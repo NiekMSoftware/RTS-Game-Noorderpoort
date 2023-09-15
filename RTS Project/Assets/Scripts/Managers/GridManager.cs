@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
@@ -17,7 +19,7 @@ public class GridManager : MonoBehaviour
 
     public class Tile
     {
-        public Vector2 pos;
+        public Vector3 pos;
         public bool isOccupied;
     }
 
@@ -39,18 +41,37 @@ public class GridManager : MonoBehaviour
 
     public Vector3 GetClosestPointOnGrid(Vector3 pos)
     {
-        Vector3[] positions = new Vector3[grid.Length];
+        List<Vector3> positions = new List<Vector3>();
+        List<float> distances = new List<float>();
+        Vector3 finalPos;
+        float shortestDistance = 100;
+        int index = 0;
 
         for (int x = 0; x < grid.GetLength(0); x++)
         {
             for (int y = 0; y < grid.GetLength(1); y++)
             {
-                positions[x * y] = grid[x, y].pos;
-                print(positions[x * y]);
+                positions.Add(grid[x, y].pos);
+                //positions[x * y] = grid[x, y].pos;
+                distances.Add(Vector3.Distance(positions[x * y], pos));
+                //distances[x * y] = Vector3.Distance(positions[x * y], pos);
+
+                //print("index : " + (x * y) + " Distance : " + distances[x * y] + " min distance : " + Mathf.Min(distances));
+
+                //print(distances.Min());
+
+                if (distances.Min() < shortestDistance)
+                {
+                    index = x * y;
+                    shortestDistance = distances.Min();
+                    //print(shortestDistance);
+                }
             }
         }
 
-        return Vector3.zero;
+        finalPos = positions[index];
+
+        return finalPos;
     }
 
     private void OnDrawGizmos()

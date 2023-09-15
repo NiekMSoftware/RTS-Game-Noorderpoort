@@ -10,6 +10,7 @@ public class Aigridtest : MonoBehaviour
     private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        agent.SetDestination(GridManager.Instance.grid[pos.x, pos.y].pos);
+        print(GridManager.Instance.grid[pos.x, pos.y].pos);
+        agent.SetDestination(new Vector3(GridManager.Instance.grid[pos.x, pos.y].pos.x, 0, GridManager.Instance.grid[pos.x, pos.y].pos.z));
     }
 }
