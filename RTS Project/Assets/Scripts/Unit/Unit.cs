@@ -14,6 +14,10 @@ public class Unit : ScriptableObject {
 
     [Space] 
     [SerializeField] int unitHealth;
+    [SerializeField] int unitMaxHealth;
+    [SerializeField] int unitHealing;
+    
+    [Space]
     [SerializeField] int unitSpeed;
     [SerializeField] int unitDamage;
 
@@ -28,7 +32,8 @@ public class Unit : ScriptableObject {
         Builder,
         Hunter,
         Explorer,
-        Miner
+        Miner,
+        Nurse
     }
 
     public enum TypeUnit {
@@ -38,11 +43,16 @@ public class Unit : ScriptableObject {
     }
 
     #endregion
+    
+    #region Combat Functions
 
-    #region Functions
+    protected int TakeDamage(int dealtDamage) {
+        int remainingHealth = this.unitHealth - dealtDamage;
+        return remainingHealth;
+    }
 
-    protected void TakeDamage() {
-        
+    protected int DealDamage(int damage) {
+        return damage;
     }
     
     protected void Death() {
@@ -52,6 +62,16 @@ public class Unit : ScriptableObject {
         }
     }
 
+    protected int Heal(int healing) {
+        int gainedHealth = this.unitHealth + healing;
+
+        return gainedHealth;
+    }
+
     #endregion
-    
+
+    public Unit() {
+        this.TakeDamage(this.DealDamage(this.unitDamage));
+        this.Death();
+    }
 }
