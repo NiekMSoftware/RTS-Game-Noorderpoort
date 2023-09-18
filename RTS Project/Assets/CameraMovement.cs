@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
@@ -8,11 +10,13 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private float zoomSpeed = 5000f;
     [SerializeField] private float borderSize = 0.07f;
     private Camera mainCamera;
-    public bool isRotating = false;
+    private bool isRotating = false;
     private Vector3 hitPoint;
     private float rotationSpeed = 3.5f;
-    public bool allowMovement = true;
+    private bool allowMovement = true;
     [SerializeField] private Transform orientation;
+    private bool allowZoomInY = true;
+    private bool allowZoomOutY = true;
 
     private void Start()
     {
@@ -67,16 +71,19 @@ public class CameraMovement : MonoBehaviour
                 horizontal = -1;
             }
             transform.position += orientation.TransformDirection(new Vector3(horizontal, 0, vertical)) * moveSpeed * Time.deltaTime;
-            if (transform.position.y < hitPoint.y + 50 && zoom < 0)
+
+            if (transform.position.y > hitPoint.y + 50)
             {
-                transform.position += transform.TransformDirection(new Vector3(0, 0, zoom * 500)) * zoomSpeed * Time.deltaTime;
+                zoom = Mathf.Clamp(zoom, 0f, 1f);
             }
-            transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, hitPoint.y + 10, hitPoint.y + 50), transform.position.z);
+            if (transform.position.y < hitPoint.y + 10)
+            {
+                zoom = Mathf.Clamp(zoom, -1f, 0f);
+            }
 
+            transform.position += transform.TransformDirection(new Vector3(0, 0, zoom * 750)) * zoomSpeed * Time.deltaTime;
 
-
-            print(hitPoint);
-
+            //transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, hitPoint.y + 10, hitPoint.y + 50), transform.position.z);
         }
     }
     private void AllowMovementInvoker()
