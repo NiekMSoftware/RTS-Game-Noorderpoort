@@ -5,24 +5,48 @@ using UnityEngine.AI;
 
 public class AIMovement : MonoBehaviour
 {
-    GameObject AI;
-    [SerializeField]
-    private Transform Target;
+    Camera myCamera;
+    NavMeshAgent myAgent;
+    public LayerMask ground;
 
-    //AI movement
-    void Awake()
+    void Start()
     {
-        //zoekt target object.
-        Target = GameObject.Find("Target").transform;
-        //Zoekt GameObject met AI tag.
-        AI = GameObject.FindGameObjectWithTag("AI");
+        myCamera = Camera.main;
+        myAgent = GetComponent<NavMeshAgent>();
     }
-    
-    void Update()
+
+    private void Update()
     {
-        //Maakt AI bewegen naar target.
-        GetComponent<NavMeshAgent>().destination = Target.transform.position;
-    } 
-     
+       if(Input.GetMouseButtonDown(1)) 
+       {
+            RaycastHit hit;
+            Ray ray = myCamera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, ground)) 
+            {
+                myAgent.SetDestination(hit.point);
+            }
+       }     
+    }
+
+
+    /* GameObject AI;
+     [SerializeField]
+     private Transform Target;
+
+     //AI movement
+     void Awake()
+     {
+         //zoekt target object.
+         Target = GameObject.Find("Target").transform;
+         //Zoekt GameObject met AI tag.
+         AI = GameObject.FindGameObjectWithTag("AI");
+     }
+
+     void Update()
+     {
+         //Maakt AI bewegen naar target.
+         GetComponent<NavMeshAgent>().destination = Target.transform.position;
+     } */
+
 
 }

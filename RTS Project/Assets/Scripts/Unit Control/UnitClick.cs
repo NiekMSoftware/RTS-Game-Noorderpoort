@@ -3,6 +3,7 @@ using UnityEngine;
 public class UnitClick : MonoBehaviour
 {
     private Camera myCamera;
+    public GameObject Marker;
 
     public LayerMask clickable;
     public LayerMask ground;
@@ -47,6 +48,20 @@ public class UnitClick : MonoBehaviour
                 }
 
 
+            }
+        }
+
+        if(Input.GetMouseButtonDown(1)) 
+        {
+            RaycastHit hit;
+            Ray ray = myCamera.ScreenPointToRay (Input.mousePosition);
+
+                Debug.Log("active");
+            if(Physics.Raycast(ray,out hit,Mathf.Infinity, ground))
+            {
+                Marker.transform.position = hit.point;
+                Marker.SetActive(false);
+                Marker.SetActive(true);
             }
         }
     }
