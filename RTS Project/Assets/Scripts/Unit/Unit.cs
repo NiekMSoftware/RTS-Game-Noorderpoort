@@ -1,29 +1,22 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-[CreateAssetMenu(fileName = "Unit Boisky", menuName = "Create Unit", order = 1)]
+[CreateAssetMenu(fileName = "Unit", menuName = "Create Unit", order = 1)]
 [Serializable]
 public class Unit : ScriptableObject {
     // Naming and other basic variables
-    [Header("Basic Variables and Naming")]
-    
-    [SerializeField] string unitName;
-
-    [Space] 
-    [SerializeField] int unitHealth;
-    [SerializeField] int unitMaxHealth;
-    [SerializeField] int unitHealing;
+    [Header("Unit variables")]
+    [SerializeField] protected int unitHealth;
+    [SerializeField] protected int unitMaxHealth;
+    [SerializeField] protected int unitHealing;
     
     [Space]
-    [SerializeField] int unitSpeed;
-    [SerializeField] int unitDamage;
+    [SerializeField] protected int unitSpeed;
+    [SerializeField] protected int unitDamage;
 
     [Header("Enum Data")]
-    [SerializeField] Jobs job;
-    [SerializeField] TypeUnit typeUnit;
+    [SerializeField] protected Jobs job;
+    [SerializeField] protected TypeUnit typeUnit;
 
     #region Enums
 
@@ -37,6 +30,7 @@ public class Unit : ScriptableObject {
     }
 
     public enum TypeUnit {
+        None,
         Human,
         Animal,
         DarkElves 
@@ -69,9 +63,4 @@ public class Unit : ScriptableObject {
     }
 
     #endregion
-
-    public Unit() {
-        this.TakeDamage(this.DealDamage(this.unitDamage));
-        this.Death();
-    }
 }
