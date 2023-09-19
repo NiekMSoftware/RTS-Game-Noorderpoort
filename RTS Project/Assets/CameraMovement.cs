@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 0.02f;
+    [SerializeField] private float moveSpeed = 1f;
     [SerializeField] private float zoomSpeed = 5000f;
     [SerializeField] private float borderSize = 0.07f;
     private bool isRotating = false;
