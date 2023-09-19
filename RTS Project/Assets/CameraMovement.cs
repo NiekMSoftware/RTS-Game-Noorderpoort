@@ -6,21 +6,17 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 10f;
+    [SerializeField] private float moveSpeed = 0.02f;
     [SerializeField] private float zoomSpeed = 5000f;
     [SerializeField] private float borderSize = 0.07f;
-    private Camera mainCamera;
     private bool isRotating = false;
     private Vector3 hitPoint;
     private float rotationSpeed = 3.5f;
     private bool allowMovement = true;
     [SerializeField] private Transform orientation;
-    private bool allowZoomInY = true;
-    private bool allowZoomOutY = true;
 
     private void Start()
     {
-        this.mainCamera = GetComponent<Camera>();
         Cursor.lockState = CursorLockMode.Confined;
     }
     private void Update()
@@ -70,21 +66,18 @@ public class CameraMovement : MonoBehaviour
             {
                 horizontal = -1;
             }
-            transform.position += orientation.TransformDirection(new Vector3(horizontal, 0, vertical)) * moveSpeed * Time.deltaTime;
-
-            if (transform.position.y > hitPoint.y + 50)
-            {
-                zoom = Mathf.Clamp(zoom, 0f, 1f);
-            }
-            if (transform.position.y < hitPoint.y + 10)
-            {
-                zoom = Mathf.Clamp(zoom, -1f, 0f);
-            }
-
-            transform.position += transform.TransformDirection(new Vector3(0, 0, zoom * 750)) * zoomSpeed * Time.deltaTime;
-
             //transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, hitPoint.y + 10, hitPoint.y + 50), transform.position.z);
         }
+        if (transform.position.y > hitPoint.y + 50)
+        {
+            zoom = Mathf.Clamp(zoom, 0f, 1f);
+        }
+        if (transform.position.y < hitPoint.y + 10)
+        {
+            zoom = Mathf.Clamp(zoom, -1f, 0f);
+        }
+        transform.position += orientation.TransformDirection(new Vector3(horizontal * (transform.position.y - hitPoint.y), 0, vertical* (transform.position.y - hitPoint.y))) * moveSpeed * Time.deltaTime;
+        transform.position += transform.TransformDirection(new Vector3(0, 0, zoom * 750)) * zoomSpeed * Time.deltaTime;
     }
     private void AllowMovementInvoker()
     {
