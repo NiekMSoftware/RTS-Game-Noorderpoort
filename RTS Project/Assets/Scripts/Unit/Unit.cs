@@ -1,9 +1,7 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Unit", menuName = "Create Unit", order = 1)]
-[Serializable]
-public class Unit : ScriptableObject {
+public abstract class Unit : MonoBehaviour {
     // Naming and other basic variables
     [Header("Unit variables")]
     [SerializeField] protected int unitHealth;
