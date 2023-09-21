@@ -57,11 +57,6 @@ public class SelectUnits : MonoBehaviour
         }
     }
 
-    public void DeSelect(GameObject unitToAdd)
-    {
-
-    }
-
     public void DeSelectAll()
     {
         foreach (var unit in unitsSelected)
@@ -70,10 +65,5 @@ public class SelectUnits : MonoBehaviour
             unit.transform.GetChild(0).gameObject.SetActive(false);
         }
         unitsSelected.Clear();
-    }
-
-    public void Deselect(GameObject unitToDeselect)
-    {
-
     }
 }
