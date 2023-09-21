@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class BuildingManager : MonoBehaviour
 {
@@ -12,14 +9,14 @@ public class BuildingManager : MonoBehaviour
 
     private RaycastHit hit;
     [SerializeField] private LayerMask layerMask;
-    
-    
+
+
     void Update()
     {
         if (pendingObject != null)
         {
             pendingObject.transform.position = pos;
-            if(Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0))
             {
                 PlaceObject();
             }
@@ -33,11 +30,11 @@ public class BuildingManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-       Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if(Physics.Raycast(ray, out hit,1000, layerMask)) 
+        if (Physics.Raycast(ray, out hit, 1000, layerMask))
         {
-            pos = hit.point;
+            pos = GridManager.Instance.GetClosestPointOnGrid(hit.point);
         }
     }
 

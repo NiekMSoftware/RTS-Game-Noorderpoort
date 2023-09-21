@@ -82,6 +82,11 @@ public class GridManager : MonoBehaviour
         return finalPos;
     }
 
+    public void PlaceObject(Vector3 pos)
+    {
+
+    }
+
     private void CheckOccupancy()
     {
         for (int x = 0; x < grid.GetLength(0); x++)

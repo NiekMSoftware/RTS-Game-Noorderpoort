@@ -767,8 +767,7 @@ MonoBehaviour:
   maxWorkers: 5
   currentWorkers: 5
   maxStorage: 20
-  currentStorage: []
-  itemType: {fileID: 0}
+  currentStorage: {fileID: 0}
 --- !u!65 &1907070462
 BoxCollider:
   m_ObjectHideFlags: 0
