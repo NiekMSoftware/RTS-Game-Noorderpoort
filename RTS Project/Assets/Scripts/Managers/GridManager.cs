@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.AI.Navigation;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
@@ -10,8 +9,6 @@ public class GridManager : MonoBehaviour
     [SerializeField] private Vector2Int gridSize;
     [SerializeField] private Vector3 gridOffset;
     [SerializeField] private LayerMask buildingLayer;
-    [SerializeField] private NavMeshSurface surface;
-    //[SerializeField] private float objectOffset;
 
     private void Awake()
     {
@@ -44,8 +41,8 @@ public class GridManager : MonoBehaviour
 
     public Vector3Int GetClosestPointOnGrid(Vector3 pos)
     {
-        List<Vector3Int> positions = new List<Vector3Int>();
-        List<Tile> tiles = new List<Tile>();
+        List<Vector3Int> positions = new();
+        List<Tile> tiles = new();
         Vector3Int finalPos;
         float shortestDistance = 100;
         int index = 0;
@@ -91,9 +88,10 @@ public class GridManager : MonoBehaviour
         {
             for (int z = 0; z < grid.GetLength(1); z++)
             {
-                Collider[] colliders = Physics.OverlapSphere(grid[x, z].pos, 0.1f, buildingLayer);
+                Collider[] colliders = new Collider[1];
+                Physics.OverlapSphereNonAlloc(grid[x, z].pos, 0.1f, colliders, buildingLayer);
 
-                if (colliders.Length > 0)
+                if (colliders[0] != null)
                 {
                     grid[x, z].isOccupied = true;
                 }
