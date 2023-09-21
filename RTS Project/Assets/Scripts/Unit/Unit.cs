@@ -12,6 +12,10 @@ public abstract class Unit : MonoBehaviour {
     [SerializeField] protected int unitSpeed;
     [SerializeField] protected int unitDamage;
 
+    [Header("Inventory Stuff")] 
+    protected const int maxItems = 5;
+    protected int[] inventorySlots = new int[3];
+
     [Header("Enum Data")]
     [SerializeField] protected Jobs job;
     [SerializeField] protected TypeUnit typeUnit;
@@ -61,4 +65,8 @@ public abstract class Unit : MonoBehaviour {
     }
 
     #endregion
+
+    protected void DetectUnit() {
+        
+    }
 }
