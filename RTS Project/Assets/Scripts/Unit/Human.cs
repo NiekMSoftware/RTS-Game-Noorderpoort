@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Human : Unit
-{
+public class Human : Unit {
     public Human() {
         
     }
@@ -17,6 +16,6 @@ public class Human : Unit
     // Update is called once per frame
     void Update()
     {
-        
+        this.DetectUnit();
     }
 }
