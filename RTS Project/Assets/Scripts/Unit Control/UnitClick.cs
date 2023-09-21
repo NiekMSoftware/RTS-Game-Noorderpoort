@@ -51,12 +51,13 @@ public class UnitClick : MonoBehaviour
             }
         }
 
+        //plaats marker voor AI om te volgen
         if(Input.GetMouseButtonDown(1)) 
         {
             RaycastHit hit;
             Ray ray = myCamera.ScreenPointToRay (Input.mousePosition);
 
-                Debug.Log("active");
+            Debug.Log("Place marker");
             if(Physics.Raycast(ray,out hit,Mathf.Infinity, ground))
             {
                 Marker.transform.position = hit.point;
