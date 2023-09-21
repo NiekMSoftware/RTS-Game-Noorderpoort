@@ -126,7 +126,7 @@ public class GridManager : MonoBehaviour
                 Physics.OverlapSphereNonAlloc(grid[x, z].pos, 0.1f, colliders, buildingLayer);
 
                 //bug : it only checks for its own collider, so only the onces that are not occupied
-                if (colliders[0] == collider)
+                if (colliders[0] != null)
                 {
                     Tile tile = new()
                     {
