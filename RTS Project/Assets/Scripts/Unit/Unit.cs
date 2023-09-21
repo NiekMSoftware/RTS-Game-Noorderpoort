@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public abstract class Unit : MonoBehaviour {
+public class Unit : MonoBehaviour {
     // Naming and other basic variables
     [Header("Unit variables")]
     [SerializeField] protected int unitHealth;
@@ -13,7 +13,7 @@ public abstract class Unit : MonoBehaviour {
     [SerializeField] protected int unitDamage;
 
     [Header("Inventory Stuff")] 
-    protected const int maxItems = 5;
+    protected int maxItems = 5;
     protected int[] inventorySlots = new int[3];
 
     [Header("Enum Data")]
@@ -42,31 +42,27 @@ public abstract class Unit : MonoBehaviour {
     
     #region Combat Functions
 
-    protected int TakeDamage(int dealtDamage) {
+    public int TakeDamage(int dealtDamage) {
         int remainingHealth = this.unitHealth - dealtDamage;
         return remainingHealth;
     }
 
-    protected int DealDamage(int damage) {
+    public int DealDamage(int damage) {
         return damage;
     }
     
-    protected void Death() {
+    public void Death() {
         // Kill off the Unit once it's health reaches 0
         if (this.unitHealth <= 0) {
             // Play death animation + particle system
         }
     }
 
-    protected int Heal(int healing) {
+    public int Heal(int healing) {
         int gainedHealth = this.unitHealth + healing;
 
         return gainedHealth;
     }
 
     #endregion
-
-    protected void DetectUnit() {
-        
-    }
 }
