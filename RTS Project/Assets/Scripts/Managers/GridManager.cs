@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
+using Unity.AI.Navigation;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
@@ -8,7 +8,10 @@ public class GridManager : MonoBehaviour
 
     public Tile[,] grid;
     [SerializeField] private Vector2Int gridSize;
-    [SerializeField] private Vector2 gridOffset;
+    [SerializeField] private Vector3 gridOffset;
+    [SerializeField] private LayerMask buildingLayer;
+    [SerializeField] private NavMeshSurface surface;
+    //[SerializeField] private float objectOffset;
 
     private void Awake()
     {
@@ -30,48 +33,72 @@ public class GridManager : MonoBehaviour
 
         for (int x = 0; x < grid.GetLength(0); x++)
         {
-            for (int y = 0; y < grid.GetLength(1); y++)
+            for (int z = 0; z < grid.GetLength(1); z++)
             {
                 Tile tile = new();
-                grid[x, y] = tile;
-                grid[x, y].pos = new Vector2(x, y) + gridOffset;
+                grid[x, z] = tile;
+                grid[x, z].pos = new Vector3Int(x, 0, z) + gridOffset;
             }
         }
     }
 
-    public Vector3 GetClosestPointOnGrid(Vector3 pos)
+    public Vector3Int GetClosestPointOnGrid(Vector3 pos)
     {
-        List<Vector3> positions = new List<Vector3>();
-        List<float> distances = new List<float>();
-        Vector3 finalPos;
+        List<Vector3Int> positions = new List<Vector3Int>();
+        List<Tile> tiles = new List<Tile>();
+        Vector3Int finalPos;
         float shortestDistance = 100;
         int index = 0;
+        Tile finalTile = null;
 
         for (int x = 0; x < grid.GetLength(0); x++)
         {
-            for (int y = 0; y < grid.GetLength(1); y++)
+            for (int z = 0; z < grid.GetLength(1); z++)
             {
-                positions.Add(grid[x, y].pos);
-                //positions[x * y] = grid[x, y].pos;
-                distances.Add(Vector3.Distance(positions[x * y], pos));
-                //distances[x * y] = Vector3.Distance(positions[x * y], pos);
-
-                //print("index : " + (x * y) + " Distance : " + distances[x * y] + " min distance : " + Mathf.Min(distances));
-
-                //print(distances.Min());
-
-                if (distances.Min() < shortestDistance)
-                {
-                    index = x * y;
-                    shortestDistance = distances.Min();
-                    //print(shortestDistance);
-                }
+                tiles.Add(grid[x, z]);
+                positions.Add(Vector3Int.FloorToInt(grid[x, z].pos));
             }
         }
 
-        finalPos = positions[index];
+        for (int i = 0; i < positions.Count; i++)
+        {
+            if (Vector3.Distance(positions[i], pos) < shortestDistance)
+            {
+                index = i;
+                shortestDistance = Vector3.Distance(positions[i], pos);
+                finalTile = tiles[i];
+            }
+        }
+
+        if (!finalTile.isOccupied)
+        {
+            finalPos = positions[index];
+        }
+        else
+        {
+            Debug.LogError("Tried to spawn on occupied position : " + finalTile.pos);
+            finalPos = Vector3Int.CeilToInt(pos);
+        }
+
+        Invoke(nameof(CheckOccupancy), 0.1f);
 
         return finalPos;
+    }
+
+    private void CheckOccupancy()
+    {
+        for (int x = 0; x < grid.GetLength(0); x++)
+        {
+            for (int z = 0; z < grid.GetLength(1); z++)
+            {
+                Collider[] colliders = Physics.OverlapSphere(grid[x, z].pos, 0.1f, buildingLayer);
+
+                if (colliders.Length > 0)
+                {
+                    grid[x, z].isOccupied = true;
+                }
+            }
+        }
     }
 
     private void OnDrawGizmos()
@@ -80,9 +107,16 @@ public class GridManager : MonoBehaviour
 
         for (int x = 0; x < grid.GetLength(0); x++)
         {
-            for (int y = 0; y < grid.GetLength(1); y++)
+            for (int z = 0; z < grid.GetLength(1); z++)
             {
-                Gizmos.DrawWireCube(new Vector3(grid[x, y].pos.x, 0, grid[x, y].pos.y), new Vector3(1, 0, 1));
+                Gizmos.color = Color.white;
+
+                if (grid[x, z].isOccupied)
+                {
+                    Gizmos.color = Color.red;
+                }
+
+                Gizmos.DrawWireCube(new Vector3(grid[x, z].pos.x, 0, grid[x, z].pos.z), new Vector3(0.9f, 0, 0.9f));
             }
         }
     }

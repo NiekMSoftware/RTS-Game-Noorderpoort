@@ -9,8 +9,10 @@ public class GridObject : MonoBehaviour
 
     private void Setup()
     {
+        Vector3 oldPos = transform.position;
         transform.position = GridManager.Instance.GetClosestPointOnGrid(transform.position);
-        //transform.position = GridManager.Instance.grid[]
-        //transform.position = new Vector3(Mathf.Floor(transform.position.x), Mathf.Floor(transform.position.y), Mathf.Floor(transform.position.z));
+        Vector3 newPos = transform.position;
+        newPos.y = oldPos.y;
+        transform.position = newPos;
     }
 }
