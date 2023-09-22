@@ -6,6 +6,7 @@ TagManager:
   tags:
   - AI
   - Ground
+  - StoneResource
   layers:
   - Default
   - TransparentFX
@@ -17,8 +18,8 @@ TagManager:
   - Building
   - 
   - 
-  - 
-  - 
+  - Obstacle
+  - Target
   - 
   - 
   - 
