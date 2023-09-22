@@ -9,6 +9,14 @@ public class BuildingBase : MonoBehaviour
     protected ItemSlot currentStorage;
     [SerializeField] protected ItemData item;
 
+    private void Awake()
+    {
+        ItemSlot slot = new();
+        slot.SetAmount(0);
+        slot.SetData(item);
+        currentStorage = slot;
+    }
+
     protected void ManageStorage()
     {
         if (currentStorage.GetAmount() < maxStorage)

@@ -29,7 +29,6 @@ public class Worker : MonoBehaviour
         itemSlot.SetAmount(0);
         currentStorage = itemSlot;
         myAgent = GetComponent<NavMeshAgent>();
-
     }
 
     protected void AddItemToWorkerStorage(ItemData itemData)
@@ -83,11 +82,11 @@ public class Worker : MonoBehaviour
 
         return closestResource;
     }
+
     private IEnumerator GatherResource()
     {
         while (currentStorage.GetAmount() < maxStorage)
         {
-            print("owihrg");
             myAgent.isStopped = false;
             AddItemToWorkerStorage(resourceItem);
             yield return new WaitForSeconds(1f);
@@ -103,14 +102,11 @@ public class Worker : MonoBehaviour
         while (currentStorage.GetAmount() > 0)
         {
             myAgent.isStopped = false;
-            print("Current storage : " + currentStorage.GetAmount());
             RemoveItemFromWorkerStorage(resourceItem);
             buildingBase.AddItemToStorage(resourceItem);
             yield return new WaitForSeconds(1f);
-            print("hello");
         }
 
-        print("Done 69");
         currentState = State.Idle;
         canDeposit = true;
 
@@ -118,7 +114,6 @@ public class Worker : MonoBehaviour
     }
     private void Update()
     {
-        print(currentStorage.GetAmount());
         switch (currentState)
         {
             case State.Idle:
@@ -170,22 +165,11 @@ public class Worker : MonoBehaviour
                 if (Vector3.Distance(transform.position, workerHouse.transform.position) <= 2.5f)
                 {
                     myAgent.isStopped = true;
-                    print("in range");
                     if (canDeposit)
                     {
-                        Debug.Log("Coroutine called");
                         canDeposit = false;
                         StartCoroutine(DepositResources());
                     }
-
-                    //while (currentStorage.GetAmount() <= maxStorage)
-                    //{
-                    //    myAgent.isStopped = false;
-                    //    RemoveItemFromWorkerStorage(resourceItem);
-                    //    AddItemToStorage(resourceItem);
-                    //}
-                    //myAgent.isStopped = true;
-                    //currentState = State.Idle;
                 }
                 else
                 {
