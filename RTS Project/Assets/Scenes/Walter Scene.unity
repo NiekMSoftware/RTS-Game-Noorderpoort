@@ -736,9 +736,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingHp: 50
   maxWorkers: 5
-  currentWorkers: 5
+  currentWorkers: 0
   maxStorage: 20
-  currentStorage: {fileID: 0}
   item: {fileID: 11400000, guid: 0c0ea06af6a171e42a725e0fb10167fc, type: 2}
 --- !u!1 &1560536725
 GameObject:
@@ -1481,12 +1480,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dacdf40a663ad0b43840765d2de62f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingHp: 50
-  maxWorkers: 5
-  currentWorkers: 0
-  maxStorage: 3
-  currentStorage: {fileID: 0}
-  item: {fileID: 0}
   workerHouse: {fileID: 1439619667}
   currentStorage: {fileID: 0}
   maxStorage: 3
