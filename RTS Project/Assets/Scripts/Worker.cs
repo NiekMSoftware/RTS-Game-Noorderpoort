@@ -1,7 +1,6 @@
-using Unity.VisualScripting;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using System.Collections;
 
 public class Worker : MonoBehaviour
 {
@@ -12,36 +11,54 @@ public class Worker : MonoBehaviour
     NavMeshAgent myAgent;
     private State currentState = State.Idle;
     private bool inventorFull = false;
-
-    public enum State
-    {
-        Idle,
-        Moving,
-        Gathering,
-    }
+    [SerializeField] protected ItemSlot currentStorage;
+    [SerializeField] protected int maxStorage = 3;
+    [SerializeField] protected float workerHp = 5f;
+    [SerializeField] private ItemData resourceItem;
+    private bool canGather = true;
+    private bool canDeposit = true;
+    private enum State{Idle, Moving, Gathering, Depositing}
+    private BuildingBase buildingBase;
 
     private void Start()
     {
+        buildingBase = workerHouse.GetComponent<BuildingBase>();
+
+        ItemSlot itemSlot = new();
+        itemSlot.SetData(resourceItem);
+        itemSlot.SetAmount(0);
+        currentStorage = itemSlot;
         myAgent = GetComponent<NavMeshAgent>();
     }
-    private void IdleState()
-    {
-        myAgent.isStopped = true;
-        resourceTarget = FindClosestResource();
-    }
 
-    private void MovingState()
+    protected void AddItemToWorkerStorage(ItemData itemData)
     {
-        if (resourceTarget != null)
+        if (itemData == resourceItem)
         {
-            myAgent.isStopped = false;
-            myAgent.SetDestination(resourceTarget.position);
+            if (currentStorage.GetAmount() < maxStorage)
+            {
+                currentStorage.IncreaseAmount(1);
+            }
+            else
+            {
+                Debug.LogError("Worker storage full");
+            }
         }
     }
 
-    private void GatheringState()
+    protected void RemoveItemFromWorkerStorage(ItemData itemData)
     {
-        // Gather go brrr
+        if (itemData == resourceItem)
+        {
+            if (currentStorage.GetAmount() > 0)
+            {
+                currentStorage.IncreaseAmount(-1);
+            }
+            else
+            {
+                Debug.LogError("Worker storage Empty");
+            }
+        }
     }
 
     public Transform FindClosestResource()
@@ -65,22 +82,43 @@ public class Worker : MonoBehaviour
 
         return closestResource;
     }
+
     private IEnumerator GatherResource()
     {
-        // Play gather animation or perform gathering action here
-        yield return new WaitForSeconds(3f);
-        myAgent.isStopped = false;
-        inventorFull = true;
+        while (currentStorage.GetAmount() < maxStorage)
+        {
+            myAgent.isStopped = false;
+            AddItemToWorkerStorage(resourceItem);
+            yield return new WaitForSeconds(1f);
+        }
         resourceTarget = null;
         currentState = State.Moving;
-        myAgent.SetDestination(workerHouse.transform.position);
+
+        yield return null;
+    }
+
+    private IEnumerator DepositResources()
+    {
+        while (currentStorage.GetAmount() > 0)
+        {
+            myAgent.isStopped = false;
+            RemoveItemFromWorkerStorage(resourceItem);
+            buildingBase.AddItemToStorage(resourceItem);
+            yield return new WaitForSeconds(1f);
+        }
+
+        currentState = State.Idle;
+        canDeposit = true;
+
+        yield return null;
     }
     private void Update()
-    {  
+    {
         switch (currentState)
         {
             case State.Idle:
-                IdleState();
+                myAgent.isStopped = true;
+                resourceTarget = FindClosestResource();
                 if (resourceTarget != null )
                 {
                     currentState = State.Moving;
@@ -88,8 +126,14 @@ public class Worker : MonoBehaviour
                 break;
 
             case State.Moving:
-                MovingState();
-                if (resourceTarget != null && Vector3.Distance(transform.position, resourceTarget.position) <= 2.5f)
+                canGather = true;
+                StopAllCoroutines();
+                if (resourceTarget != null)
+                {
+                    myAgent.isStopped = false;
+                    myAgent.SetDestination(resourceTarget.position);
+                }
+                if (resourceTarget != null && Vector3.Distance(transform.position, resourceTarget.position) <= 2.5f && currentStorage.GetAmount() == 0)
                 { 
                     currentState = State.Gathering;
                 }
@@ -97,24 +141,45 @@ public class Worker : MonoBehaviour
                 {
                     currentState = State.Idle;
                 }
+                if (currentStorage.GetAmount() > 1)
+                {
+                    myAgent.SetDestination(workerHouse.transform.position);
+                }
                 if (Vector3.Distance(transform.position, workerHouse.transform.position) <= 2.5f)
                 {
-                    myAgent.isStopped = true;
-                    currentState = State.Idle;
+                    currentState = State.Depositing;
+                }
+                    break;
+                
+
+            case State.Gathering:
+                myAgent.isStopped = true;
+                if (canGather)
+                {
+                    canGather = false;
+                    StartCoroutine(GatherResource());
                 }
                 break;
 
-            case State.Gathering:
-                GatheringState();
-                myAgent.isStopped = true;
-                StartCoroutine(GatherResource());
-
+            case State.Depositing:
+                if (Vector3.Distance(transform.position, workerHouse.transform.position) <= 2.5f)
+                {
+                    myAgent.isStopped = true;
+                    if (canDeposit)
+                    {
+                        canDeposit = false;
+                        StartCoroutine(DepositResources());
+                    }
+                }
+                else
+                {
+                    currentState = State.Idle;
+                }
                 break;
 
             default:
                 print("switch shitting itself");
                 break;
-
         }
     }
 }

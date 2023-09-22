@@ -9,5 +9,9 @@ public class ItemSlot : MonoBehaviour
 
     public void IncreaseAmount(int value) => amount += value;
 
+    public void SetAmount(int value) => amount = value;
+
     public ItemData GetData() => data;
+
+    public ItemData SetData(ItemData _data) => data = _data;
 }

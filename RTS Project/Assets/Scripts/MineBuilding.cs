@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class MineBuilding : BuildingBase
 {
-    public MineBuilding()
-    {
+        //public MineBuilding()
+        //{
 
-    }
+        //}
 
     void Start()
     {
