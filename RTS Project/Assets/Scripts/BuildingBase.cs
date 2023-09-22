@@ -4,13 +4,14 @@ public class BuildingBase : MonoBehaviour
 {
     [SerializeField] protected float buildingHp = 50f;
     [SerializeField] protected int maxWorkers = 5;
-    [SerializeField] protected int currentWorkers = 5;
+    [SerializeField] protected int currentWorkers = 0;
     [SerializeField] protected int maxStorage = 20;
-    [SerializeField] protected ItemSlot currentStorage;
+    protected ItemSlot currentStorage;
+    [SerializeField] protected ItemData item;
 
     protected void ManageStorage()
     {
-        if (currentStorage.GetAmount() != maxStorage)
+        if (currentStorage.GetAmount() < maxStorage)
         {
             //human go work
         }
@@ -21,9 +22,9 @@ public class BuildingBase : MonoBehaviour
         //human.healthUnit;
     }
 
-    protected void AddItemToStorage(ItemData itemData)
+    public void AddItemToStorage(ItemData itemData)
     {
-        if (itemData == currentStorage.GetData())
+        if (itemData == item)
         {
             if (currentStorage.GetAmount() < maxStorage)
             {
@@ -35,9 +36,10 @@ public class BuildingBase : MonoBehaviour
             }
         }
     }
-    protected void RemoveItemFromStorage(ItemData itemData)
+
+    public void RemoveItemFromStorage(ItemData itemData)
     {
-        if (itemData == currentStorage.GetData())
+        if (itemData == item)
         {
             if (currentStorage.GetAmount() > 0)
             {
