@@ -43,10 +43,8 @@ public class GridManager : MonoBehaviour
     {
         List<Vector3Int> positions = new();
         List<Tile> tiles = new();
-        Vector3Int finalPos;
         float shortestDistance = 100;
         int index = 0;
-        Tile finalTile = null;
 
         for (int x = 0; x < grid.GetLength(0); x++)
         {
@@ -63,26 +61,37 @@ public class GridManager : MonoBehaviour
             {
                 index = i;
                 shortestDistance = Vector3.Distance(positions[i], pos);
-                finalTile = tiles[i];
             }
         }
 
-        if (!finalTile.isOccupied)
-        {
-            finalPos = positions[index];
-        }
-        else
-        {
-            Debug.LogError("Tried to spawn on occupied position : " + finalTile.pos);
-            finalPos = Vector3Int.CeilToInt(pos);
-        }
-
-        Invoke(nameof(CheckOccupancy), 0.1f);
-
-        return finalPos;
+        return positions[index];
     }
 
-    private void CheckOccupancy()
+    public bool GetOccupanyByCollider(Collider collider)
+    {
+        Tile[] tiles;
+
+        tiles = CheckOccupancy2(collider);
+
+        print(tiles.Length);
+
+        foreach (var tile in tiles)
+        {
+            if (tile.isOccupied)
+            {
+                print("is occupied");
+                return true;
+            }
+            else
+            {
+                print("not occupied");
+            }    
+        }
+
+        return false;
+    }
+
+    public void CheckOccupancy()
     {
         for (int x = 0; x < grid.GetLength(0); x++)
         {
@@ -95,8 +104,41 @@ public class GridManager : MonoBehaviour
                 {
                     grid[x, z].isOccupied = true;
                 }
+                else
+                {
+                    grid[x, z].isOccupied = false;
+                }
             }
         }
+    }
+
+    public Tile[] CheckOccupancy2(Collider collider)
+    {
+        List<Tile> tiles = new();
+
+        CheckOccupancy();
+
+        for (int x = 0; x < grid.GetLength(0); x++)
+        {
+            for (int z = 0; z < grid.GetLength(1); z++)
+            {
+                Collider[] colliders = new Collider[1];
+                Physics.OverlapSphereNonAlloc(grid[x, z].pos, 0.1f, colliders, buildingLayer);
+
+                //bug : it only checks for its own collider, so only the onces that are not occupied
+                if (colliders[0] != null)
+                {
+                    Tile tile = new()
+                    {
+                        pos = grid[x, z].pos,
+                    };
+
+                    tiles.Add(tile);
+                }
+            }
+        }
+
+        return tiles.ToArray();
     }
 
     private void OnDrawGizmos()
