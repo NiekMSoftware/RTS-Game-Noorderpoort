@@ -13,6 +13,7 @@ public class SelectUnits : MonoBehaviour
 
      void Awake()
     {
+
         if(_instance != null && _instance != this)
         {
             Destroy(this.gameObject);
@@ -25,6 +26,8 @@ public class SelectUnits : MonoBehaviour
 
     public void ClickSelect(GameObject unitToAdd)
     {
+        
+        Debug.Log("Deselected");
         DeSelectAll();
         unitsSelected.Add(unitToAdd);
         unitToAdd.transform.GetChild(0).gameObject.SetActive(true);
@@ -59,8 +62,10 @@ public class SelectUnits : MonoBehaviour
 
     public void DeSelectAll()
     {
+        
         foreach (var unit in unitsSelected)
         {
+            Debug.Log("test");
             unit.GetComponent<AIMovement>().enabled = false;
             unit.transform.GetChild(0).gameObject.SetActive(false);
         }

@@ -8,6 +8,8 @@ public class UnitClick : MonoBehaviour
     public LayerMask clickable;
     public LayerMask ground;
 
+    SelectUnits mySelectUnits;
+
 
     void Start()
     {
