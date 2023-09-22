@@ -458,7 +458,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 09dd1cb9497c48047a19249a3f8d5964,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1439619669}
   m_SourcePrefab: {fileID: 100100000, guid: 09dd1cb9497c48047a19249a3f8d5964, type: 3}
 --- !u!1 &416528567
 GameObject:
@@ -718,6 +722,24 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 383555105}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1439619669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439619667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e99496344083c5345ad812831fa82be5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingHp: 50
+  maxWorkers: 5
+  currentWorkers: 5
+  maxStorage: 20
+  currentStorage: {fileID: 0}
+  item: {fileID: 11400000, guid: 0c0ea06af6a171e42a725e0fb10167fc, type: 2}
 --- !u!1 &1560536725
 GameObject:
   m_ObjectHideFlags: 0
@@ -1459,7 +1481,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dacdf40a663ad0b43840765d2de62f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buildingHp: 50
+  maxWorkers: 5
+  currentWorkers: 0
+  maxStorage: 3
+  currentStorage: {fileID: 0}
+  item: {fileID: 0}
   workerHouse: {fileID: 1439619667}
+  currentStorage: {fileID: 0}
+  maxStorage: 3
+  workerHp: 5
+  resourceItem: {fileID: 11400000, guid: 0c0ea06af6a171e42a725e0fb10167fc, type: 2}
 --- !u!1001 &892754476655269723
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1559,7 +1591,7 @@ PrefabInstance:
     - target: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 20.922958
+      value: 4.91
       objectReference: {fileID: 0}
     - target: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
         type: 3}
@@ -1569,7 +1601,7 @@ PrefabInstance:
     - target: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 14.8728485
+      value: 29.24
       objectReference: {fileID: 0}
     - target: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
         type: 3}
