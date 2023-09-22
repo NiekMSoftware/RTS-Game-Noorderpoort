@@ -23,12 +23,14 @@ public class BuildingManager : MonoBehaviour
         if (pendingObject != null)
         {
             pendingObject.transform.position = pos;
-            if (Input.GetMouseButtonDown(0) && !GridManager.Instance.GetOccupanyByCollider(pendingObject.GetComponent<Collider>()))
+            if (Input.GetMouseButtonDown(0) && !GridManager.Instance.GetOccupanyPendingObject())
             {
                 PlaceObject();
             }
         }
     }
+
+    public GameObject GetPendingObject() => pendingObject;
 
     private void PlaceObject()
     {
