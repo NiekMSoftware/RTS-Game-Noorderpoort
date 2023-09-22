@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 
-public class Jobs : MonoBehaviour
+public class Worker : MonoBehaviour
 {
     private Transform resourceTarget;
     [SerializeField] private GameObject workerHouse;
