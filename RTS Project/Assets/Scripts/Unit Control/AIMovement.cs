@@ -8,11 +8,15 @@ public class AIMovement : MonoBehaviour
     Camera myCamera;
     NavMeshAgent myAgent;
     public LayerMask ground;
+    SelectUnits mySelectUnits;
+
+
 
     void Start()
     {
         myCamera = Camera.main;
         myAgent = GetComponent<NavMeshAgent>();
+        mySelectUnits = GetComponent<SelectUnits>();
     }
 
     private void Update()
@@ -27,5 +31,4 @@ public class AIMovement : MonoBehaviour
             }
        }     
     }
-
 }
