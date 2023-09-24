@@ -1,22 +1,22 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class BuildingBase : MonoBehaviour
 {
     [SerializeField] protected float buildingHp = 50f;
     [SerializeField] protected int maxWorkers = 5;
-    [SerializeField] protected int currentWorkers = 0;
-    [SerializeField] protected int maxStorage = 20;
-    protected ItemSlot currentStorage;
-    [SerializeField] protected ItemData item;
+    protected int currentWorkers = 0;
+    [SerializeField] public int maxStorage = 20;
+    [SerializeField] public ItemSlot currentStorage;
+    [SerializeField] protected ItemData resourceItem;
 
     private void Awake()
     {
         ItemSlot slot = new();
+        slot.SetData(resourceItem);
         slot.SetAmount(0);
-        slot.SetData(item);
         currentStorage = slot;
     }
-
     protected void ManageStorage()
     {
         if (currentStorage.GetAmount() < maxStorage)
@@ -32,7 +32,7 @@ public class BuildingBase : MonoBehaviour
 
     public void AddItemToStorage(ItemData itemData)
     {
-        if (itemData == item)
+        if (itemData == resourceItem)
         {
             if (currentStorage.GetAmount() < maxStorage)
             {
@@ -47,7 +47,7 @@ public class BuildingBase : MonoBehaviour
 
     public void RemoveItemFromStorage(ItemData itemData)
     {
-        if (itemData == item)
+        if (itemData == resourceItem)
         {
             if (currentStorage.GetAmount() > 0)
             {
@@ -68,15 +68,5 @@ public class BuildingBase : MonoBehaviour
     protected void RemoveHumanFromBuilding()
     {
         currentWorkers--;
-    }
-
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-
     }
 }

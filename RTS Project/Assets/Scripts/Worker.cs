@@ -9,15 +9,16 @@ public class Worker : MonoBehaviour
     private string resourceTag = "StoneResource";
     private float scanRange = 100f;
     NavMeshAgent myAgent;
-    private State currentState = State.Idle;
-    private bool inventorFull = false;
+    private State currentState = State.Moving;
     [SerializeField] protected ItemSlot currentStorage;
     [SerializeField] protected int maxStorage = 3;
     [SerializeField] protected float workerHp = 5f;
     [SerializeField] private ItemData resourceItem;
     private bool canGather = true;
     private bool canDeposit = true;
-    private enum State{Idle, Moving, Gathering, Depositing}
+    private float transferRange = 2.5f;
+    private float gatherTime = 1f;
+    private enum State{Moving, Idling, Gathering, Depositing}
     private BuildingBase buildingBase;
 
     private void Start()
@@ -82,17 +83,16 @@ public class Worker : MonoBehaviour
 
         return closestResource;
     }
-
     private IEnumerator GatherResource()
     {
         while (currentStorage.GetAmount() < maxStorage)
         {
-            myAgent.isStopped = false;
             AddItemToWorkerStorage(resourceItem);
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(gatherTime);
         }
         resourceTarget = null;
         currentState = State.Moving;
+        canGather = true;
 
         yield return null;
     }
@@ -101,13 +101,14 @@ public class Worker : MonoBehaviour
     {
         while (currentStorage.GetAmount() > 0)
         {
-            myAgent.isStopped = false;
-            RemoveItemFromWorkerStorage(resourceItem);
-            buildingBase.AddItemToStorage(resourceItem);
+            if (buildingBase.currentStorage.GetAmount() < buildingBase.maxStorage)
+            {
+                RemoveItemFromWorkerStorage(resourceItem);
+                buildingBase.AddItemToStorage(resourceItem);
+            }
             yield return new WaitForSeconds(1f);
         }
-
-        currentState = State.Idle;
+        currentState = State.Moving;
         canDeposit = true;
 
         yield return null;
@@ -116,41 +117,62 @@ public class Worker : MonoBehaviour
     {
         switch (currentState)
         {
-            case State.Idle:
-                myAgent.isStopped = true;
-                resourceTarget = FindClosestResource();
-                if (resourceTarget != null )
+            case State.Moving:
+                myAgent.isStopped = false;
+                if (currentStorage.GetAmount() < maxStorage)
+                {
+                    if (!resourceTarget)
+                    {
+                        resourceTarget = FindClosestResource();
+                    }
+                    else
+                    {
+                        myAgent.SetDestination(resourceTarget.position);
+                    }
+                }
+                else if (currentStorage.GetAmount() == maxStorage)
+                {
+                    myAgent.SetDestination(workerHouse.transform.position);
+                }
+
+                if (resourceTarget)
+                {
+                    if (Vector3.Distance(transform.position, resourceTarget.position) <= transferRange && currentStorage.GetAmount() < maxStorage)
+                    {
+                        currentState = State.Gathering;
+                    }
+                }
+
+                if (Vector3.Distance(transform.position, workerHouse.transform.position) <= transferRange) 
+                {
+                    if (currentStorage.GetAmount() > 0 && buildingBase.currentStorage.GetAmount() < buildingBase.maxStorage)
+                    {
+                        currentState = State.Depositing;
+                    }
+                }
+
+                if (currentStorage.GetAmount()  >= maxStorage && buildingBase.currentStorage.GetAmount() >= buildingBase.maxStorage)
+                {
+                    currentState = State.Idling;
+                }
+                break;
+
+            case State.Idling:
+
+                if (Vector3.Distance(transform.position, workerHouse.transform.position) <= transferRange)
+                {
+                    myAgent.isStopped = true;
+                }
+                else
+                {
+                    myAgent.SetDestination(workerHouse.transform.position);
+                }
+
+                if (currentStorage.GetAmount() < maxStorage && buildingBase.currentStorage.GetAmount() < buildingBase.maxStorage)
                 {
                     currentState = State.Moving;
                 }
                 break;
-
-            case State.Moving:
-                canGather = true;
-                StopAllCoroutines();
-                if (resourceTarget != null)
-                {
-                    myAgent.isStopped = false;
-                    myAgent.SetDestination(resourceTarget.position);
-                }
-                if (resourceTarget != null && Vector3.Distance(transform.position, resourceTarget.position) <= 2.5f && currentStorage.GetAmount() == 0)
-                { 
-                    currentState = State.Gathering;
-                }
-                if (resourceTarget == null && !inventorFull)
-                {
-                    currentState = State.Idle;
-                }
-                if (currentStorage.GetAmount() > 1)
-                {
-                    myAgent.SetDestination(workerHouse.transform.position);
-                }
-                if (Vector3.Distance(transform.position, workerHouse.transform.position) <= 2.5f)
-                {
-                    currentState = State.Depositing;
-                }
-                    break;
-                
 
             case State.Gathering:
                 myAgent.isStopped = true;
@@ -162,23 +184,31 @@ public class Worker : MonoBehaviour
                 break;
 
             case State.Depositing:
-                if (Vector3.Distance(transform.position, workerHouse.transform.position) <= 2.5f)
+                myAgent.isStopped = true;
+                // kijk uit voor de edge case als een worker vol is en een gebouw vol is
+                if (buildingBase.currentStorage.GetAmount() == buildingBase.maxStorage)
                 {
-                    myAgent.isStopped = true;
+                    currentState = State.Moving;
+                }
+
+                if (Vector3.Distance(transform.position, workerHouse.transform.position) <= transferRange)
+                {
                     if (canDeposit)
                     {
                         canDeposit = false;
                         StartCoroutine(DepositResources());
                     }
+
+                    if (currentStorage.GetAmount() == maxStorage)
+                    {
+                        currentState = State.Moving;
+
+                    }
                 }
                 else
                 {
-                    currentState = State.Idle;
+                    currentState= State.Moving;
                 }
-                break;
-
-            default:
-                print("switch shitting itself");
                 break;
         }
     }
