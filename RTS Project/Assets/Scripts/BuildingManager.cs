@@ -2,8 +2,11 @@ using UnityEngine;
 
 public class BuildingManager : MonoBehaviour
 {
+    [SerializeField] Color correctPlaceColor;
+    [SerializeField] Color incorrectPlaceColor;
     [SerializeField] PlaceableObject[] objects;
     private GameObject pendingObject;
+    private Material pendingObjectMaterial;
     private int currentIndex = -1;
 
     private Vector3 pos;
@@ -23,6 +26,25 @@ public class BuildingManager : MonoBehaviour
         if (pendingObject != null)
         {
             pendingObject.transform.position = pos;
+
+            if (GridManager.Instance.GetOccupanyPendingObject())
+            {
+                pendingObjectMaterial.color = incorrectPlaceColor;
+            }
+            else
+            {
+                pendingObjectMaterial.color = correctPlaceColor;
+            }
+
+            if (pendingObject.GetComponent<MeshRenderer>().material)
+            {
+                pendingObject.GetComponent<MeshRenderer>().material = pendingObjectMaterial;
+            }
+            else
+            {
+                pendingObject.GetComponentInChildren<MeshRenderer>().material = pendingObjectMaterial;
+            }
+
             if (Input.GetMouseButtonDown(0) && !GridManager.Instance.GetOccupanyPendingObject())
             {
                 PlaceObject();
@@ -53,6 +75,20 @@ public class BuildingManager : MonoBehaviour
     public void SelectObject(int index)
     {
         pendingObject = Instantiate(objects[index].model, pos, transform.rotation);
+        if (pendingObject.TryGetComponent(out MeshRenderer mr))
+        {
+            if (mr.material)
+            {
+                pendingObjectMaterial = pendingObject.GetComponent<MeshRenderer>().material;
+            }
+        }
+        else
+        {
+            pendingObjectMaterial = pendingObject.GetComponentInChildren<MeshRenderer>().material;
+        }
+
+        pendingObjectMaterial.color = correctPlaceColor;
+
         currentIndex = index;
     }
 }
