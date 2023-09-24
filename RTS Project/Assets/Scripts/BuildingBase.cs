@@ -32,7 +32,6 @@ public class BuildingBase : MonoBehaviour
 
     public void AddItemToStorage(ItemData itemData)
     {
-        print(currentStorage.GetAmount());
         if (itemData == resourceItem)
         {
             if (currentStorage.GetAmount() < maxStorage)
