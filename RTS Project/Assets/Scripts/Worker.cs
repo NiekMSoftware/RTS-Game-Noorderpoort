@@ -101,7 +101,7 @@ public class Worker : MonoBehaviour
     {
         while (currentStorage.GetAmount() > 0)
         {
-            if (buildingBase.currentStorage.GetAmount() < buildingBase.maxStorage)
+            if (buildingBase.GetStorage(resourceItem).GetAmount() < buildingBase.GetStorage(resourceItem).GetMaxAmount())
             {
                 RemoveItemFromWorkerStorage(resourceItem);
                 buildingBase.AddItemToStorage(resourceItem);
@@ -145,13 +145,13 @@ public class Worker : MonoBehaviour
 
                 if (Vector3.Distance(transform.position, workerHouse.transform.position) <= transferRange) 
                 {
-                    if (currentStorage.GetAmount() > 0 && buildingBase.currentStorage.GetAmount() < buildingBase.maxStorage)
+                    if (currentStorage.GetAmount() > 0 && buildingBase.GetStorage(resourceItem).GetAmount() < buildingBase.GetStorage(resourceItem).GetMaxAmount())
                     {
                         currentState = State.Depositing;
                     }
                 }
 
-                if (currentStorage.GetAmount()  >= maxStorage && buildingBase.currentStorage.GetAmount() >= buildingBase.maxStorage)
+                if (currentStorage.GetAmount()  >= maxStorage && buildingBase.GetStorage(resourceItem).GetAmount() >= buildingBase.GetStorage(resourceItem).GetMaxAmount())
                 {
                     currentState = State.Idling;
                 }
@@ -168,7 +168,7 @@ public class Worker : MonoBehaviour
                     myAgent.SetDestination(workerHouse.transform.position);
                 }
 
-                if (currentStorage.GetAmount() < maxStorage && buildingBase.currentStorage.GetAmount() < buildingBase.maxStorage)
+                if (currentStorage.GetAmount() < maxStorage && buildingBase.GetStorage(resourceItem).GetAmount() < buildingBase.GetStorage(resourceItem).GetMaxAmount())
                 {
                     currentState = State.Moving;
                 }
@@ -186,7 +186,7 @@ public class Worker : MonoBehaviour
             case State.Depositing:
                 myAgent.isStopped = true;
                 // kijk uit voor de edge case als een worker vol is en een gebouw vol is
-                if (buildingBase.currentStorage.GetAmount() == buildingBase.maxStorage)
+                if (buildingBase.GetStorage(resourceItem).GetAmount() == buildingBase.GetStorage(resourceItem).GetMaxAmount())
                 {
                     currentState = State.Moving;
                 }

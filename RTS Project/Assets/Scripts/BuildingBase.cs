@@ -6,56 +6,49 @@ public class BuildingBase : MonoBehaviour
     [SerializeField] protected float buildingHp = 50f;
     [SerializeField] protected int maxWorkers = 5;
     protected int currentWorkers = 0;
-    [SerializeField] public int maxStorage = 20;
-    [SerializeField] public ItemSlot currentStorage;
-    [SerializeField] protected ItemData resourceItem;
-
-    private void Awake()
+    [SerializeField] public ItemSlot[] currentStorage;
+    public ItemSlot GetStorage(ItemData itemdata)
     {
-        ItemSlot slot = new();
-        slot.SetData(resourceItem);
-        slot.SetAmount(0);
-        currentStorage = slot;
-    }
-    protected void ManageStorage()
-    {
-        if (currentStorage.GetAmount() < maxStorage)
+        foreach (ItemSlot slot in currentStorage)
         {
-            //human go work
+            if (slot.GetData() == itemdata) return slot;
         }
 
-        //Human human;
-        //human = GetComponent<Human>();
-
-        //human.healthUnit;
+        return null;
     }
 
     public void AddItemToStorage(ItemData itemData)
     {
-        if (itemData == resourceItem)
+        foreach (ItemSlot slot in currentStorage)
         {
-            if (currentStorage.GetAmount() < maxStorage)
+            if (slot.GetData() == itemData)
             {
-                currentStorage.IncreaseAmount(1);
-            }
-            else
-            {
-                Debug.LogError("Storage full");
+                if (slot.GetAmount() < slot.GetMaxAmount())
+                {
+                    slot.IncreaseAmount(1);
+                }
+                else
+                {
+                    Debug.LogError("Storage full");
+                }
             }
         }
     }
 
     public void RemoveItemFromStorage(ItemData itemData)
     {
-        if (itemData == resourceItem)
+        foreach (ItemSlot slot in currentStorage)
         {
-            if (currentStorage.GetAmount() > 0)
+            if (slot.GetData() == itemData)
             {
-                currentStorage.IncreaseAmount(-1);
-            }
-            else
-            {
-                Debug.LogError("Storage Empty");
+                if (slot.GetAmount() > 0)
+                {
+                    slot.IncreaseAmount(-1);
+                }
+                else
+                {
+                    Debug.LogError("Storage empty");
+                }
             }
         }
     }
