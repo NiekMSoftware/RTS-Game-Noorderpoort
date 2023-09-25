@@ -1,13 +1,19 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class BuildingBase : MonoBehaviour
 {
     [SerializeField] protected float buildingHp = 50f;
     [SerializeField] protected int maxWorkers = 5;
-    [SerializeField] public ItemSlot[] currentStorage;
+    [SerializeField] private ItemSlot[] currentStorage;
     [SerializeField] private List<Worker> workers = new();
+    [SerializeField] private string jobName;
+    [SerializeField] private string resourceTag;
+    private SelectUnits selectUnits;
+    private void Awake()
+    {
+        selectUnits = FindObjectOfType<SelectUnits>();
+    }
 
     public ItemSlot GetStorage(ItemData itemdata)
     {
@@ -55,9 +61,17 @@ public class BuildingBase : MonoBehaviour
         }
     }
 
-    protected void AddWorkerToBuilding(Worker worker)
+    public void AddWorkerToBuilding(Worker worker)
     {
-        workers.Add(worker);
+        if (workers.Contains(worker))
+        {
+            return;
+        }
+        else if (workers.Count < maxWorkers)
+        {
+            worker.InitializeWorker(gameObject, resourceTag, jobName);
+            workers.Add(worker);
+        }
     }
 
     protected void RemoveWorkerFromBuilding(Worker worker)
