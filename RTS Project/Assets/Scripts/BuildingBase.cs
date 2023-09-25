@@ -1,61 +1,54 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class BuildingBase : MonoBehaviour
 {
     [SerializeField] protected float buildingHp = 50f;
     [SerializeField] protected int maxWorkers = 5;
-    [SerializeField] protected int currentWorkers = 0;
-    [SerializeField] protected int maxStorage = 20;
-    protected ItemSlot currentStorage;
-    [SerializeField] protected ItemData item;
-
-    private void Awake()
+    protected int currentWorkers = 0;
+    [SerializeField] public ItemSlot[] currentStorage;
+    public ItemSlot GetStorage(ItemData itemdata)
     {
-        ItemSlot slot = new();
-        slot.SetAmount(0);
-        slot.SetData(item);
-        currentStorage = slot;
-    }
-
-    protected void ManageStorage()
-    {
-        if (currentStorage.GetAmount() < maxStorage)
+        foreach (ItemSlot slot in currentStorage)
         {
-            //human go work
+            if (slot.GetData() == itemdata) return slot;
         }
 
-        //Human human;
-        //human = GetComponent<Human>();
-
-        //human.healthUnit;
+        return null;
     }
 
     public void AddItemToStorage(ItemData itemData)
     {
-        if (itemData == item)
+        foreach (ItemSlot slot in currentStorage)
         {
-            if (currentStorage.GetAmount() < maxStorage)
+            if (slot.GetData() == itemData)
             {
-                currentStorage.IncreaseAmount(1);
-            }
-            else
-            {
-                Debug.LogError("Storage full");
+                if (slot.GetAmount() < slot.GetMaxAmount())
+                {
+                    slot.IncreaseAmount(1);
+                }
+                else
+                {
+                    Debug.LogError("Storage full");
+                }
             }
         }
     }
 
     public void RemoveItemFromStorage(ItemData itemData)
     {
-        if (itemData == item)
+        foreach (ItemSlot slot in currentStorage)
         {
-            if (currentStorage.GetAmount() > 0)
+            if (slot.GetData() == itemData)
             {
-                currentStorage.IncreaseAmount(-1);
-            }
-            else
-            {
-                Debug.LogError("Storage Empty");
+                if (slot.GetAmount() > 0)
+                {
+                    slot.IncreaseAmount(-1);
+                }
+                else
+                {
+                    Debug.LogError("Storage empty");
+                }
             }
         }
     }
@@ -68,15 +61,5 @@ public class BuildingBase : MonoBehaviour
     protected void RemoveHumanFromBuilding()
     {
         currentWorkers--;
-    }
-
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-
     }
 }

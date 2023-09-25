@@ -9,6 +9,8 @@ public class GridManager : MonoBehaviour
     [SerializeField] private Vector2Int gridSize;
     [SerializeField] private Vector3 gridOffset;
     [SerializeField] private LayerMask buildingLayer;
+    [SerializeField] private LayerMask tempBuildingLayer;
+    [SerializeField] private BuildingManager buildingManager;
 
     private void Awake()
     {
@@ -67,11 +69,11 @@ public class GridManager : MonoBehaviour
         return positions[index];
     }
 
-    public bool GetOccupanyByCollider(Collider collider)
+    public bool GetOccupanyPendingObject()
     {
         Tile[] tiles;
 
-        tiles = CheckOccupancy2(collider);
+        tiles = CheckOccupancy2();
 
         print(tiles.Length);
 
@@ -112,18 +114,20 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public Tile[] CheckOccupancy2(Collider collider)
+    public Tile[] CheckOccupancy2()
     {
         List<Tile> tiles = new();
 
         CheckOccupancy();
+
+        buildingManager.GetPendingObject().layer = (int)Mathf.Log(tempBuildingLayer.value, 2);
 
         for (int x = 0; x < grid.GetLength(0); x++)
         {
             for (int z = 0; z < grid.GetLength(1); z++)
             {
                 Collider[] colliders = new Collider[1];
-                Physics.OverlapSphereNonAlloc(grid[x, z].pos, 0.1f, colliders, buildingLayer);
+                Physics.OverlapSphereNonAlloc(grid[x, z].pos, 0.1f, colliders, tempBuildingLayer);
 
                 //bug : it only checks for its own collider, so only the onces that are not occupied
                 if (colliders[0] != null)
@@ -137,6 +141,8 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
+
+        buildingManager.GetPendingObject().layer = (int)Mathf.Log(buildingLayer.value, 2);
 
         return tiles.ToArray();
     }

@@ -736,10 +736,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingHp: 50
   maxWorkers: 5
-  currentWorkers: 5
-  maxStorage: 20
-  currentStorage: {fileID: 0}
-  item: {fileID: 11400000, guid: 0c0ea06af6a171e42a725e0fb10167fc, type: 2}
+  currentStorage:
+  - data: {fileID: 11400000, guid: 0c0ea06af6a171e42a725e0fb10167fc, type: 2}
+    amount: 0
+    maxAmount: 20
 --- !u!1 &1560536725
 GameObject:
   m_ObjectHideFlags: 0
@@ -1000,7 +1000,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 4974a747f67f38f40836fe581a148a56, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1038,7 +1038,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1797223151}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.45, z: 0}
+  m_LocalPosition: {x: 8.67, y: 0.45, z: -2.38}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1481,14 +1481,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dacdf40a663ad0b43840765d2de62f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingHp: 50
-  maxWorkers: 5
-  currentWorkers: 0
-  maxStorage: 3
-  currentStorage: {fileID: 0}
-  item: {fileID: 0}
   workerHouse: {fileID: 1439619667}
-  currentStorage: {fileID: 0}
+  currentStorage:
+    data: {fileID: 0}
+    amount: 0
+    maxAmount: 0
   maxStorage: 3
   workerHp: 5
   resourceItem: {fileID: 11400000, guid: 0c0ea06af6a171e42a725e0fb10167fc, type: 2}
