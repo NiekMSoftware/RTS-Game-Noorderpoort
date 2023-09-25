@@ -1,12 +1,12 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BuildingManager : MonoBehaviour
 {
-    [SerializeField] Color correctPlaceColor;
-    [SerializeField] Color incorrectPlaceColor;
+    [SerializeField] Material correctPlaceMaterial;
+    [SerializeField] Material incorrectPlaceMaterial;
     [SerializeField] PlaceableObject[] objects;
     private GameObject pendingObject;
-    private Material pendingObjectMaterial;
     private int currentIndex = -1;
 
     private Vector3 pos;
@@ -29,20 +29,16 @@ public class BuildingManager : MonoBehaviour
 
             if (GridManager.Instance.GetOccupanyPendingObject())
             {
-                pendingObjectMaterial.color = incorrectPlaceColor;
+                ChangeObjectMaterial(pendingObject, incorrectPlaceMaterial);
             }
             else
             {
-                pendingObjectMaterial.color = correctPlaceColor;
+                ChangeObjectMaterial(pendingObject, correctPlaceMaterial);
             }
 
-            if (pendingObject.GetComponent<MeshRenderer>().material)
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
-                pendingObject.GetComponent<MeshRenderer>().material = pendingObjectMaterial;
-            }
-            else
-            {
-                pendingObject.GetComponentInChildren<MeshRenderer>().material = pendingObjectMaterial;
+                ResetObject();
             }
 
             if (Input.GetMouseButtonDown(0) && !GridManager.Instance.GetOccupanyPendingObject())
@@ -54,10 +50,19 @@ public class BuildingManager : MonoBehaviour
 
     public GameObject GetPendingObject() => pendingObject;
 
-    private void PlaceObject()
+    private void ResetObject()
     {
+        Destroy(pendingObject);
         pendingObject = null;
         currentIndex = -1;
+        pos = Vector3.zero;
+    }
+
+    private void PlaceObject()
+    {
+        Instantiate(objects[currentIndex].model, pos, transform.rotation);
+        ResetObject();
+        GridManager.Instance.CheckOccupancy();
     }
 
     private void FixedUpdate()
@@ -75,20 +80,34 @@ public class BuildingManager : MonoBehaviour
     public void SelectObject(int index)
     {
         pendingObject = Instantiate(objects[index].model, pos, transform.rotation);
-        if (pendingObject.TryGetComponent(out MeshRenderer mr))
+
+        ChangeObjectMaterial(pendingObject, correctPlaceMaterial);
+
+        currentIndex = index;
+    }
+
+    private void ChangeObjectMaterial(GameObject go, Material material)
+    {
+        if (go.TryGetComponent(out MeshRenderer mr))
         {
             if (mr.material)
             {
-                pendingObjectMaterial = pendingObject.GetComponent<MeshRenderer>().material;
+                mr.material = material;
             }
         }
         else
         {
-            pendingObjectMaterial = pendingObject.GetComponentInChildren<MeshRenderer>().material;
+            foreach (var mr2 in go.GetComponentsInChildren<MeshRenderer>())
+            {
+                List<Material> materials = new();
+
+                for (int i = 0; i < mr2.materials.Length; i++)
+                {
+                    materials.Add(material);
+                }
+
+                mr2.SetMaterials(materials);
+            }
         }
-
-        pendingObjectMaterial.color = correctPlaceColor;
-
-        currentIndex = index;
     }
 }

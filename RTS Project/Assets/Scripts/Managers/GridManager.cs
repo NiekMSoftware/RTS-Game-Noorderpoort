@@ -71,23 +71,14 @@ public class GridManager : MonoBehaviour
 
     public bool GetOccupanyPendingObject()
     {
-        Tile[] tiles;
-
-        tiles = CheckOccupancy2();
-
-        print(tiles.Length);
+        Tile[] tiles = CheckOccupancy2();
 
         foreach (var tile in tiles)
         {
             if (tile.isOccupied)
             {
-                print("is occupied");
                 return true;
             }
-            else
-            {
-                print("not occupied");
-            }    
         }
 
         return false;
@@ -118,7 +109,7 @@ public class GridManager : MonoBehaviour
     {
         List<Tile> tiles = new();
 
-        CheckOccupancy();
+        //CheckOccupancy();
 
         buildingManager.GetPendingObject().layer = (int)Mathf.Log(tempBuildingLayer.value, 2);
 
@@ -129,12 +120,12 @@ public class GridManager : MonoBehaviour
                 Collider[] colliders = new Collider[1];
                 Physics.OverlapSphereNonAlloc(grid[x, z].pos, 0.1f, colliders, tempBuildingLayer);
 
-                //bug : it only checks for its own collider, so only the onces that are not occupied
                 if (colliders[0] != null)
                 {
                     Tile tile = new()
                     {
                         pos = grid[x, z].pos,
+                        isOccupied = grid[x, z].isOccupied,
                     };
 
                     tiles.Add(tile);
