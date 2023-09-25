@@ -24,7 +24,6 @@ public class UnitClick : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, building))
             {
-                print(hit.collider.gameObject);
                 SelectUnits.Instance.BuildingSelected(hit.collider.gameObject);
             }
 

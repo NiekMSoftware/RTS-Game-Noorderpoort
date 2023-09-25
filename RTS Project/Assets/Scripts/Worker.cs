@@ -35,7 +35,6 @@ public class Worker : MonoBehaviour
 
     public void InitializeWorker(GameObject _workerHouse, string _resourceTag, string _jobName)
     {
-        print("123");
         workerHouse = _workerHouse;
         resourceTag = _resourceTag;
         jobName = _jobName;
