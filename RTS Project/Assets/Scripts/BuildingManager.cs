@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class BuildingManager : MonoBehaviour
 {
@@ -13,12 +14,27 @@ public class BuildingManager : MonoBehaviour
 
     private RaycastHit hit;
     [SerializeField] private LayerMask layerMask;
+    [SerializeField] private ResourceManager resources;
 
     [System.Serializable]
     class PlaceableObject
     {
         public GameObject model;
         public float yHeight;
+        public Recipe recipe;
+    }
+
+    [System.Serializable]
+    class Recipe
+    {
+        public RecipeItem[] items;
+    }
+
+    [System.Serializable]
+    class RecipeItem
+    {
+        public ItemData data;
+        public int amountNeeded;
     }
 
     void Update()
@@ -43,7 +59,37 @@ public class BuildingManager : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0) && !GridManager.Instance.GetOccupanyPendingObject())
             {
-                PlaceObject();
+                bool hasEverything = false;
+
+                foreach (var itemNeeded in objects[currentIndex].recipe.items)
+                {
+                    foreach (var itemGot in resources.GetAllResources())
+                    {
+                        if (itemNeeded.data == itemGot.data)
+                        {
+                            print(itemGot.amount);
+                            if (itemGot.amount >= itemNeeded.amountNeeded)
+                            {
+                                print("got enough : " + itemNeeded.data.name);
+                                hasEverything = true;
+                            }
+                            else
+                            {
+                                print("needs more : " + itemNeeded.data.name);
+                                hasEverything = false;
+                            }
+                        }
+                    }
+                }
+
+                if (hasEverything)
+                {
+                    PlaceObject();
+                }
+                else
+                {
+                    Debug.LogError("can't place because not enough resouces");
+                }
             }
         }
     }
