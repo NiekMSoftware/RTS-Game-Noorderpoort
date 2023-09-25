@@ -7,16 +7,13 @@ public class UnitClick : MonoBehaviour
 
     public LayerMask clickable;
     public LayerMask ground;
-
-    SelectUnits mySelectUnits;
-
+    public LayerMask building;
 
     void Start()
     {
         myCamera = Camera.main;
     }
-
-    
+ 
     void Update()
     {
         if(Input.GetMouseButtonDown(0))
@@ -24,22 +21,25 @@ public class UnitClick : MonoBehaviour
             RaycastHit hit;
             Ray ray = myCamera.ScreenPointToRay(Input.mousePosition);
 
-            if(Physics.Raycast(ray, out hit,Mathf.Infinity, clickable)) 
+
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, building))
+            {
+                print(hit.collider.gameObject);
+                SelectUnits.Instance.BuildingSelected(hit.collider.gameObject);
+            }
+
+            if (Physics.Raycast(ray, out hit,Mathf.Infinity, clickable)) 
             {
                 if(Input.GetKey(KeyCode.LeftShift))
                 {
                     //wanneer shift ingedrukt wordt.
-                    Debug.Log("Multiple Units Selected");
                     SelectUnits.Instance.ShiftClickSelect(hit.collider.gameObject);
                 }
                 else
                 {
                     //wanneer 1 keer geklikt.
-                    Debug.Log("Unit Selected");
                     SelectUnits.Instance.ClickSelect(hit.collider.gameObject);
                 }
-
-
             }
             else
             {
@@ -48,22 +48,18 @@ public class UnitClick : MonoBehaviour
                 {
                     SelectUnits.Instance.DeSelectAll();
                 }
-
-
             }
         }
 
         //plaats marker voor AI om te volgen
-        if(Input.GetMouseButtonDown(1)) 
+        if (Input.GetMouseButtonDown(1)) 
         {
             RaycastHit hit;
             Ray ray = myCamera.ScreenPointToRay (Input.mousePosition);
 
-            Debug.Log("Place marker");
             if(Physics.Raycast(ray,out hit,Mathf.Infinity, ground))
             {
                 Marker.transform.position = hit.point;
-                Marker.SetActive(false);
                 Marker.SetActive(true);
             }
         }

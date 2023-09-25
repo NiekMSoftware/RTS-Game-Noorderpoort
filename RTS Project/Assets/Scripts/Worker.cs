@@ -9,22 +9,23 @@ public class Worker : MonoBehaviour
     private string resourceTag = "StoneResource";
     private float scanRange = 100f;
     NavMeshAgent myAgent;
-    private State currentState = State.Moving;
+
     [SerializeField] protected ItemSlot currentStorage;
     [SerializeField] protected int maxStorage = 3;
     [SerializeField] protected float workerHp = 5f;
     [SerializeField] private ItemData resourceItem;
+
     private bool canGather = true;
     private bool canDeposit = true;
     private float transferRange = 2.5f;
     private float gatherTime = 1f;
-    private enum State{Moving, Idling, Gathering, Depositing}
+    private enum State{Moving, Idling, Gathering, Depositing, Assigning}
+    private State currentState = State.Assigning;
     private BuildingBase buildingBase;
+    private string jobName;
 
     private void Start()
     {
-        buildingBase = workerHouse.GetComponent<BuildingBase>();
-
         ItemSlot itemSlot = new();
         itemSlot.SetData(resourceItem);
         itemSlot.SetAmount(0);
@@ -32,6 +33,13 @@ public class Worker : MonoBehaviour
         myAgent = GetComponent<NavMeshAgent>();
     }
 
+    public void InitializeWorker(GameObject _workerHouse, string _resourceTag, string _jobName)
+    {
+        print("123");
+        workerHouse = _workerHouse;
+        resourceTag = _resourceTag;
+        jobName = _jobName;
+    }
     protected void AddItemToWorkerStorage(ItemData itemData)
     {
         if (itemData == resourceItem)
@@ -117,6 +125,26 @@ public class Worker : MonoBehaviour
     {
         switch (currentState)
         {
+            case State.Assigning:
+                if (workerHouse)
+                {
+                    buildingBase = workerHouse.GetComponent<BuildingBase>();
+                    myAgent.isStopped = false;
+                    myAgent.SetDestination(workerHouse.transform.position);
+
+                    if (Vector3.Distance(transform.position, workerHouse.transform.position) <= transferRange)
+                    {
+                        currentState = State.Moving;
+                    }
+                }
+                else
+                {
+                    myAgent.isStopped = true;
+                }
+                
+
+                
+                break;
             case State.Moving:
                 myAgent.isStopped = false;
                 if (currentStorage.GetAmount() < maxStorage)

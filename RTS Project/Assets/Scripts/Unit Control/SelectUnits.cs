@@ -11,9 +11,10 @@ public class SelectUnits : MonoBehaviour
     private static SelectUnits _instance;
     public static SelectUnits Instance { get { return _instance; } }
 
-     void Awake()
-    {
+    public BuildingBase selectedBuilding;
 
+     void Awake()
+     {
         if(_instance != null && _instance != this)
         {
             Destroy(this.gameObject);
@@ -22,12 +23,21 @@ public class SelectUnits : MonoBehaviour
         {
             _instance = this;
         }
-    }
-
-    public void ClickSelect(GameObject unitToAdd)
+     }
+    public void BuildingSelected(GameObject _building)
     {
-        
-        Debug.Log("Deselected");
+        if (unitsSelected.Count > 0) 
+        {
+            selectedBuilding = _building.GetComponent<BuildingBase>();
+            foreach (GameObject unit in unitsSelected) 
+            {
+                // Change when worker is integrated into unit
+                selectedBuilding.AddWorkerToBuilding(unit.GetComponent<Worker>());
+            }
+        }
+    }
+    public void ClickSelect(GameObject unitToAdd)
+    {    
         DeSelectAll();
         unitsSelected.Add(unitToAdd);
         unitToAdd.transform.GetChild(0).gameObject.SetActive(true);
@@ -62,10 +72,8 @@ public class SelectUnits : MonoBehaviour
 
     public void DeSelectAll()
     {
-        
         foreach (var unit in unitsSelected)
         {
-            Debug.Log("test");
             unit.GetComponent<AIMovement>().enabled = false;
             unit.transform.GetChild(0).gameObject.SetActive(false);
         }

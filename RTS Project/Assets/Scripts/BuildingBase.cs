@@ -1,12 +1,20 @@
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class BuildingBase : MonoBehaviour
 {
     [SerializeField] protected float buildingHp = 50f;
     [SerializeField] protected int maxWorkers = 5;
-    protected int currentWorkers = 0;
-    [SerializeField] public ItemSlot[] currentStorage;
+    [SerializeField] private ItemSlot[] currentStorage;
+    [SerializeField] private List<Worker> workers = new();
+    [SerializeField] private string jobName;
+    [SerializeField] private string resourceTag;
+    private SelectUnits selectUnits;
+    private void Awake()
+    {
+        selectUnits = FindObjectOfType<SelectUnits>();
+    }
+
     public ItemSlot GetStorage(ItemData itemdata)
     {
         foreach (ItemSlot slot in currentStorage)
@@ -53,13 +61,21 @@ public class BuildingBase : MonoBehaviour
         }
     }
 
-    protected void AddHumanToBuilding()
+    public void AddWorkerToBuilding(Worker worker)
     {
-        currentWorkers++;
+        if (workers.Contains(worker))
+        {
+            return;
+        }
+        else if (workers.Count < maxWorkers)
+        {
+            worker.InitializeWorker(gameObject, resourceTag, jobName);
+            workers.Add(worker);
+        }
     }
 
-    protected void RemoveHumanFromBuilding()
+    protected void RemoveWorkerFromBuilding(Worker worker)
     {
-        currentWorkers--;
+        workers.Remove(worker);
     }
 }
