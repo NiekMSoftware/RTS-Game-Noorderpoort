@@ -9,17 +9,20 @@ public class Worker : MonoBehaviour
     private string resourceTag = "StoneResource";
     private float scanRange = 100f;
     NavMeshAgent myAgent;
-    private State currentState = State.Moving;
+
     [SerializeField] protected ItemSlot currentStorage;
     [SerializeField] protected int maxStorage = 3;
     [SerializeField] protected float workerHp = 5f;
     [SerializeField] private ItemData resourceItem;
+
     private bool canGather = true;
     private bool canDeposit = true;
     private float transferRange = 2.5f;
     private float gatherTime = 1f;
-    private enum State{Moving, Idling, Gathering, Depositing}
+    private enum State{Moving, Idling, Gathering, Depositing, Assigning}
+    private State currentState = State.Assigning;
     private BuildingBase buildingBase;
+    private bool assignedToBuilding = false;
 
     private void Start()
     {
@@ -117,6 +120,23 @@ public class Worker : MonoBehaviour
     {
         switch (currentState)
         {
+            case State.Assigning:
+                if (assignedToBuilding)
+                {
+                    myAgent.isStopped = false;
+                    myAgent.SetDestination(workerHouse.transform.position);
+                }
+                else
+                {
+                    myAgent.isStopped = true;
+                }
+                
+                if (Vector3.Distance(transform.position, workerHouse.transform.position) <= transferRange)
+                {
+                    currentState = State.Moving;
+                }
+                
+                break;
             case State.Moving:
                 myAgent.isStopped = false;
                 if (currentStorage.GetAmount() < maxStorage)
