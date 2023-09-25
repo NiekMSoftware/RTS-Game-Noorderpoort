@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Collections;
+using TMPro;
 using UnityEngine;
-using static UnityEditor.Progress;
+using DG.Tweening;
 
 public class BuildingManager : MonoBehaviour
 {
@@ -15,6 +17,9 @@ public class BuildingManager : MonoBehaviour
     private RaycastHit hit;
     [SerializeField] private LayerMask layerMask;
     [SerializeField] private ResourceManager resources;
+    [SerializeField] private Transform buildErrorParent;
+    [SerializeField] private GameObject buildErrorPrefab;
+    [SerializeField] private float buildErrorFloatUpSpeed;
 
     [System.Serializable]
     class PlaceableObject
@@ -22,6 +27,7 @@ public class BuildingManager : MonoBehaviour
         public GameObject model;
         public float yHeight;
         public Recipe recipe;
+        public bool multiPlace;
     }
 
     [System.Serializable]
@@ -57,44 +63,90 @@ public class BuildingManager : MonoBehaviour
                 ResetObject();
             }
 
-            if (Input.GetMouseButtonDown(0) && !GridManager.Instance.GetOccupanyPendingObject())
+            if (Input.GetMouseButtonDown(0))
             {
-                bool hasEverything = false;
-
-                foreach (var itemNeeded in objects[currentIndex].recipe.items)
+                if (!GridManager.Instance.GetOccupanyPendingObject())
                 {
-                    foreach (var itemGot in resources.GetAllResources())
+                    bool hasEverything = true;
+
+                    List<ItemSlot> savedSlots = new();
+
+                    foreach (var itemNeeded in objects[currentIndex].recipe.items)
                     {
-                        if (itemNeeded.data == itemGot.data)
+                        foreach (var itemGot in resources.GetAllResources())
                         {
-                            print(itemGot.amount);
-                            if (itemGot.amount >= itemNeeded.amountNeeded)
+                            if (itemNeeded.data == itemGot.data)
                             {
-                                print("got enough : " + itemNeeded.data.name);
-                                hasEverything = true;
-                            }
-                            else
-                            {
-                                print("needs more : " + itemNeeded.data.name);
-                                hasEverything = false;
+                                if (itemGot.amount >= itemNeeded.amountNeeded)
+                                {
+                                    savedSlots.Add(itemGot);
+                                    hasEverything = true;
+                                }
+                                else
+                                {
+                                    SpawnError($"needs {itemNeeded.amountNeeded - itemGot.amount} more : {itemNeeded.data.name}");
+                                    hasEverything = false;
+                                }
                             }
                         }
                     }
-                }
 
-                if (hasEverything)
-                {
-                    PlaceObject();
+                    if (hasEverything)
+                    {
+                        foreach (var itemNeeded in objects[currentIndex].recipe.items)
+                        {
+                            foreach (var itemGot in resources.GetAllResources())
+                            {
+                                if (itemNeeded.data == itemGot.data)
+                                {
+                                    itemGot.amount -= itemNeeded.amountNeeded;
+                                }
+                            }
+                        }
+
+                        savedSlots.Clear();
+
+                        PlaceObject();
+                    }
                 }
                 else
                 {
-                    Debug.LogError("can't place because not enough resouces");
+                    SpawnError("Can't place building here");
                 }
-            }
+            } 
         }
     }
 
     public GameObject GetPendingObject() => pendingObject;
+
+    private void SpawnError(string text)
+    {
+        GameObject buildError = Instantiate(buildErrorPrefab, buildErrorParent);
+        StartCoroutine(ErrorHandle(buildError, text));
+    }
+
+    IEnumerator ErrorHandle(GameObject buildError, string text)
+    {
+        TMP_Text buildErrorText = buildError.GetComponent<TMP_Text>();
+        buildErrorText.SetText(text);
+
+        yield return new WaitForSeconds(1);
+
+        while (buildError)
+        {
+            buildErrorText.DOFade(0f, 1f).OnComplete(() => RemoveError(buildError));
+            buildError.transform.Translate(Vector2.up * buildErrorFloatUpSpeed);
+
+            yield return null;
+        }
+
+        yield return null;
+    }
+
+    private void RemoveError(GameObject buildError)
+    {
+        Destroy(buildError);
+    }
 
     private void ResetObject()
     {
@@ -107,7 +159,10 @@ public class BuildingManager : MonoBehaviour
     private void PlaceObject()
     {
         Instantiate(objects[currentIndex].model, pos, transform.rotation);
-        ResetObject();
+        if (!objects[currentIndex].multiPlace)
+        {
+            ResetObject();
+        }
         GridManager.Instance.CheckOccupancy();
     }
 
