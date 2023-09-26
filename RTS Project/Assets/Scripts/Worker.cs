@@ -4,9 +4,9 @@ using UnityEngine.AI;
 
 public class Worker : MonoBehaviour
 {
-    private Transform resourceTarget;
+    private GameObject[] resourceTargets;
+    [SerializeField] private Transform resourceTarget;
     [SerializeField] private GameObject workerHouse;
-    private string resourceTag = "StoneResource";
     private float scanRange = 100f;
     NavMeshAgent myAgent;
 
@@ -24,6 +24,8 @@ public class Worker : MonoBehaviour
     private BuildingBase buildingBase;
     private string jobName;
 
+    public bool assigned = false;
+
     private void Start()
     {
         ItemSlot itemSlot = new();
@@ -32,12 +34,24 @@ public class Worker : MonoBehaviour
         currentStorage = itemSlot;
         myAgent = GetComponent<NavMeshAgent>();
     }
-
-    public void InitializeWorker(GameObject _workerHouse, string _resourceTag, string _jobName)
+    public BuildingBase GetCurrentBuilding()
     {
+        if (workerHouse)
+        {
+            return workerHouse.GetComponent<BuildingBase>();
+        }
+        else
+        { 
+        return null;
+        }
+        
+    }
+    public void InitializeWorker(GameObject _workerHouse, BuildingBase.Jobs _jobName, GameObject[] _resourceTargets)
+    {
+
         workerHouse = _workerHouse;
-        resourceTag = _resourceTag;
-        jobName = _jobName;
+        resourceTargets = _resourceTargets;
+        jobName = _jobName.ToString();
     }
     protected void AddItemToWorkerStorage(ItemData itemData)
     {
@@ -71,22 +85,32 @@ public class Worker : MonoBehaviour
 
     public Transform FindClosestResource()
     {
-        GameObject[] resourceObjects = GameObject.FindGameObjectsWithTag(resourceTag);
         Transform closestResource = null;
         float closestDistance = scanRange;
         Vector3 currentPosition = transform.position;
 
-        foreach (GameObject resource in resourceObjects)
-        {
-            Vector3 resourcePosition = resource.transform.position;
-            float distanceToResource = Vector3.Distance(currentPosition, resourcePosition);
+        resourceTargets = buildingBase.resourceTargets;
 
-            if (distanceToResource <= scanRange && distanceToResource < closestDistance)
+        if (resourceTargets != null)
+        {
+            foreach (GameObject resource in resourceTargets)
             {
-                closestDistance = distanceToResource;
-                closestResource = resource.transform;
+                Vector3 resourcePosition = resource.transform.position;
+                float distanceToResource = Vector3.Distance(currentPosition, resourcePosition);
+
+                if (distanceToResource <= scanRange && distanceToResource < closestDistance)
+                {
+                    resourceTarget = resource.transform;
+                    closestDistance = distanceToResource;
+                    closestResource = resource.transform;
+                }
             }
         }
+        else
+        {
+            print("No resource in range");
+        }
+
 
         return closestResource;
     }
@@ -135,14 +159,7 @@ public class Worker : MonoBehaviour
                     {
                         currentState = State.Moving;
                     }
-                }
-                else
-                {
-                    myAgent.isStopped = true;
-                }
-                
-
-                
+                }   
                 break;
             case State.Moving:
                 myAgent.isStopped = false;
@@ -168,6 +185,10 @@ public class Worker : MonoBehaviour
                     {
                         currentState = State.Gathering;
                     }
+                }
+                else
+                {
+                    currentState = State.Idling;
                 }
 
                 if (Vector3.Distance(transform.position, workerHouse.transform.position) <= transferRange) 
@@ -195,9 +216,18 @@ public class Worker : MonoBehaviour
                     myAgent.SetDestination(workerHouse.transform.position);
                 }
 
-                if (currentStorage.GetAmount() < maxStorage && buildingBase.GetStorage(resourceItem).GetAmount() < buildingBase.GetStorage(resourceItem).GetMaxAmount())
+                if (currentStorage.GetAmount() < maxStorage && 
+                    buildingBase.GetStorage(resourceItem).GetAmount() < buildingBase.GetStorage(resourceItem).GetMaxAmount()
+                    && resourceTarget)
                 {
                     currentState = State.Moving;
+                }
+                else
+                {
+                    if (resourceTargets != null)
+                    {
+                        resourceTarget = FindClosestResource();
+                    }
                 }
                 break;
 
