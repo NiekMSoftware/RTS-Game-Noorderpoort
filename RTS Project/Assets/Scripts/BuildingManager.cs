@@ -1,15 +1,20 @@
-using System.Collections.Generic;
+using DG.Tweening;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using DG.Tweening;
 
 public class BuildingManager : MonoBehaviour
 {
-    [SerializeField] Material correctPlaceMaterial;
-    [SerializeField] Material incorrectPlaceMaterial;
-    [SerializeField] PlaceableObject[] objects;
+    [SerializeField] private GameObject buildParticle;
+    [SerializeField] private Material buildParticleMaterial;
+    [SerializeField] private Material correctPlaceMaterial;
+    [SerializeField] private Material buildingMaterial;
+    [SerializeField] private Material incorrectPlaceMaterial;
+    [SerializeField] private PlaceableObject[] objects;
+    [SerializeField] private float degreesToRotate = 90f;
     private GameObject pendingObject;
+    private GameObject tempObject;
     private int currentIndex = -1;
 
     private Vector3 pos;
@@ -21,6 +26,10 @@ public class BuildingManager : MonoBehaviour
     [SerializeField] private GameObject buildErrorPrefab;
     [SerializeField] private float buildErrorFloatUpSpeed;
 
+    [SerializeField] private GameObject buildProgressPrefab;
+    [SerializeField] private Transform buildProgressParent;
+    [SerializeField] private Gradient buildProgressGradient;
+
     [System.Serializable]
     class PlaceableObject
     {
@@ -28,6 +37,8 @@ public class BuildingManager : MonoBehaviour
         public float yHeight;
         public Recipe recipe;
         public bool multiPlace;
+        public Gradient buildParticleRandomColor;
+        public float buildTime;
     }
 
     [System.Serializable]
@@ -45,7 +56,7 @@ public class BuildingManager : MonoBehaviour
 
     void Update()
     {
-        if (pendingObject != null)
+        if (pendingObject)
         {
             pendingObject.transform.position = pos;
 
@@ -62,8 +73,18 @@ public class BuildingManager : MonoBehaviour
             {
                 ResetObject();
             }
-
-            if (Input.GetMouseButtonDown(0))
+            else if (Input.GetKeyDown(KeyCode.R))
+            {
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    pendingObject.transform.Rotate(Vector3.up * -degreesToRotate);
+                }
+                else
+                {
+                    pendingObject.transform.Rotate(Vector3.up * degreesToRotate);
+                }
+            }
+            else if (Input.GetMouseButtonDown(0))
             {
                 if (!GridManager.Instance.GetOccupanyPendingObject())
                 {
@@ -106,7 +127,7 @@ public class BuildingManager : MonoBehaviour
 
                         savedSlots.Clear();
 
-                        PlaceObject();
+                        StartCoroutine(BuildObject());
                     }
                 }
                 else
@@ -156,14 +177,33 @@ public class BuildingManager : MonoBehaviour
         pos = Vector3.zero;
     }
 
-    private void PlaceObject()
+    IEnumerator BuildObject()
     {
-        Instantiate(objects[currentIndex].model, pos, transform.rotation);
+        float randomNum = Random.Range(0f, 1f);
+        buildParticleMaterial.color = objects[currentIndex].buildParticleRandomColor.Evaluate(randomNum);
+        buildParticle.GetComponent<ParticleSystemRenderer>().material = buildParticleMaterial;
+
+        ParticleSystem spawnedParticle = Instantiate(buildParticle, pos, Quaternion.identity).GetComponent<ParticleSystem>();
+        spawnedParticle.Play();
+
+        int saveCurrentIndex = currentIndex;
+
         if (!objects[currentIndex].multiPlace)
         {
             ResetObject();
         }
+
         GridManager.Instance.CheckOccupancy();
+
+        ChangeObjectMaterial(pendingObject, buildingMaterial);
+        tempObject = Instantiate(pendingObject, pos, pendingObject.transform.rotation);
+
+        yield return new WaitForSeconds(objects[saveCurrentIndex].buildTime);
+
+        Destroy(tempObject);
+        Instantiate(objects[saveCurrentIndex].model, tempObject.transform.position, pendingObject.transform.rotation);
+
+        yield return null;
     }
 
     private void FixedUpdate()
