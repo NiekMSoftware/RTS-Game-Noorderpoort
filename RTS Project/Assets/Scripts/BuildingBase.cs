@@ -8,12 +8,10 @@ public class BuildingBase : MonoBehaviour
     [SerializeField] private ItemSlot[] currentStorage;
     [SerializeField] private List<Worker> workers = new();
     [SerializeField] private string jobName;
-    [SerializeField] private string resourceTag;
-    private SelectUnits selectUnits;
-    private void Awake()
-    {
-        selectUnits = FindObjectOfType<SelectUnits>();
-    }
+    [SerializeField] public GameObject[] resourceTargets;
+    public enum Jobs { Wood, Stone, Metal }
+
+    [SerializeField] private Jobs jobs;
 
     public ItemSlot GetStorage(ItemData itemdata)
     {
@@ -67,9 +65,13 @@ public class BuildingBase : MonoBehaviour
         {
             return;
         }
+        else if (worker.GetCurrentBuilding() != null)
+        {
+            return;
+        }
         else if (workers.Count < maxWorkers)
         {
-            worker.InitializeWorker(gameObject, resourceTag, jobName);
+            worker.InitializeWorker(gameObject, jobs, resourceTargets);
             workers.Add(worker);
         }
     }
