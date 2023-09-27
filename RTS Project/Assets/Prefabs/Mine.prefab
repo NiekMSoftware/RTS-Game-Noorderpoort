@@ -48,9 +48,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingHp: 50
   maxWorkers: 5
-  currentWorkers: 5
-  maxStorage: 20
-  currentStorage: {fileID: 0}
+  currentStorage:
+  - data: {fileID: 0}
+    amount: 0
+    maxAmount: 0
+  workers: []
+  jobName: 
+  resourceTargets: []
+  jobs: 0
+  currentState: 0
+  buildingMaterial: {fileID: 2100000, guid: cac183192c43ae94daa0febcf6779c36, type: 2}
 --- !u!65 &4694457708341824937
 BoxCollider:
   m_ObjectHideFlags: 0

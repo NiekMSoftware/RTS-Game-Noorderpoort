@@ -10,6 +10,10 @@ public class BuildingManager : MonoBehaviour
     [SerializeField] private PlaceableObject[] objects;
     [SerializeField] private ResourceManager resources;
 
+    [Header("Build Progresses")]
+    [SerializeField] private GameObject buildProgressPrefab;
+    [SerializeField] private float buildProgressHeight;
+
     [Header("Particle")]
     [SerializeField] private GameObject buildParticle;
     [SerializeField] private Material buildParticleMaterial;
@@ -29,7 +33,6 @@ public class BuildingManager : MonoBehaviour
     [SerializeField] private float buildErrorFloatUpSpeed;
 
     private GameObject pendingObject;
-    private GameObject tempObject;
     private int currentIndex = -1;
     private Vector3 pos;
     private RaycastHit hit;
@@ -40,23 +43,10 @@ public class BuildingManager : MonoBehaviour
     {
         public GameObject model;
         public float yHeight;
-        public Recipe recipe;
+        public Recipe[] recipes;
         public bool multiPlace;
         public Gradient buildParticleRandomColor;
         public float buildTime;
-    }
-
-    [System.Serializable]
-    class Recipe
-    {
-        public RecipeItem[] items;
-    }
-
-    [System.Serializable]
-    class RecipeItem
-    {
-        public ItemData data;
-        public int amountNeeded;
     }
 
     void Update()
@@ -115,7 +105,7 @@ public class BuildingManager : MonoBehaviour
             List<ItemSlot> savedSlots = new();
 
             //loop through all recipe items and all resources and check if the player has enough resources to build the building
-            foreach (var itemNeeded in objects[currentIndex].recipe.items)
+            foreach (var itemNeeded in objects[currentIndex].recipes)
             {
                 foreach (var itemGot in resources.GetAllResources())
                 {
@@ -138,7 +128,7 @@ public class BuildingManager : MonoBehaviour
             //remove items only when the player can actually build it
             if (hasEverything)
             {
-                foreach (var itemNeeded in objects[currentIndex].recipe.items)
+                foreach (var itemNeeded in objects[currentIndex].recipes)
                 {
                     foreach (var itemGot in resources.GetAllResources())
                     {
@@ -152,7 +142,7 @@ public class BuildingManager : MonoBehaviour
                 savedSlots.Clear();
 
                 //build object
-                StartCoroutine(BuildObject());
+                BuildObject();
             }
         }
         else
@@ -195,7 +185,7 @@ public class BuildingManager : MonoBehaviour
         pos = Vector3.zero;
     }
 
-    IEnumerator BuildObject()
+    private void BuildObject()
     {
         float randomNum = Random.Range(0f, 1f);
         buildParticleMaterial.color = objects[currentIndex].buildParticleRandomColor.Evaluate(randomNum);
@@ -204,8 +194,11 @@ public class BuildingManager : MonoBehaviour
         ParticleSystem spawnedParticle = Instantiate(buildParticle, pos, Quaternion.identity).GetComponent<ParticleSystem>();
         spawnedParticle.Play();
 
-        int saveCurrentIndex = currentIndex;
-        GameObject savePendingObject = pendingObject;
+        BuildingBase spawnedBuilding = Instantiate(objects[currentIndex].model, pendingObject.transform.position, pendingObject.transform.rotation).GetComponent<BuildingBase>();
+        StartCoroutine(spawnedBuilding.Build(objects[currentIndex].buildTime));
+
+        BuildProgress buildProgress = Instantiate(buildProgressPrefab, new Vector3(spawnedBuilding.transform.position.x, buildProgressHeight, spawnedBuilding.transform.position.z), Quaternion.identity).GetComponent<BuildProgress>();
+        buildProgress.Init(objects[currentIndex].buildTime);
 
         if (!objects[currentIndex].multiPlace)
         {
@@ -213,15 +206,6 @@ public class BuildingManager : MonoBehaviour
         }
 
         GridManager.Instance.CheckOccupancy();
-
-        ChangeObjectMaterial(savePendingObject, buildingMaterial);
-        tempObject = Instantiate(savePendingObject, savePendingObject.transform.position, savePendingObject.transform.rotation);
-
-        yield return new WaitForSeconds(objects[saveCurrentIndex].buildTime);
-
-        Instantiate(objects[saveCurrentIndex].model, tempObject.transform.position, tempObject.transform.rotation);
-        Destroy(tempObject);
-        yield return null;
     }
 
     private void FixedUpdate()

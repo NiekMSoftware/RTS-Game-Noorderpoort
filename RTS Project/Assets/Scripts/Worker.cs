@@ -89,7 +89,7 @@ public class Worker : MonoBehaviour
         float closestDistance = scanRange;
         Vector3 currentPosition = transform.position;
 
-        resourceTargets = buildingBase.resourceTargets;
+        resourceTargets = buildingBase.GetResources();
 
         if (resourceTargets != null)
         {
