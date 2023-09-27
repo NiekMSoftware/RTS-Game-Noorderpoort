@@ -6,29 +6,34 @@ using UnityEngine;
 
 public class BuildingManager : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] private PlaceableObject[] objects;
+    [SerializeField] private ResourceManager resources;
+
+    [Header("Particle")]
     [SerializeField] private GameObject buildParticle;
     [SerializeField] private Material buildParticleMaterial;
-    [SerializeField] private Material correctPlaceMaterial;
+
+    [Header("Materials")]
     [SerializeField] private Material buildingMaterial;
+    [SerializeField] private Material correctPlaceMaterial;
     [SerializeField] private Material incorrectPlaceMaterial;
-    [SerializeField] private PlaceableObject[] objects;
+
+    [Header("Build Errors")]
+    [SerializeField] private GameObject buildErrorPrefab;
+    [SerializeField] private Transform buildErrorParent;
+
+    [Header("Variables")]
+    [SerializeField] private LayerMask buildLayerMask;
     [SerializeField] private float degreesToRotate = 90f;
+    [SerializeField] private float buildErrorFloatUpSpeed;
+
     private GameObject pendingObject;
     private GameObject tempObject;
     private int currentIndex = -1;
-
     private Vector3 pos;
-
     private RaycastHit hit;
-    [SerializeField] private LayerMask layerMask;
-    [SerializeField] private ResourceManager resources;
-    [SerializeField] private Transform buildErrorParent;
-    [SerializeField] private GameObject buildErrorPrefab;
-    [SerializeField] private float buildErrorFloatUpSpeed;
-
-    [SerializeField] private GameObject buildProgressPrefab;
-    [SerializeField] private Transform buildProgressParent;
-    [SerializeField] private Gradient buildProgressGradient;
+    private bool rayHit;
 
     [System.Serializable]
     class PlaceableObject
@@ -56,85 +61,103 @@ public class BuildingManager : MonoBehaviour
 
     void Update()
     {
-        if (pendingObject)
-        {
-            pendingObject.transform.position = pos;
+        if (!pendingObject) return;
 
-            if (GridManager.Instance.GetOccupanyPendingObject())
+        pendingObject.transform.position = pos;
+
+        //Change pending object material based on if it can be placed or not
+        if (GridManager.Instance.GetOccupanyPendingObject())
+        {
+            ChangeObjectMaterial(pendingObject, incorrectPlaceMaterial);
+        }
+        else
+        {
+            ChangeObjectMaterial(pendingObject, correctPlaceMaterial);
+        }
+
+        HandleInput();
+    }
+
+    private void HandleInput()
+    {
+        //Destroy and reset pending object
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ResetObject();
+        }
+        //Rotate pending object
+        else if (Input.GetKeyDown(KeyCode.R))
+        {
+            //Reverse rotation when holding leftshift
+            if (Input.GetKey(KeyCode.LeftShift))
             {
-                ChangeObjectMaterial(pendingObject, incorrectPlaceMaterial);
+                pendingObject.transform.Rotate(Vector3.up * -degreesToRotate);
             }
             else
             {
-                ChangeObjectMaterial(pendingObject, correctPlaceMaterial);
+                pendingObject.transform.Rotate(Vector3.up * degreesToRotate);
             }
+        }
+        //place object
+        else if (Input.GetMouseButtonDown(0))
+        {
+            CheckCanPlace();
+        }
+    }
 
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                ResetObject();
-            }
-            else if (Input.GetKeyDown(KeyCode.R))
-            {
-                if (Input.GetKey(KeyCode.LeftShift))
-                {
-                    pendingObject.transform.Rotate(Vector3.up * -degreesToRotate);
-                }
-                else
-                {
-                    pendingObject.transform.Rotate(Vector3.up * degreesToRotate);
-                }
-            }
-            else if (Input.GetMouseButtonDown(0))
-            {
-                if (!GridManager.Instance.GetOccupanyPendingObject())
-                {
-                    bool hasEverything = true;
+    private void CheckCanPlace()
+    {
+        //check collision
+        if (!GridManager.Instance.GetOccupanyPendingObject() && rayHit)
+        {
+            bool hasEverything = true;
 
-                    List<ItemSlot> savedSlots = new();
+            List<ItemSlot> savedSlots = new();
 
-                    foreach (var itemNeeded in objects[currentIndex].recipe.items)
+            //loop through all recipe items and all resources and check if the player has enough resources to build the building
+            foreach (var itemNeeded in objects[currentIndex].recipe.items)
+            {
+                foreach (var itemGot in resources.GetAllResources())
+                {
+                    if (itemNeeded.data == itemGot.data)
                     {
-                        foreach (var itemGot in resources.GetAllResources())
+                        if (itemGot.amount >= itemNeeded.amountNeeded)
                         {
-                            if (itemNeeded.data == itemGot.data)
-                            {
-                                if (itemGot.amount >= itemNeeded.amountNeeded)
-                                {
-                                    savedSlots.Add(itemGot);
-                                    hasEverything = true;
-                                }
-                                else
-                                {
-                                    SpawnError($"needs {itemNeeded.amountNeeded - itemGot.amount} more : {itemNeeded.data.name}");
-                                    hasEverything = false;
-                                }
-                            }
+                            savedSlots.Add(itemGot);
+                            hasEverything = true;
+                        }
+                        else
+                        {
+                            SpawnError($"needs {itemNeeded.amountNeeded - itemGot.amount} more : {itemNeeded.data.name}");
+                            hasEverything = false;
                         }
                     }
+                }
+            }
 
-                    if (hasEverything)
+            //remove items only when the player can actually build it
+            if (hasEverything)
+            {
+                foreach (var itemNeeded in objects[currentIndex].recipe.items)
+                {
+                    foreach (var itemGot in resources.GetAllResources())
                     {
-                        foreach (var itemNeeded in objects[currentIndex].recipe.items)
+                        if (itemNeeded.data == itemGot.data)
                         {
-                            foreach (var itemGot in resources.GetAllResources())
-                            {
-                                if (itemNeeded.data == itemGot.data)
-                                {
-                                    itemGot.amount -= itemNeeded.amountNeeded;
-                                }
-                            }
+                            itemGot.amount -= itemNeeded.amountNeeded;
                         }
-
-                        savedSlots.Clear();
-
-                        StartCoroutine(BuildObject());
                     }
                 }
-                else
-                {
-                    SpawnError("Can't place building here");
-                }
-            } 
+
+                savedSlots.Clear();
+
+                //build object
+                StartCoroutine(BuildObject());
+            }
+        }
+        else
+        {
+            SpawnError("Can't place building here");
         }
     }
 
@@ -155,18 +178,13 @@ public class BuildingManager : MonoBehaviour
 
         while (buildError)
         {
-            buildErrorText.DOFade(0f, 1f).OnComplete(() => RemoveError(buildError));
+            buildErrorText.DOFade(0f, 1f).OnComplete(() => Destroy(buildError));
             buildError.transform.Translate(Vector2.up * buildErrorFloatUpSpeed);
 
             yield return null;
         }
 
         yield return null;
-    }
-
-    private void RemoveError(GameObject buildError)
-    {
-        Destroy(buildError);
     }
 
     private void ResetObject()
@@ -187,6 +205,7 @@ public class BuildingManager : MonoBehaviour
         spawnedParticle.Play();
 
         int saveCurrentIndex = currentIndex;
+        GameObject savePendingObject = pendingObject;
 
         if (!objects[currentIndex].multiPlace)
         {
@@ -195,14 +214,13 @@ public class BuildingManager : MonoBehaviour
 
         GridManager.Instance.CheckOccupancy();
 
-        ChangeObjectMaterial(pendingObject, buildingMaterial);
-        tempObject = Instantiate(pendingObject, pos, pendingObject.transform.rotation);
+        ChangeObjectMaterial(savePendingObject, buildingMaterial);
+        tempObject = Instantiate(savePendingObject, savePendingObject.transform.position, savePendingObject.transform.rotation);
 
         yield return new WaitForSeconds(objects[saveCurrentIndex].buildTime);
 
+        Instantiate(objects[saveCurrentIndex].model, tempObject.transform.position, tempObject.transform.rotation);
         Destroy(tempObject);
-        Instantiate(objects[saveCurrentIndex].model, tempObject.transform.position, pendingObject.transform.rotation);
-
         yield return null;
     }
 
@@ -212,14 +230,21 @@ public class BuildingManager : MonoBehaviour
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(ray, out hit, 1000, layerMask))
+        if (Physics.Raycast(ray, out hit, 1000, buildLayerMask))
         {
+            rayHit = true;
             pos = new Vector3(GridManager.Instance.GetClosestPointOnGrid(hit.point).x, objects[currentIndex].yHeight, GridManager.Instance.GetClosestPointOnGrid(hit.point).z);
+        }
+        else
+        {
+            rayHit = false;
         }
     }
 
     public void SelectObject(int index)
     {
+        ResetObject();
+
         pendingObject = Instantiate(objects[index].model, pos, transform.rotation);
 
         ChangeObjectMaterial(pendingObject, correctPlaceMaterial);
