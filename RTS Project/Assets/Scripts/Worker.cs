@@ -4,34 +4,55 @@ using UnityEngine.AI;
 
 public class Worker : MonoBehaviour
 {
-    private Transform resourceTarget;
+    private GameObject[] resourceTargets;
+    [SerializeField] private Transform resourceTarget;
     [SerializeField] private GameObject workerHouse;
-    private string resourceTag = "StoneResource";
     private float scanRange = 100f;
     NavMeshAgent myAgent;
-    private State currentState = State.Moving;
+
     [SerializeField] protected ItemSlot currentStorage;
     [SerializeField] protected int maxStorage = 3;
     [SerializeField] protected float workerHp = 5f;
     [SerializeField] private ItemData resourceItem;
+
     private bool canGather = true;
     private bool canDeposit = true;
     private float transferRange = 2.5f;
     private float gatherTime = 1f;
-    private enum State{Moving, Idling, Gathering, Depositing}
+    private enum State{Moving, Idling, Gathering, Depositing, Assigning}
+    private State currentState = State.Assigning;
     private BuildingBase buildingBase;
+    private string jobName;
+
+    public bool assigned = false;
 
     private void Start()
     {
-        buildingBase = workerHouse.GetComponent<BuildingBase>();
-
         ItemSlot itemSlot = new();
         itemSlot.SetData(resourceItem);
         itemSlot.SetAmount(0);
         currentStorage = itemSlot;
         myAgent = GetComponent<NavMeshAgent>();
     }
+    public BuildingBase GetCurrentBuilding()
+    {
+        if (workerHouse)
+        {
+            return workerHouse.GetComponent<BuildingBase>();
+        }
+        else
+        { 
+        return null;
+        }
+        
+    }
+    public void InitializeWorker(GameObject _workerHouse, BuildingBase.Jobs _jobName, GameObject[] _resourceTargets)
+    {
 
+        workerHouse = _workerHouse;
+        resourceTargets = _resourceTargets;
+        jobName = _jobName.ToString();
+    }
     protected void AddItemToWorkerStorage(ItemData itemData)
     {
         if (itemData == resourceItem)
@@ -64,22 +85,32 @@ public class Worker : MonoBehaviour
 
     public Transform FindClosestResource()
     {
-        GameObject[] resourceObjects = GameObject.FindGameObjectsWithTag(resourceTag);
         Transform closestResource = null;
         float closestDistance = scanRange;
         Vector3 currentPosition = transform.position;
 
-        foreach (GameObject resource in resourceObjects)
-        {
-            Vector3 resourcePosition = resource.transform.position;
-            float distanceToResource = Vector3.Distance(currentPosition, resourcePosition);
+        resourceTargets = buildingBase.resourceTargets;
 
-            if (distanceToResource <= scanRange && distanceToResource < closestDistance)
+        if (resourceTargets != null)
+        {
+            foreach (GameObject resource in resourceTargets)
             {
-                closestDistance = distanceToResource;
-                closestResource = resource.transform;
+                Vector3 resourcePosition = resource.transform.position;
+                float distanceToResource = Vector3.Distance(currentPosition, resourcePosition);
+
+                if (distanceToResource <= scanRange && distanceToResource < closestDistance)
+                {
+                    resourceTarget = resource.transform;
+                    closestDistance = distanceToResource;
+                    closestResource = resource.transform;
+                }
             }
         }
+        else
+        {
+            print("No resource in range");
+        }
+
 
         return closestResource;
     }
@@ -117,6 +148,19 @@ public class Worker : MonoBehaviour
     {
         switch (currentState)
         {
+            case State.Assigning:
+                if (workerHouse)
+                {
+                    buildingBase = workerHouse.GetComponent<BuildingBase>();
+                    myAgent.isStopped = false;
+                    myAgent.SetDestination(workerHouse.transform.position);
+
+                    if (Vector3.Distance(transform.position, workerHouse.transform.position) <= transferRange)
+                    {
+                        currentState = State.Moving;
+                    }
+                }   
+                break;
             case State.Moving:
                 myAgent.isStopped = false;
                 if (currentStorage.GetAmount() < maxStorage)
@@ -141,6 +185,10 @@ public class Worker : MonoBehaviour
                     {
                         currentState = State.Gathering;
                     }
+                }
+                else
+                {
+                    currentState = State.Idling;
                 }
 
                 if (Vector3.Distance(transform.position, workerHouse.transform.position) <= transferRange) 
@@ -168,9 +216,18 @@ public class Worker : MonoBehaviour
                     myAgent.SetDestination(workerHouse.transform.position);
                 }
 
-                if (currentStorage.GetAmount() < maxStorage && buildingBase.GetStorage(resourceItem).GetAmount() < buildingBase.GetStorage(resourceItem).GetMaxAmount())
+                if (currentStorage.GetAmount() < maxStorage && 
+                    buildingBase.GetStorage(resourceItem).GetAmount() < buildingBase.GetStorage(resourceItem).GetMaxAmount()
+                    && resourceTarget)
                 {
                     currentState = State.Moving;
+                }
+                else
+                {
+                    if (resourceTargets != null)
+                    {
+                        resourceTarget = FindClosestResource();
+                    }
                 }
                 break;
 

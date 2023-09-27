@@ -20,6 +20,15 @@ public class Unit : MonoBehaviour {
     [SerializeField] protected Jobs job;
     [SerializeField] protected TypeUnit typeUnit;
 
+    void Start() {
+        // Insert code here that needs to be initiated from the start method.
+    }
+
+    void Update() {
+        // Insert code here that needs to use the Update function
+            // Think of: Looking for enemies, healing allies etc.
+    }
+
     #region Enums
 
     public enum Jobs {
@@ -53,16 +62,22 @@ public class Unit : MonoBehaviour {
     
     public void Death() {
         // Kill off the Unit once it's health reaches 0
-        if (this.unitHealth <= 0) {
+        if (unitHealth <= 0) {
             // Play death animation + particle system
         }
     }
 
     public int Heal(int healing) {
-        int gainedHealth = this.unitHealth + healing;
+        int gainedHealth = unitHealth + healing;
 
         return gainedHealth;
     }
 
+    #endregion
+
+    #region Unit Controller
+
+    // Give the unit other functions
+    
     #endregion
 }
