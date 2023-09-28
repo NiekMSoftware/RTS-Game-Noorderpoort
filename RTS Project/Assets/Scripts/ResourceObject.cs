@@ -10,11 +10,16 @@ public class ResourceObject : MonoBehaviour
     {
         resourceSpawnManager = FindObjectOfType<ResourceSpawnManager>();
     }
-    private void Update()
+    public void RemoveItemFromResource()
     {
-        if (slot.amount <= 0)
+        if (slot.amount > 0)
         {
+            slot.IncreaseAmount(-1);
 
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 }
