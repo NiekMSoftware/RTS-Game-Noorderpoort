@@ -50,22 +50,23 @@ public class CameraMovement : MonoBehaviour
 
         if (!isRotating && allowMovement)
         {
-            //if (Input.mousePosition.y >= Screen.height * (1 - borderSize))
-            //{
-            //    vertical = 1;
-            //}
-            //if (Input.mousePosition.y <= Screen.height * borderSize)
-            //{
-            //    vertical = -1;
-            //}
-            //if (Input.mousePosition.x >= Screen.width * (1 - borderSize))
-            //{
-            //    horizontal = 1;
-            //}
-            //if (Input.mousePosition.x <= Screen.width * borderSize)
-            //{
-            //    horizontal = -1;
-            //}
+            if (Input.mousePosition.y >= Screen.height * (1 - borderSize))
+            {
+                vertical = 1;
+            }
+            if (Input.mousePosition.y <= Screen.height * borderSize)
+            {
+                vertical = -1;
+            }
+            if (Input.mousePosition.x >= Screen.width * (1 - borderSize))
+            {
+                horizontal = 1;
+            }
+            if (Input.mousePosition.x <= Screen.width * borderSize)
+            {
+                horizontal = -1;
+            }
+            //transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, hitPoint.y + 10, hitPoint.y + 50), transform.position.z);
         }
         if (transform.position.y > hitPoint.y + 50)
         {

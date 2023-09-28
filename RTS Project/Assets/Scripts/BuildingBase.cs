@@ -24,19 +24,6 @@ public class BuildingBase : MonoBehaviour
         Normal
     }
 
-<<<<<<< Updated upstream
-=======
-    public void Init(Material _material, GameObject _particleObject)
-    {
-        buildingMaterial = _material;
-        particleObject = _particleObject;
-    }
-
-    public void RequestResourcePosition()
-    {
-
-    }
->>>>>>> Stashed changes
     public IEnumerator Build(float buildTime)
     {
         currentState = States.Building;

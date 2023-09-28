@@ -295,12 +295,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03430657f2f14514ba955174b175ae45, type: 3}
---- !u!1 &320777361 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3530037491363124616, guid: a6db7042f17279d44ad3fbc4c4c85ce5,
-    type: 3}
-  m_PrefabInstance: {fileID: 318118098804409167}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &322792568
 GameObject:
   m_ObjectHideFlags: 0
@@ -402,52 +396,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &359485467
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 359485469}
-  - component: {fileID: 359485468}
-  m_Layer: 0
-  m_Name: Managers
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &359485468
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 359485467}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e0e964b4ce771844a8586b4b991ebce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  assignedResources: []
-  itemSlots: []
---- !u!4 &359485469
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 359485467}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 17.566393, y: 0.40404496, z: 1.7518892}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &383555105
 PrefabInstance:
@@ -1077,7 +1025,6 @@ MonoBehaviour:
   jobName: metalboi
   resourceTargets: []
   jobs: 0
-  currentState: 0
 --- !u!4 &998318912 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
@@ -1133,7 +1080,6 @@ MonoBehaviour:
   jobName: woodboy
   resourceTargets: []
   jobs: 0
-  currentState: 0
 --- !u!1 &1393413177
 GameObject:
   m_ObjectHideFlags: 0
@@ -1213,7 +1159,6 @@ MonoBehaviour:
   jobName: SToneBOyi
   resourceTargets: []
   jobs: 0
-  currentState: 0
 --- !u!65 &1439619671
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2169,11 +2114,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8733233270987179618, guid: a980ba7d2d6b2ca478a66b2f0e6e8be3,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 9052503688383518193, guid: a980ba7d2d6b2ca478a66b2f0e6e8be3,
         type: 3}
       propertyPath: m_Name
@@ -2207,11 +2147,6 @@ PrefabInstance:
       propertyPath: workerHouse
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 6537541034667993825, guid: 03430657f2f14514ba955174b175ae45,
-        type: 3}
-      propertyPath: resourceTarget
-      value: 
-      objectReference: {fileID: 320777361}
     - target: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
         type: 3}
       propertyPath: m_RootOrder
