@@ -44,7 +44,6 @@ public class UnitDrag : MonoBehaviour
             endPosition = Vector2.zero;
             DrawVisual();
         }
-
     }
 
     void DrawVisual()

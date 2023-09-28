@@ -109,6 +109,19 @@ public class Unit : MonoBehaviour
     //    SelectUnits.Instance.unitList.Add(gameObject);
     //}
 
+    public void SendUnitToLocation(Vector3 pos)
+    {
+        //doesnt work entirely
+        if (Vector3.Distance(transform.position, pos) > 1)
+        {
+            myAgent.SetDestination(pos);
+        }
+        else
+        {
+            myAgent.SetDestination(transform.position);
+        }
+    }
+
     //void SendUnitToLocation() {
     //    if (Input.GetMouseButton(1)) {
     //        RaycastHit hit;

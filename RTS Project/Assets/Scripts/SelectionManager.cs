@@ -5,9 +5,16 @@ public class SelectionManager : MonoBehaviour
 {
     [SerializeField] private LayerMask selectable;
     [SerializeField] private LayerMask ground;
-    [SerializeField] private List<GameObject> unitsSelected = new();
+    [SerializeField] private List<GameObject> selectedUnits = new();
 
     [SerializeField] private GameObject marker;
+
+    [SerializeField] RectTransform boxVisual;
+
+    Rect selectionBox;
+
+    Vector2 startPosition;
+    Vector2 endPosition;
 
     private Camera mainCamera;
 
@@ -15,6 +22,10 @@ public class SelectionManager : MonoBehaviour
     {
         mainCamera = Camera.main;
         marker.SetActive(false);
+
+        startPosition = Vector2.zero;
+        endPosition = Vector2.zero;
+        DrawBoxVisual();
     }
 
     private void Update()
@@ -29,16 +40,16 @@ public class SelectionManager : MonoBehaviour
                 {
                     if (Input.GetKey(KeyCode.LeftShift))
                     {
-                        if (!unitsSelected.Contains(hit.collider.gameObject))
+                        if (!selectedUnits.Contains(hit.collider.gameObject))
                         {
-                            unitsSelected.Add(hit.collider.gameObject);
+                            selectedUnits.Add(hit.collider.gameObject);
                             hit.collider.GetComponent<Unit>().SetSelectionObject(true);
                         }
                     }
                     else
                     {
                         DeselectAll();
-                        unitsSelected.Add(hit.collider.gameObject);
+                        selectedUnits.Add(hit.collider.gameObject);
                         hit.collider.GetComponent<Unit>().SetSelectionObject(true);
                     }
                 }
@@ -51,20 +62,100 @@ public class SelectionManager : MonoBehaviour
             {
                 if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, ground))
                 {
-                    print("hi");
-                    marker.transform.position = hit.collider.transform.position;
+                    marker.transform.position = hit.point;
                     marker.SetActive(true);
+                    foreach (var unit in selectedUnits)
+                    {
+                        unit.GetComponent<Unit>().SendUnitToLocation(marker.transform.position);
+                    }
                 }
             }
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            startPosition = Input.mousePosition;
+            selectionBox = new Rect();
+        }
+
+        if (Input.GetMouseButton(0))
+        {
+            endPosition = Input.mousePosition;
+            DrawBoxVisual();
+            DrawSelection();
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            UnitSelection();
+
+            startPosition = Vector2.zero;
+            endPosition = Vector2.zero;
+            DrawBoxVisual();
         }
     }
 
     private void DeselectAll()
     {
-        foreach (GameObject unit in unitsSelected)
+        foreach (GameObject unit in selectedUnits)
         {
             unit.GetComponent<Unit>().SetSelectionObject(false);
         }
-        unitsSelected.Clear();
+        selectedUnits.Clear();
+    }
+
+    void DrawBoxVisual()
+    {
+        Vector2 boxStart = startPosition;
+        Vector2 boxEnd = endPosition;
+
+        Vector2 boxCenter = (boxStart + boxEnd) / 2;
+        boxVisual.position = boxCenter;
+
+        Vector2 boxSize = new(Mathf.Abs(boxStart.x - boxEnd.x), Mathf.Abs(boxStart.y - boxEnd.y));
+
+        boxVisual.sizeDelta = boxSize;
+    }
+
+    void DrawSelection()
+    {
+        if (Input.mousePosition.x < startPosition.x)
+        {
+            selectionBox.xMin = Input.mousePosition.x;
+            selectionBox.xMax = startPosition.x;
+        }
+        else
+        {
+            selectionBox.xMax = Input.mousePosition.x;
+            selectionBox.xMin = startPosition.x;
+        }
+
+        if (Input.mousePosition.y < startPosition.y)
+        {
+            selectionBox.yMin = Input.mousePosition.y;
+            selectionBox.yMax = startPosition.y;
+        }
+        else
+        {
+            selectionBox.yMax = Input.mousePosition.y;
+            selectionBox.yMin = startPosition.y;
+        }
+    }
+
+    void UnitSelection()
+    {
+        Unit[] allUnits = FindObjectsOfType<Unit>();
+
+        foreach (var unit in allUnits)
+        {
+            if (selectionBox.Contains(mainCamera.WorldToScreenPoint(unit.transform.position)))
+            {
+                if (!selectedUnits.Contains(unit.gameObject))
+                {
+                    selectedUnits.Add(unit.gameObject);
+                    unit.GetComponent<Unit>().SetSelectionObject(true);
+                }
+            }
+        }
     }
 }
