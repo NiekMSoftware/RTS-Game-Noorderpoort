@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BuildingBase : MonoBehaviour
@@ -12,9 +12,11 @@ public class BuildingBase : MonoBehaviour
     [SerializeField] private GameObject[] resourceTargets;
     [SerializeField] private Jobs jobs;
     [SerializeField] private States currentState;
-    [SerializeField] private Material buildingMaterial;
 
     private List<Material> savedMaterials = new();
+    private GameObject particleObject;
+
+    private Material buildingMaterial;
 
     public enum Jobs { Wood, Stone, Metal }
 
@@ -24,16 +26,24 @@ public class BuildingBase : MonoBehaviour
         Normal
     }
 
+    public void Init(Material _material, GameObject _particleObject)
+    {
+        buildingMaterial = _material;
+        particleObject = _particleObject;
+    }
+
     public IEnumerator Build(float buildTime)
     {
         currentState = States.Building;
 
         SaveObjectMaterials();
-        ChangeObjectMaterial(gameObject, buildingMaterial);
+        ApplyObjectMaterials();
+        //ChangeObjectMaterial(buildingMaterial);
         yield return new WaitForSeconds(buildTime);
 
-        ApplyObjectMaterials();
         currentState = States.Normal;
+        ParticleSystem particle = Instantiate(particleObject, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
+        particle.Play();
 
         yield return null;
     }
@@ -110,23 +120,27 @@ public class BuildingBase : MonoBehaviour
 
     public States GetCurrentState() => currentState;
 
-    private void SaveObjectMaterials()
+    private void ChangeObjectMaterial(Material material)
     {
         if (gameObject.TryGetComponent(out MeshRenderer mr))
         {
             if (mr.material)
             {
-                savedMaterials[0] = mr.material;
+                mr.material = material;
             }
         }
         else
         {
             foreach (var mr2 in gameObject.GetComponentsInChildren<MeshRenderer>())
             {
-                for (int i = 0; i < mr2.materials.Length; i++)
+                Material[] materials = mr2.materials;
+
+                for (int i = 0; i < materials.Length; i++)
                 {
-                    savedMaterials.Add(mr2.materials[i]);
+                    materials[i] = material;
                 }
+
+                mr2.materials = materials;
             }
         }
     }
@@ -144,35 +158,38 @@ public class BuildingBase : MonoBehaviour
         {
             foreach (var mr2 in gameObject.GetComponentsInChildren<MeshRenderer>())
             {
-                for (int i = 0; i < mr2.materials.Length; i++)
+                Material[] materials = mr2.materials;
+
+                for (int i = 0; i < materials.Length; i++)
                 {
-                    mr2.materials[i] = savedMaterials[i];
+                    materials[i] = savedMaterials[i];
                 }
+
+                mr2.materials = materials;
             }
         }
     }
 
-    private void ChangeObjectMaterial(GameObject go, Material material)
+    private void SaveObjectMaterials()
     {
-        if (go.TryGetComponent(out MeshRenderer mr))
+        if (gameObject.TryGetComponent(out MeshRenderer mr))
         {
             if (mr.material)
             {
-                mr.material = material;
+                savedMaterials[0] = mr.material;
             }
         }
         else
         {
-            foreach (var mr2 in go.GetComponentsInChildren<MeshRenderer>())
+            foreach (var mr2 in gameObject.GetComponentsInChildren<MeshRenderer>())
             {
-                List<Material> materials = new();
+                Material[] materials = mr2.materials;
 
-                for (int i = 0; i < mr2.materials.Length; i++)
+                for (int i = 0; i < materials.Length; i++)
                 {
-                    materials.Add(material);
+                    print(materials[i].name + " " + i + mr2.transform.GetSiblingIndex());
+                    savedMaterials.Add(materials[i]);
                 }
-
-                mr2.SetMaterials(materials);
             }
         }
     }

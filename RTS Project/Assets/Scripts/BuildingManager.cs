@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BuildingManager : MonoBehaviour
 {
@@ -31,6 +32,7 @@ public class BuildingManager : MonoBehaviour
     [SerializeField] private LayerMask buildLayerMask;
     [SerializeField] private float degreesToRotate = 90f;
     [SerializeField] private float buildErrorFloatUpSpeed;
+    [SerializeField] private Button[] buttons;
 
     private GameObject pendingObject;
     private int currentIndex = -1;
@@ -47,6 +49,26 @@ public class BuildingManager : MonoBehaviour
         public bool multiPlace;
         public Gradient buildParticleRandomColor;
         public float buildTime;
+        public bool isUnlocked;
+        public int[] buildingsToUnlock;
+    }
+
+    private void Start()
+    {
+        UpdateButtons();
+    }
+
+    private void UpdateButtons()
+    {
+        for (int i = 0; i < objects.Length; i++)
+        {
+            buttons[i].interactable = false;
+
+            if (objects[i].isUnlocked)
+            {
+                buttons[i].interactable = true;
+            }
+        }
     }
 
     void Update()
@@ -97,57 +119,61 @@ public class BuildingManager : MonoBehaviour
 
     private void CheckCanPlace()
     {
-        //check collision
-        if (!GridManager.Instance.GetOccupanyPendingObject() && rayHit)
+        if (rayHit)
         {
-            bool hasEverything = true;
-
-            List<ItemSlot> savedSlots = new();
-
-            //loop through all recipe items and all resources and check if the player has enough resources to build the building
-            foreach (var itemNeeded in objects[currentIndex].recipes)
+            pendingObject.SetActive(true);
+            //check collision
+            if (!GridManager.Instance.GetOccupanyPendingObject() && rayHit)
             {
-                foreach (var itemGot in resources.GetAllResources())
-                {
-                    if (itemNeeded.data == itemGot.data)
-                    {
-                        if (itemGot.amount >= itemNeeded.amountNeeded)
-                        {
-                            savedSlots.Add(itemGot);
-                            hasEverything = true;
-                        }
-                        else
-                        {
-                            SpawnError($"needs {itemNeeded.amountNeeded - itemGot.amount} more : {itemNeeded.data.name}");
-                            hasEverything = false;
-                        }
-                    }
-                }
-            }
+                bool hasEverything = true;
 
-            //remove items only when the player can actually build it
-            if (hasEverything)
-            {
+                List<ItemSlot> savedSlots = new();
+
+                //loop through all recipe items and all resources and check if the player has enough resources to build the building
                 foreach (var itemNeeded in objects[currentIndex].recipes)
                 {
                     foreach (var itemGot in resources.GetAllResources())
                     {
                         if (itemNeeded.data == itemGot.data)
                         {
-                            itemGot.amount -= itemNeeded.amountNeeded;
+                            if (itemGot.amount >= itemNeeded.amountNeeded)
+                            {
+                                savedSlots.Add(itemGot);
+                                hasEverything = true;
+                            }
+                            else
+                            {
+                                SpawnError($"needs {itemNeeded.amountNeeded - itemGot.amount} more : {itemNeeded.data.name}");
+                                hasEverything = false;
+                            }
                         }
                     }
                 }
 
-                savedSlots.Clear();
+                //remove items only when the player can actually build it
+                if (hasEverything)
+                {
+                    foreach (var itemNeeded in objects[currentIndex].recipes)
+                    {
+                        foreach (var itemGot in resources.GetAllResources())
+                        {
+                            if (itemNeeded.data == itemGot.data)
+                            {
+                                itemGot.amount -= itemNeeded.amountNeeded;
+                            }
+                        }
+                    }
 
-                //build object
-                BuildObject();
+                    savedSlots.Clear();
+
+                    //build object
+                    BuildObject();
+                }
             }
-        }
-        else
-        {
-            SpawnError("Can't place building here");
+            else
+            {
+                SpawnError("Can't place building here");
+            }
         }
     }
 
@@ -195,10 +221,18 @@ public class BuildingManager : MonoBehaviour
         spawnedParticle.Play();
 
         BuildingBase spawnedBuilding = Instantiate(objects[currentIndex].model, pendingObject.transform.position, pendingObject.transform.rotation).GetComponent<BuildingBase>();
+        spawnedBuilding.Init(buildingMaterial, buildParticle);
         StartCoroutine(spawnedBuilding.Build(objects[currentIndex].buildTime));
 
         BuildProgress buildProgress = Instantiate(buildProgressPrefab, new Vector3(spawnedBuilding.transform.position.x, buildProgressHeight, spawnedBuilding.transform.position.z), Quaternion.identity).GetComponent<BuildProgress>();
         buildProgress.Init(objects[currentIndex].buildTime);
+
+        for (int i = 0; i < objects[currentIndex].buildingsToUnlock.Length; i++)
+        {
+            objects[objects[currentIndex].buildingsToUnlock[i]].isUnlocked = true;
+        }
+
+        UpdateButtons();
 
         if (!objects[currentIndex].multiPlace)
         {
@@ -216,11 +250,13 @@ public class BuildingManager : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, 1000, buildLayerMask))
         {
+            pendingObject.SetActive(true);
             rayHit = true;
             pos = new Vector3(GridManager.Instance.GetClosestPointOnGrid(hit.point).x, objects[currentIndex].yHeight, GridManager.Instance.GetClosestPointOnGrid(hit.point).z);
         }
         else
         {
+            pendingObject.SetActive(false);
             rayHit = false;
         }
     }
@@ -249,14 +285,14 @@ public class BuildingManager : MonoBehaviour
         {
             foreach (var mr2 in go.GetComponentsInChildren<MeshRenderer>())
             {
-                List<Material> materials = new();
+                Material[] materials = mr2.materials;
 
-                for (int i = 0; i < mr2.materials.Length; i++)
+                for (int i = 0; i < materials.Length; i++)
                 {
-                    materials.Add(material);
+                    materials[i] = material;
                 }
 
-                mr2.SetMaterials(materials);
+                mr2.materials = materials;
             }
         }
     }
