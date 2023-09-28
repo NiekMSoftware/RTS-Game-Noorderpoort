@@ -212,6 +212,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 892754476655269723}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &271915448 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3530037491363124616, guid: a6db7042f17279d44ad3fbc4c4c85ce5,
+    type: 3}
+  m_PrefabInstance: {fileID: 318118098804409167}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &286085779
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1025,6 +1031,8 @@ MonoBehaviour:
   jobName: metalboi
   resourceTargets: []
   jobs: 0
+  currentState: 0
+  buildingMaterial: {fileID: 0}
 --- !u!4 &998318912 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
@@ -1080,6 +1088,8 @@ MonoBehaviour:
   jobName: woodboy
   resourceTargets: []
   jobs: 0
+  currentState: 0
+  buildingMaterial: {fileID: 0}
 --- !u!1 &1393413177
 GameObject:
   m_ObjectHideFlags: 0
@@ -1159,6 +1169,8 @@ MonoBehaviour:
   jobName: SToneBOyi
   resourceTargets: []
   jobs: 0
+  currentState: 0
+  buildingMaterial: {fileID: 0}
 --- !u!65 &1439619671
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2147,6 +2159,11 @@ PrefabInstance:
       propertyPath: workerHouse
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6537541034667993825, guid: 03430657f2f14514ba955174b175ae45,
+        type: 3}
+      propertyPath: resourceTarget
+      value: 
+      objectReference: {fileID: 271915448}
     - target: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
         type: 3}
       propertyPath: m_RootOrder
