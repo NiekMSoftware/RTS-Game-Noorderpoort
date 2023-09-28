@@ -17,4 +17,17 @@ public class ResourceObject : MonoBehaviour
 
         }
     }
+
+    public void RemoveItemFromResource()
+    {
+        if (slot.amount > 0)
+        {
+            slot.IncreaseAmount(-1);
+            
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 }

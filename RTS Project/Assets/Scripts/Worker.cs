@@ -5,7 +5,7 @@ using UnityEngine.AI;
 public class Worker : MonoBehaviour
 {
     private GameObject[] resourceTargets;
-    [SerializeField] private Transform resourceTarget;
+    [SerializeField] private GameObject resourceTarget;
     [SerializeField] private GameObject workerHouse;
     private float scanRange = 100f;
     NavMeshAgent myAgent;
@@ -83,9 +83,9 @@ public class Worker : MonoBehaviour
         }
     }
 
-    public Transform FindClosestResource()
+    public GameObject FindClosestResource()
     {
-        Transform closestResource = null;
+        GameObject closestResource = null;
         float closestDistance = scanRange;
         Vector3 currentPosition = transform.position;
 
@@ -100,9 +100,8 @@ public class Worker : MonoBehaviour
 
                 if (distanceToResource <= scanRange && distanceToResource < closestDistance)
                 {
-                    resourceTarget = resource.transform;
                     closestDistance = distanceToResource;
-                    closestResource = resource.transform;
+                    closestResource = resource;
                 }
             }
         }
@@ -111,17 +110,17 @@ public class Worker : MonoBehaviour
             print("No resource in range");
         }
 
-
         return closestResource;
     }
     private IEnumerator GatherResource()
     {
         while (currentStorage.GetAmount() < maxStorage)
         {
+            resourceTarget.GetComponent<ResourceObject>().RemoveItemFromResource();
             AddItemToWorkerStorage(resourceItem);
             yield return new WaitForSeconds(gatherTime);
         }
-        resourceTarget = null;
+        //resourceTarget = null;
         currentState = State.Moving;
         canGather = true;
 
@@ -171,7 +170,7 @@ public class Worker : MonoBehaviour
                     }
                     else
                     {
-                        myAgent.SetDestination(resourceTarget.position);
+                        myAgent.SetDestination(resourceTarget.transform.position);
                     }
                 }
                 else if (currentStorage.GetAmount() == maxStorage)
@@ -181,7 +180,7 @@ public class Worker : MonoBehaviour
 
                 if (resourceTarget)
                 {
-                    if (Vector3.Distance(transform.position, resourceTarget.position) <= transferRange && currentStorage.GetAmount() < maxStorage)
+                    if (Vector3.Distance(transform.position, resourceTarget.transform.position) <= transferRange && currentStorage.GetAmount() < maxStorage)
                     {
                         currentState = State.Gathering;
                     }
