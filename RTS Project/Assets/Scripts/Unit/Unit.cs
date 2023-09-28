@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Unit : MonoBehaviour {
     // Naming and other basic variables
@@ -20,13 +21,23 @@ public class Unit : MonoBehaviour {
     [SerializeField] protected Jobs job;
     [SerializeField] protected TypeUnit typeUnit;
 
+    [Header("Select Agent Movement")] 
+    [SerializeField] NavMeshAgent myAgent;
+    [SerializeField] LayerMask groundLayer;
+    [Space] 
+    [SerializeField] GameObject marker;
+    [SerializeField] LayerMask clickableUnit;
+
+    SelectUnits mySelectionUnits;
+    Camera myCamera;
+    
     void Start() {
-        // Insert code here that needs to be initiated from the start method.
+        InitSelection();
     }
 
     void Update() {
-        // Insert code here that needs to use the Update function
-            // Think of: Looking for enemies, healing allies etc.
+        SendUnitToLocation();
+        CustomSelectionUnits();
     }
 
     #region Enums
@@ -75,9 +86,63 @@ public class Unit : MonoBehaviour {
 
     #endregion
 
-    #region Unit Controller
+    #region Unit Location Controller
 
     // Give the unit other functions
-    
+    void InitSelection() {
+        myCamera = Camera.main;
+        myAgent = GetComponent<NavMeshAgent>();
+        
+        // Instantiate the list
+        SelectUnits.Instance.unitList.Add(gameObject);
+    }
+
+    void SendUnitToLocation() {
+        if (Input.GetMouseButton(1)) {
+            RaycastHit hit;
+            Ray ray = myCamera.ScreenPointToRay(Input.mousePosition);
+
+            // Check if the Ray cast hit the ground
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, groundLayer)) {
+                marker.transform.position = hit.point;
+                
+                // Set the destination of the AI to the marker
+                myAgent.SetDestination(hit.point);
+                print("Placed Marker");
+            }
+        }
+    }
+
+    void OnDestroy() {
+        SelectUnits.Instance.unitList.Remove(this.gameObject);
+    }
+
+    void CustomSelectionUnits() {
+        if(Input.GetMouseButtonDown(0))
+        {
+            RaycastHit hit;
+            Ray ray = myCamera.ScreenPointToRay(Input.mousePosition);
+
+            if(Physics.Raycast(ray, out hit,Mathf.Infinity, clickableUnit)) {
+                if(Input.GetKey(KeyCode.LeftShift)) {
+                    //wanneer shift ingedrukt wordt.
+                    Debug.Log("Multiple Units Selected");
+                    SelectUnits.Instance.ShiftClickSelect(hit.collider.gameObject);
+                }
+                else {
+                    //wanneer 1 keer geklikt.
+                    Debug.Log("Unit Selected");
+                    SelectUnits.Instance.ClickSelect(hit.collider.gameObject);
+                }
+            }
+            else {
+                //wanneer we missen en niet op shift klikken
+                if (!Input.GetKey(KeyCode.LeftShift)) {
+                    SelectUnits.Instance.DeSelectAll();
+                }
+            }
+        }
+    }
+
     #endregion
 }
