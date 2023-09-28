@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class UnitClick : MonoBehaviour
 {
-    private Camera myCamera;
+    private Camera mainCamera;
     public GameObject Marker;
 
     public LayerMask clickable;
@@ -11,25 +11,27 @@ public class UnitClick : MonoBehaviour
 
     void Start()
     {
-        myCamera = Camera.main;
+        mainCamera = Camera.main;
     }
- 
+
     void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             RaycastHit hit;
-            Ray ray = myCamera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
+            print("hi");
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, building))
             {
                 SelectUnits.Instance.BuildingSelected(hit.collider.gameObject);
             }
 
-            if (Physics.Raycast(ray, out hit,Mathf.Infinity, clickable)) 
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, clickable))
             {
-                if(Input.GetKey(KeyCode.LeftShift))
+                print("hi");
+                if (Input.GetKey(KeyCode.LeftShift))
                 {
                     //wanneer shift ingedrukt wordt.
                     SelectUnits.Instance.ShiftClickSelect(hit.collider.gameObject);
@@ -51,12 +53,12 @@ public class UnitClick : MonoBehaviour
         }
 
         //plaats marker voor AI om te volgen
-        if (Input.GetMouseButtonDown(1)) 
+        if (Input.GetMouseButtonDown(1))
         {
             RaycastHit hit;
-            Ray ray = myCamera.ScreenPointToRay (Input.mousePosition);
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
-            if(Physics.Raycast(ray,out hit,Mathf.Infinity, ground))
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, ground))
             {
                 Marker.transform.position = hit.point;
                 Marker.SetActive(true);
