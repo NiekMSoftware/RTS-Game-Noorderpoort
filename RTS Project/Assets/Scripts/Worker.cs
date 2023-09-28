@@ -2,13 +2,12 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Worker : MonoBehaviour
+public class Worker : Unit
 {
     private GameObject[] resourceTargets;
     [SerializeField] private GameObject resourceTarget;
     [SerializeField] private GameObject workerHouse;
     private float scanRange = 100f;
-    NavMeshAgent myAgent;
 
     [SerializeField] protected ItemSlot currentStorage;
     [SerializeField] protected int maxStorage = 3;
@@ -115,7 +114,7 @@ public class Worker : MonoBehaviour
     }
     private IEnumerator GatherResource()
     {
-        while (currentStorage.GetAmount() < maxStorage)
+        while (currentStorage.GetAmount() < maxStorage && resourceTarget)
         {
             resourceTarget.GetComponent<ResourceObject>().RemoveItemFromResource();
             AddItemToWorkerStorage(resourceItem);
@@ -145,7 +144,6 @@ public class Worker : MonoBehaviour
     }
     private void Update()
     {
-        print(currentState);
         switch (currentState)
         {
             case State.Assigning:

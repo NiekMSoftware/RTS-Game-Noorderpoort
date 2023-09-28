@@ -23,13 +23,12 @@ public class Unit : MonoBehaviour
 
     [Header("Select Agent Movement")]
     [SerializeField] GameObject selectionObject;
-    [SerializeField] NavMeshAgent myAgent;
+    [SerializeField] protected NavMeshAgent myAgent;
     [SerializeField] LayerMask groundLayer;
     [Space]
     [SerializeField] GameObject marker;
     [SerializeField] LayerMask clickableUnit;
 
-    SelectUnits mySelectionUnits;
     Camera myCamera;
 
     //void Start()

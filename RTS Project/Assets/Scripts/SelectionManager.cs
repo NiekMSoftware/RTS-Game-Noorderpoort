@@ -5,11 +5,12 @@ public class SelectionManager : MonoBehaviour
 {
     [SerializeField] private LayerMask selectable;
     [SerializeField] private LayerMask ground;
+    [SerializeField] private LayerMask building;
     [SerializeField] private List<GameObject> selectedUnits = new();
-
     [SerializeField] private GameObject marker;
 
     [SerializeField] RectTransform boxVisual;
+    private GameObject selectedBuilding;
 
     Rect selectionBox;
 
@@ -36,6 +37,11 @@ public class SelectionManager : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
+                if (Physics.Raycast(ray, out RaycastHit hit2, Mathf.Infinity, building))
+                {
+                    selectedBuilding = hit2.collider.gameObject;
+                    BuildingSelected();
+                }
                 if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, selectable))
                 {
                     if (Input.GetKey(KeyCode.LeftShift))
@@ -94,7 +100,17 @@ public class SelectionManager : MonoBehaviour
             DrawBoxVisual();
         }
     }
-
+    private void BuildingSelected()
+    {
+        if (selectedUnits.Count > 0)
+        {
+            foreach (GameObject unit in selectedUnits)
+            {
+                // Change when worker is integrated into unit
+                selectedBuilding.GetComponent<BuildingBase>().AddWorkerToBuilding(unit.GetComponent<Worker>());
+            }
+        }
+    }
     private void DeselectAll()
     {
         foreach (GameObject unit in selectedUnits)
