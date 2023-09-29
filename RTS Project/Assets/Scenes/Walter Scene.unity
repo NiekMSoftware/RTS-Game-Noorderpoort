@@ -1001,7 +1001,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnRange: 15
-  spawnObject: {fileID: 3530037491363124616, guid: a6db7042f17279d44ad3fbc4c4c85ce5,
+  spawnObject: {fileID: 8952031714232469564, guid: fbf2de6a09128e54e990884604ddc847,
     type: 3}
   minSpawnAmount: 12
   maxSpawnAmount: 50
@@ -1090,7 +1090,6 @@ MonoBehaviour:
     maxAmount: 367
   workers: []
   jobName: metalboi
-  resourceTargets: []
   jobs: 0
   currentState: 0
 --- !u!1001 &924448593
@@ -1229,7 +1228,6 @@ MonoBehaviour:
     maxAmount: 695
   workers: []
   jobName: woodboy
-  resourceTargets: []
   jobs: 0
   currentState: 0
 --- !u!4 &1241622894 stripped
@@ -1264,7 +1262,6 @@ MonoBehaviour:
     maxAmount: 699
   workers: []
   jobName: SToneBOyi
-  resourceTargets: []
   jobs: 1
   currentState: 0
 --- !u!65 &1439619671
