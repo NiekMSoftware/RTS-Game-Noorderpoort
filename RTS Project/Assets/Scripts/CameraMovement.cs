@@ -15,10 +15,6 @@ public class CameraMovement : MonoBehaviour
     private bool allowMovement = true;
     [SerializeField] private Transform orientation;
 
-    private void Start()
-    {
-        Cursor.lockState = CursorLockMode.Confined;
-    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))

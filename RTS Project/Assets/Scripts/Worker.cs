@@ -162,7 +162,7 @@ public class Worker : Unit
                 myAgent.isStopped = false;
                 if (currentStorage.GetAmount() < maxStorage)
                 {
-                    if (!resourceTarget && resourceManager.resources != resourceManager.occupiedResources)
+                    if (!resourceTarget)
                     {
                         print("123");
                         resourceTarget = resourceManager.FindClosestResource(buildingBase.transform, resourceItem);
@@ -221,8 +221,9 @@ public class Worker : Unit
                     currentState = State.Moving;
                 }
                 
-                if (!resourceTarget)
+                if (!resourceTarget && resourceManager.resources.Count > resourceManager.occupiedResources.Count)
                 {
+                    resourceTarget = resourceManager.FindClosestResource(buildingBase.transform, resourceItem);
                     currentState = State.Moving;
                 }
                 break;
