@@ -110,11 +110,6 @@ public class Worker : Unit
     }
     private void Update()
     {
-        if (this.gameObject.name == "AI")
-        {
-            print(currentState);
-
-        }
         switch (currentState)
         {
             case State.Assigning:
@@ -179,7 +174,6 @@ public class Worker : Unit
                 // If there are resources, go find resource to get
                 if (!resourceTarget && resourceManager.resources.Count > resourceManager.occupiedResources.Count)
                 {
-                    print("in idle calling finding new resource");
                     currentState = State.Moving;
                     resourceTarget = resourceManager.FindClosestResource(buildingBase.transform, resourceItem, this);
                 }
