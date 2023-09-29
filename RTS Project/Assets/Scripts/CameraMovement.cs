@@ -21,6 +21,11 @@ public class CameraMovement : MonoBehaviour
     }
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            print("timescale");
+            Time.timeScale = 15f;
+        }
         Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit hit);
         hitPoint = hit.point;
         if (Input.GetMouseButton(2))

@@ -7,8 +7,7 @@ public class Worker : Unit
     private GameObject[] resourceTargets;
     [SerializeField] private GameObject resourceTarget;
     [SerializeField] private GameObject workerHouse;
-    private float scanRange = 100f;
-
+    [SerializeField] private ResourceManager resourceManager;
     [SerializeField] protected ItemSlot currentStorage;
     [SerializeField] protected int maxStorage = 3;
     [SerializeField] protected float workerHp = 5f;
@@ -18,7 +17,7 @@ public class Worker : Unit
     private bool canDeposit = true;
     private float transferRange = 2.5f;
     private float gatherTime = 1f;
-    private enum State{Moving, Idling, Gathering, Depositing, Assigning}
+    private enum State { Moving, Idling, Gathering, Depositing, Assigning }
     private State currentState = State.Assigning;
     private BuildingBase buildingBase;
     private string jobName;
@@ -40,10 +39,10 @@ public class Worker : Unit
             return workerHouse.GetComponent<BuildingBase>();
         }
         else
-        { 
-        return null;
+        {
+            return null;
         }
-        
+
     }
     public void InitializeWorker(GameObject _workerHouse, BuildingBase.Jobs _jobName, GameObject[] _resourceTargets)
     {
@@ -82,36 +81,36 @@ public class Worker : Unit
         }
     }
 
-    public GameObject FindClosestResource()
-    {
-        GameObject closestResource = null;
-        float closestDistance = scanRange;
-        Vector3 currentPosition = transform.position;
+    //public GameObject FindClosestResource()
+    //{
+    //    GameObject closestResource = null;
+    //    float closestDistance = scanRange;
+    //    Vector3 currentPosition = transform.position;
 
-        resourceTargets = buildingBase.GetResources();
+    //    resourceTargets = buildingBase.GetResources();
 
-        if (resourceTargets != null)
-        {
-            foreach (GameObject resource in resourceTargets)
-            {
-                Vector3 resourcePosition = resource.transform.position;
-                float distanceToResource = Vector3.Distance(currentPosition, resourcePosition);
+    //    if (resourceTargets != null)
+    //    {
+    //        foreach (GameObject resource in resourceTargets)
+    //        {
+    //            Vector3 resourcePosition = resource.transform.position;
+    //            float distanceToResource = Vector3.Distance(currentPosition, resourcePosition);
 
-                if (distanceToResource <= scanRange && distanceToResource < closestDistance)
-                {
-                    closestDistance = distanceToResource;
-                    closestResource = resource;
-                }
-            }
-        }
-        else
-        {
-            print("No resource in range");
-        }
+    //            if (distanceToResource <= scanRange && distanceToResource < closestDistance)
+    //            {
+    //                closestDistance = distanceToResource;
+    //                closestResource = resource;
+    //            }
+    //        }
+    //    }
+    //    else
+    //    {
+    //        print("No resource in range");
+    //    }
 
 
-        return closestResource;
-    }
+    //    return closestResource;
+    //}
     private IEnumerator GatherResource()
     {
         while (currentStorage.GetAmount() < maxStorage && resourceTarget)
@@ -157,15 +156,16 @@ public class Worker : Unit
                     {
                         currentState = State.Moving;
                     }
-                }   
+                }
                 break;
             case State.Moving:
                 myAgent.isStopped = false;
                 if (currentStorage.GetAmount() < maxStorage)
                 {
-                    if (!resourceTarget)
+                    if (!resourceTarget && resourceManager.resources != resourceManager.occupiedResources)
                     {
-                        resourceTarget = FindClosestResource();
+                        print("123");
+                        resourceTarget = resourceManager.FindClosestResource(buildingBase.transform, resourceItem);
                     }
                     else
                     {
@@ -189,7 +189,7 @@ public class Worker : Unit
                     currentState = State.Idling;
                 }
 
-                if (Vector3.Distance(transform.position, workerHouse.transform.position) <= transferRange) 
+                if (Vector3.Distance(transform.position, workerHouse.transform.position) <= transferRange)
                 {
                     if (currentStorage.GetAmount() > 0 && buildingBase.GetStorage(resourceItem).GetAmount() < buildingBase.GetStorage(resourceItem).GetMaxAmount())
                     {
@@ -197,7 +197,7 @@ public class Worker : Unit
                     }
                 }
 
-                if (currentStorage.GetAmount()  >= maxStorage && buildingBase.GetStorage(resourceItem).GetAmount() >= buildingBase.GetStorage(resourceItem).GetMaxAmount())
+                if (currentStorage.GetAmount() >= maxStorage && buildingBase.GetStorage(resourceItem).GetAmount() >= buildingBase.GetStorage(resourceItem).GetMaxAmount())
                 {
                     currentState = State.Idling;
                 }
@@ -214,18 +214,16 @@ public class Worker : Unit
                     myAgent.SetDestination(workerHouse.transform.position);
                 }
 
-                if (currentStorage.GetAmount() < maxStorage && 
+                if (currentStorage.GetAmount() < maxStorage &&
                     buildingBase.GetStorage(resourceItem).GetAmount() < buildingBase.GetStorage(resourceItem).GetMaxAmount()
                     && resourceTarget)
                 {
                     currentState = State.Moving;
                 }
-                else
+                
+                if (!resourceTarget)
                 {
-                    if (resourceTargets != null)
-                    {
-                        resourceTarget = FindClosestResource();
-                    }
+                    currentState = State.Moving;
                 }
                 break;
 
@@ -262,7 +260,7 @@ public class Worker : Unit
                 }
                 else
                 {
-                    currentState= State.Moving;
+                    currentState = State.Moving;
                 }
                 break;
         }

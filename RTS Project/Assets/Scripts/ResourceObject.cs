@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class ResourceObject : MonoBehaviour
 {
-    [SerializeField] private ItemSlot slot;
-    private ResourceSpawnManager resourceSpawnManager;
+    [SerializeField] public ItemSlot slot;
+    private ResourceManager resourceManager;
     private void Awake()
     {
-        resourceSpawnManager = FindObjectOfType<ResourceSpawnManager>();
+        resourceManager = FindObjectOfType<ResourceManager>();
     }
     public void RemoveItemFromResource()
     {
@@ -19,7 +19,15 @@ public class ResourceObject : MonoBehaviour
         }
         else
         {
+            print("destroy");
+            resourceManager.resources.Remove(gameObject);
+            resourceManager.occupiedResources.Remove(gameObject);
             Destroy(gameObject);
         }
+    }
+    private void OnDestroy()
+    {
+        resourceManager.resources.Remove(gameObject);
+        resourceManager.occupiedResources.Remove(gameObject);
     }
 }

@@ -12,7 +12,6 @@ public class BuildingBase : MonoBehaviour
     [SerializeField] private GameObject[] resourceTargets;
     [SerializeField] private Jobs jobs;
     [SerializeField] private States currentState;
-
     private List<Material> savedMaterials = new();
     private GameObject particleObject;
 
