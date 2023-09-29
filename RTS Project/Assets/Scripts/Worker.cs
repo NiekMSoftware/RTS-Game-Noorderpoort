@@ -16,8 +16,8 @@ public class Worker : Unit
     private bool canDeposit = true;
     private float transferRange = 2.5f;
     private float gatherTime = 1f;
-    private enum State { Moving, Idling, Gathering, Depositing, Assigning }
-    private State currentState = State.Assigning;
+    public enum State { Moving, Idling, Gathering, Depositing, Assigning }
+    public State currentState = State.Assigning;
     private BuildingBase buildingBase;
     private string jobName;
 
@@ -110,6 +110,11 @@ public class Worker : Unit
     }
     private void Update()
     {
+        if (this.gameObject.name == "AI")
+        {
+            print(currentState);
+
+        }
         switch (currentState)
         {
             case State.Assigning:
@@ -131,7 +136,7 @@ public class Worker : Unit
                 {
                     if (!resourceTarget)
                     {
-                        resourceTarget = resourceManager.FindClosestResource(buildingBase.transform, resourceItem);
+                        resourceTarget = resourceManager.FindClosestResource(buildingBase.transform, resourceItem, this);
                     }
                     else
                     {
@@ -171,15 +176,15 @@ public class Worker : Unit
 
             case State.Idling:
 
-                if (Vector3.Distance(transform.position, workerHouse.transform.position) <= transferRange)
+                // If there are resources, go find resource to get
+                if (!resourceTarget && resourceManager.resources.Count > resourceManager.occupiedResources.Count)
                 {
-                    myAgent.isStopped = true;
+                    print("in idle calling finding new resource");
+                    currentState = State.Moving;
+                    resourceTarget = resourceManager.FindClosestResource(buildingBase.transform, resourceItem, this);
                 }
-                else
-                {
-                    myAgent.SetDestination(workerHouse.transform.position);
-                }
-
+                
+                // If inventory isnt full in building and working go to moving
                 if (currentStorage.GetAmount() < maxStorage &&
                     buildingBase.GetStorage(resourceItem).GetAmount() < buildingBase.GetStorage(resourceItem).GetMaxAmount()
                     && resourceTarget)
@@ -187,10 +192,15 @@ public class Worker : Unit
                     currentState = State.Moving;
                 }
                 
-                if (!resourceTarget && resourceManager.resources.Count > resourceManager.occupiedResources.Count)
+
+                // Go back to the workerhouse
+                if (Vector3.Distance(transform.position, workerHouse.transform.position) <= transferRange)
                 {
-                    resourceTarget = resourceManager.FindClosestResource(buildingBase.transform, resourceItem);
-                    currentState = State.Moving;
+                    myAgent.isStopped = true;
+                }
+                else
+                {
+                    myAgent.SetDestination(workerHouse.transform.position);
                 }
                 break;
 

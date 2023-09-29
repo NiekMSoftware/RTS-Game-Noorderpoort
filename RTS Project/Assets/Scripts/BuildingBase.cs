@@ -56,6 +56,11 @@ public class BuildingBase : MonoBehaviour
         return null;
     }
 
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(this.gameObject.transform.position, 20);
+    }
     public void AddItemToStorage(ItemData itemData)
     {
         foreach (ItemSlot slot in currentStorage)
