@@ -4,7 +4,6 @@ using UnityEngine.AI;
 
 public class Worker : Unit
 {
-    private GameObject[] resourceTargets;
     [SerializeField] private GameObject resourceTarget;
     [SerializeField] private GameObject workerHouse;
     [SerializeField] private ResourceManager resourceManager;
@@ -44,11 +43,10 @@ public class Worker : Unit
         }
 
     }
-    public void InitializeWorker(GameObject _workerHouse, BuildingBase.Jobs _jobName, GameObject[] _resourceTargets)
+    public void InitializeWorker(GameObject _workerHouse, BuildingBase.Jobs _jobName)
     {
 
         workerHouse = _workerHouse;
-        resourceTargets = _resourceTargets;
         jobName = _jobName.ToString();
     }
     protected void AddItemToWorkerStorage(ItemData itemData)
@@ -80,37 +78,6 @@ public class Worker : Unit
             }
         }
     }
-
-    //public GameObject FindClosestResource()
-    //{
-    //    GameObject closestResource = null;
-    //    float closestDistance = scanRange;
-    //    Vector3 currentPosition = transform.position;
-
-    //    resourceTargets = buildingBase.GetResources();
-
-    //    if (resourceTargets != null)
-    //    {
-    //        foreach (GameObject resource in resourceTargets)
-    //        {
-    //            Vector3 resourcePosition = resource.transform.position;
-    //            float distanceToResource = Vector3.Distance(currentPosition, resourcePosition);
-
-    //            if (distanceToResource <= scanRange && distanceToResource < closestDistance)
-    //            {
-    //                closestDistance = distanceToResource;
-    //                closestResource = resource;
-    //            }
-    //        }
-    //    }
-    //    else
-    //    {
-    //        print("No resource in range");
-    //    }
-
-
-    //    return closestResource;
-    //}
     private IEnumerator GatherResource()
     {
         while (currentStorage.GetAmount() < maxStorage && resourceTarget)
@@ -164,7 +131,6 @@ public class Worker : Unit
                 {
                     if (!resourceTarget)
                     {
-                        print("123");
                         resourceTarget = resourceManager.FindClosestResource(buildingBase.transform, resourceItem);
                     }
                     else

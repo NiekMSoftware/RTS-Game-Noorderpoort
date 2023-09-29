@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ResourceObject : MonoBehaviour
@@ -9,6 +11,14 @@ public class ResourceObject : MonoBehaviour
     private void Awake()
     {
         resourceManager = FindObjectOfType<ResourceManager>();
+        StartCoroutine(AmountChanger());
+    }
+
+    private IEnumerator AmountChanger()
+    {
+        yield return new WaitForSeconds(1f);
+        slot.amount = (int)Math.Round(slot.amount * transform.localScale.x, 0);
+        yield return null;
     }
     public void RemoveItemFromResource()
     {
@@ -19,7 +29,6 @@ public class ResourceObject : MonoBehaviour
         }
         else
         {
-            print("destroy");
             resourceManager.resources.Remove(gameObject);
             resourceManager.occupiedResources.Remove(gameObject);
             Destroy(gameObject);
