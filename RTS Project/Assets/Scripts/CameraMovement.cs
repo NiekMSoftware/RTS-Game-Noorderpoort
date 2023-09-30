@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
@@ -14,25 +10,26 @@ public class CameraMovement : MonoBehaviour
     private float rotationSpeed = 3.5f;
     private bool allowMovement = true;
     [SerializeField] private Transform orientation;
+    [SerializeField] private Transform particleSpawnPoint;
 
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Confined;
     }
+
     private void Update()
     {
         Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit hit);
         hitPoint = hit.point;
         if (Input.GetMouseButton(2))
         {
-
-                isRotating = true;
-                allowMovement = false;
+            isRotating = true;
+            allowMovement = false;
         }
         else
         {
             isRotating = false;
-            Invoke("AllowMovementInvoker", 0.75f);
+            Invoke(nameof(AllowMovementInvoker), 0.75f);
         }
         
         if (isRotating)
@@ -79,8 +76,11 @@ public class CameraMovement : MonoBehaviour
         transform.position += orientation.TransformDirection(new Vector3(horizontal * (transform.position.y - hitPoint.y), 0, vertical* (transform.position.y - hitPoint.y))) * moveSpeed * Time.deltaTime;
         transform.position += transform.TransformDirection(new Vector3(0, 0, zoom * 750)) * zoomSpeed * Time.deltaTime;
     }
+
     private void AllowMovementInvoker()
     {
         allowMovement = true;
     }
+
+    public Transform GetParticleSpawnPoint() => particleSpawnPoint;
 }
