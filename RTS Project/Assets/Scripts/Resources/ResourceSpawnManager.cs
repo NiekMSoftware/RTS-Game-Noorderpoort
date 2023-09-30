@@ -16,7 +16,6 @@ public class ResourceSpawnManager : MonoBehaviour
     [SerializeField] private int maxSpawnerAmount = 10;
     [SerializeField] private float miniSpawnerRange = 10f;
 
-
     private void Start()
     {
         int _randomSpawnAmount = Random.Range(minSpawnAmount, maxSpawnAmount);
@@ -71,5 +70,10 @@ public class ResourceSpawnManager : MonoBehaviour
         {
             SpawnResource(_spawnLocation);
         }
+    }
+
+    public void SetSpawnObject(GameObject _spawnObject)
+    {
+        spawnObject = _spawnObject;
     }
 }

@@ -145,7 +145,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &322792569
 Transform:
   m_ObjectHideFlags: 0
@@ -183,7 +183,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   selectedUnits: []
-  marker: {fileID: 1893045242}
+  markerPrefab: {fileID: 0}
   boxVisual: {fileID: 1771354653}
 --- !u!1 &338483391
 GameObject:
@@ -774,6 +774,73 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03430657f2f14514ba955174b175ae45, type: 3}
+--- !u!1 &548637658
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 548637660}
+  - component: {fileID: 548637659}
+  m_Layer: 0
+  m_Name: ResourceAreaSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &548637659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 548637658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c78f180e3da1c6e4580c0209a1d6f6c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scale: {x: 1000, y: 1000}
+  resourceManagerToSpawn: {fileID: 8125856419683990175, guid: 386352292dc51624ca85fc60fea3b2b9,
+    type: 3}
+  checkRadius: 30
+  spawnableResources:
+  - parent: {fileID: 1088864027}
+    prefabToSpawn: {fileID: 8952031714232469564, guid: fbf2de6a09128e54e990884604ddc847,
+      type: 3}
+    texture: {fileID: 2800000, guid: 9d79072a390dce44e8aca998618c5907, type: 3}
+    amountToSpawn: 100
+  - parent: {fileID: 1504713981}
+    prefabToSpawn: {fileID: 8952031714232469564, guid: 7a63f1001277b9846b5fda8ce86db9f2,
+      type: 3}
+    texture: {fileID: 2800000, guid: 536c056888c244948939a87bb4a8efac, type: 3}
+    amountToSpawn: 30
+  - parent: {fileID: 802976316}
+    prefabToSpawn: {fileID: 8952031714232469564, guid: d3f81d9c9f1ccaf4d9e022455daae196,
+      type: 3}
+    texture: {fileID: 2800000, guid: 405390574dde6304aa0dc4ebf5dfc180, type: 3}
+    amountToSpawn: 10
+--- !u!4 &548637660
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 548637658}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.006178, y: 4.4744873, z: 6.0999203}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1088864027}
+  - {fileID: 1504713981}
+  - {fileID: 802976316}
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &596720486
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1000,6 +1067,37 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1100969389}
   m_SourcePrefab: {fileID: 100100000, guid: 09dd1cb9497c48047a19249a3f8d5964, type: 3}
+--- !u!1 &802976315
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 802976316}
+  m_Layer: 0
+  m_Name: Stone3Resource
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &802976316
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 802976315}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 548637660}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &811806965
 GameObject:
   m_ObjectHideFlags: 0
@@ -1009,7 +1107,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 811806967}
-  - component: {fileID: 811806966}
   - component: {fileID: 811806968}
   m_Layer: 0
   m_Name: resourceManager
@@ -1018,31 +1115,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &811806966
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 811806965}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52ffe143346278940a99cd2178cfb39f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spawnRange: 15
-  spawnObject: {fileID: 8952031714232469564, guid: fbf2de6a09128e54e990884604ddc847,
-    type: 3}
-  minSpawnAmount: 12
-  maxSpawnAmount: 50
-  minSpawnSize: 0.7
-  maxSpawnSize: 1.3
-  spawnLayerMask:
-    serializedVersion: 2
-    m_Bits: 4224
-  minSpawnerAmount: 1
-  maxSpawnerAmount: 3
-  miniSpawnerRange: 6.22
 --- !u!4 &811806967
 Transform:
   m_ObjectHideFlags: 0
@@ -1120,7 +1192,7 @@ MonoBehaviour:
     maxAmount: 10000
   workers: []
   jobName: metalboi
-  jobs: 0
+  jobs: 2
   currentState: 0
 --- !u!1001 &924448593
 PrefabInstance:
@@ -1211,6 +1283,37 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 504882303}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1088864026
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1088864027}
+  m_Layer: 0
+  m_Name: StoneResource
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1088864027
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1088864026}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 548637660}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1100969388 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 09dd1cb9497c48047a19249a3f8d5964,
@@ -1315,6 +1418,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.9984131, y: 1.9738646, z: 1.9784391}
   m_Center: {x: -0.00899601, y: 0.013254374, z: 0.06479311}
+--- !u!1 &1504713980
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1504713981}
+  m_Layer: 0
+  m_Name: Stone2Resource
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1504713981
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1504713980}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 548637660}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1512040747
 PrefabInstance:
   m_ObjectHideFlags: 0
