@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ResourceSpawnerTest : MonoBehaviour
+public class ResourceAreaSpawner : MonoBehaviour
 {
     [SerializeField] private Vector2Int scale;
     [SerializeField] private SpawnableResouce[] spawnableResources;
