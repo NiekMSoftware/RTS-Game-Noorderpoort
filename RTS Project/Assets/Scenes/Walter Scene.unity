@@ -668,6 +668,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 09dd1cb9497c48047a19249a3f8d5964,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8416272007918961125, guid: 09dd1cb9497c48047a19249a3f8d5964,
         type: 3}
       propertyPath: m_Layer
@@ -932,15 +937,30 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: -8391222552659086748, guid: 09dd1cb9497c48047a19249a3f8d5964,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -7146521406498821007, guid: 09dd1cb9497c48047a19249a3f8d5964,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: -7146521406498821007, guid: 09dd1cb9497c48047a19249a3f8d5964,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -516098083770646512, guid: 09dd1cb9497c48047a19249a3f8d5964,
         type: 3}
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: -516098083770646512, guid: 09dd1cb9497c48047a19249a3f8d5964,
         type: 3}
-      propertyPath: m_Layer
-      value: 7
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 09dd1cb9497c48047a19249a3f8d5964,
         type: 3}
@@ -952,10 +972,20 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 09dd1cb9497c48047a19249a3f8d5964,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8416272007918961125, guid: 09dd1cb9497c48047a19249a3f8d5964,
         type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8416272007918961125, guid: 09dd1cb9497c48047a19249a3f8d5964,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1001,7 +1031,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnRange: 15
-  spawnObject: {fileID: 3530037491363124616, guid: a6db7042f17279d44ad3fbc4c4c85ce5,
+  spawnObject: {fileID: 8952031714232469564, guid: fbf2de6a09128e54e990884604ddc847,
     type: 3}
   minSpawnAmount: 12
   maxSpawnAmount: 50
@@ -1087,10 +1117,9 @@ MonoBehaviour:
   currentStorage:
   - data: {fileID: 11400000, guid: 0c0ea06af6a171e42a725e0fb10167fc, type: 2}
     amount: 0
-    maxAmount: 367
+    maxAmount: 10000
   workers: []
   jobName: metalboi
-  resourceTargets: []
   jobs: 0
   currentState: 0
 --- !u!1001 &924448593
@@ -1226,10 +1255,9 @@ MonoBehaviour:
   currentStorage:
   - data: {fileID: 11400000, guid: 0c0ea06af6a171e42a725e0fb10167fc, type: 2}
     amount: 0
-    maxAmount: 695
+    maxAmount: 10000
   workers: []
   jobName: woodboy
-  resourceTargets: []
   jobs: 0
   currentState: 0
 --- !u!4 &1241622894 stripped
@@ -1261,10 +1289,9 @@ MonoBehaviour:
   currentStorage:
   - data: {fileID: 11400000, guid: 0c0ea06af6a171e42a725e0fb10167fc, type: 2}
     amount: 0
-    maxAmount: 699
+    maxAmount: 10000
   workers: []
   jobName: SToneBOyi
-  resourceTargets: []
   jobs: 1
   currentState: 0
 --- !u!65 &1439619671
@@ -1990,7 +2017,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1906173039
 PrefabInstance:
@@ -2003,7 +2030,7 @@ PrefabInstance:
     - target: {fileID: 2585609115489764413, guid: 04da167e17f3d7a4bba0b9dbd8eb0b96,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2585609115489764413, guid: 04da167e17f3d7a4bba0b9dbd8eb0b96,
         type: 3}

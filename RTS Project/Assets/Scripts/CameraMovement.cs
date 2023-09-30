@@ -16,7 +16,6 @@ public class CameraMovement : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            print("timescale");
             Time.timeScale = 15f;
         }
         Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit hit);
@@ -72,7 +71,8 @@ public class CameraMovement : MonoBehaviour
         {
             zoom = Mathf.Clamp(zoom, -1f, 0f);
         }
-        transform.position += moveSpeed * Time.deltaTime * orientation.TransformDirection(new Vector3(horizontal * (transform.position.y - hitPoint.y), 0, vertical* (transform.position.y - hitPoint.y)));
+        
+        transform.position += Time.deltaTime * moveSpeed * orientation.TransformDirection(new Vector3(horizontal * (transform.position.y - hitPoint.y), 0, vertical* (transform.position.y - hitPoint.y)));
         transform.position += Time.deltaTime * zoomSpeed * transform.TransformDirection(new Vector3(0, 0, zoom * 750));
     }
 

@@ -9,7 +9,6 @@ public class BuildingBase : MonoBehaviour
     [SerializeField] private ItemSlot[] currentStorage;
     [SerializeField] private List<Worker> workers = new();
     [SerializeField] private string jobName;
-    [SerializeField] private GameObject[] resourceTargets;
     [SerializeField] private Jobs jobs;
     [SerializeField] private States currentState;
     private List<Material> savedMaterials = new();
@@ -57,6 +56,11 @@ public class BuildingBase : MonoBehaviour
         return null;
     }
 
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(this.gameObject.transform.position, 20);
+    }
     public void AddItemToStorage(ItemData itemData)
     {
         foreach (ItemSlot slot in currentStorage)
@@ -105,12 +109,10 @@ public class BuildingBase : MonoBehaviour
         }
         else if (workers.Count < maxWorkers)
         {
-            worker.InitializeWorker(gameObject, jobs, resourceTargets);
+            worker.InitializeWorker(gameObject, jobs);
             workers.Add(worker);
         }
     }
-
-    public GameObject[] GetResources() => resourceTargets;
 
     protected void RemoveWorkerFromBuilding(Worker worker)
     {
