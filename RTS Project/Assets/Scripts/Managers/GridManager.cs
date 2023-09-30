@@ -71,7 +71,7 @@ public class GridManager : MonoBehaviour
 
     public bool GetOccupanyPendingObject()
     {
-        Tile[] tiles = CheckOccupancy2();
+        Tile[] tiles = CheckOccupancyPendingObject();
 
         foreach (var tile in tiles)
         {
@@ -105,11 +105,9 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public Tile[] CheckOccupancy2()
+    public Tile[] CheckOccupancyPendingObject()
     {
         List<Tile> tiles = new();
-
-        //CheckOccupancy();
 
         buildingManager.GetPendingObject().layer = (int)Mathf.Log(tempBuildingLayer.value, 2);
 

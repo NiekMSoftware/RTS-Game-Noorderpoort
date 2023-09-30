@@ -7,7 +7,8 @@ public class SelectionManager : MonoBehaviour
     [SerializeField] private LayerMask ground;
     [SerializeField] private LayerMask building;
     [SerializeField] private List<GameObject> selectedUnits = new();
-    [SerializeField] private GameObject marker;
+
+    [SerializeField] private GameObject markerPrefab;
 
     [SerializeField] RectTransform boxVisual;
     private GameObject selectedBuilding;
@@ -22,7 +23,6 @@ public class SelectionManager : MonoBehaviour
     private void Start()
     {
         mainCamera = Camera.main;
-        marker.SetActive(false);
 
         startPosition = Vector2.zero;
         endPosition = Vector2.zero;
@@ -68,11 +68,10 @@ public class SelectionManager : MonoBehaviour
             {
                 if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, ground))
                 {
-                    marker.transform.position = hit.point;
-                    marker.SetActive(true);
+                    Instantiate(markerPrefab, hit.point, Quaternion.identity);
                     foreach (var unit in selectedUnits)
                     {
-                        unit.GetComponent<Unit>().SendUnitToLocation(marker.transform.position);
+                        unit.GetComponent<Unit>().SendUnitToLocation(hit.point);
                     }
                 }
             }
