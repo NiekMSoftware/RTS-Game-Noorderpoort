@@ -5,6 +5,8 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 1f;
     [SerializeField] private float zoomSpeed = 5000f;
     [SerializeField] private float borderSize = 0.07f;
+    [SerializeField] private float maxZoomHeight = 50f;
+    [SerializeField] private float minZoomHeight = 10f;
     private bool isRotating = false;
     private Vector3 hitPoint;
     private float rotationSpeed = 3.5f;
@@ -63,11 +65,11 @@ public class CameraMovement : MonoBehaviour
             //    horizontal = -1;
             //}
         }
-        if (transform.position.y > hitPoint.y + 50)
+        if (transform.position.y > hitPoint.y + maxZoomHeight)
         {
             zoom = Mathf.Clamp(zoom, 0f, 1f);
         }
-        if (transform.position.y < hitPoint.y + 10)
+        if (transform.position.y < hitPoint.y + minZoomHeight)
         {
             zoom = Mathf.Clamp(zoom, -1f, 0f);
         }
