@@ -22,33 +22,35 @@ public class WeatherTimeManager : MonoBehaviour
     [SerializeField] WindZone wind;
     [SerializeField] float windDirectionChangeSpeed;
     [SerializeField] GameObject clouds;
-    [SerializeField] float cloudSpeedModifier;
+    [SerializeField] private float cloudSpeedModifier;
     [SerializeField] float cloudRotationSpeed;
 
     [SerializeField] private WeatherStates currentWeather;
     [SerializeField] private Weather[] weathers;
 
+
     [System.Serializable]
     public class Weather
     {
-        public WeatherStates weatherState;
-        public GameObject particle;
+        public GameObject weatherParticle;
+        public float particlesAmountMultiplier;
         public CloudSettings cloudState;
         public float windSpeed;
-        //public float intensity;
+        public AudioManager.AudioGroupNames audioToPlay;
     }
 
     [System.Serializable]
     public class CloudSettings
     {
-        public float speed;
+        public float density;
         public Color color;
     }
 
     public enum WeatherStates
     {
-        None = 0,
-        Rain = 1
+        None,
+        Rain,
+        HeavyRain
     }
 
     private Camera mainCamera;
@@ -82,7 +84,7 @@ public class WeatherTimeManager : MonoBehaviour
             timeOfDay %= 24;
 
             clouds.GetComponent<MeshRenderer>().material.SetVector("_ScrollDirection", new Vector2(wind.transform.rotation.x, wind.transform.rotation.z));
-            //clouds.GetComponent<MeshRenderer>().material.SetFloat("_Speed", wind.windMain * cloudSpeedModifier);
+            clouds.GetComponent<MeshRenderer>().material.SetFloat("_Speed", wind.windMain * cloudSpeedModifier);
 
             Vector2 windMoveDirection;
 
@@ -106,21 +108,31 @@ public class WeatherTimeManager : MonoBehaviour
     {
         if (!Application.isPlaying) return;
 
-        if (weathers[(int)currentWeather].particle)
+        Weather weather = weathers[(int)currentWeather];
+
+        if (weather.weatherParticle)
         {
             if (weatherParticle)
             {
                 Destroy(weatherParticle);
             }
 
-            print("has particle");
-            weatherParticle = Instantiate(weathers[(int)currentWeather].particle, mainCamera.GetComponent<CameraMovement>().GetParticleSpawnPoint());
-            weatherParticle.GetComponent<ParticleSystem>().Play();
+            weatherParticle = Instantiate(weather.weatherParticle, mainCamera.GetComponent<CameraMovement>().GetParticleSpawnPoint());
+            ParticleSystem particleSystem = weatherParticle.GetComponent<ParticleSystem>();
+            ParticleSystem.EmissionModule emission = particleSystem.emission;
+            emission.rateOverTimeMultiplier = weather.particlesAmountMultiplier;
+            particleSystem.GetComponent<ParticleSystem>().Play();
         }
         else if (weatherParticle)
         {
             Destroy(weatherParticle);
         }
+
+        wind.GetComponent<WindZone>().windMain = weather.windSpeed;
+        clouds.GetComponent<MeshRenderer>().material.SetColor("_Color2", weather.cloudState.color);
+        clouds.GetComponent<MeshRenderer>().material.SetFloat("_Density", weather.cloudState.density);
+        print(clouds.GetComponent<MeshRenderer>().material.GetFloat("_Density"));
+        AudioManager.Instance.PlaySounds(AudioManager.Instance.audioGroups[(int)weather.audioToPlay], true, true);
     }
 
     private void UpdateLightning(float timePercent)
