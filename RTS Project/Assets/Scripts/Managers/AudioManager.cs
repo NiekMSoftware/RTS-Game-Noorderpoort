@@ -1,6 +1,4 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
@@ -15,7 +13,8 @@ public class AudioManager : MonoBehaviour
     public enum AudioGroupNames
     {
         None,
-        Rain
+        Rain,
+        HeavyRain
     }
 
     [System.Serializable]
@@ -35,12 +34,18 @@ public class AudioManager : MonoBehaviour
     {
         if (audioGroup.name == AudioGroupNames.None) return;
 
+        Sequence audioSequence = DOTween.Sequence();
+        AudioSource audioSourceToStop = null;
+
         if (audioGroup.isPlaying)
         {
             foreach (var audio in audioGroup.audioSources)
             {
-                audio.DOFade(0, 1).OnComplete(() => audio.Stop());
-                audio.volume = 1;
+                if (audio.isPlaying)
+                {
+                    audioSourceToStop = audio;
+                    return;
+                }
             }
         }
 
@@ -58,13 +63,17 @@ public class AudioManager : MonoBehaviour
         audioGroup.audioSources[randomNum].volume = 0;
 
         audioGroup.audioSources[randomNum].loop = shouldLoop;
+        //audioGroup.audioSources[randomNum].Play();
+        //audioGroup.audioSources[randomNum].DOFade(randomVolume, 1);
         audioGroup.audioSources[randomNum].Play();
-        audioGroup.audioSources[randomNum].DOFade(randomVolume, 1);
+        audioSequence.Append(audioSourceToStop.DOFade(0, 1));
+        audioSequence.Append(audioGroup.audioSources[randomNum].DOFade(randomVolume, 1).OnComplete(() => audioSourceToStop.Stop()));
+        audioSequence.Play();
     }
 
     public void PlaySound(AudioSource audioSource, bool shouldLoop = false)
     {
         audioSource.Play();
-        audioSource.loop = shouldLoop; 
+        audioSource.loop = shouldLoop;
     }
 }

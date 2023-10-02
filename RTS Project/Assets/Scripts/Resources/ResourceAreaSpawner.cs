@@ -6,6 +6,8 @@ public class ResourceAreaSpawner : MonoBehaviour
     [SerializeField] private GameObject resourceManagerToSpawn;
     [SerializeField] private float checkRadius;
     [SerializeField] private SpawnableResource[] spawnableResources;
+    [SerializeField] private LayerMask resourceLayer;
+    [SerializeField] private Terrain terrain;
 
     [System.Serializable]
     class SpawnableResource
@@ -29,13 +31,14 @@ public class ResourceAreaSpawner : MonoBehaviour
 
                 if (resource.texture.GetPixel(randomX, randomY).a >= 0.9f)
                 {
-                    Vector3 position = new(randomX, 0, randomY);
+                    Vector3 position = new(randomX, terrain.SampleHeight(new Vector3(randomX, 0, randomY)), randomY);
 
-                    if (!Physics.CheckSphere(position, checkRadius))
+                    if (!Physics.CheckSphere(position, checkRadius, resourceLayer))
                     {
                         amountSpawned++;
                         GameObject spawnedResource = Instantiate(resourceManagerToSpawn, position, Quaternion.identity, resource.parent);
                         spawnedResource.GetComponent<ResourceSpawnManager>().SetSpawnObject(resource.prefabToSpawn);
+                        spawnedResource.GetComponent<ResourceSpawnManager>().SetTerrain(terrain);
                     }
                 }
             }

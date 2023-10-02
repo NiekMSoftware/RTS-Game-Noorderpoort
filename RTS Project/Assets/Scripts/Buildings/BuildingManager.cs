@@ -2,7 +2,9 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class BuildingManager : MonoBehaviour
@@ -10,6 +12,8 @@ public class BuildingManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private PlaceableObject[] objects;
     [SerializeField] private ResourceManager resources;
+    [SerializeField] private GridManager gridManager;
+    [SerializeField] private Terrain terrain;
 
     [Header("Build Progresses")]
     [SerializeField] private GameObject buildProgressPrefab;
@@ -39,6 +43,7 @@ public class BuildingManager : MonoBehaviour
     private Vector3 pos;
     private RaycastHit hit;
     private bool rayHit;
+    private Vector3 previousPos;
 
     [System.Serializable]
     class PlaceableObject
@@ -78,7 +83,7 @@ public class BuildingManager : MonoBehaviour
         pendingObject.transform.position = pos;
 
         //Change pending object material based on if it can be placed or not
-        if (GridManager.Instance.GetOccupanyPendingObject())
+        if (gridManager.GetOccupanyPendingObject())
         {
             ChangeObjectMaterial(pendingObject, incorrectPlaceMaterial);
         }
@@ -119,11 +124,13 @@ public class BuildingManager : MonoBehaviour
 
     private void CheckCanPlace()
     {
+        if (EventSystem.current.IsPointerOverGameObject()) return;
+
         if (rayHit)
         {
             pendingObject.SetActive(true);
             //check collision
-            if (!GridManager.Instance.GetOccupanyPendingObject() && rayHit)
+            if (!gridManager.GetOccupanyPendingObject() && rayHit)
             {
                 bool hasEverything = true;
 
@@ -213,6 +220,8 @@ public class BuildingManager : MonoBehaviour
 
     private void BuildObject()
     {
+
+
         float randomNum = Random.Range(0f, 1f);
         buildParticleMaterial.color = objects[currentIndex].buildParticleRandomColor.Evaluate(randomNum);
         buildParticle.GetComponent<ParticleSystemRenderer>().material = buildParticleMaterial;
@@ -239,7 +248,7 @@ public class BuildingManager : MonoBehaviour
             ResetObject();
         }
 
-        GridManager.Instance.CheckOccupancy();
+        gridManager.CheckOccupancy();
     }
 
     private void FixedUpdate()
@@ -252,7 +261,15 @@ public class BuildingManager : MonoBehaviour
         {
             pendingObject.SetActive(true);
             rayHit = true;
-            pos = new Vector3(GridManager.Instance.GetClosestPointOnGrid(hit.point).x, objects[currentIndex].yHeight, GridManager.Instance.GetClosestPointOnGrid(hit.point).z);
+            //Vector3 gridPos = gridManager.GetClosestPointOnGrid(hit.point);
+
+            //check raycast for terrain hit normal and check if can place
+
+            Vector3 gridPos = Vector3Int.RoundToInt(hit.point);
+            gridPos.y = terrain.SampleHeight(gridPos) + objects[currentIndex].model.transform.localScale.y;
+            pos = gridPos;
+
+            //rotate object towards hit.normal
         }
         else
         {

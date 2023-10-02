@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7071059947000653681
+--- !u!1 &1678940331253426876
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,42 +8,52 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 34008687857172929}
-  - component: {fileID: 7558401282448064175}
+  - component: {fileID: 732866239184625619}
+  - component: {fileID: 7064066154610920584}
   m_Layer: 0
-  m_Name: resourceManager
+  m_Name: UnitSelectionSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &34008687857172929
+--- !u!4 &732866239184625619
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7071059947000653681}
+  m_GameObject: {fileID: 1678940331253426876}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 3.1204972, y: -32.410458, z: -20.9647}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7558401282448064175
+--- !u!114 &7064066154610920584
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7071059947000653681}
+  m_GameObject: {fileID: 1678940331253426876}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e0e964b4ce771844a8586b4b991ebce, type: 3}
+  m_Script: {fileID: 11500000, guid: e306f9889e5d45745a041ab21cd1e23d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemSlots: []
-  resources: []
-  occupiedResources: []
+  selectable:
+    serializedVersion: 2
+    m_Bits: 64
+  ground:
+    serializedVersion: 2
+    m_Bits: 8
+  building:
+    serializedVersion: 2
+    m_Bits: 128
+  selectedUnits: []
+  markerPrefab: {fileID: 5548776474470136572, guid: 34b62cf16c90e2f4c986bba758587a80,
+    type: 3}
+  boxVisual: {fileID: 0}

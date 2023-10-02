@@ -1,5 +1,5 @@
+using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 [ExecuteAlways]
@@ -32,7 +32,7 @@ public class WeatherTimeManager : MonoBehaviour
     [System.Serializable]
     public class Weather
     {
-        public GameObject weatherParticle;
+        public GameObject[] weatherParticles;
         public float particlesAmountMultiplier;
         public CloudSettings cloudState;
         public float windSpeed;
@@ -58,11 +58,12 @@ public class WeatherTimeManager : MonoBehaviour
     private bool isDay;
     private float currentSpeed;
 
-    private GameObject weatherParticle;
+    private List<ParticleSystem> weatherParticles = new();
 
     private void Start()
     {
         mainCamera = Camera.main;
+        UpdateWeather();
     }
 
     private void Update()
@@ -110,28 +111,30 @@ public class WeatherTimeManager : MonoBehaviour
 
         Weather weather = weathers[(int)currentWeather];
 
-        if (weather.weatherParticle)
+        if (weatherParticles.Count > 0)
         {
-            if (weatherParticle)
+            foreach (var particle in weatherParticles)
             {
-                Destroy(weatherParticle);
+                Destroy(particle);
             }
-
-            weatherParticle = Instantiate(weather.weatherParticle, mainCamera.GetComponent<CameraMovement>().GetParticleSpawnPoint());
-            ParticleSystem particleSystem = weatherParticle.GetComponent<ParticleSystem>();
-            ParticleSystem.EmissionModule emission = particleSystem.emission;
-            emission.rateOverTimeMultiplier = weather.particlesAmountMultiplier;
-            particleSystem.GetComponent<ParticleSystem>().Play();
         }
-        else if (weatherParticle)
+
+        if (weather.weatherParticles.Length > 0)
         {
-            Destroy(weatherParticle);
+            foreach (var particle in weather.weatherParticles)
+            {
+                GameObject weatherParticle = Instantiate(particle, mainCamera.GetComponent<CameraMovement>().GetParticleSpawnPoint());
+                weatherParticles.Add(particle.GetComponent<ParticleSystem>());
+                ParticleSystem particleSystem = weatherParticle.GetComponent<ParticleSystem>();
+                ParticleSystem.EmissionModule emission = particleSystem.emission;
+                emission.rateOverTimeMultiplier = weather.particlesAmountMultiplier;
+                particleSystem.GetComponent<ParticleSystem>().Play();
+            }
         }
 
         wind.GetComponent<WindZone>().windMain = weather.windSpeed;
         clouds.GetComponent<MeshRenderer>().material.SetColor("_Color2", weather.cloudState.color);
         clouds.GetComponent<MeshRenderer>().material.SetFloat("_Density", weather.cloudState.density);
-        print(clouds.GetComponent<MeshRenderer>().material.GetFloat("_Density"));
         AudioManager.Instance.PlaySounds(AudioManager.Instance.audioGroups[(int)weather.audioToPlay], true, true);
     }
 
@@ -139,7 +142,7 @@ public class WeatherTimeManager : MonoBehaviour
     {
         RenderSettings.ambientLight = ambientColor.Evaluate(timePercent);
         RenderSettings.fogColor = fogColor.Evaluate(timePercent);
-        
+
         sun.color = directionalColor.Evaluate(timePercent);
         sun.transform.localRotation = Quaternion.Euler(new Vector3((timePercent * 360f) - 90f, 170, 0f));
     }
