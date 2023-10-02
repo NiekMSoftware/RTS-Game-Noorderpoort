@@ -29,8 +29,6 @@ public class ResourceObject : MonoBehaviour
         }
         else
         {
-            resourceManager.resources.Remove(gameObject);
-            resourceManager.occupiedResources.Remove(gameObject);
             Destroy(gameObject);
         }
     }

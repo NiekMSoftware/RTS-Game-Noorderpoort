@@ -13,6 +13,9 @@ public class BuildingBase : MonoBehaviour
     [SerializeField] private States currentState;
     private List<Material> savedMaterials = new();
     private GameObject particleObject;
+    public List<GameObject> resourceAreas = new();
+    private GameObject resourceAreaSpawnerObject;
+    private int scanRange = 200;
 
     private Material buildingMaterial;
 
@@ -24,6 +27,51 @@ public class BuildingBase : MonoBehaviour
         Normal
     }
 
+    private void Start()
+    {
+        FindClosestResourceManager(this.transform, currentStorage[0].data);
+        resourceAreaSpawnerObject = GameObject.Find("ResourceAreaSpawner");
+    }
+    public GameObject FindClosestResourceManager(Transform buildingBase, ItemData itemdata)
+    {
+        foreach (ResourceManager resource in FindObjectsOfType<ResourceManager>())
+        {
+            if (!resourceAreas.Contains(resource.gameObject))
+            {
+                resourceAreas.Add(resource.gameObject);
+            }
+        }
+
+        GameObject closestResource = null;
+        float closestDistance = scanRange;
+        Vector3 currentPosition = buildingBase.transform.position;
+
+        if (resourceAreas != null)
+        {
+            foreach (GameObject resource in resourceAreas)
+            {
+                if (resource != null)
+                {
+                    Vector3 resourcePosition = resource.transform.position;
+                    float distanceToResource = Vector3.Distance(currentPosition, resourcePosition);
+
+                    if (distanceToResource <= scanRange && distanceToResource < closestDistance)
+                    {
+                        if (Vector3.Distance(currentPosition, resourcePosition) < scanRange)
+                        {
+                            closestDistance = distanceToResource;
+                            closestResource = resource;
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            print("No resource in range");
+        }
+        return closestResource;
+    }
     public void Init(Material _material, GameObject _particleObject)
     {
         buildingMaterial = _material;
