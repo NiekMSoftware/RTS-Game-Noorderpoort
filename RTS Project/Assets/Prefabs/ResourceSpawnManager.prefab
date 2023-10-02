@@ -46,15 +46,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnRange: 15
-  spawnObject: {fileID: 8952031714232469564, guid: fbf2de6a09128e54e990884604ddc847,
-    type: 3}
   minSpawnAmount: 12
   maxSpawnAmount: 50
   minSpawnSize: 0.7
   maxSpawnSize: 1.3
-  spawnLayerMask:
+  spawnLayer:
     serializedVersion: 2
-    m_Bits: 4224
+    m_Bits: 0
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
   minSpawnerAmount: 1
   maxSpawnerAmount: 3
   miniSpawnerRange: 6.22

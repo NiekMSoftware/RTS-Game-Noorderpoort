@@ -140,19 +140,19 @@ public class GridManager : MonoBehaviour
     {
         if (grid == null) return;
 
-        for (int x = 0; x < grid.GetLength(0); x++)
-        {
-            for (int z = 0; z < grid.GetLength(1); z++)
-            {
-                Gizmos.color = Color.white;
+        //for (int x = 0; x < grid.GetLength(0); x++)
+        //{
+        //    for (int z = 0; z < grid.GetLength(1); z++)
+        //    {
+        //        Gizmos.color = Color.white;
 
-                if (grid[x, z].isOccupied)
-                {
-                    Gizmos.color = Color.red;
-                }
+        //        if (grid[x, z].isOccupied)
+        //        {
+        //            Gizmos.color = Color.red;
+        //        }
 
-                Gizmos.DrawWireCube(new Vector3(grid[x, z].pos.x, 0, grid[x, z].pos.z), new Vector3(0.9f, 0, 0.9f));
-            }
-        }
+        //        Gizmos.DrawWireCube(new Vector3(grid[x, z].pos.x, 0, grid[x, z].pos.z), new Vector3(0.9f, 0, 0.9f));
+        //    }
+        //}
     }
 }
