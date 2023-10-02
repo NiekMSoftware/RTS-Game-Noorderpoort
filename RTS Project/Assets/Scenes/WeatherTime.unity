@@ -773,23 +773,21 @@ MonoBehaviour:
   cloudRotationSpeed: 10
   currentWeather: 1
   weathers:
-  - weatherParticle: {fileID: 0}
+  - weatherParticles: []
     particlesAmountMultiplier: 0
     cloudState:
       density: 1
       color: {r: 0.4669811, g: 0.5885469, b: 1, a: 1}
     windSpeed: 2
     audioToPlay: 0
-  - weatherParticle: {fileID: 350913030430283285, guid: ee46268dece28d946b5d2fe9e985ab89,
-      type: 3}
+  - weatherParticles: []
     particlesAmountMultiplier: 50
     cloudState:
       density: 0.5
       color: {r: 0.2735849, g: 0.2735849, b: 0.2735849, a: 1}
     windSpeed: 5
     audioToPlay: 1
-  - weatherParticle: {fileID: 350913030430283285, guid: ee46268dece28d946b5d2fe9e985ab89,
-      type: 3}
+  - weatherParticles: []
     particlesAmountMultiplier: 200
     cloudState:
       density: 0.5
