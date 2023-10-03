@@ -81,6 +81,7 @@ public class ResourceSpawnManager : MonoBehaviour
         }
 
         int _randomSpawnAmount = Random.Range(minSpawnerAmount, maxSpawnerAmount);
+
         for (int i = 0; i < _randomSpawnAmount; i++)
         {
             SpawnResource(_spawnLocation);
