@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aef85369774cc24aa28ec3fe2372d05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSize: {x: 10, y: 10}
+  gridSize: {x: 700, y: 700}
   gridOffset: {x: 0.5, y: 0, z: 0.5}
   buildingLayer:
     serializedVersion: 2
