@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -252,12 +252,17 @@ PrefabInstance:
         type: 3}
       propertyPath: resources
       value: 
-      objectReference: {fileID: 2036185462}
+      objectReference: {fileID: 901137356}
     - target: {fileID: 4960871854027342727, guid: 14d717b6b9bb25049a85cee8480ea724,
         type: 3}
       propertyPath: gridManager
       value: 
       objectReference: {fileID: 1626420541}
+    - target: {fileID: 4960871854027342727, guid: 14d717b6b9bb25049a85cee8480ea724,
+        type: 3}
+      propertyPath: buildProgressHeight
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4960871854027342727, guid: 14d717b6b9bb25049a85cee8480ea724,
         type: 3}
       propertyPath: buttons.Array.data[0]
@@ -278,6 +283,11 @@ PrefabInstance:
       propertyPath: buttons.Array.data[3]
       value: 
       objectReference: {fileID: 1169274211}
+    - target: {fileID: 4960871854027342727, guid: 14d717b6b9bb25049a85cee8480ea724,
+        type: 3}
+      propertyPath: objects.Array.data[2].multiPlace
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5290549236025193350, guid: 14d717b6b9bb25049a85cee8480ea724,
         type: 3}
       propertyPath: m_Name
@@ -445,10 +455,15 @@ PrefabInstance:
       propertyPath: itemSlots.Array.data[0].maxAmount
       value: 99999
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7558401282448064175, guid: 24f651634f67b3d40a844924ef7bc32a, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7071059947000653681, guid: 24f651634f67b3d40a844924ef7bc32a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 901137356}
   m_SourcePrefab: {fileID: 100100000, guid: 24f651634f67b3d40a844924ef7bc32a, type: 3}
 --- !u!4 &392051082 stripped
 Transform:
@@ -1215,6 +1230,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &901137355 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7071059947000653681, guid: 24f651634f67b3d40a844924ef7bc32a,
+    type: 3}
+  m_PrefabInstance: {fileID: 392051081}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &901137356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 901137355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3da07764186293c4ebf58944135ae0d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemSlots:
+  - data: {fileID: 11400000, guid: 4178d3d151ebd1a4295d48f9a7f482c9, type: 2}
+    amount: 100
+    maxAmount: 99999
+  - data: {fileID: 11400000, guid: 0c0ea06af6a171e42a725e0fb10167fc, type: 2}
+    amount: 100
+    maxAmount: 99999
 --- !u!114 &906958388 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5186336904201031862, guid: 15487bef90308ce46b42e6411d55c4cf,
@@ -1550,18 +1590,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 713222366}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2036185462 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7558401282448064175, guid: 24f651634f67b3d40a844924ef7bc32a,
-    type: 3}
-  m_PrefabInstance: {fileID: 392051081}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e0e964b4ce771844a8586b4b991ebce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &2118764349 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2585609115489764413, guid: 04da167e17f3d7a4bba0b9dbd8eb0b96,
