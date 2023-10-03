@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,6 +12,8 @@ public class GridManager : MonoBehaviour
     [SerializeField] private LayerMask buildingLayer;
     [SerializeField] private LayerMask tempBuildingLayer;
     [SerializeField] private BuildingManager buildingManager;
+
+    private List<Vector3Int> tilePositions = new();
 
     private void Awake()
     {
@@ -37,49 +40,40 @@ public class GridManager : MonoBehaviour
                 Tile tile = new();
                 grid[x, z] = tile;
                 grid[x, z].pos = new Vector3Int(x, 0, z) + gridOffset;
+                tilePositions.Add(Vector3Int.FloorToInt(grid[x, z].pos));
             }
         }
     }
 
     public Vector3Int GetClosestPointOnGrid(Vector3 pos)
     {
-        List<Vector3Int> positions = new();
-        List<Tile> tiles = new();
+        print("get");
         float shortestDistance = 100;
         int index = 0;
 
-        for (int x = 0; x < grid.GetLength(0); x++)
+        for (int i = 0; i < tilePositions.Count; i++)
         {
-            for (int z = 0; z < grid.GetLength(1); z++)
-            {
-                tiles.Add(grid[x, z]);
-                positions.Add(Vector3Int.FloorToInt(grid[x, z].pos));
-            }
-        }
-
-        for (int i = 0; i < positions.Count; i++)
-        {
-            if (Vector3.Distance(positions[i], pos) < shortestDistance)
+            if (Vector3.Distance(tilePositions[i], pos) < shortestDistance)
             {
                 index = i;
-                shortestDistance = Vector3.Distance(positions[i], pos);
+                shortestDistance = Vector3.Distance(tilePositions[i], pos);
             }
         }
 
-        return positions[index];
+        return tilePositions[index];
     }
 
     public bool GetOccupanyPendingObject()
     {
-        Tile[] tiles = CheckOccupancy2();
+        //Tile[] tiles = CheckOccupancyPendingObject();
 
-        foreach (var tile in tiles)
-        {
-            if (tile.isOccupied)
-            {
-                return true;
-            }
-        }
+        //foreach (var tile in tiles)
+        //{
+        //    if (tile.isOccupied)
+        //    {
+        //        return true;
+        //    }
+        //}
 
         return false;
     }
@@ -105,11 +99,9 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public Tile[] CheckOccupancy2()
+    public Tile[] CheckOccupancyPendingObject()
     {
         List<Tile> tiles = new();
-
-        //CheckOccupancy();
 
         buildingManager.GetPendingObject().layer = (int)Mathf.Log(tempBuildingLayer.value, 2);
 
@@ -142,19 +134,19 @@ public class GridManager : MonoBehaviour
     {
         if (grid == null) return;
 
-        for (int x = 0; x < grid.GetLength(0); x++)
-        {
-            for (int z = 0; z < grid.GetLength(1); z++)
-            {
-                Gizmos.color = Color.white;
+        //for (int x = 0; x < grid.GetLength(0); x++)
+        //{
+        //    for (int z = 0; z < grid.GetLength(1); z++)
+        //    {
+        //        Gizmos.color = Color.white;
 
-                if (grid[x, z].isOccupied)
-                {
-                    Gizmos.color = Color.red;
-                }
+        //        if (grid[x, z].isOccupied)
+        //        {
+        //            Gizmos.color = Color.red;
+        //        }
 
-                Gizmos.DrawWireCube(new Vector3(grid[x, z].pos.x, 0, grid[x, z].pos.z), new Vector3(0.9f, 0, 0.9f));
-            }
-        }
+        //        Gizmos.DrawWireCube(new Vector3(grid[x, z].pos.x, 0, grid[x, z].pos.z), new Vector3(0.9f, 0, 0.9f));
+        //    }
+        //}
     }
 }
