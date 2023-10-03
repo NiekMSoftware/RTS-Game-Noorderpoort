@@ -98,8 +98,9 @@ public class BuildingBase : MonoBehaviour
         currentState = States.Normal;
         ParticleSystem particle = Instantiate(particleObject, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
         particle.Play();
-        FindClosestResourceManager(this.transform, currentStorage[0].data);
-
+        FindClosestResourceManager(transform, currentStorage[0].data);
+        yield return new WaitForSeconds(particle.main.duration);
+        particle.GetComponent<ParticleSystemRenderer>().material.color = Color.white;
 
         yield return null;
     }

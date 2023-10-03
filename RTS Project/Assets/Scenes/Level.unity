@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -260,9 +260,9 @@ PrefabInstance:
       objectReference: {fileID: 1626420541}
     - target: {fileID: 4960871854027342727, guid: 14d717b6b9bb25049a85cee8480ea724,
         type: 3}
-      propertyPath: buildProgressHeight
-      value: 1.5
-      objectReference: {fileID: 0}
+      propertyPath: buildErrorParent
+      value: 
+      objectReference: {fileID: 1422069670}
     - target: {fileID: 4960871854027342727, guid: 14d717b6b9bb25049a85cee8480ea724,
         type: 3}
       propertyPath: buttons.Array.data[0]
@@ -283,11 +283,6 @@ PrefabInstance:
       propertyPath: buttons.Array.data[3]
       value: 
       objectReference: {fileID: 1169274211}
-    - target: {fileID: 4960871854027342727, guid: 14d717b6b9bb25049a85cee8480ea724,
-        type: 3}
-      propertyPath: objects.Array.data[2].multiPlace
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5290549236025193350, guid: 14d717b6b9bb25049a85cee8480ea724,
         type: 3}
       propertyPath: m_Name
@@ -1483,6 +1478,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 888b82d808e72d9438b936a33ab8907c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &1422069670 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5314710920988549199, guid: 15487bef90308ce46b42e6411d55c4cf,
+    type: 3}
+  m_PrefabInstance: {fileID: 713222366}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1437358349
 PrefabInstance:
   m_ObjectHideFlags: 0

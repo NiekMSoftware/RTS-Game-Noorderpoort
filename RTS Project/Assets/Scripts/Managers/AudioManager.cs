@@ -1,5 +1,7 @@
 using DG.Tweening;
+using System.Collections.Generic;
 using UnityEngine;
+using static AudioManager;
 
 public class AudioManager : MonoBehaviour
 {
@@ -21,7 +23,7 @@ public class AudioManager : MonoBehaviour
     public class AudioGroup
     {
         public AudioGroupNames name;
-        public AudioSource[] audioSources;
+        public List<AudioSource> audioSources;
         public bool isPlaying = false;
     }
 
@@ -43,14 +45,16 @@ public class AudioManager : MonoBehaviour
             {
                 if (audio.isPlaying)
                 {
+                    print("something is playing");
                     audioSourceToStop = audio;
-                    return;
+                    break;
                 }
             }
         }
 
         audioGroup.isPlaying = true;
-        int randomNum = Random.Range(0, audioGroup.audioSources.Length);
+        int randomNum = Random.Range(0, audioGroup.audioSources.Count);
+
 
         float randomVolume = 1;
 
@@ -63,12 +67,25 @@ public class AudioManager : MonoBehaviour
         audioGroup.audioSources[randomNum].volume = 0;
 
         audioGroup.audioSources[randomNum].loop = shouldLoop;
-        //audioGroup.audioSources[randomNum].Play();
-        //audioGroup.audioSources[randomNum].DOFade(randomVolume, 1);
         audioGroup.audioSources[randomNum].Play();
-        audioSequence.Append(audioSourceToStop.DOFade(0, 1));
-        audioSequence.Append(audioGroup.audioSources[randomNum].DOFade(randomVolume, 1).OnComplete(() => audioSourceToStop.Stop()));
+        if (audioSourceToStop)
+        {
+            print("fade out audio");
+            audioSequence.Append(audioSourceToStop.DOFade(0, 1));
+        }
+        audioSequence.Append(audioGroup.audioSources[randomNum].DOFade(randomVolume, 1).OnComplete(() => StopAudioSource(audioSourceToStop, audioGroup, randomNum)));
         audioSequence.Play();
+    }
+
+    private void StopAudioSource(AudioSource audioSource, AudioGroup audioGroup, int randomNum)
+    {
+        if (audioSource)
+        {
+            print("stop");
+            audioSource.Stop();
+            audioGroup.audioSources.Remove(audioGroup.audioSources[randomNum]);
+            audioGroup.audioSources.Add(audioSource);
+        }
     }
 
     public void PlaySound(AudioSource audioSource, bool shouldLoop = false)
