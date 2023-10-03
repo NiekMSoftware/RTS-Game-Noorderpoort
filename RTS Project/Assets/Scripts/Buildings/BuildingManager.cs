@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -55,6 +56,11 @@ public class BuildingManager : MonoBehaviour
         public float buildTime;
         public bool isUnlocked;
         public int[] buildingsToUnlock;
+    }
+
+    private void Awake()
+    {
+        buildParticleMaterial.color = Color.white;
     }
 
     private void Start()

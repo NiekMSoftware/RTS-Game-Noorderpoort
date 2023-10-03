@@ -126,7 +126,7 @@ MonoBehaviour:
   - model: {fileID: 2432438935407483892, guid: 3fe74175db7cfc64e8eb83e219921af4, type: 3}
     yHeight: 1
     recipes: []
-    multiPlace: 0
+    multiPlace: 1
     buildParticleRandomColor:
       serializedVersion: 2
       key0: {r: 1, g: 0.3726415, b: 0.3726415, a: 1}
@@ -198,9 +198,11 @@ MonoBehaviour:
     isUnlocked: 0
     buildingsToUnlock: 
   resources: {fileID: 0}
+  gridManager: {fileID: 0}
+  terrain: {fileID: 0}
   buildProgressPrefab: {fileID: 863354181301575538, guid: bac4b3a229a7de0498d4928b343b3bfb,
     type: 3}
-  buildProgressHeight: 5
+  buildProgressHeight: 1.5
   buildParticle: {fileID: 3392335869857621335, guid: 7cd638073cc234548803694628a32bcf,
     type: 3}
   buildParticleMaterial: {fileID: 2100000, guid: 275fd92925e3e124aa92ec3d30e063ba,
