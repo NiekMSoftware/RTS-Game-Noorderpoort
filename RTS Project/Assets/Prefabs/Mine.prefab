@@ -32,7 +32,7 @@ Transform:
   m_Children:
   - {fileID: 6535320631260924044}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5247091873377409366
 MonoBehaviour:
@@ -49,15 +49,15 @@ MonoBehaviour:
   buildingHp: 50
   maxWorkers: 5
   currentStorage:
-  - data: {fileID: 0}
+  - data: {fileID: 11400000, guid: 0c0ea06af6a171e42a725e0fb10167fc, type: 2}
     amount: 0
-    maxAmount: 0
+    maxAmount: 10000
   workers: []
-  jobName: 
-  resourceTargets: []
-  jobs: 0
+  jobName: StoneBOi
+  jobs: 1
   currentState: 0
-  buildingMaterial: {fileID: 2100000, guid: cac183192c43ae94daa0febcf6779c36, type: 2}
+  resourceTypes: []
+  resourceAreas: []
 --- !u!65 &4694457708341824937
 BoxCollider:
   m_ObjectHideFlags: 0

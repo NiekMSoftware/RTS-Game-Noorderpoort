@@ -47,7 +47,6 @@ public class ResourceSpawnManager : MonoBehaviour
 
         if (Physics.Raycast(_spawnLocation, -Vector3.up + new Vector3(0, -2, 0), out RaycastHit hit, Mathf.Infinity, groundLayer))
         {
-            print("ray hit");
             terrainNormal = hit.normal;
             Debug.DrawRay(_spawnLocation, terrainNormal, Color.red, 60);
         }
