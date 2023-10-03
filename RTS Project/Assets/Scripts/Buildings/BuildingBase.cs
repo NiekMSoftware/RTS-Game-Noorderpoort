@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BuildingBase : MonoBehaviour
@@ -13,8 +14,8 @@ public class BuildingBase : MonoBehaviour
     [SerializeField] private States currentState;
     private List<Material> savedMaterials = new();
     private GameObject particleObject;
+    public List<GameObject> resourceTypes = new();
     public List<GameObject> resourceAreas = new();
-    private GameObject resourceAreaSpawnerObject;
     private int scanRange = 200;
 
     private Material buildingMaterial;
@@ -26,21 +27,28 @@ public class BuildingBase : MonoBehaviour
         Building,
         Normal
     }
-
-    private void Start()
-    {
-        FindClosestResourceManager(this.transform, currentStorage[0].data);
-        resourceAreaSpawnerObject = GameObject.Find("ResourceAreaSpawner");
-    }
     public GameObject FindClosestResourceManager(Transform buildingBase, ItemData itemdata)
     {
-        foreach (ResourceManager resource in FindObjectsOfType<ResourceManager>())
+        foreach (Transform resourceType in FindAnyObjectByType<ResourceAreaSpawner>().GetComponentInChildren<Transform>())
         {
-            if (!resourceAreas.Contains(resource.gameObject))
+            GameObject childGameObject = resourceType.gameObject;
+
+            if (!resourceTypes.Contains(childGameObject) && itemdata == currentStorage[0].data)
             {
-                resourceAreas.Add(resource.gameObject);
+                resourceTypes.Add(childGameObject);
+                
+            }
+            foreach (Transform resource in resourceType.GetComponentInChildren<Transform>())
+            {
+                if (!resourceAreas.Contains(resource.gameObject))
+                {
+                    resourceAreas.Add(resource.gameObject);
+
+                }
             }
         }
+
+
 
         GameObject closestResource = null;
         float closestDistance = scanRange;
@@ -90,6 +98,8 @@ public class BuildingBase : MonoBehaviour
         currentState = States.Normal;
         ParticleSystem particle = Instantiate(particleObject, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
         particle.Play();
+        FindClosestResourceManager(this.transform, currentStorage[0].data);
+
 
         yield return null;
     }
@@ -157,7 +167,8 @@ public class BuildingBase : MonoBehaviour
         }
         else if (workers.Count < maxWorkers)
         {
-            worker.InitializeWorker(gameObject, jobs);
+            
+            worker.InitializeWorker(gameObject, jobs, FindClosestResourceManager(this.transform, currentStorage[0].data));
             workers.Add(worker);
         }
     }
@@ -236,7 +247,7 @@ public class BuildingBase : MonoBehaviour
 
                 for (int i = 0; i < materials.Length; i++)
                 {
-                    print(materials[i].name + " " + i + mr2.transform.GetSiblingIndex());
+                    //print(materials[i].name + " " + i + mr2.transform.GetSiblingIndex());
                     savedMaterials.Add(materials[i]);
                 }
             }

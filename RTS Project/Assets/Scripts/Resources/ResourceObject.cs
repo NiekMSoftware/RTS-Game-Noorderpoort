@@ -7,10 +7,10 @@ using UnityEngine;
 public class ResourceObject : MonoBehaviour
 {
     [SerializeField] public ItemSlot slot;
-    private ResourceManager resourceManager;
+    private ResourceObjectManager resourceManager;
     private void Awake()
     {
-        resourceManager = FindObjectOfType<ResourceManager>();
+        resourceManager = FindObjectOfType<ResourceObjectManager>();
         StartCoroutine(AmountChanger());
     }
 
