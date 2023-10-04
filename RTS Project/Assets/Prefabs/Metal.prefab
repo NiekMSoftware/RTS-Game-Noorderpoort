@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3266933957997051367}
   - component: {fileID: 7950675862453578318}
   m_Layer: 12
-  m_Name: Rocks 2
+  m_Name: Metal
   m_TagString: StoneResource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41,7 +41,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8952031714232469564}
-  m_Mesh: {fileID: -4687895321025338212, guid: 25a3ed54f6431474e9855f7ce61b90f9, type: 3}
+  m_Mesh: {fileID: -4687895321025338212, guid: 2a5b53bf2bd533943a11a218474f4f65, type: 3}
 --- !u!23 &3266933957997051367
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -62,7 +62,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 194762e40d2f56c49bf0736afba293af, type: 2}
+  - {fileID: -876546973899608171, guid: 2a5b53bf2bd533943a11a218474f4f65, type: 3}
+  - {fileID: -4973734387028869240, guid: 2a5b53bf2bd533943a11a218474f4f65, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -97,6 +98,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slot:
-    data: {fileID: 11400000, guid: 4178d3d151ebd1a4295d48f9a7f482c9, type: 2}
+    data: {fileID: 11400000, guid: 161a6795559e79647b98c0f3e168464e, type: 2}
     amount: 15
     maxAmount: 33
