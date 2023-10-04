@@ -2,8 +2,6 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -244,6 +242,8 @@ public class BuildingManager : MonoBehaviour
         {
             objects[objects[currentIndex].buildingsToUnlock[i]].isUnlocked = true;
         }
+
+
 
         UpdateButtons();
 

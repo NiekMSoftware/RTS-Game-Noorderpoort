@@ -6,7 +6,7 @@ public class GridManager : MonoBehaviour
 {
     public static GridManager Instance;
 
-    public Tile[,] grid;
+    public static Tile[,] grid;
     [SerializeField] private Vector2Int gridSize;
     [SerializeField] private Vector3 gridOffset;
     [SerializeField] private LayerMask buildingLayer;
@@ -26,6 +26,24 @@ public class GridManager : MonoBehaviour
     {
         public Vector3 pos;
         public bool isOccupied;
+
+        public Tile[] GetNeighbours()
+        {
+            List<Tile> neighbours = new();
+
+            for (int x = 0; x < 3; x++)
+            {
+                for (int y = 0; y < 3; y++)
+                {
+                    if (grid[x, y] != this)
+                    {
+                        neighbours.Add(grid[x, y]);
+                    }
+                }
+            }
+
+            return neighbours.ToArray();
+        }
     }
 
     [ContextMenu("Setup Grid")]
@@ -43,6 +61,13 @@ public class GridManager : MonoBehaviour
                 tilePositions.Add(Vector3Int.FloorToInt(grid[x, z].pos));
             }
         }
+
+        foreach (var item in grid[1, 1].GetNeighbours())
+        {
+            item.isOccupied = true;
+        }
+
+        //CheckOccupancy();
     }
 
     public Vector3Int GetClosestPointOnGrid(Vector3 pos)
@@ -134,19 +159,19 @@ public class GridManager : MonoBehaviour
     {
         if (grid == null) return;
 
-        //for (int x = 0; x < grid.GetLength(0); x++)
-        //{
-        //    for (int z = 0; z < grid.GetLength(1); z++)
-        //    {
-        //        Gizmos.color = Color.white;
+        for (int x = 0; x < grid.GetLength(0); x++)
+        {
+            for (int z = 0; z < grid.GetLength(1); z++)
+            {
+                Gizmos.color = Color.white;
 
-        //        if (grid[x, z].isOccupied)
-        //        {
-        //            Gizmos.color = Color.red;
-        //        }
+                if (grid[x, z].isOccupied)
+                {
+                    Gizmos.color = Color.red;
+                }
 
-        //        Gizmos.DrawWireCube(new Vector3(grid[x, z].pos.x, 0, grid[x, z].pos.z), new Vector3(0.9f, 0, 0.9f));
-        //    }
-        //}
+                Gizmos.DrawWireCube(new Vector3(grid[x, z].pos.x, 0, grid[x, z].pos.z), new Vector3(0.9f, 0, 0.9f));
+            }
+        }
     }
 }
