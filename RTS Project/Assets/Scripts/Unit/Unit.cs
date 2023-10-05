@@ -35,7 +35,7 @@ public class Unit : MonoBehaviour
     
     #region Enums
 
-    public enum Jobs
+    protected enum Jobs
     {
         None,
         Builder,
@@ -45,7 +45,7 @@ public class Unit : MonoBehaviour
         Nurse
     }
 
-    public enum TypeUnit
+    protected enum TypeUnit
     {
         None,
         Human,
@@ -58,27 +58,23 @@ public class Unit : MonoBehaviour
 
     #region Combat Functions
 
-    public int TakeDamage(int dealtDamage)
+    protected virtual int TakeDamage(int dealtDamage)
     {
         int remainingHealth = this.unitHealth - dealtDamage;
         return remainingHealth;
     }
 
-    public int DealDamage(int damage)
+    protected virtual int DealDamage(int damage)
     {
         return damage;
     }
 
-    public void Death()
+    protected virtual void Death()
     {
-        // Kill off the Unit once it's health reaches 0
-        if (unitHealth <= 0)
-        {
-            // Play death animation + particle system
-        }
+        
     }
 
-    public int Heal(int healing)
+    protected virtual int Heal(int healing)
     {
         int gainedHealth = unitHealth + healing;
 
@@ -89,9 +85,9 @@ public class Unit : MonoBehaviour
 
     #region Unit Location Controller
 
-    public void SetSelectionObject(bool value) => selectionObject.SetActive(value);
+    protected void SetSelectionObject(bool value) => selectionObject.SetActive(value);
 
-    public void SendUnitToLocation(Vector3 pos)
+    protected void SendUnitToLocation(Vector3 pos)
     {
         //doesnt work entirely
         if (Vector3.Distance(transform.position, pos) > 1)
@@ -104,7 +100,5 @@ public class Unit : MonoBehaviour
         }
     }
     
-    
-
     #endregion
 }
