@@ -8,9 +8,9 @@ public class SoldierUnit : Unit
         
     }
 
-    protected override void Death() {
-        if (unitHealth <= 0) {
-            // Play death anim
-        }
-    }
+    //protected override void Death() {
+    //    if (unitHealth <= 0) {
+    //        // Play death anim
+    //    }
+    //}
 }
