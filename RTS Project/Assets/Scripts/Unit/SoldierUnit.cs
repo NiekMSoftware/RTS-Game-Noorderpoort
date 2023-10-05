@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class SoldierUnit : Unit
 {
-    public SoldierUnit() 
+    public SoldierUnit()
     {
-        
+
     }
 
-    protected override void Death() 
+    protected override void Death()
     {
-        if (unitHealth <= 0) {
+        if (unitHealth <= 0)
+        {
             // Play death anim
         }
     }
+
 }
