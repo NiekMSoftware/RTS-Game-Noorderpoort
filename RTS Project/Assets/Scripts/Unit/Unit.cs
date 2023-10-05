@@ -85,9 +85,9 @@ public class Unit : MonoBehaviour
 
     #region Unit Location Controller
 
-    protected void SetSelectionObject(bool value) => selectionObject.SetActive(value);
+    public void SetSelectionObject(bool value) => selectionObject.SetActive(value);
 
-    protected void SendUnitToLocation(Vector3 pos)
+    public void SendUnitToLocation(Vector3 pos)
     {
         //doesnt work entirely
         if (Vector3.Distance(transform.position, pos) > 1)
