@@ -27,9 +27,9 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
-  m_LightmapFlags: 0
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
+  m_LightmapFlags: 1
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 1
   m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses: []
@@ -105,7 +105,7 @@ Material:
     - _ClearCoatSmoothness: 0
     - _Cull: 2
     - _Cutoff: 0.5
-    - _Density: 1.88
+    - _Density: 1
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
@@ -132,8 +132,9 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 0}
-    - _Color_2: {r: 0.019134922, g: 0.06028745, b: 0.8113208, a: 0}
+    - _Color: {r: 1.4980394, g: 1.4980394, b: 1.4980394, a: 1}
+    - _Color2: {r: 0, g: 0.0015323207, b: 0.3584906, a: 1}
+    - _Color_2: {r: 0.0005339965, g: 0.0023756637, b: 0.03773582, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Height: {r: 0, g: 2, b: 0, a: 0}
     - _ScrollDirection: {r: 1, g: 0, b: 0, a: 0}

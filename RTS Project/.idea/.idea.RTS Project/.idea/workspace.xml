@@ -5,7 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="61fec265-b941-4aea-9e79-1061e99e3b0b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Prefabs/AI/Niek - Character Test.prefab" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Prefabs/AI/Niek - Character Test.prefab.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Niek Scene.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Niek Scene/NavMesh-Character.asset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Niek Scene/NavMesh-Character.asset.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Niek Scene/NavMesh-Ground.asset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Niek Scene/NavMesh-Ground.asset.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.RTS Project/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RTS Project/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/AI/AI.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/AI/AI.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Niek Scene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Niek Scene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Unit/Unit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Unit/Unit.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -111,6 +120,7 @@
       <workItem from="1695629227996" duration="95000" />
       <workItem from="1695644271598" duration="76000" />
       <workItem from="1695644611246" duration="1045000" />
+      <workItem from="1695889006627" duration="3541000" />
     </task>
     <servers />
   </component>
