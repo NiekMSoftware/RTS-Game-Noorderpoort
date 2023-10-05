@@ -50,7 +50,8 @@ public class Unit : MonoBehaviour
         None,
         Human,
         Animal,
-        DarkElves
+        DarkElves,
+        Special
     }
 
     #endregion
