@@ -1396,13 +1396,19 @@ PrefabInstance:
     - target: {fileID: 7104704401532483812, guid: 882d516c60352f74b866e4a1e6a01077,
         type: 3}
       propertyPath: gridSize.x
-      value: 500
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 7104704401532483812, guid: 882d516c60352f74b866e4a1e6a01077,
         type: 3}
       propertyPath: gridSize.y
-      value: 500
+      value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 7104704401532483812, guid: 882d516c60352f74b866e4a1e6a01077,
+        type: 3}
+      propertyPath: tilePrefab
+      value: 
+      objectReference: {fileID: 845174674004875299, guid: 6935f65b8ba423a4bb8b2537ec36f5bf,
+        type: 3}
     - target: {fileID: 7104704401532483812, guid: 882d516c60352f74b866e4a1e6a01077,
         type: 3}
       propertyPath: buildingManager
