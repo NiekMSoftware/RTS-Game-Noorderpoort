@@ -1243,7 +1243,7 @@ MonoBehaviour:
   specialUnitObject: {fileID: 3605923049727603461, guid: a3fd11bbf25d1d245b39327fd77cdede,
     type: 3}
   spawnTime: 1
-  spawnDelay: 0.5
+  spawnDelay: 5
   UnitList: []
   GoDown: 0
   stopSpawning: 0

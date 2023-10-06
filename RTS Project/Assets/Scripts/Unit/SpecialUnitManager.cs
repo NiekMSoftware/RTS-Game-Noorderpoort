@@ -7,9 +7,10 @@ public class SpecialUnitManager : MonoBehaviour
 {
     [Header("Timer")]
     public GameObject specialUnitObject;
+    private GameObject currentUnitObject;
     public float spawnTime;
     public float spawnDelay;
-    [SerializeField] private List<GameObject> UnitList = new();
+    public List<GameObject> UnitList = new();
     public bool GoDown = false;
     public bool stopSpawning = false;
 
@@ -23,24 +24,25 @@ public class SpecialUnitManager : MonoBehaviour
 
     public void SpawnObject()
     {
-        while(UnitList.Count >= 0)
-        {
-            Instantiate(specialUnitObject, transform.position, transform.rotation);
-            UnitList.Add(specialUnitObject);
+        currentUnitObject = Instantiate(specialUnitObject, transform.position, transform.rotation);
+        SpecialUnit currentSpecialUnit = currentUnitObject.GetComponent<SpecialUnit>();
+        currentSpecialUnit.refSpecialUnitManager = this;
+        UnitList.Add(currentUnitObject);
 
-            if (UnitList.Count == 5)
-            {
-                stopSpawning = true;
-            }
-        }
+        if (UnitList.Count == 5)
+        {
+            stopSpawning = true;
+        }      
         
         if (stopSpawning)
         {
-            CancelInvoke("SpawnObject");
-            specialUnit.health--;
-            UnitList.Clear();
-
-            stopSpawning = false;
+            print("StopSpawning!!!!!!!");
+            foreach(GameObject unit in UnitList)
+            {
+                print(unit.name);
+                currentSpecialUnit = unit.GetComponent<SpecialUnit>();
+                currentSpecialUnit.health--;
+            }            
         }
     }
 }

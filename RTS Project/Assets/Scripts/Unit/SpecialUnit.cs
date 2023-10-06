@@ -8,22 +8,27 @@ using UnityEngine;
 public class SpecialUnit : Unit
 {
     [Header("FUCKING HELL KUT DING WERK")]
-    public int health;
+    public int health = 1;
+    public SpecialUnitManager refSpecialUnitManager;
 
     private void Start()
     {
-        unitHealth = health;
+        
     }
 
     private void Update()
     {
         Death();
+        unitHealth = health;
     }
 
     protected override void Death()
     {
+        print("Death");
         if(unitHealth <= 0)
         {
+            print("Destroyed GO");
+            refSpecialUnitManager.UnitList.Remove(gameObject);
             Destroy(gameObject);
         }
     }
