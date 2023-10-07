@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
@@ -14,57 +15,57 @@ public class GridManager : MonoBehaviour
     [SerializeField] private LayerMask gridLayer;
     [SerializeField] private BuildingManager buildingManager;
     [SerializeField] private GameObject tilePrefab;
-    [SerializeField] private int groupEvery;
-    [SerializeField] private TileGroupManager tileGroupManager;
 
     private void Awake()
     {
         Instance = this;
 
+        //Invoke(nameof(SetupGrid), 1);
         SetupGrid();
-        DrawGrid();
     }
 
-    [ContextMenu("Setup Grid")]
     private void SetupGrid()
     {
+        Stopwatch stopWatch = Stopwatch.StartNew();
+
         grid = new Tile[gridSize.x, gridSize.y];
 
-        for (int x = 0; x < grid.GetLength(0); x++)
+        for (int x = 0; x < gridSize.x; x++)
         {
-            for (int z = 0; z < grid.GetLength(1); z++)
+            for (int z = 0; z < gridSize.y; z++)
             {
-                Tile tile = new();
-                grid[x, z] = tile;
-                grid[x, z].pos = new Vector3Int(x, 0, z) + gridOffset;
+                grid[x, z] = SpawnTile(new Vector3(x, 0, z) + gridOffset);
             }
         }
+
+        stopWatch.Stop();
+        print("Setupgrid : " + stopWatch.ElapsedMilliseconds + "ms");
     }
 
-    public Vector3Int GetClosestPointOnGrid(Vector3 pos)
-    {
-        print("get");
-        float shortestDistance = 100;
-        int index = 0;
+    //public Vector3Int GetClosestPointOnGrid(Vector3 pos)
+    //{
+    //    print("get");
+    //    float shortestDistance = 100;
+    //    int index = 0;
 
-        Tile tile = null;
+    //    Tile tile = null;
 
-        if (Physics.Raycast(pos, Vector3.down, out RaycastHit hit, Mathf.Infinity, gridLayer))
-        {
-            tile = hit.transform.GetComponent<Tile>();
-        }
+    //    if (Physics.Raycast(pos, Vector3.down, out RaycastHit hit, Mathf.Infinity, gridLayer))
+    //    {
+    //        tile = hit.transform.GetComponent<Tile>();
+    //    }
 
-        //for (int i = 0; i < tilePositions.Count; i++)
-        //{
-        //    if (Vector3.Distance(tilePositions[i], pos) < shortestDistance)
-        //    {
-        //        index = i;
-        //        shortestDistance = Vector3.Distance(tilePositions[i], pos);
-        //    }
-        //}
+    //    //for (int i = 0; i < tilePositions.Count; i++)
+    //    //{
+    //    //    if (Vector3.Distance(tilePositions[i], pos) < shortestDistance)
+    //    //    {
+    //    //        index = i;
+    //    //        shortestDistance = Vector3.Distance(tilePositions[i], pos);
+    //    //    }
+    //    //}
 
-        return Vector3Int.CeilToInt(tile.pos);
-    }
+    //    return Vector3Int.CeilToInt(tile.pos);
+    //}
 
     public bool GetOccupanyPendingObject()
     {
@@ -81,25 +82,73 @@ public class GridManager : MonoBehaviour
         return false;
     }
 
-    public void CheckOccupancy()
+    public void CheckOccupancy(Vector3 pos)
     {
-        for (int x = 0; x < grid.GetLength(0); x++)
-        {
-            for (int z = 0; z < grid.GetLength(1); z++)
-            {
-                Collider[] colliders = new Collider[1];
-                Physics.OverlapSphereNonAlloc(grid[x, z].pos, 0.1f, colliders, buildingLayer);
+        UnityEngine.Debug.DrawRay(pos, Vector3.down * 100, Color.red, 60f);
 
-                if (colliders[0] != null)
+        if (Physics.Raycast(pos, Vector3.down, out RaycastHit hit, Mathf.Infinity, gridLayer))
+        {
+            int amountCollided = 0;
+
+            Tile startTile = hit.transform.GetComponent<Tile>();
+
+            Collider[] colliders = new Collider[1];
+            Physics.OverlapSphereNonAlloc(startTile.pos, 1f, colliders, buildingLayer);
+
+            print(colliders[0]);
+
+            if (colliders[0] != null)
+            {
+                print("First tile collided with building");
+                amountCollided++;
+                startTile.isOccupied = true;
+            }
+            else
+            {
+                print("First tile not occupied");
+                startTile.isOccupied = false;
+            }
+
+            if (amountCollided > 0)
+            {
+                amountCollided = 0;
+
+                foreach (var tile in hit.transform.GetComponent<Tile>().GetNeighbours())
                 {
-                    grid[x, z].isOccupied = true;
-                }
-                else
-                {
-                    grid[x, z].isOccupied = false;
+                    Collider[] colliders2 = new Collider[1];
+                    Physics.OverlapSphereNonAlloc(tile.pos, 0.1f, colliders2, buildingLayer);
+
+                    if (colliders2[0] != null)
+                    {
+                        print("neighbouring tile : " + tile + " collided with building");
+                        amountCollided++;
+                        tile.isOccupied = true;
+                    }
+                    else
+                    {
+                        tile.isOccupied = false;
+                    }
                 }
             }
         }
+
+        //for (int x = 0; x < grid.GetLength(0); x++)
+        //{
+        //    for (int z = 0; z < grid.GetLength(1); z++)
+        //    {
+        //        Collider[] colliders = new Collider[1];
+        //        Physics.OverlapSphereNonAlloc(grid[x, z].pos, 0.1f, colliders, buildingLayer);
+
+        //        if (colliders[0] != null)
+        //        {
+        //            grid[x, z].isOccupied = true;
+        //        }
+        //        else
+        //        {
+        //            grid[x, z].isOccupied = false;
+        //        }
+        //    }
+        //}
     }
 
     public Tile[] CheckOccupancyPendingObject()
@@ -117,7 +166,7 @@ public class GridManager : MonoBehaviour
 
                 if (colliders[0] != null)
                 {
-                    Tile tile = new()
+                    Tile tile = new(this)
                     {
                         pos = grid[x, z].pos,
                         isOccupied = grid[x, z].isOccupied,
@@ -133,25 +182,36 @@ public class GridManager : MonoBehaviour
         return tiles.ToArray();
     }
 
-    private void DrawGrid()
+    private IEnumerator DrawGrid()
     {
-        if (grid == null) return;
+        if (grid == null) yield return null;
+
+        Stopwatch stopWatch = Stopwatch.StartNew();
+
+        int count = 100;
 
         for (int x = 0; x < grid.GetLength(0); x++)
         {
             for (int z = 0; z < grid.GetLength(1); z++)
             {
-                //add multithreading
-                StartCoroutine(SpawnTile(grid[x, z].pos));
+                SpawnTile(grid[x, z].pos);
+                count--;
+                if (count < 0)
+                {
+                    count = 100;
+                    yield return null;
+                }
             }
         }
-    }
 
-    IEnumerator SpawnTile(Vector3 pos)
-    {
-        Tile spawnedTile = Instantiate(tilePrefab, pos, Quaternion.identity, transform).GetComponent<Tile>();
-        spawnedTile.Init(Camera.main, 30, this);
+        stopWatch.Stop();
+        print("Draw grid : " + stopWatch.ElapsedMilliseconds + "ms");
 
         yield return null;
+    }
+
+    private Tile SpawnTile(Vector3 pos)
+    {
+        return Instantiate(tilePrefab, pos, Quaternion.identity, transform).GetComponent<Tile>();
     }
 }

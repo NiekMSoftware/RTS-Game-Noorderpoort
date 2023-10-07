@@ -3,19 +3,10 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    float distance;
-    Camera mainCamera;
     GridManager gridManager;
 
     public Vector3 pos;
     public bool isOccupied;
-
-    MeshRenderer meshRenderer;
-
-    private void Awake()
-    {
-        meshRenderer = GetComponent<MeshRenderer>();
-    }
 
     public Tile[] GetNeighbours()
     {
@@ -35,16 +26,8 @@ public class Tile : MonoBehaviour
         return neighbours.ToArray();
     }
 
-    public void Init(Camera camera, float distance, GridManager gridManager)
+    public Tile(GridManager gridManager)
     {
-        mainCamera = camera;
-        this.distance = distance;
         this.gridManager = gridManager;
-    }
-
-    public void UpdateLOD()
-    {
-        //meshRenderer.enabled = Vector3.Distance(transform.position, mainCamera.transform.position) < distance;
-        //print(meshRenderer.enabled);
     }
 }
