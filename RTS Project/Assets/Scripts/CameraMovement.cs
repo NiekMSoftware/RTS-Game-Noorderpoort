@@ -1,3 +1,6 @@
+using System;
+using System.Drawing;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
@@ -9,13 +12,21 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private float minZoomHeight = 10f;
     private bool isRotating = false;
     private Vector3 hitPoint;
-    private float rotationSpeed = 3.5f;
+    private float rotationSpeed = 1000f;
     private bool allowMovement = true;
     [SerializeField] private Transform orientation;
     [SerializeField] private Transform particleSpawnPoint;
 
+    private Vector3 rotatePoint = Vector3.zero;
+
+
+    private void Start()
+    {
+        //Cursor.lockState = CursorLockMode.Locked;
+    }
     private void Update()
     {
+        //orientation.transform.rotation = Quaternion.Euler(-transform.rotation.x, transform.rotation.y, transform.rotation.z);
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Time.timeScale = 15f;
@@ -24,6 +35,10 @@ public class CameraMovement : MonoBehaviour
         hitPoint = hit.point;
         if (Input.GetMouseButton(2))
         {
+            if (!isRotating)
+            {
+                rotatePoint = hitPoint; 
+            }
             isRotating = true;
             allowMovement = false;
         }
@@ -35,11 +50,43 @@ public class CameraMovement : MonoBehaviour
         
         if (isRotating)
         {
+            
             float horizontalInput = Input.GetAxis("Mouse X");
-            transform.RotateAround(hitPoint, Vector3.up, horizontalInput * rotationSpeed);
+            float verticalInput = Input.GetAxis("Mouse Y");
+            //print(verticalInput);
+
+            print(transform.eulerAngles.x);
+            if (transform.eulerAngles.x < 20)
+            {
+                verticalInput = Mathf.Clamp(verticalInput, -1f, 0f);
+                //Quaternion rotation = transform.rotation;
+                //rotation.x = 0.1f;
+                //transform.rotation = rotation;
+            }
+            else if (transform.eulerAngles.x > 60)
+            {
+                verticalInput = Mathf.Clamp(verticalInput, 0f, 1f);
+            }
+
+
+            //// Clamp the X-axis rotation angle between 20 and 60 degrees
+            //float clampedXAngle = Mathf.Clamp(transform.rotation.eulerAngles.x, 20f, 60f);
+
+            //// Create a new Vector3 with the clamped X-axis angle and the original Y and Z angles
+            //Vector3 newRotation = new Vector3(clampedXAngle, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
+
+            //// Create a new quaternion using the clamped rotation
+            //transform.rotation = Quaternion.Euler(newRotation);
+
+            transform.RotateAround(rotatePoint, Vector3.up, Input.GetAxis("Mouse X") * Time.deltaTime * rotationSpeed);
+            transform.RotateAround(rotatePoint, Camera.main.transform.right, Input.GetAxis("Mouse Y") * Time.deltaTime * rotationSpeed);
+            //transform.RotateAround(rotatePoint, new Vector3(0, 1 * horizontalInput, 1 * verticalInput), rotationSpeed * Time.deltaTime);
+
+            //transform.RotateAround(rotatePoint, Vector3.up, horizontalInput * rotationSpeed);
+
 
             Vector3 currentEulerAngles = transform.rotation.eulerAngles;
-            transform.rotation = Quaternion.Euler(currentEulerAngles);
+            transform.rotation = Quaternion.Euler(currentEulerAngles.x, currentEulerAngles.y, 0);
         }
 
         float horizontal = Input.GetAxis("Horizontal");
@@ -85,3 +132,6 @@ public class CameraMovement : MonoBehaviour
 
     public Transform GetParticleSpawnPoint() => particleSpawnPoint;
 }
+
+//print(transform.rotation.x);
+
