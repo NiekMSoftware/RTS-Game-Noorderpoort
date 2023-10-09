@@ -92,8 +92,8 @@ public class GridManager : MonoBehaviour
 
             Tile startTile = hit.transform.GetComponent<Tile>();
 
-            Collider[] colliders = new Collider[1];
-            Physics.OverlapSphereNonAlloc(startTile.pos, 1f, colliders, buildingLayer);
+            //Collider[] colliders = new Collider[1];
+            Collider[] colliders = Physics.OverlapSphere(startTile.pos, 1f, buildingLayer);
 
             print(colliders[0]);
 
