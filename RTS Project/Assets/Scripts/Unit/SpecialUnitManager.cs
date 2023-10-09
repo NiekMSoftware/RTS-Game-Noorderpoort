@@ -16,7 +16,6 @@ public class SpecialUnitManager : MonoBehaviour
 
     public SpecialUnit specialUnit;
 
-    // Start is called before the first frame update
     void Start()
     {
         InvokeRepeating("SpawnObject", spawnTime, spawnDelay);
@@ -41,8 +40,13 @@ public class SpecialUnitManager : MonoBehaviour
             {
                 print(unit.name);
                 currentSpecialUnit = unit.GetComponent<SpecialUnit>();
-                currentSpecialUnit.health--;
+                currentSpecialUnit.health--;                              
             }            
         }
+        /*if (Input.GetKeyDown(KeyCode.V))
+        {
+            Debug.Log("stopspawing false");
+            stopSpawning = false;
+        }*/
     }
 }

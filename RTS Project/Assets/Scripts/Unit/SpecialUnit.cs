@@ -7,8 +7,9 @@ using UnityEngine;
 
 public class SpecialUnit : Unit
 {
-    [Header("FUCKING HELL KUT DING WERK")]
+    [Header("Health")]
     public int health = 1;
+    //aparte health voor GoDown. als die 0 is dan wordt het een unit en krijgt het unitHealth.
     public SpecialUnitManager refSpecialUnitManager;
 
     private void Start()
@@ -33,7 +34,7 @@ public class SpecialUnit : Unit
         }
     }
     //Special creatures have a lot of health. They randomly spawn (in the fog of war) every X minutes.
-    //They can be captured by “killing” it and feeding it until it’s tamed.
+    //They can be captured by “killing” it.
     //You can then use it as a unit. it can die just like any other unit.
     //The creature has abilities that are triggered via the UI.
 
