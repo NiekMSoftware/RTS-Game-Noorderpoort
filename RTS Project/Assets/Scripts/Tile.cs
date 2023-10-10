@@ -26,8 +26,9 @@ public class Tile : MonoBehaviour
         return neighbours.ToArray();
     }
 
-    public Tile(GridManager gridManager)
+    public void Init(Vector3 pos, GridManager gridManager)
     {
+        this.pos = pos;
         this.gridManager = gridManager;
     }
 }
