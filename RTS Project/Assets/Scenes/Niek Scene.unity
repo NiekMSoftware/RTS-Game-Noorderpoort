@@ -344,6 +344,7 @@ MonoBehaviour:
   unitDamage: 0
   job: 0
   typeUnit: 0
+  selectionObject: {fileID: 0}
   myAgent: {fileID: 0}
   groundLayer:
     serializedVersion: 2
@@ -507,6 +508,7 @@ MonoBehaviour:
   unitDamage: 0
   job: 0
   typeUnit: 0
+  selectionObject: {fileID: 0}
   myAgent: {fileID: 0}
   groundLayer:
     serializedVersion: 2
@@ -1038,6 +1040,7 @@ MonoBehaviour:
   unitDamage: 0
   job: 0
   typeUnit: 0
+  selectionObject: {fileID: 0}
   myAgent: {fileID: 0}
   groundLayer:
     serializedVersion: 2
@@ -1201,6 +1204,7 @@ MonoBehaviour:
   unitDamage: 0
   job: 0
   typeUnit: 0
+  selectionObject: {fileID: 0}
   myAgent: {fileID: 0}
   groundLayer:
     serializedVersion: 2
@@ -1784,6 +1788,7 @@ MonoBehaviour:
   unitDamage: 0
   job: 0
   typeUnit: 0
+  selectionObject: {fileID: 0}
   myAgent: {fileID: 0}
   groundLayer:
     serializedVersion: 2
@@ -2170,6 +2175,7 @@ MonoBehaviour:
   unitDamage: 0
   job: 0
   typeUnit: 0
+  selectionObject: {fileID: 0}
   myAgent: {fileID: 0}
   groundLayer:
     serializedVersion: 2
@@ -2311,7 +2317,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1622010426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2440,8 +2446,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6fd66b181cf2b248a38dba6ac7f7626, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitList: []
-  unitsSelected: []
 --- !u!1 &1769858514
 GameObject:
   m_ObjectHideFlags: 0
@@ -2772,13 +2776,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dce770468bdcadb4ead2a96fa851a754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Marker: {fileID: 1955728098}
-  clickable:
-    serializedVersion: 2
-    m_Bits: 64
-  ground:
-    serializedVersion: 2
-    m_Bits: 8
 --- !u!1 &1955728098
 GameObject:
   m_ObjectHideFlags: 0
@@ -2906,7 +2903,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eac538852e83b642b0b18866d4c2e9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boxVisual: {fileID: 221459930}
 --- !u!1 &2116288220
 GameObject:
   m_ObjectHideFlags: 0
