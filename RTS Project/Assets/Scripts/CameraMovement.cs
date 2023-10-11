@@ -50,43 +50,21 @@ public class CameraMovement : MonoBehaviour
         
         if (isRotating)
         {
-            
-            float horizontalInput = Input.GetAxis("Mouse X");
-            float verticalInput = Input.GetAxis("Mouse Y");
-            //print(verticalInput);
+            float horizontalMouseInput = Input.GetAxis("Mouse X");
+            float verticalMouseInput = Input.GetAxis("Mouse Y");
 
-            //print(transform.eulerAngles.x);
             if (transform.eulerAngles.x < 20)
             {
-                print("123");
-                verticalInput = Mathf.Clamp(verticalInput, 0f, 1f);
-
-                //Quaternion rotation = transform.rotation;
-                //rotation.x = 0.1f;
-                //transform.rotation = rotation;
+                verticalMouseInput = Mathf.Clamp(verticalMouseInput, 0f, 1f);
             }
             else if (transform.eulerAngles.x > 60)
             {
-                verticalInput = Mathf.Clamp(verticalInput, -1f, 0f);
+                verticalMouseInput = Mathf.Clamp(verticalMouseInput, -1f, 0f);
 
             }
 
-
-            //// Clamp the X-axis rotation angle between 20 and 60 degrees
-            //float clampedXAngle = Mathf.Clamp(transform.rotation.eulerAngles.x, 20f, 60f);
-
-            //// Create a new Vector3 with the clamped X-axis angle and the original Y and Z angles
-            //Vector3 newRotation = new Vector3(clampedXAngle, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
-
-            //// Create a new quaternion using the clamped rotation
-            //transform.rotation = Quaternion.Euler(newRotation);
-
-            transform.RotateAround(rotatePoint, Vector3.up, Input.GetAxis("Mouse X") * Time.deltaTime * rotationSpeed);
-            transform.RotateAround(rotatePoint, Camera.main.transform.right, verticalInput * Time.deltaTime * rotationSpeed);
-            //transform.RotateAround(rotatePoint, new Vector3(0, 1 * horizontalInput, 1 * verticalInput), rotationSpeed * Time.deltaTime);
-
-            //transform.RotateAround(rotatePoint, Vector3.up, horizontalInput * rotationSpeed);
-
+            transform.RotateAround(rotatePoint, Vector3.up, horizontalMouseInput * Time.deltaTime * rotationSpeed);
+            transform.RotateAround(rotatePoint, Camera.main.transform.right, verticalMouseInput * Time.deltaTime * rotationSpeed);
 
             Vector3 currentEulerAngles = transform.rotation.eulerAngles;
             transform.rotation = Quaternion.Euler(currentEulerAngles.x, currentEulerAngles.y, 0);
@@ -135,6 +113,3 @@ public class CameraMovement : MonoBehaviour
 
     public Transform GetParticleSpawnPoint() => particleSpawnPoint;
 }
-
-//print(transform.rotation.x);
-
