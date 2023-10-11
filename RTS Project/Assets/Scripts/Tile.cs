@@ -16,9 +16,12 @@ public class Tile : MonoBehaviour
         {
             for (int z = -1; z < 2; z++)
             {
-                if (gridManager.grid[(int)pos.x + x, (int)pos.z + z] != this)
+                if ((int)pos.x + x >= 0 && (int)pos.x + x <= gridManager.grid.GetLength(0) && (int)pos.z + z >= 0 && (int)pos.z + z <= gridManager.grid.GetLength(1))
                 {
-                    neighbours.Add(gridManager.grid[(int)pos.x + x, (int)pos.z + z]);
+                    if (gridManager.grid[(int)pos.x + x, (int)pos.z + z] != this)
+                    {
+                        neighbours.Add(gridManager.grid[(int)pos.x + x, (int)pos.z + z]);
+                    }
                 }
             }
         }

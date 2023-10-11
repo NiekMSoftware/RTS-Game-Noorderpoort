@@ -128,7 +128,7 @@ public class GridManager : MonoBehaviour
 						print("Neighbouring tile : " + tile);
 						Collider[] colliders2 = new Collider[1];
 						Physics.OverlapSphereNonAlloc(tile.pos, 0.1f, colliders2, buildingLayer);
-						tilePos.Add(tile.pos);
+						//tilePos.Add(tile.pos);
 
 						if (colliders2[0] != null)
 						{
@@ -145,11 +145,13 @@ public class GridManager : MonoBehaviour
 						}
 					}
 
-                    tiles.Clear();
-                    tiles = new List<Tile>(tempTiles);
-                    tempTiles.Clear();
                 }
-			}
+
+
+                tiles.Clear();
+                tiles = new List<Tile>(tempTiles);
+                tempTiles.Clear();
+            }
 		}
 	}
 
