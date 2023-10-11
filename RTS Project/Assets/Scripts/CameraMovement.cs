@@ -55,17 +55,20 @@ public class CameraMovement : MonoBehaviour
             float verticalInput = Input.GetAxis("Mouse Y");
             //print(verticalInput);
 
-            print(transform.eulerAngles.x);
+            //print(transform.eulerAngles.x);
             if (transform.eulerAngles.x < 20)
             {
-                verticalInput = Mathf.Clamp(verticalInput, -1f, 0f);
+                print("123");
+                verticalInput = Mathf.Clamp(verticalInput, 0f, 1f);
+
                 //Quaternion rotation = transform.rotation;
                 //rotation.x = 0.1f;
                 //transform.rotation = rotation;
             }
             else if (transform.eulerAngles.x > 60)
             {
-                verticalInput = Mathf.Clamp(verticalInput, 0f, 1f);
+                verticalInput = Mathf.Clamp(verticalInput, -1f, 0f);
+
             }
 
 
@@ -79,7 +82,7 @@ public class CameraMovement : MonoBehaviour
             //transform.rotation = Quaternion.Euler(newRotation);
 
             transform.RotateAround(rotatePoint, Vector3.up, Input.GetAxis("Mouse X") * Time.deltaTime * rotationSpeed);
-            transform.RotateAround(rotatePoint, Camera.main.transform.right, Input.GetAxis("Mouse Y") * Time.deltaTime * rotationSpeed);
+            transform.RotateAround(rotatePoint, Camera.main.transform.right, verticalInput * Time.deltaTime * rotationSpeed);
             //transform.RotateAround(rotatePoint, new Vector3(0, 1 * horizontalInput, 1 * verticalInput), rotationSpeed * Time.deltaTime);
 
             //transform.RotateAround(rotatePoint, Vector3.up, horizontalInput * rotationSpeed);
