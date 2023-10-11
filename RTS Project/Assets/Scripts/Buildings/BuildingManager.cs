@@ -86,7 +86,7 @@ public class BuildingManager : MonoBehaviour
         pendingObject.transform.position = pos;
 
         //Change pending object material based on if it can be placed or not
-        if (gridManager.GetOccupanyPendingObject())
+        if (gridManager.GetOccupany(pos, pendingObject))
         {
             ChangeObjectMaterial(pendingObject, incorrectPlaceMaterial);
         }
@@ -133,7 +133,7 @@ public class BuildingManager : MonoBehaviour
         {
             pendingObject.SetActive(true);
             //check collision
-            if (!gridManager.GetOccupanyPendingObject() && rayHit)
+            if (!gridManager.GetOccupany(pos, pendingObject) && rayHit)
             {
                 bool hasEverything = true;
 
@@ -243,8 +243,6 @@ public class BuildingManager : MonoBehaviour
             objects[objects[currentIndex].buildingsToUnlock[i]].isUnlocked = true;
         }
 
-
-
         UpdateButtons();
 
         if (!objects[currentIndex].multiPlace)
@@ -252,7 +250,7 @@ public class BuildingManager : MonoBehaviour
             ResetObject();
         }
 
-        gridManager.CheckOccupancy();
+        gridManager.SetOccupancy(spawnedBuilding.transform.position);
     }
 
     private void FixedUpdate()
@@ -270,7 +268,14 @@ public class BuildingManager : MonoBehaviour
             //check raycast for terrain hit normal and check if can place
 
             Vector3 gridPos = Vector3Int.RoundToInt(hit.point);
-            gridPos.y = terrain.SampleHeight(gridPos) + objects[currentIndex].model.transform.localScale.y;
+            if (terrain)
+            {
+                gridPos.y = terrain.SampleHeight(gridPos) + objects[currentIndex].model.transform.localScale.y;
+            }
+            else
+            {
+                gridPos.y = objects[currentIndex].model.transform.localScale.y;
+            }
             pos = gridPos;
 
             //rotate object towards hit.normal

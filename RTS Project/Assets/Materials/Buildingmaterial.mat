@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Buildingmaterial
-  m_Shader: {fileID: -6465566751694194690, guid: f8f0debf659f39340becb806cd6e3f89,
+  m_Shader: {fileID: -6465566751694194690, guid: 5a5fd8be79530d042a5c001468e4bb85,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -132,7 +132,7 @@ Material:
     - _AlphaRange: {r: 0.2, g: 0.8, b: 0, a: 0}
     - _Alpha_Range: {r: 0.2, g: 0.8, b: 0, a: 0}
     - _BaseColor: {r: 0.22665763, g: 1, b: 0, a: 0.7058824}
-    - _Color: {r: 0.4339623, g: 0.4339623, b: 0.4339623, a: 1}
+    - _Color: {r: 0.75974905, g: 0.75974905, b: 0.75974905, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _NoiseSpeed: {r: 0.1, g: 0.03, b: 0, a: 0}
     - _PowerRange: {r: 0.5, g: 1, b: 0, a: 0}
