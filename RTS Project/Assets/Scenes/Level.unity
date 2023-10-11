@@ -170,6 +170,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 226539239}
     m_Modifications:
+    - target: {fileID: 729508185884157989, guid: 04da167e17f3d7a4bba0b9dbd8eb0b96,
+        type: 3}
+      propertyPath: m_CameraType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2585609115489764413, guid: 04da167e17f3d7a4bba0b9dbd8eb0b96,
         type: 3}
       propertyPath: m_RootOrder
@@ -263,6 +268,11 @@ PrefabInstance:
       propertyPath: buildErrorParent
       value: 
       objectReference: {fileID: 1422069670}
+    - target: {fileID: 4960871854027342727, guid: 14d717b6b9bb25049a85cee8480ea724,
+        type: 3}
+      propertyPath: buildParticleMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: ee39ebe10d2e73b4bb3bdfb2f8b9241c, type: 2}
     - target: {fileID: 4960871854027342727, guid: 14d717b6b9bb25049a85cee8480ea724,
         type: 3}
       propertyPath: buttons.Array.data[0]
@@ -550,7 +560,7 @@ PrefabInstance:
     - target: {fileID: 839569720826515094, guid: e49dccff1924f6e49be9b73ff22ff905,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8174031491341160228, guid: e49dccff1924f6e49be9b73ff22ff905,
         type: 3}
@@ -1396,12 +1406,12 @@ PrefabInstance:
     - target: {fileID: 7104704401532483812, guid: 882d516c60352f74b866e4a1e6a01077,
         type: 3}
       propertyPath: gridSize.x
-      value: 100
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 7104704401532483812, guid: 882d516c60352f74b866e4a1e6a01077,
         type: 3}
       propertyPath: gridSize.y
-      value: 100
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 7104704401532483812, guid: 882d516c60352f74b866e4a1e6a01077,
         type: 3}
@@ -1414,6 +1424,11 @@ PrefabInstance:
       propertyPath: buildingManager
       value: 
       objectReference: {fileID: 331108829}
+    - target: {fileID: 7104704401532483812, guid: 882d516c60352f74b866e4a1e6a01077,
+        type: 3}
+      propertyPath: gridLayer.m_Bits
+      value: 512
+      objectReference: {fileID: 0}
     - target: {fileID: 8908217251154640827, guid: 882d516c60352f74b866e4a1e6a01077,
         type: 3}
       propertyPath: m_Name
