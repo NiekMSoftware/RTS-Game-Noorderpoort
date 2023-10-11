@@ -86,14 +86,14 @@ public class BuildingManager : MonoBehaviour
         pendingObject.transform.position = pos;
 
         //Change pending object material based on if it can be placed or not
-        //if (gridManager.GetOccupanyPendingObject())
-        //{
-        //    ChangeObjectMaterial(pendingObject, incorrectPlaceMaterial);
-        //}
-        //else
-        //{
-        //    ChangeObjectMaterial(pendingObject, correctPlaceMaterial);
-        //}
+        if (gridManager.GetOccupany(pos, pendingObject))
+        {
+            ChangeObjectMaterial(pendingObject, incorrectPlaceMaterial);
+        }
+        else
+        {
+            ChangeObjectMaterial(pendingObject, correctPlaceMaterial);
+        }
 
         HandleInput();
     }
@@ -133,7 +133,7 @@ public class BuildingManager : MonoBehaviour
         {
             pendingObject.SetActive(true);
             //check collision
-            if (!gridManager.GetOccupanyPendingObject() && rayHit)
+            if (!gridManager.GetOccupany(pos, pendingObject) && rayHit)
             {
                 bool hasEverything = true;
 
@@ -250,7 +250,7 @@ public class BuildingManager : MonoBehaviour
             ResetObject();
         }
 
-        gridManager.CheckOccupancy(spawnedBuilding.transform.position);
+        gridManager.SetOccupancy(spawnedBuilding.transform.position);
     }
 
     private void FixedUpdate()
