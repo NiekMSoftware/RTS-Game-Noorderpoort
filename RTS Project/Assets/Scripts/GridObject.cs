@@ -14,6 +14,6 @@ public class GridObject : MonoBehaviour
         Vector3 newPos = transform.position;
         newPos.y = oldPos.y;
         transform.position = newPos;
-        GridManager.Instance.CheckOccupancy(transform.position);
+        GridManager.Instance.SetOccupancy(transform.position);
     }
 }
