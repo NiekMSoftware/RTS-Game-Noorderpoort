@@ -33,7 +33,7 @@ Transform:
   - {fileID: 5780118660089522943}
   - {fileID: 2428122277534083901}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8174031491341160228
 MonoBehaviour:
@@ -67,6 +67,10 @@ MonoBehaviour:
       type: 3}
     texture: {fileID: 2800000, guid: 405390574dde6304aa0dc4ebf5dfc180, type: 3}
     amountToSpawn: 10
+  resourceLayer:
+    serializedVersion: 2
+    m_Bits: 4096
+  terrain: {fileID: 0}
 --- !u!1 &6924859471375939796
 GameObject:
   m_ObjectHideFlags: 0
@@ -76,6 +80,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2523807452295206489}
+  - component: {fileID: 2216028408811036076}
   m_Layer: 0
   m_Name: StoneResource
   m_TagString: Untagged
@@ -98,6 +103,19 @@ Transform:
   m_Father: {fileID: 9059765624243850627}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2216028408811036076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6924859471375939796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ad3162f9754c54e9ff7f7020694367, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentResource: 0
 --- !u!1 &7092660444934034317
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,6 +125,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5780118660089522943}
+  - component: {fileID: 325177991667566721}
   m_Layer: 0
   m_Name: Stone2Resource
   m_TagString: Untagged
@@ -129,6 +148,19 @@ Transform:
   m_Father: {fileID: 9059765624243850627}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &325177991667566721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7092660444934034317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ad3162f9754c54e9ff7f7020694367, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentResource: 2
 --- !u!1 &9196394981039170553
 GameObject:
   m_ObjectHideFlags: 0
@@ -138,6 +170,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2428122277534083901}
+  - component: {fileID: 222771984813959747}
   m_Layer: 0
   m_Name: Stone3Resource
   m_TagString: Untagged
@@ -160,3 +193,16 @@ Transform:
   m_Father: {fileID: 9059765624243850627}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &222771984813959747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9196394981039170553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ad3162f9754c54e9ff7f7020694367, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentResource: 2

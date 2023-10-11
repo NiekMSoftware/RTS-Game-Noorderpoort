@@ -1,3 +1,6 @@
+using System;
+using System.Drawing;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
@@ -9,13 +12,21 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private float minZoomHeight = 10f;
     private bool isRotating = false;
     private Vector3 hitPoint;
-    private float rotationSpeed = 3.5f;
+    private float rotationSpeed = 1000f;
     private bool allowMovement = true;
     [SerializeField] private Transform orientation;
     [SerializeField] private Transform particleSpawnPoint;
 
+    private Vector3 rotatePoint = Vector3.zero;
+
+
+    private void Start()
+    {
+        //Cursor.lockState = CursorLockMode.Locked;
+    }
     private void Update()
     {
+        //orientation.transform.rotation = Quaternion.Euler(-transform.rotation.x, transform.rotation.y, transform.rotation.z);
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Time.timeScale = 15f;
@@ -24,6 +35,10 @@ public class CameraMovement : MonoBehaviour
         hitPoint = hit.point;
         if (Input.GetMouseButton(2))
         {
+            if (!isRotating)
+            {
+                rotatePoint = hitPoint; 
+            }
             isRotating = true;
             allowMovement = false;
         }
@@ -35,11 +50,24 @@ public class CameraMovement : MonoBehaviour
         
         if (isRotating)
         {
-            float horizontalInput = Input.GetAxis("Mouse X");
-            transform.RotateAround(hitPoint, Vector3.up, horizontalInput * rotationSpeed);
+            float horizontalMouseInput = Input.GetAxis("Mouse X");
+            float verticalMouseInput = Input.GetAxis("Mouse Y");
+
+            if (transform.eulerAngles.x < 20)
+            {
+                verticalMouseInput = Mathf.Clamp(verticalMouseInput, 0f, 1f);
+            }
+            else if (transform.eulerAngles.x > 60)
+            {
+                verticalMouseInput = Mathf.Clamp(verticalMouseInput, -1f, 0f);
+
+            }
+
+            transform.RotateAround(rotatePoint, Vector3.up, horizontalMouseInput * Time.deltaTime * rotationSpeed);
+            transform.RotateAround(rotatePoint, Camera.main.transform.right, verticalMouseInput * Time.deltaTime * rotationSpeed);
 
             Vector3 currentEulerAngles = transform.rotation.eulerAngles;
-            transform.rotation = Quaternion.Euler(currentEulerAngles);
+            transform.rotation = Quaternion.Euler(currentEulerAngles.x, currentEulerAngles.y, 0);
         }
 
         float horizontal = Input.GetAxis("Horizontal");

@@ -6,7 +6,7 @@ public class Worker : Unit
 {
     [SerializeField] private GameObject resourceTarget;
     [SerializeField] private GameObject workerHouse;
-    [SerializeField] private ResourceManager resourceManager;
+    [SerializeField] private ResourceObjectManager resourceObjectManager;
     [SerializeField] protected ItemSlot currentStorage;
     [SerializeField] protected int maxStorage = 3;
     [SerializeField] protected float workerHp = 5f;
@@ -43,9 +43,9 @@ public class Worker : Unit
         }
 
     }
-    public void InitializeWorker(GameObject _workerHouse, BuildingBase.Jobs _jobName)
+    public void InitializeWorker(GameObject _workerHouse, BuildingBase.Jobs _jobName, GameObject _resourceObjectManager)
     {
-
+        resourceObjectManager = _resourceObjectManager.GetComponent<ResourceObjectManager>();
         workerHouse = _workerHouse;
         jobName = _jobName.ToString();
     }
@@ -131,7 +131,7 @@ public class Worker : Unit
                 {
                     if (!resourceTarget)
                     {
-                        resourceTarget = resourceManager.FindClosestResource(buildingBase.transform, resourceItem, this);
+                        resourceTarget = resourceObjectManager.FindClosestResource(buildingBase.transform, resourceItem, this);
                     }
                     else
                     {
@@ -172,10 +172,10 @@ public class Worker : Unit
             case State.Idling:
 
                 // If there are resources, go find resource to get
-                if (!resourceTarget && resourceManager.resources.Count > resourceManager.occupiedResources.Count)
+                if (!resourceTarget && resourceObjectManager.resources.Count > resourceObjectManager.occupiedResources.Count)
                 {
                     currentState = State.Moving;
-                    resourceTarget = resourceManager.FindClosestResource(buildingBase.transform, resourceItem, this);
+                    resourceTarget = resourceObjectManager.FindClosestResource(buildingBase.transform, resourceItem, this);
                 }
                 
                 // If inventory isnt full in building and working go to moving

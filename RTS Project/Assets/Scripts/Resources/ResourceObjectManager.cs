@@ -1,12 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ResourceManager : MonoBehaviour
+public class ResourceObjectManager : MonoBehaviour
 {
-    public ItemSlot[] itemSlots;
-
-    public ItemSlot[] GetAllResources() => itemSlots;
-
     public List<GameObject> resources = new List<GameObject>();
     public List<GameObject> occupiedResources = new List<GameObject>();
     private float scanRange = 20f;
@@ -45,7 +41,7 @@ public class ResourceManager : MonoBehaviour
                 }
                 else
                 {
-                    print("Go die");
+                    //print("Go die");
                 }
             }
             if (closestResource != null)

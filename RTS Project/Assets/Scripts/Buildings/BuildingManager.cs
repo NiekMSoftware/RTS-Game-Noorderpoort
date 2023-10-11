@@ -11,7 +11,7 @@ public class BuildingManager : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private PlaceableObject[] objects;
-    [SerializeField] private ResourceManager resources;
+    [SerializeField] private ResourceItemManager resources;
     [SerializeField] private GridManager gridManager;
     [SerializeField] private Terrain terrain;
 
@@ -43,7 +43,6 @@ public class BuildingManager : MonoBehaviour
     private Vector3 pos;
     private RaycastHit hit;
     private bool rayHit;
-    private Vector3 previousPos;
 
     [System.Serializable]
     class PlaceableObject
@@ -220,8 +219,6 @@ public class BuildingManager : MonoBehaviour
 
     private void BuildObject()
     {
-
-
         float randomNum = Random.Range(0f, 1f);
         buildParticleMaterial.color = objects[currentIndex].buildParticleRandomColor.Evaluate(randomNum);
         buildParticle.GetComponent<ParticleSystemRenderer>().material = buildParticleMaterial;
@@ -233,7 +230,8 @@ public class BuildingManager : MonoBehaviour
         spawnedBuilding.Init(buildingMaterial, buildParticle);
         StartCoroutine(spawnedBuilding.Build(objects[currentIndex].buildTime));
 
-        BuildProgress buildProgress = Instantiate(buildProgressPrefab, new Vector3(spawnedBuilding.transform.position.x, buildProgressHeight, spawnedBuilding.transform.position.z), Quaternion.identity).GetComponent<BuildProgress>();
+        BuildProgress buildProgress = Instantiate(buildProgressPrefab, new Vector3(spawnedBuilding.transform.position.x,
+            spawnedBuilding.transform.position.y + spawnedBuilding.transform.localScale.y + buildProgressHeight, spawnedBuilding.transform.position.z), Quaternion.identity).GetComponent<BuildProgress>();
         buildProgress.Init(objects[currentIndex].buildTime);
 
         for (int i = 0; i < objects[currentIndex].buildingsToUnlock.Length; i++)
