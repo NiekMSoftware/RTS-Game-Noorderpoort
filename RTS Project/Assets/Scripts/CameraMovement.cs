@@ -45,15 +45,15 @@ public class CameraMovement : MonoBehaviour
         else
         {
             isRotating = false;
-            Invoke(nameof(AllowMovementInvoker), 0.75f);
+            Invoke(nameof(AllowMovementInvoker), 0.5f);
         }
         
         if (isRotating)
         {
             float horizontalMouseInput = Input.GetAxis("Mouse X");
             float verticalMouseInput = Input.GetAxis("Mouse Y");
-
-            if (transform.eulerAngles.x < 20)
+            verticalMouseInput = Mathf.Clamp(verticalMouseInput, -1f, 1f);
+            if (transform.eulerAngles.x < 10)
             {
                 verticalMouseInput = Mathf.Clamp(verticalMouseInput, 0f, 1f);
             }
@@ -92,18 +92,20 @@ public class CameraMovement : MonoBehaviour
             //{
             //    horizontal = -1;
             //}
+
+            if (transform.position.y > hitPoint.y + maxZoomHeight)
+            {
+                zoom = Mathf.Clamp(zoom, 0f, 1f);
+            }
+            if (transform.position.y < hitPoint.y + minZoomHeight)
+            {
+                zoom = Mathf.Clamp(zoom, -1f, 0f);
+            }
+            transform.position += Time.deltaTime * moveSpeed * orientation.TransformDirection(new Vector3(horizontal * (transform.position.y - hitPoint.y), 0, vertical * (transform.position.y - hitPoint.y)));
+            transform.position += Time.deltaTime * zoomSpeed * transform.TransformDirection(new Vector3(0, 0, zoom * 750));
         }
-        if (transform.position.y > hitPoint.y + maxZoomHeight)
-        {
-            zoom = Mathf.Clamp(zoom, 0f, 1f);
-        }
-        if (transform.position.y < hitPoint.y + minZoomHeight)
-        {
-            zoom = Mathf.Clamp(zoom, -1f, 0f);
-        }
-        
-        transform.position += Time.deltaTime * moveSpeed * orientation.TransformDirection(new Vector3(horizontal * (transform.position.y - hitPoint.y), 0, vertical* (transform.position.y - hitPoint.y)));
-        transform.position += Time.deltaTime * zoomSpeed * transform.TransformDirection(new Vector3(0, 0, zoom * 750));
+
+        orientation.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
     }
 
     private void AllowMovementInvoker()
