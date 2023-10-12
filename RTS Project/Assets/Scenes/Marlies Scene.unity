@@ -1242,12 +1242,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   specialUnitObject: {fileID: 3605923049727603461, guid: a3fd11bbf25d1d245b39327fd77cdede,
     type: 3}
+<<<<<<< Updated upstream
   spawnTime: 1
   spawnDelay: 2
+=======
+  spawnTime: 0
+  spawnDelay: 1
+>>>>>>> Stashed changes
   UnitList: []
   GoDown: 0
   stopSpawning: 0
-  specialUnit: {fileID: 4948552307928526063, guid: a3fd11bbf25d1d245b39327fd77cdede,
+  specialUnit: {fileID: 2121331087622604721, guid: a3fd11bbf25d1d245b39327fd77cdede,
     type: 3}
 --- !u!1 &2111347936
 GameObject:

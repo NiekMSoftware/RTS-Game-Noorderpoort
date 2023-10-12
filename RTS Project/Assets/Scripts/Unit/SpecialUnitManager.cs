@@ -7,10 +7,10 @@ public class SpecialUnitManager : MonoBehaviour
 {
     [Header("Timer")]
     public GameObject specialUnitObject;
-    private GameObject currentUnitObject;
+    public GameObject currentUnitObject;
     public float spawnTime;
     public float spawnDelay;
-    public List<GameObject> UnitList = new();
+    List<GameObject> UnitList;
     public bool GoDown = false;
     public bool stopSpawning = false;
 
@@ -18,9 +18,16 @@ public class SpecialUnitManager : MonoBehaviour
 
     void Start()
     {
-        InvokeRepeating("SpawnObject", spawnTime, spawnDelay);
-    }
+    UnitList = new();
+    InvokeRepeating("SpawnObject", spawnTime, spawnDelay);
 
+    }
+    public void RemoveThis(GameObject DeletedUnit)
+    {
+        UnitList.Remove(DeletedUnit);
+        DestroyImmediate(DeletedUnit, true);
+        print("unit removed");
+    }
     public void SpawnObject()
     {
         currentUnitObject = Instantiate(specialUnitObject, transform.position, transform.rotation);
@@ -28,20 +35,28 @@ public class SpecialUnitManager : MonoBehaviour
         currentSpecialUnit.refSpecialUnitManager = this;
         UnitList.Add(currentUnitObject);
 
-        if (UnitList.Count == 5)
+        if (UnitList.Count >= 6)
         {
             stopSpawning = true;
-        }      
-        
+        }     
+
         if (stopSpawning)
         {
             print("StopSpawning!!!!!!!");
             foreach(GameObject unit in UnitList)
             {
+                if (unit != null) { 
                 print(unit.name);
                 currentSpecialUnit = unit.GetComponent<SpecialUnit>();
+<<<<<<< Updated upstream
                 currentSpecialUnit.health--;                              
             }            
+=======
+                currentSpecialUnit.health--; 
+                stopSpawning = false;
+                }
+            }                     
+>>>>>>> Stashed changes
         }
         /*if (Input.GetKeyDown(KeyCode.V))
         {
