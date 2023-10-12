@@ -87,13 +87,9 @@ public class ResourceSpawnManager : MonoBehaviour
         }
     }
 
-    public void SetSpawnObject(GameObject _spawnObject)
+    public void Init(GameObject spawnObject, Terrain terrain)
     {
-        spawnObject = _spawnObject;
-    }
-
-    public void SetTerrain(Terrain _terrain)
-    {
-        terrain = _terrain;
+        this.spawnObject = spawnObject;
+        this.terrain = terrain;
     }
 }
