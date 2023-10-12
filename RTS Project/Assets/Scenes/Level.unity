@@ -265,6 +265,11 @@ PrefabInstance:
       objectReference: {fileID: 1422069670}
     - target: {fileID: 4960871854027342727, guid: 14d717b6b9bb25049a85cee8480ea724,
         type: 3}
+      propertyPath: buildParticleMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 92a1e7a474f73bf40a6d8ec7b7eb0d3c, type: 2}
+    - target: {fileID: 4960871854027342727, guid: 14d717b6b9bb25049a85cee8480ea724,
+        type: 3}
       propertyPath: buttons.Array.data[0]
       value: 
       objectReference: {fileID: 871768213}
