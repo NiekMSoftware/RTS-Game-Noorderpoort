@@ -5,8 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="61fec265-b941-4aea-9e79-1061e99e3b0b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Gui/Toggler.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Gui/Toggler.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.RTS Project/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RTS Project/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Unit/Unit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Unit/Unit.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Test GUI.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Test GUI.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sprites/Icons- Gui/Stevenhe.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sprites/Icons- Gui/Stevenhe.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sprites/Icons- Gui/metal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sprites/Icons- Gui/metal.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sprites/Icons- Gui/wood.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sprites/Icons- Gui/wood.png.meta" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,7 +45,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "MERGE",
+    "git-widget-placeholder": "Programming-Niek",
     "ignore.virus.scanning.warn.message": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -117,6 +125,7 @@
       <workItem from="1696489848698" duration="260000" />
       <workItem from="1696490369161" duration="272000" />
       <workItem from="1696492168747" duration="191000" />
+      <workItem from="1697097893221" duration="428000" />
     </task>
     <servers />
   </component>
