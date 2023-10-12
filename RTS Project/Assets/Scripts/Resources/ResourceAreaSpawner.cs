@@ -21,15 +21,19 @@ public class ResourceAreaSpawner : MonoBehaviour
 
     private void Start()
     {
-        Stopwatch sw = new();
-        sw.Start();
+        Stopwatch sw = Stopwatch.StartNew();
 
         foreach (var resource in spawnableResources)
         {
             int amountSpawned = 0;
 
-            while (amountSpawned < resource.amountToSpawn)
+            for (int i = 0; i < resource.amountToSpawn + 10; i++)
             {
+                if (amountSpawned >= resource.amountToSpawn)
+                {
+                    return;
+                }
+
                 int randomX = Random.Range(0, scale.x);
                 int randomY = Random.Range(0, scale.y);
 
@@ -41,8 +45,7 @@ public class ResourceAreaSpawner : MonoBehaviour
                     {
                         amountSpawned++;
                         GameObject spawnedResource = Instantiate(resourceManagerToSpawn, position, Quaternion.identity, resource.parent);
-                        spawnedResource.GetComponent<ResourceSpawnManager>().SetSpawnObject(resource.prefabToSpawn);
-                        spawnedResource.GetComponent<ResourceSpawnManager>().SetTerrain(terrain);
+                        spawnedResource.GetComponent<ResourceSpawnManager>().Init(spawnedResource, terrain);
                     }
                 }
             }
