@@ -11,7 +11,7 @@ public class BuildingManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private PlaceableObject[] objects;
     [SerializeField] private ResourceItemManager resources;
-    [SerializeField] private GridManager gridManager;
+    //[SerializeField] private GridManager gridManager;
     [SerializeField] private Terrain terrain;
 
     [Header("Build Progresses")]
@@ -20,7 +20,6 @@ public class BuildingManager : MonoBehaviour
 
     [Header("Particle")]
     [SerializeField] private GameObject buildParticle;
-    [SerializeField] private Material buildParticleMaterial;
 
     [Header("Materials")]
     [SerializeField] private Material buildingMaterial;
@@ -33,9 +32,13 @@ public class BuildingManager : MonoBehaviour
 
     [Header("Variables")]
     [SerializeField] private LayerMask buildLayerMask;
+    [SerializeField] private LayerMask tempBuildingLayerMask;
+    [SerializeField] private LayerMask groundLayerMask;
     [SerializeField] private float degreesToRotate = 90f;
     [SerializeField] private float buildErrorFloatUpSpeed;
     [SerializeField] private Button[] buttons;
+    [SerializeField] private float maxAngle;
+    [SerializeField] private float maxHeight;
 
     private GameObject pendingObject;
     private int currentIndex = -1;
@@ -54,11 +57,6 @@ public class BuildingManager : MonoBehaviour
         public float buildTime;
         public bool isUnlocked;
         public int[] buildingsToUnlock;
-    }
-
-    private void Awake()
-    {
-        buildParticleMaterial.color = Color.white;
     }
 
     private void Start()
@@ -86,7 +84,7 @@ public class BuildingManager : MonoBehaviour
         pendingObject.transform.position = pos;
 
         //Change pending object material based on if it can be placed or not
-        if (gridManager.GetOccupany(pos, pendingObject))
+        if (GetOccupany(pendingObject))
         {
             ChangeObjectMaterial(pendingObject, incorrectPlaceMaterial);
         }
@@ -131,58 +129,75 @@ public class BuildingManager : MonoBehaviour
 
         if (rayHit)
         {
-            pendingObject.SetActive(true);
-            //check collision
-            if (!gridManager.GetOccupany(pos, pendingObject) && rayHit)
+            float rayAngle = Vector3.Angle(Camera.main.transform.position, hit.point);
+            print(rayAngle);
+
+            if (rayAngle <= maxAngle)
             {
-                bool hasEverything = true;
-
-                List<ItemSlot> savedSlots = new();
-
-                //loop through all recipe items and all resources and check if the player has enough resources to build the building
-                foreach (var itemNeeded in objects[currentIndex].recipes)
+                if (pendingObject.transform.position.y <= maxHeight)
                 {
-                    foreach (var itemGot in resources.GetAllResources())
+                    pendingObject.SetActive(true);
+                    //check collision
+                    if (!GetOccupany(pendingObject) && rayHit)
                     {
-                        if (itemNeeded.data == itemGot.data)
+                        bool hasEverything = true;
+
+                        List<ItemSlot> savedSlots = new();
+
+                        //loop through all recipe items and all resources and check if the player has enough resources to build the building
+                        foreach (var itemNeeded in objects[currentIndex].recipes)
                         {
-                            if (itemGot.amount >= itemNeeded.amountNeeded)
+                            foreach (var itemGot in resources.GetAllResources())
                             {
-                                savedSlots.Add(itemGot);
-                                hasEverything = true;
-                            }
-                            else
-                            {
-                                SpawnError($"needs {itemNeeded.amountNeeded - itemGot.amount} more : {itemNeeded.data.name}");
-                                hasEverything = false;
+                                if (itemNeeded.data == itemGot.data)
+                                {
+                                    if (itemGot.amount >= itemNeeded.amountNeeded)
+                                    {
+                                        savedSlots.Add(itemGot);
+                                        hasEverything = true;
+                                    }
+                                    else
+                                    {
+                                        SpawnError($"needs {itemNeeded.amountNeeded - itemGot.amount} more : {itemNeeded.data.name}");
+                                        hasEverything = false;
+                                    }
+                                }
                             }
                         }
+
+                        //remove items only when the player can actually build it
+                        if (hasEverything)
+                        {
+                            foreach (var itemNeeded in objects[currentIndex].recipes)
+                            {
+                                foreach (var itemGot in resources.GetAllResources())
+                                {
+                                    if (itemNeeded.data == itemGot.data)
+                                    {
+                                        itemGot.amount -= itemNeeded.amountNeeded;
+                                    }
+                                }
+                            }
+
+                            savedSlots.Clear();
+
+                            //build object
+                            BuildObject();
+                        }
+                    }
+                    else
+                    {
+                        SpawnError("Can't place building here");
                     }
                 }
-
-                //remove items only when the player can actually build it
-                if (hasEverything)
+                else
                 {
-                    foreach (var itemNeeded in objects[currentIndex].recipes)
-                    {
-                        foreach (var itemGot in resources.GetAllResources())
-                        {
-                            if (itemNeeded.data == itemGot.data)
-                            {
-                                itemGot.amount -= itemNeeded.amountNeeded;
-                            }
-                        }
-                    }
-
-                    savedSlots.Clear();
-
-                    //build object
-                    BuildObject();
+                    SpawnError("Too high");
                 }
             }
             else
             {
-                SpawnError("Can't place building here");
+                SpawnError("angle too steep");
             }
         }
     }
@@ -223,10 +238,6 @@ public class BuildingManager : MonoBehaviour
 
     private void BuildObject()
     {
-        float randomNum = Random.Range(0f, 1f);
-        buildParticleMaterial.color = objects[currentIndex].buildParticleRandomColor.Evaluate(randomNum);
-        buildParticle.GetComponent<ParticleSystemRenderer>().material = buildParticleMaterial;
-
         ParticleSystem spawnedParticle = Instantiate(buildParticle, pos, Quaternion.identity).GetComponent<ParticleSystem>();
         spawnedParticle.Play();
 
@@ -249,8 +260,6 @@ public class BuildingManager : MonoBehaviour
         {
             ResetObject();
         }
-
-        gridManager.SetOccupancy(spawnedBuilding.transform.position);
     }
 
     private void FixedUpdate()
@@ -259,11 +268,10 @@ public class BuildingManager : MonoBehaviour
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(ray, out hit, 1000, buildLayerMask))
+        if (Physics.Raycast(ray, out hit, 1000, groundLayerMask))
         {
             pendingObject.SetActive(true);
             rayHit = true;
-            //Vector3 gridPos = gridManager.GetClosestPointOnGrid(hit.point);
 
             //check raycast for terrain hit normal and check if can place
 
@@ -321,5 +329,25 @@ public class BuildingManager : MonoBehaviour
                 mr2.materials = materials;
             }
         }
+    }
+
+    public bool GetOccupany(GameObject building)
+    {
+        building.layer = (int)Mathf.Log(tempBuildingLayerMask.value, 2);
+        Transform trans = building.transform;
+
+        //Collider[] colliders = null;
+        Collider[] colliders = Physics.OverlapBox(trans.position, trans.localScale / 2, trans.rotation, buildLayerMask);
+
+        if (colliders.Length > 0)
+        {
+            return true;
+        }
+        //if (colliders[0] != null)
+        //{
+        //    return true;
+        //}
+
+        return false;
     }
 }

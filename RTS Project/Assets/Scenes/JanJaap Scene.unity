@@ -199,7 +199,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: d2a6cf95b93fac64090f1e6fddc6f4c2,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -839,7 +839,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridSize: {x: 300, y: 300}
-  gridOffset: {x: 0.5, y: 0}
+  gridOffset: {x: 0.5, y: 0, z: 0}
   buildingLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -852,8 +852,6 @@ MonoBehaviour:
   buildingManager: {fileID: 0}
   tilePrefab: {fileID: 845174674004875299, guid: 6935f65b8ba423a4bb8b2537ec36f5bf,
     type: 3}
-  groupEvery: 50
-  tileGroupManager: {fileID: 0}
 --- !u!4 &2093285613
 Transform:
   m_ObjectHideFlags: 0

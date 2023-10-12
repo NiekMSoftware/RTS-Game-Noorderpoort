@@ -13,8 +13,7 @@ public class BuildingBase : MonoBehaviour
     [SerializeField] private States currentState;
     private List<Material> savedMaterials = new();
     private GameObject particleObject;
-    public List<GameObject> resourceTypes = new();
-    public List<GameObject> resourceAreas = new();
+    private List<GameObject> resourceAreas = new();
     private int scanRange = 200;
 
     private Material buildingMaterial;
@@ -30,24 +29,15 @@ public class BuildingBase : MonoBehaviour
     {
         foreach (Transform resourceType in FindAnyObjectByType<ResourceAreaSpawner>().GetComponentInChildren<Transform>())
         {
-            GameObject childGameObject = resourceType.gameObject;
-
-            if (!resourceTypes.Contains(childGameObject) && itemdata == currentStorage[0].data)
-            {
-                resourceTypes.Add(childGameObject);
-                
-            }
+            //wanneer broken probeer dit  foreach (Transform resource in resourceType.GetComponentsInChildren<Transform>())
             foreach (Transform resource in resourceType.GetComponentInChildren<Transform>())
             {
                 if (!resourceAreas.Contains(resource.gameObject))
                 {
                     resourceAreas.Add(resource.gameObject);
-
                 }
             }
         }
-
-
 
         GameObject closestResource = null;
         float closestDistance = scanRange;
@@ -167,7 +157,7 @@ public class BuildingBase : MonoBehaviour
         }
         else if (workers.Count < maxWorkers)
         {
-            
+
             worker.InitializeWorker(gameObject, jobs, FindClosestResourceManager(this.transform, currentStorage[0].data));
             workers.Add(worker);
         }
