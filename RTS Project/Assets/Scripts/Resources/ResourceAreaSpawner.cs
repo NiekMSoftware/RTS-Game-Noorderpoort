@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using UnityEngine;
 
 public class ResourceAreaSpawner : MonoBehaviour
@@ -20,6 +21,9 @@ public class ResourceAreaSpawner : MonoBehaviour
 
     private void Start()
     {
+        Stopwatch sw = new();
+        sw.Start();
+
         foreach (var resource in spawnableResources)
         {
             int amountSpawned = 0;
@@ -43,5 +47,8 @@ public class ResourceAreaSpawner : MonoBehaviour
                 }
             }
         }
+
+        sw.Stop();
+        print("Spawn resouces took : " + sw.ElapsedMilliseconds + "ms");
     }
 }
