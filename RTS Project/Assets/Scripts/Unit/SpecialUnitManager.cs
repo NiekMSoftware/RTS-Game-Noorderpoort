@@ -16,6 +16,7 @@ public class SpecialUnitManager : MonoBehaviour
 
     public SpecialUnit specialUnit;
 
+    // Start is called before the first frame update
     void Start()
     {
     UnitList = new();
@@ -48,15 +49,15 @@ public class SpecialUnitManager : MonoBehaviour
                 if (unit != null) { 
                 print(unit.name);
                 currentSpecialUnit = unit.GetComponent<SpecialUnit>();
+<<<<<<< HEAD
                 currentSpecialUnit.health--; 
                 stopSpawning = false;
                 }
             }                     
+=======
+                currentSpecialUnit.health--;
+            }            
+>>>>>>> parent of 4470b2f (can make a spawning loop (still getting weird error))
         }
-        /*if (Input.GetKeyDown(KeyCode.V))
-        {
-            Debug.Log("stopspawing false");
-            stopSpawning = false;
-        }*/
     }
 }

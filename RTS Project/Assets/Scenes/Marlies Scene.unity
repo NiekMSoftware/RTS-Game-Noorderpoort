@@ -1244,11 +1244,15 @@ MonoBehaviour:
     type: 3}
 <<<<<<< Updated upstream
   spawnTime: 1
+<<<<<<< HEAD
   spawnDelay: 2
 =======
   spawnTime: 0
   spawnDelay: 1
 >>>>>>> Stashed changes
+=======
+  spawnDelay: 5
+>>>>>>> parent of 4470b2f (can make a spawning loop (still getting weird error))
   UnitList: []
   GoDown: 0
   stopSpawning: 0
