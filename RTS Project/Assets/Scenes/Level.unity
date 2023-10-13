@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -169,11 +169,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 226539239}
     m_Modifications:
-    - target: {fileID: 729508185884157989, guid: 04da167e17f3d7a4bba0b9dbd8eb0b96,
-        type: 3}
-      propertyPath: m_CameraType
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2585609115489764413, guid: 04da167e17f3d7a4bba0b9dbd8eb0b96,
         type: 3}
       propertyPath: m_RootOrder
@@ -229,15 +224,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6475130287855665572, guid: 04da167e17f3d7a4bba0b9dbd8eb0b96,
+        type: 3}
+      propertyPath: orientation
+      value: 
+      objectReference: {fileID: 331108828}
     - target: {fileID: 7794861187723199530, guid: 04da167e17f3d7a4bba0b9dbd8eb0b96,
         type: 3}
       propertyPath: m_Name
       value: Main Camera
-      objectReference: {fileID: 0}
-    - target: {fileID: 7794861187723199530, guid: 04da167e17f3d7a4bba0b9dbd8eb0b96,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -257,6 +252,11 @@ PrefabInstance:
       propertyPath: terrain
       value: 
       objectReference: {fileID: 477139716}
+    - target: {fileID: 4960871854027342727, guid: 14d717b6b9bb25049a85cee8480ea724,
+        type: 3}
+      propertyPath: maxAngle
+      value: 95
+      objectReference: {fileID: 0}
     - target: {fileID: 4960871854027342727, guid: 14d717b6b9bb25049a85cee8480ea724,
         type: 3}
       propertyPath: resources
@@ -563,8 +563,23 @@ PrefabInstance:
       objectReference: {fileID: 477139716}
     - target: {fileID: 8174031491341160228, guid: e49dccff1924f6e49be9b73ff22ff905,
         type: 3}
+      propertyPath: maxAngle
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 8174031491341160228, guid: e49dccff1924f6e49be9b73ff22ff905,
+        type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8174031491341160228, guid: e49dccff1924f6e49be9b73ff22ff905,
+        type: 3}
+      propertyPath: maxHeight
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 8174031491341160228, guid: e49dccff1924f6e49be9b73ff22ff905,
+        type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 9059765624243850627, guid: e49dccff1924f6e49be9b73ff22ff905,
         type: 3}

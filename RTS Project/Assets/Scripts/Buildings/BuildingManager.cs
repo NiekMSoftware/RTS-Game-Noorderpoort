@@ -129,9 +129,7 @@ public class BuildingManager : MonoBehaviour
 
         if (rayHit)
         {
-            Vector3 rayDirection = hit.point - Camera.main.transform.position;
-            float rayAngle = Vector3.Angle(Camera.main.transform.forward, rayDirection);
-            print(rayAngle);
+            float rayAngle = Vector3.Angle(pendingObject.transform.forward, hit.normal);
 
             if (rayAngle <= maxAngle)
             {

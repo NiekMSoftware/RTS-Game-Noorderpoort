@@ -55,10 +55,10 @@ public class ResourceSpawnManager : MonoBehaviour
         }
 
         // Calculate the random Y-axis rotation
-        float randomYRotation = Random.Range(0.0f, 360.0f); // Random rotation between 0 and 360 degrees
+        float randomYRotation = Random.Range(0f, 360f);
 
         // Create a Quaternion for the random Y-axis rotation
-        Quaternion randomYRotationQuaternion = Quaternion.Euler(0.0f, randomYRotation, 0.0f);
+        Quaternion randomYRotationQuaternion = Quaternion.Euler(0, randomYRotation, 0);
 
         // Calculate the initial rotation based on the terrainNormal
         Quaternion initialRotation = Quaternion.FromToRotation(Vector3.up, terrainNormal);

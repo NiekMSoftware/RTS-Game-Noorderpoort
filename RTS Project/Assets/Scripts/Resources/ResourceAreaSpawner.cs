@@ -9,6 +9,9 @@ public class ResourceAreaSpawner : MonoBehaviour
     [SerializeField] private SpawnableResource[] spawnableResources;
     [SerializeField] private LayerMask resourceLayer;
     [SerializeField] private Terrain terrain;
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private float maxAngle;
+    [SerializeField] private float maxHeight;
 
     [System.Serializable]
     class SpawnableResource
@@ -50,11 +53,25 @@ public class ResourceAreaSpawner : MonoBehaviour
                 {
                     Vector3 position = new(randomX, terrain.SampleHeight(new Vector3(randomX, 0, randomZ)), randomZ);
 
-                    if (!Physics.CheckSphere(position, checkRadius, resourceLayer))
+                    if (Physics.Raycast(position + new Vector3(0, 1, 0), -Vector3.up, out RaycastHit hit, groundLayer))
                     {
-                        amountSpawned++;
-                        GameObject spawnedResource = Instantiate(resourceManagerToSpawn, position, Quaternion.identity, resource.parent);
-                        spawnedResource.GetComponent<ResourceSpawnManager>().Init(resource.prefabToSpawn, terrain);
+                        Vector3 normalizedNormal = hit.normal.normalized;
+                        float rayAngle = Vector3.Angle(Vector3.up, normalizedNormal);
+
+                        print(rayAngle);
+
+                        if (rayAngle <= maxAngle)
+                        {
+                            if (position.y <= maxHeight)
+                            {
+                                if (!Physics.CheckSphere(position, checkRadius, resourceLayer))
+                                {
+                                    amountSpawned++;
+                                    GameObject spawnedResource = Instantiate(resourceManagerToSpawn, position, Quaternion.identity, resource.parent);
+                                    spawnedResource.GetComponent<ResourceSpawnManager>().Init(resource.prefabToSpawn, terrain);
+                                }
+                            }
+                        }
                     }
                 }
             }
