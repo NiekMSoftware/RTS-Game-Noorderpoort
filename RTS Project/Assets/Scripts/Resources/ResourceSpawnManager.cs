@@ -49,16 +49,25 @@ public class ResourceSpawnManager : MonoBehaviour
 
         Vector3 terrainNormal = Vector3.zero;
 
-        Debug.DrawRay(_spawnLocation, -Vector3.up + new Vector3(0, -1, 0) * 1, Color.green, 60);
-
-        if (Physics.Raycast(_spawnLocation, -Vector3.up + new Vector3(0, -2, 0), out RaycastHit hit, Mathf.Infinity, groundLayer))
+        if (Physics.Raycast(_spawnLocation + new Vector3(0, 1, 0), -Vector3.up, out RaycastHit hit, Mathf.Infinity, groundLayer))
         {
             terrainNormal = hit.normal;
-            Debug.DrawRay(_spawnLocation, terrainNormal, Color.red, 60);
         }
 
-        //add random rotation
-        GameObject _spawnedObject = Instantiate(spawnObject, _spawnLocation, Quaternion.FromToRotation(/*Vector3.up + terrainNormal * Random.Range(0, 360)*/Vector3.up, terrainNormal), transform);
+        // Calculate the random Y-axis rotation
+        float randomYRotation = Random.Range(0.0f, 360.0f); // Random rotation between 0 and 360 degrees
+
+        // Create a Quaternion for the random Y-axis rotation
+        Quaternion randomYRotationQuaternion = Quaternion.Euler(0.0f, randomYRotation, 0.0f);
+
+        // Calculate the initial rotation based on the terrainNormal
+        Quaternion initialRotation = Quaternion.FromToRotation(Vector3.up, terrainNormal);
+
+        // Combine the initial rotation with the random Y-axis rotation
+        Quaternion finalRotation = initialRotation * randomYRotationQuaternion;
+
+        GameObject _spawnedObject = Instantiate(spawnObject, _spawnLocation, finalRotation, transform);
+
         Vector3 _randomSize;
         float _randomSizeNum = Random.Range(spawnObject.transform.localScale.x * minSpawnSize, spawnObject.transform.localScale.x * maxSpawnSize);
         _randomSize = new Vector3(_randomSizeNum, _randomSizeNum, _randomSizeNum);
