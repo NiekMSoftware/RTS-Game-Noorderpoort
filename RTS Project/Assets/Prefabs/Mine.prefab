@@ -49,15 +49,13 @@ MonoBehaviour:
   buildingHp: 50
   maxWorkers: 5
   currentStorage:
-  - data: {fileID: 11400000, guid: 0c0ea06af6a171e42a725e0fb10167fc, type: 2}
+  - data: {fileID: 11400000, guid: 4178d3d151ebd1a4295d48f9a7f482c9, type: 2}
     amount: 0
     maxAmount: 10000
   workers: []
   jobName: StoneBOi
   jobs: 1
   currentState: 0
-  resourceTypes: []
-  resourceAreas: []
 --- !u!65 &4694457708341824937
 BoxCollider:
   m_ObjectHideFlags: 0

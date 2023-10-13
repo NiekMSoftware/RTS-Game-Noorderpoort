@@ -187,5 +187,5 @@ MonoBehaviour:
   borderSize: 0.07
   maxZoomHeight: 50
   minZoomHeight: 10
-  orientation: {fileID: 0}
+  orientation: {fileID: 341264856937314044}
   particleSpawnPoint: {fileID: 0}

@@ -8,12 +8,25 @@ public class ComputerEnemy : MonoBehaviour
     [SerializeField] private ResourceItemManager resources;
     [SerializeField] private BuildingManager buildingManager;
     [SerializeField] private float scanRange;
-    [SerializeField] private GameObject building;
+    [SerializeField] private ResourceAndBuilding[] resourcesAndBuildings;
+    [SerializeField] private ItemData woodItem;
+    [SerializeField] private Terrain terrain;
+    [SerializeField] private LayerMask resourceLayer;
+    [SerializeField] private LayerMask groundLayer;
+    [Tooltip("Higher is more accurate but also less performent")]
+    [SerializeField] private float buildingPlaceAccuracy = 50;
 
     [SerializeField] private List<Worker> workers;
     [SerializeField] private List<GameObject> buildings;
 
     private List<GameObject> resourceAreas = new();
+
+    [System.Serializable]
+    public class ResourceAndBuilding
+    {
+        public GameObject building;
+        public ItemData itemData;
+    }
 
     private void Start()
     {
@@ -27,10 +40,7 @@ public class ComputerEnemy : MonoBehaviour
         //Worker currentWorker = workers[randomWorker];
         //currentWorker.
 
-        GameObject closestResource = FindClosestResourceManager(ResourceType.resourceType.Wood);
-        print(closestResource.name);
-        GameObject spawnedBuilding = Instantiate(building, closestResource.transform.position, Quaternion.identity);
-        buildings.Add(spawnedBuilding);
+        PlaceBuilding(resourcesAndBuildings[GetResourceIndexByItemdata(woodItem)].itemData);
     }
 
     private void Update()
@@ -38,82 +48,86 @@ public class ComputerEnemy : MonoBehaviour
 
     }
 
-    public GameObject FindClosestResourceManager(ResourceType.resourceType itemdata)
+    public void PlaceBuilding(ItemData itemData)
     {
-        Transform resourceAreaSpawner = FindObjectOfType<ResourceAreaSpawner>().transform;
+        ResourceObjectManager closestResource = FindClosestResourceManager(itemData);
 
-        List<Transform> resourceSorters = new();
-        foreach (Transform transform in resourceAreaSpawner)
+        Vector3 direction = transform.position - closestResource.transform.position;
+        Debug.DrawRay(closestResource.transform.position, direction * 1000, Color.green, 30);
+
+        Vector3 originalPos = closestResource.transform.position;
+
+        while (Physics.CheckSphere(originalPos, 5f, resourceLayer))
         {
-            resourceSorters.Add(transform);
+            originalPos += direction / buildingPlaceAccuracy;
         }
 
-        List<Transform> resourceSpawners = new();
+        originalPos.y = terrain.SampleHeight(originalPos) +
+            resourcesAndBuildings[GetResourceIndexByItemdata(woodItem)].building.transform.localScale.y;
 
-        foreach (Transform transform in resourceSorters)
+        GameObject spawnedBuilding = Instantiate(resourcesAndBuildings[GetResourceIndexByItemdata(woodItem)].building
+            , originalPos, Quaternion.identity);
+
+        if (Physics.Raycast(spawnedBuilding.transform.position + new Vector3(0, 1, 0), -Vector3.up, out RaycastHit hit, groundLayer))
         {
-            print("resource sorter : " + transform.name);
-            resourceSpawners.Add(transform);
-        }
+            spawnedBuilding.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+            buildings.Add(spawnedBuilding);
 
-        List<Transform> resources = new();
-
-        foreach (Transform transform in resourceSpawners)
-        {
-            resources.Add(transform);
-            print("Individual spawner : " + transform.name);
-        }
-
-        return null;
-
-        foreach (Transform resourceType in FindAnyObjectByType<ResourceAreaSpawner>().GetComponentInChildren<Transform>())
-        {
-            print(resourceType.GetComponentsInChildren<Transform>().Length);
-
-            foreach (Transform resource in resourceType.GetComponentsInChildren<Transform>())
+            for (int i = 0; i < 2; i++)
             {
-                print("loop through resource");
-                if (!resourceAreas.Contains(resource.gameObject))
+                int randomWorker = Random.Range(0, workers.Count);
+                spawnedBuilding.GetComponent<BuildingBase>().AddWorkerToBuilding(workers[randomWorker]);
+            }
+        }
+    }
+
+    public ResourceObjectManager FindClosestResourceManager(ItemData itemdata)
+    {
+        ResourceObjectManager[] resourceManagers = FindObjectsOfType<ResourceObjectManager>();
+        List<ResourceObjectManager> validResourceManagers = new();
+
+        foreach (var resourceManager in resourceManagers)
+        {
+            if (resourceManager.resources.Count > 0)
+            {
+                if (resourceManager.resources[0].GetComponent<ResourceObject>().slot.data == itemdata)
                 {
-                    print("add resource area");
-                    resourceAreas.Add(resource.gameObject);
+                    validResourceManagers.Add(resourceManager);
                 }
             }
         }
 
-        GameObject closestResource = null;
+        ResourceObjectManager closestResource = null;
         float closestDistance = scanRange;
-        Vector3 currentPosition = transform.position;
 
-        if (resourceAreas != null)
+        foreach (var resourceManager in validResourceManagers)
         {
-            print("Found resource areas");
-            foreach (GameObject resource in resourceAreas)
-            {
-                print("Loop through resources");
-                if (resource != null)
-                {
-                    print("Resource not null");
-                    Vector3 resourcePosition = resource.transform.position;
-                    float distanceToResource = Vector3.Distance(currentPosition, resourcePosition);
+            float distanceToResourceManager = Vector3.Distance(transform.position, resourceManager.transform.position);
 
-                    if (distanceToResource <= scanRange && distanceToResource < closestDistance)
-                    {
-                        print("Resource in range");
-                        if (Vector3.Distance(currentPosition, resourcePosition) < scanRange)
-                        {
-                            print("Resource close enough");
-                            closestDistance = distanceToResource;
-                            closestResource = resource;
-                        }
-                    }
-                }
+            if (distanceToResourceManager <= scanRange && distanceToResourceManager <= closestDistance)
+            {
+                closestDistance = distanceToResourceManager;
+                closestResource = resourceManager;
             }
         }
-        else
-        {
-            print("No resource in range");
-        }
+
         return closestResource;
+    }
+
+    public int GetResourceIndexByItemdata(ItemData itemData)
+    {
+        int index = 0;
+
+        foreach (var item in resourcesAndBuildings)
+        {
+            if (item.itemData == itemData)
+            {
+                print("found itemdata");
+                return index;
+            }
+            index++;
+        }
+
+        return -1;
     }
 }

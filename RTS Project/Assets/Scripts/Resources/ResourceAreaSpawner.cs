@@ -58,8 +58,6 @@ public class ResourceAreaSpawner : MonoBehaviour
                         Vector3 normalizedNormal = hit.normal.normalized;
                         float rayAngle = Vector3.Angle(Vector3.up, normalizedNormal);
 
-                        print(rayAngle);
-
                         if (rayAngle <= maxAngle)
                         {
                             if (position.y <= maxHeight)

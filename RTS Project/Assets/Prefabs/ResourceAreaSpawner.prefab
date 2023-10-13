@@ -71,6 +71,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4096
   terrain: {fileID: 0}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  maxAngle: 20
+  maxHeight: 50
 --- !u!1 &6924859471375939796
 GameObject:
   m_ObjectHideFlags: 0
