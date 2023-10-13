@@ -3,19 +3,10 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    float distance;
-    Camera mainCamera;
     GridManager gridManager;
 
     public Vector3 pos;
     public bool isOccupied;
-
-    MeshRenderer meshRenderer;
-
-    private void Awake()
-    {
-        meshRenderer = GetComponent<MeshRenderer>();
-    }
 
     public Tile[] GetNeighbours()
     {
@@ -25,9 +16,12 @@ public class Tile : MonoBehaviour
         {
             for (int z = -1; z < 2; z++)
             {
-                if (gridManager.grid[(int)pos.x + x, (int)pos.z + z] != this)
+                if ((int)pos.x + x >= 0 && (int)pos.x + x <= gridManager.grid.GetLength(0) && (int)pos.z + z >= 0 && (int)pos.z + z <= gridManager.grid.GetLength(1))
                 {
-                    neighbours.Add(gridManager.grid[(int)pos.x + x, (int)pos.z + z]);
+                    if (gridManager.grid[(int)pos.x + x, (int)pos.z + z] != this)
+                    {
+                        neighbours.Add(gridManager.grid[(int)pos.x + x, (int)pos.z + z]);
+                    }
                 }
             }
         }
@@ -35,16 +29,9 @@ public class Tile : MonoBehaviour
         return neighbours.ToArray();
     }
 
-    public void Init(Camera camera, float distance, GridManager gridManager)
+    public void Init(Vector3 pos, GridManager gridManager)
     {
-        mainCamera = camera;
-        this.distance = distance;
+        this.pos = pos;
         this.gridManager = gridManager;
-    }
-
-    public void UpdateLOD()
-    {
-        //meshRenderer.enabled = Vector3.Distance(transform.position, mainCamera.transform.position) < distance;
-        //print(meshRenderer.enabled);
     }
 }
