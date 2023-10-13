@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c5b12b920007fa4e896b56c4e79e233, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitHealth: 0
+  unitHealth: 1
   unitMaxHealth: 0
   unitHealing: 0
   unitSpeed: 0
@@ -135,3 +135,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   health: 1
+  refSpecialUnitManager: {fileID: 0}
