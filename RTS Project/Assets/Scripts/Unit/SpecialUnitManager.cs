@@ -48,15 +48,10 @@ public class SpecialUnitManager : MonoBehaviour
                 if (unit != null) { 
                 print(unit.name);
                 currentSpecialUnit = unit.GetComponent<SpecialUnit>();
-<<<<<<< Updated upstream
-                currentSpecialUnit.health--;                              
-            }            
-=======
                 currentSpecialUnit.health--; 
                 stopSpawning = false;
                 }
             }                     
->>>>>>> Stashed changes
         }
         /*if (Input.GetKeyDown(KeyCode.V))
         {
