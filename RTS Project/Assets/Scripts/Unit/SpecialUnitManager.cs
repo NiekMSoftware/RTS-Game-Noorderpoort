@@ -7,21 +7,27 @@ public class SpecialUnitManager : MonoBehaviour
 {
     [Header("Timer")]
     public GameObject specialUnitObject;
-    private GameObject currentUnitObject;
+    public GameObject currentUnitObject;
     public float spawnTime;
     public float spawnDelay;
-    public List<GameObject> UnitList = new();
+    List<GameObject> UnitList;
     public bool GoDown = false;
     public bool stopSpawning = false;
 
     public SpecialUnit specialUnit;
 
-    // Start is called before the first frame update
     void Start()
     {
+        UnitList = new();
         InvokeRepeating("SpawnObject", spawnTime, spawnDelay);
-    }
 
+    }
+    public void RemoveThis(GameObject DeletedUnit)
+    {
+        UnitList.Remove(DeletedUnit);
+        DestroyImmediate(DeletedUnit, true);
+        print("unit removed");
+    }
     public void SpawnObject()
     {
         currentUnitObject = Instantiate(specialUnitObject, transform.position, transform.rotation);
@@ -29,20 +35,24 @@ public class SpecialUnitManager : MonoBehaviour
         currentSpecialUnit.refSpecialUnitManager = this;
         UnitList.Add(currentUnitObject);
 
-        if (UnitList.Count == 5)
+        if (UnitList.Count >= 6)
         {
             stopSpawning = true;
-        }      
-        
+        }
+
         if (stopSpawning)
         {
             print("StopSpawning!!!!!!!");
-            foreach(GameObject unit in UnitList)
+            foreach (GameObject unit in UnitList)
             {
-                print(unit.name);
-                currentSpecialUnit = unit.GetComponent<SpecialUnit>();
-                currentSpecialUnit.health--;
-            }            
+                if (unit != null)
+                {
+                    print(unit.name);
+                    currentSpecialUnit = unit.GetComponent<SpecialUnit>();
+                    currentSpecialUnit.health--; 
+                    stopSpawning = false;
+                }
+            }                                
         }
     }
 }
