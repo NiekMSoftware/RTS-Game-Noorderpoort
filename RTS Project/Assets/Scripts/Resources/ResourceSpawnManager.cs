@@ -19,12 +19,11 @@ public class ResourceSpawnManager : MonoBehaviour
     private GameObject spawnObject;
     private Terrain terrain;
 
-    private void Start()
+    private void SpawnResources()
     {
         int _randomSpawnAmount = Random.Range(minSpawnAmount, maxSpawnAmount);
         for (int i = 0; i < _randomSpawnAmount; i++)
         {
-            SpawnResource(transform.position);
             SpawnMoreMiniSpawners();
         }
     }
@@ -34,7 +33,14 @@ public class ResourceSpawnManager : MonoBehaviour
         Vector3 _spawnLocation;
         float _rndX = Random.Range(origin.x - spawnRange, origin.x + spawnRange);
         float _rndZ = Random.Range(origin.z - spawnRange, origin.z + spawnRange);
-        _spawnLocation = new Vector3(_rndX, terrain.SampleHeight(new Vector3(_rndX, 0, _rndZ)), _rndZ);
+        if (terrain)
+        {
+            _spawnLocation = new Vector3(_rndX, terrain.SampleHeight(new Vector3(_rndX, 0, _rndZ)), _rndZ);
+        }
+        else
+        {
+            _spawnLocation = new Vector3(_rndX, 0, _rndZ);
+        }
 
         if (Physics.CheckSphere(_spawnLocation, 1, spawnLayer))
         {
@@ -43,7 +49,7 @@ public class ResourceSpawnManager : MonoBehaviour
 
         Vector3 terrainNormal = Vector3.zero;
 
-        //Debug.DrawRay(_spawnLocation, -Vector3.up + new Vector3(0, -1, 0) * 1, Color.green, 60);
+        Debug.DrawRay(_spawnLocation, -Vector3.up + new Vector3(0, -1, 0) * 1, Color.green, 60);
 
         if (Physics.Raycast(_spawnLocation, -Vector3.up + new Vector3(0, -2, 0), out RaycastHit hit, Mathf.Infinity, groundLayer))
         {
@@ -91,5 +97,7 @@ public class ResourceSpawnManager : MonoBehaviour
     {
         this.spawnObject = spawnObject;
         this.terrain = terrain;
+
+        SpawnResources();
     }
 }
