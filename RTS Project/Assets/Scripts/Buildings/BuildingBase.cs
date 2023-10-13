@@ -89,7 +89,6 @@ public class BuildingBase : MonoBehaviour
         particle.Play();
         FindClosestResourceManager(transform, currentStorage[0].data);
         yield return new WaitForSeconds(particle.main.duration);
-        particle.GetComponent<ParticleSystemRenderer>().material.color = Color.white;
 
         yield return null;
     }
@@ -157,7 +156,6 @@ public class BuildingBase : MonoBehaviour
         }
         else if (workers.Count < maxWorkers)
         {
-
             worker.InitializeWorker(gameObject, jobs, FindClosestResourceManager(this.transform, currentStorage[0].data));
             workers.Add(worker);
         }

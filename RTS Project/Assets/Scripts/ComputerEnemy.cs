@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +8,6 @@ public class ComputerEnemy : MonoBehaviour
     [SerializeField] private GameObject workerPrefab;
     [SerializeField] private ResourceItemManager resources;
     [SerializeField] private BuildingManager buildingManager;
-    [SerializeField] private float scanRange;
     [SerializeField] private ResourceAndBuilding[] resourcesAndBuildings;
     [SerializeField] private ItemData woodItem;
     [SerializeField] private Terrain terrain;
@@ -15,11 +15,15 @@ public class ComputerEnemy : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [Tooltip("Higher is more accurate but also less performent")]
     [SerializeField] private float buildingPlaceAccuracy = 50;
+    [SerializeField] private float amountOfSecondsPerChoise = 3;
+    [SerializeField] private ResourceItemManager resourceItemManager;
 
     [SerializeField] private List<Worker> workers;
     [SerializeField] private List<GameObject> buildings;
 
     private List<GameObject> resourceAreas = new();
+
+    private float choiseTimer;
 
     [System.Serializable]
     public class ResourceAndBuilding
@@ -45,10 +49,22 @@ public class ComputerEnemy : MonoBehaviour
 
     private void Update()
     {
+        choiseTimer -= Time.deltaTime;
 
+        if (choiseTimer <= 0)
+        {
+            choiseTimer = amountOfSecondsPerChoise;
+
+            MakeChoise();
+        }
     }
 
-    public void PlaceBuilding(ItemData itemData)
+    private void MakeChoise()
+    {
+        
+    }
+
+    private void PlaceBuilding(ItemData itemData)
     {
         ResourceObjectManager closestResource = FindClosestResourceManager(itemData);
 
@@ -84,6 +100,9 @@ public class ComputerEnemy : MonoBehaviour
     public ResourceObjectManager FindClosestResourceManager(ItemData itemdata)
     {
         ResourceObjectManager[] resourceManagers = FindObjectsOfType<ResourceObjectManager>();
+
+        if (resourceManagers.Length <= 0) return null;
+
         List<ResourceObjectManager> validResourceManagers = new();
 
         foreach (var resourceManager in resourceManagers)
@@ -98,13 +117,13 @@ public class ComputerEnemy : MonoBehaviour
         }
 
         ResourceObjectManager closestResource = null;
-        float closestDistance = scanRange;
+        float closestDistance = Mathf.Infinity;
 
         foreach (var resourceManager in validResourceManagers)
         {
             float distanceToResourceManager = Vector3.Distance(transform.position, resourceManager.transform.position);
 
-            if (distanceToResourceManager <= scanRange && distanceToResourceManager <= closestDistance)
+            if (distanceToResourceManager <= closestDistance)
             {
                 closestDistance = distanceToResourceManager;
                 closestResource = resourceManager;
@@ -122,7 +141,6 @@ public class ComputerEnemy : MonoBehaviour
         {
             if (item.itemData == itemData)
             {
-                print("found itemdata");
                 return index;
             }
             index++;

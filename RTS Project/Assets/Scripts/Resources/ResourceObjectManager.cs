@@ -33,15 +33,19 @@ public class ResourceObjectManager : MonoBehaviour
         {
             foreach (GameObject resource in resources)
             {
+                print("looping through resources");
                 if (resource != null && resource.GetComponent<ResourceObject>().slot.data == itemdata)
                 {
+                    print("found resource with correct itemdata");
                     Vector3 resourcePosition = resource.transform.position;
                     float distanceToResource = Vector3.Distance(currentPosition, resourcePosition);
 
                     if (distanceToResource <= scanRange && !occupiedResources.Contains(resource) && distanceToResource < closestDistance)
                     {
+                        print("found resource in range");
                         if (Vector3.Distance(currentPosition, resourcePosition) < scanRange)
                         {
+                            print("found resource");
                             closestDistance = distanceToResource;
                             closestResource = resource;
                         }

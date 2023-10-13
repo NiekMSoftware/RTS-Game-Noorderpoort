@@ -145,20 +145,17 @@ public class BuildingManager : MonoBehaviour
                         //loop through all recipe items and all resources and check if the player has enough resources to build the building
                         foreach (var itemNeeded in objects[currentIndex].recipes)
                         {
-                            foreach (var itemGot in resources.GetAllResources())
+                            if (itemNeeded.data == resources.GetSlotByItemData(itemNeeded.data).data)
                             {
-                                if (itemNeeded.data == itemGot.data)
+                                if (resources.GetSlotByItemData(itemNeeded.data).amount >= itemNeeded.amountNeeded)
                                 {
-                                    if (itemGot.amount >= itemNeeded.amountNeeded)
-                                    {
-                                        savedSlots.Add(itemGot);
-                                        hasEverything = true;
-                                    }
-                                    else
-                                    {
-                                        SpawnError($"needs {itemNeeded.amountNeeded - itemGot.amount} more : {itemNeeded.data.name}");
-                                        hasEverything = false;
-                                    }
+                                    savedSlots.Add(resources.GetSlotByItemData(itemNeeded.data));
+                                    hasEverything = true;
+                                }
+                                else
+                                {
+                                    SpawnError($"needs {itemNeeded.amountNeeded - resources.GetSlotByItemData(itemNeeded.data).amount} more : {itemNeeded.data.name}");
+                                    hasEverything = false;
                                 }
                             }
                         }
@@ -168,12 +165,9 @@ public class BuildingManager : MonoBehaviour
                         {
                             foreach (var itemNeeded in objects[currentIndex].recipes)
                             {
-                                foreach (var itemGot in resources.GetAllResources())
+                                if (itemNeeded.data == resources.GetSlotByItemData(itemNeeded.data).data)
                                 {
-                                    if (itemNeeded.data == itemGot.data)
-                                    {
-                                        itemGot.amount -= itemNeeded.amountNeeded;
-                                    }
+                                    resources.GetSlotByItemData(itemNeeded.data).amount -= itemNeeded.amountNeeded;
                                 }
                             }
 
