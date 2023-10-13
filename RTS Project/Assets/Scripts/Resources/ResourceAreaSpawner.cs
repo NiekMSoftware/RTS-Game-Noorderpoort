@@ -23,35 +23,41 @@ public class ResourceAreaSpawner : MonoBehaviour
     {
         Stopwatch sw = Stopwatch.StartNew();
 
+        TrySpawnResources();
+
+        sw.Stop();
+        print("Spawn resouces took : " + sw.ElapsedMilliseconds + "ms");
+    }
+
+    private void TrySpawnResources()
+    {
         foreach (var resource in spawnableResources)
         {
             int amountSpawned = 0;
+            int loopIndex = 0;
 
-            for (int i = 0; i < resource.amountToSpawn + 10; i++)
+            while (amountSpawned <= resource.amountToSpawn)
             {
-                if (amountSpawned >= resource.amountToSpawn)
+                if (loopIndex > 100)
                 {
-                    return;
+                    break;
                 }
-
+                loopIndex++;
                 int randomX = Random.Range(0, scale.x);
-                int randomY = Random.Range(0, scale.y);
+                int randomZ = Random.Range(0, scale.y);
 
-                if (resource.texture.GetPixel(randomX, randomY).a >= 0.9f)
+                if (resource.texture.GetPixel(randomX, randomZ).a >= 0.9f)
                 {
-                    Vector3 position = new(randomX, terrain.SampleHeight(new Vector3(randomX, 0, randomY)), randomY);
+                    Vector3 position = new(randomX, terrain.SampleHeight(new Vector3(randomX, 0, randomZ)), randomZ);
 
                     if (!Physics.CheckSphere(position, checkRadius, resourceLayer))
                     {
                         amountSpawned++;
                         GameObject spawnedResource = Instantiate(resourceManagerToSpawn, position, Quaternion.identity, resource.parent);
-                        spawnedResource.GetComponent<ResourceSpawnManager>().Init(spawnedResource, terrain);
+                        spawnedResource.GetComponent<ResourceSpawnManager>().Init(resource.prefabToSpawn, terrain);
                     }
                 }
             }
         }
-
-        sw.Stop();
-        print("Spawn resouces took : " + sw.ElapsedMilliseconds + "ms");
     }
 }
