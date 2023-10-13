@@ -368,6 +368,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 09dd1cb9497c48047a19249a3f8d5964,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8416272007918961125, guid: 09dd1cb9497c48047a19249a3f8d5964,
         type: 3}
       propertyPath: m_Layer
@@ -518,8 +523,8 @@ Transform:
   m_GameObject: {fileID: 416528567}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 5}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 50, y: 50, z: 50}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -988,7 +993,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e0e964b4ce771844a8586b4b991ebce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemSlots: []
   resources: []
   occupiedResources: []
 --- !u!1 &910311095 stripped
@@ -1040,6 +1044,8 @@ MonoBehaviour:
   jobName: metalboi
   jobs: 2
   currentState: 0
+  resourceTypes: []
+  resourceAreas: []
 --- !u!1001 &924448593
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1178,6 +1184,8 @@ MonoBehaviour:
   jobName: woodboy
   jobs: 0
   currentState: 0
+  resourceTypes: []
+  resourceAreas: []
 --- !u!4 &1241622894 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
@@ -1212,6 +1220,8 @@ MonoBehaviour:
   jobName: SToneBOyi
   jobs: 1
   currentState: 0
+  resourceTypes: []
+  resourceAreas: []
 --- !u!65 &1439619671
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2037,7 +2047,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1981529684
 Transform:
   m_ObjectHideFlags: 0
@@ -2340,6 +2350,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ResourceAreaSpawner
+      objectReference: {fileID: 0}
+    - target: {fileID: 839569720826515094, guid: e49dccff1924f6e49be9b73ff22ff905,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9059765624243850627, guid: e49dccff1924f6e49be9b73ff22ff905,
         type: 3}
