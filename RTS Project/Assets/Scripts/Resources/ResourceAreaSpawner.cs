@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using UnityEngine;
 
 public class ResourceAreaSpawner : MonoBehaviour
@@ -8,6 +9,9 @@ public class ResourceAreaSpawner : MonoBehaviour
     [SerializeField] private SpawnableResource[] spawnableResources;
     [SerializeField] private LayerMask resourceLayer;
     [SerializeField] private Terrain terrain;
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private float maxAngle;
+    [SerializeField] private float maxHeight;
 
     [System.Serializable]
     class SpawnableResource
@@ -20,25 +24,54 @@ public class ResourceAreaSpawner : MonoBehaviour
 
     private void Start()
     {
+        Stopwatch sw = Stopwatch.StartNew();
+
+        TrySpawnResources();
+
+        sw.Stop();
+        print("Spawn resouces took : " + sw.ElapsedMilliseconds + "ms");
+    }
+
+    private void TrySpawnResources()
+    {
         foreach (var resource in spawnableResources)
         {
             int amountSpawned = 0;
+            int loopIndex = 0;
 
-            while (amountSpawned < resource.amountToSpawn)
+            while (amountSpawned <= resource.amountToSpawn)
             {
-                int randomX = Random.Range(0, scale.x);
-                int randomY = Random.Range(0, scale.y);
-
-                if (resource.texture.GetPixel(randomX, randomY).a >= 0.9f)
+                if (loopIndex > 100)
                 {
-                    Vector3 position = new(randomX, terrain.SampleHeight(new Vector3(randomX, 0, randomY)), randomY);
+                    break;
+                }
+                loopIndex++;
+                int randomX = Random.Range(0, scale.x);
+                int randomZ = Random.Range(0, scale.y);
 
-                    if (!Physics.CheckSphere(position, checkRadius, resourceLayer))
+                if (resource.texture.GetPixel(randomX, randomZ).a >= 0.9f)
+                {
+                    Vector3 position = new(randomX, terrain.SampleHeight(new Vector3(randomX, 0, randomZ)), randomZ);
+
+                    if (Physics.Raycast(position + new Vector3(0, 1, 0), -Vector3.up, out RaycastHit hit, groundLayer))
                     {
-                        amountSpawned++;
-                        GameObject spawnedResource = Instantiate(resourceManagerToSpawn, position, Quaternion.identity, resource.parent);
-                        spawnedResource.GetComponent<ResourceSpawnManager>().SetSpawnObject(resource.prefabToSpawn);
-                        spawnedResource.GetComponent<ResourceSpawnManager>().SetTerrain(terrain);
+                        Vector3 normalizedNormal = hit.normal.normalized;
+                        float rayAngle = Vector3.Angle(Vector3.up, normalizedNormal);
+
+                        print(rayAngle);
+
+                        if (rayAngle <= maxAngle)
+                        {
+                            if (position.y <= maxHeight)
+                            {
+                                if (!Physics.CheckSphere(position, checkRadius, resourceLayer))
+                                {
+                                    amountSpawned++;
+                                    GameObject spawnedResource = Instantiate(resourceManagerToSpawn, position, Quaternion.identity, resource.parent);
+                                    spawnedResource.GetComponent<ResourceSpawnManager>().Init(resource.prefabToSpawn, terrain);
+                                }
+                            }
+                        }
                     }
                 }
             }

@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class BuildingBase : MonoBehaviour
@@ -14,8 +13,7 @@ public class BuildingBase : MonoBehaviour
     [SerializeField] private States currentState;
     private List<Material> savedMaterials = new();
     private GameObject particleObject;
-    public List<GameObject> resourceTypes = new();
-    public List<GameObject> resourceAreas = new();
+    private List<GameObject> resourceAreas = new();
     private int scanRange = 200;
 
     private Material buildingMaterial;
@@ -31,24 +29,15 @@ public class BuildingBase : MonoBehaviour
     {
         foreach (Transform resourceType in FindAnyObjectByType<ResourceAreaSpawner>().GetComponentInChildren<Transform>())
         {
-            GameObject childGameObject = resourceType.gameObject;
-
-            if (!resourceTypes.Contains(childGameObject) && itemdata == currentStorage[0].data)
-            {
-                resourceTypes.Add(childGameObject);
-                
-            }
+            //wanneer broken probeer dit  foreach (Transform resource in resourceType.GetComponentsInChildren<Transform>())
             foreach (Transform resource in resourceType.GetComponentInChildren<Transform>())
             {
                 if (!resourceAreas.Contains(resource.gameObject))
                 {
                     resourceAreas.Add(resource.gameObject);
-
                 }
             }
         }
-
-
 
         GameObject closestResource = null;
         float closestDistance = scanRange;
@@ -98,8 +87,9 @@ public class BuildingBase : MonoBehaviour
         currentState = States.Normal;
         ParticleSystem particle = Instantiate(particleObject, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
         particle.Play();
-        FindClosestResourceManager(this.transform, currentStorage[0].data);
-
+        FindClosestResourceManager(transform, currentStorage[0].data);
+        yield return new WaitForSeconds(particle.main.duration);
+        particle.GetComponent<ParticleSystemRenderer>().material.color = Color.white;
 
         yield return null;
     }
@@ -167,7 +157,7 @@ public class BuildingBase : MonoBehaviour
         }
         else if (workers.Count < maxWorkers)
         {
-            
+
             worker.InitializeWorker(gameObject, jobs, FindClosestResourceManager(this.transform, currentStorage[0].data));
             workers.Add(worker);
         }

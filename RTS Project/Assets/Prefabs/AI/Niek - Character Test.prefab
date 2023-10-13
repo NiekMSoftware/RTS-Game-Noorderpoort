@@ -119,8 +119,6 @@ GameObject:
   - component: {fileID: 2923870599971325206}
   - component: {fileID: 1422479362053962893}
   - component: {fileID: 7906421660620480633}
-  - component: {fileID: 8616647046272125197}
-  - component: {fileID: 8075160539243237464}
   m_Layer: 6
   m_Name: Niek - Character Test
   m_TagString: Untagged
@@ -142,7 +140,7 @@ Transform:
   m_Children:
   - {fileID: 2556568414347069243}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4262623663196095240
 MeshFilter:
@@ -266,52 +264,3 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &8616647046272125197
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 842143286070584942}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da3960ee6ca78b24baf38bb57f3c93e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  unitHealth: 0
-  unitMaxHealth: 0
-  unitHealing: 0
-  unitSpeed: 0
-  unitDamage: 0
-  job: 0
-  typeUnit: 0
-  selectionObject: {fileID: 227532526917903741}
-  myAgent: {fileID: 7906421660620480633}
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  marker: {fileID: 0}
-  clickableUnit:
-    serializedVersion: 2
-    m_Bits: 64
---- !u!114 &8075160539243237464
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 842143286070584942}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 20d0b4e5cd8d95c459a805b00fd2ddc4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewRadius: 5
-  viewAngle: 75
-  targetMask:
-    serializedVersion: 2
-    m_Bits: 2048
-  obstacleMask:
-    serializedVersion: 2
-    m_Bits: 1024
-  visibleTargets: []

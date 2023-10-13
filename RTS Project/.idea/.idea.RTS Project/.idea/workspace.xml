@@ -5,17 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="61fec265-b941-4aea-9e79-1061e99e3b0b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Prefabs/AI/Niek - Character Test.prefab" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Prefabs/AI/Niek - Character Test.prefab.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Niek Scene.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Niek Scene/NavMesh-Character.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Niek Scene/NavMesh-Character.asset.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Niek Scene/NavMesh-Ground.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Niek Scene/NavMesh-Ground.asset.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.RTS Project/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RTS Project/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/AI/AI.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/AI/AI.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Niek Scene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Niek Scene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Unit/Unit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Unit/Unit.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Materials/BuildParticle.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/BuildParticle.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/PlaceBuildingEffect.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/PlaceBuildingEffect.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Test GUI.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Test GUI.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Gui/BuildingUIAnimation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Gui/BuildingUIAnimation.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,8 +20,10 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Gui/BuildingUIAnimation.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Unit/FieldOfViewEditor.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 7
@@ -121,12 +117,20 @@
       <workItem from="1695644271598" duration="76000" />
       <workItem from="1695644611246" duration="1045000" />
       <workItem from="1695889006627" duration="3541000" />
+      <workItem from="1696330096979" duration="505000" />
+      <workItem from="1696489323757" duration="86000" />
+      <workItem from="1696489848698" duration="260000" />
+      <workItem from="1696490369161" duration="272000" />
+      <workItem from="1696492168747" duration="191000" />
+      <workItem from="1697097893221" duration="2322000" />
+      <workItem from="1697188327278" duration="3482000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="true" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="Both" />
   <component name="VcsManagerConfiguration">
