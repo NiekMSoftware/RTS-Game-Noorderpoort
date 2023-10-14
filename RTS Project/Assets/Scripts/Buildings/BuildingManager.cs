@@ -11,7 +11,6 @@ public class BuildingManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private PlaceableObject[] objects;
     [SerializeField] private ResourceItemManager resources;
-    //[SerializeField] private GridManager gridManager;
     [SerializeField] private Terrain terrain;
 
     [Header("Build Progresses")]

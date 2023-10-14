@@ -177,7 +177,9 @@ public class Worker : Unit
                     currentState = State.Moving;
                     resourceTarget = resourceObjectManager.FindClosestResource(buildingBase.transform, resourceItem, this);
                 }
-                
+
+                print(currentStorage);
+
                 // If inventory isnt full in building and working go to moving
                 if (currentStorage.GetAmount() < maxStorage &&
                     buildingBase.GetStorage(resourceItem).GetAmount() < buildingBase.GetStorage(resourceItem).GetMaxAmount()
@@ -185,7 +187,7 @@ public class Worker : Unit
                 {
                     currentState = State.Moving;
                 }
-                
+
 
                 // Go back to the workerhouse
                 if (Vector3.Distance(transform.position, workerHouse.transform.position) <= transferRange)

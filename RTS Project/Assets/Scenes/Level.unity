@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -551,36 +551,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ResourceAreaSpawner
       objectReference: {fileID: 0}
-    - target: {fileID: 839569720826515094, guid: e49dccff1924f6e49be9b73ff22ff905,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8174031491341160228, guid: e49dccff1924f6e49be9b73ff22ff905,
         type: 3}
       propertyPath: terrain
       value: 
       objectReference: {fileID: 477139716}
-    - target: {fileID: 8174031491341160228, guid: e49dccff1924f6e49be9b73ff22ff905,
-        type: 3}
-      propertyPath: maxAngle
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 8174031491341160228, guid: e49dccff1924f6e49be9b73ff22ff905,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8174031491341160228, guid: e49dccff1924f6e49be9b73ff22ff905,
-        type: 3}
-      propertyPath: maxHeight
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 8174031491341160228, guid: e49dccff1924f6e49be9b73ff22ff905,
-        type: 3}
-      propertyPath: groundLayer.m_Bits
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 9059765624243850627, guid: e49dccff1924f6e49be9b73ff22ff905,
         type: 3}
       propertyPath: m_RootOrder
