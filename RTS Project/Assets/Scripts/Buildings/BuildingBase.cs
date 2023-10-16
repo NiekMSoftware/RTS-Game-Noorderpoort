@@ -25,6 +25,7 @@ public class BuildingBase : MonoBehaviour
 
     public enum Jobs { Wood, Stone, Metal }
 
+    [System.Serializable]
     public class Points
     {
         public PointManager.PointType type;
@@ -35,6 +36,11 @@ public class BuildingBase : MonoBehaviour
     {
         Building,
         Normal
+    }
+
+    public Points GetPoints()
+    {
+        return points;
     }
 
     public Recipe[] GetRecipes()

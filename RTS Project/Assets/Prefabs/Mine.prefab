@@ -60,6 +60,9 @@ MonoBehaviour:
   recipes:
   - data: {fileID: 11400000, guid: 4178d3d151ebd1a4295d48f9a7f482c9, type: 2}
     amountNeeded: 50
+  points:
+    type: 1
+    pointsToReceive: 3
 --- !u!65 &4694457708341824937
 BoxCollider:
   m_ObjectHideFlags: 0

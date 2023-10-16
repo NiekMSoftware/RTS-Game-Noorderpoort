@@ -26,6 +26,26 @@ public class PointManager : MonoBehaviour
         public float defensivePoints;
     }
 
+    public void AddPoints(float amount, PointType pointType, Type type)
+    {
+        Points points = GetPointsByType(type);
+
+        switch (pointType)
+        {
+            case PointType.resource:
+                points.resourcePoints += amount;
+                break;
+
+            case PointType.offensive:
+                points.offensivePoints += amount;
+                break;
+
+            case PointType.defensive:
+                points.defensivePoints += amount;
+                break;
+        }
+    }
+
     public Points GetPointsByType(Type type)
     {
         foreach (var point in points)

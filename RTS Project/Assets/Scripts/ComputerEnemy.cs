@@ -18,6 +18,7 @@ public class ComputerEnemy : MonoBehaviour
     [SerializeField] private float buildingPlaceAccuracy = 50;
     [SerializeField] private float amountOfSecondsPerChoise = 3;
     [SerializeField] private ResourceItemManager resourceItemManager;
+    [SerializeField] private PointManager pointManager;
 
     [SerializeField] private List<Worker> workers;
     [SerializeField] private List<Worker> availableWorkers;
@@ -116,14 +117,15 @@ public class ComputerEnemy : MonoBehaviour
 
         if (HasEnoughResources(resourcesAndBuildings[GetResourceIndexByItemdata(woodItem)].building.GetComponent<BuildingBase>()))
         {
-            GameObject spawnedBuilding = Instantiate(resourcesAndBuildings[GetResourceIndexByItemdata(woodItem)].building
-                , originalPos, Quaternion.identity);
+            BuildingBase spawnedBuilding = Instantiate(resourcesAndBuildings[GetResourceIndexByItemdata(woodItem)].building
+                , originalPos, Quaternion.identity).GetComponent<BuildingBase>();
 
             if (Physics.Raycast(spawnedBuilding.transform.position + new Vector3(0, 1, 0), -Vector3.up, out RaycastHit hit, groundLayer))
             {
                 spawnedBuilding.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
-                buildings.Add(spawnedBuilding.GetComponent<BuildingBase>());
-                spawnedBuilding.GetComponent<BuildingBase>().SetResourceItemManagerByType(ResourceItemManager.Type.AI);
+                spawnedBuilding.SetResourceItemManagerByType(ResourceItemManager.Type.AI);
+                pointManager.AddPoints(spawnedBuilding.GetPoints().pointsToReceive, spawnedBuilding.GetPoints().type, PointManager.Type.AI);
+                buildings.Add(spawnedBuilding);
             }
         }
         else

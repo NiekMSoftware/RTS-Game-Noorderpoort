@@ -246,7 +246,7 @@ public class BuildingManager : MonoBehaviour
             buildings[buildings[currentIndex].buildingsToUnlock[i]].isUnlocked = true;
         }
 
-        //TODO: add points to point system
+        pointManager.AddPoints(spawnedBuilding.GetPoints().pointsToReceive, spawnedBuilding.GetPoints().type, PointManager.Type.Player);
 
         UpdateButtons();
 
