@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,6 +9,8 @@ public class ComputerEnemy : MonoBehaviour
     [SerializeField] private BuildingManager buildingManager;
     [SerializeField] private ResourceAndBuilding[] resourcesAndBuildings;
     [SerializeField] private ItemData woodItem;
+    [SerializeField] private ItemData stoneItem;
+    [SerializeField] private ItemData metalItem;
     [SerializeField] private Terrain terrain;
     [SerializeField] private LayerMask resourceLayer;
     [SerializeField] private LayerMask groundLayer;
@@ -19,7 +20,8 @@ public class ComputerEnemy : MonoBehaviour
     [SerializeField] private ResourceItemManager resourceItemManager;
 
     [SerializeField] private List<Worker> workers;
-    [SerializeField] private List<GameObject> buildings;
+    [SerializeField] private List<Worker> availableWorkers;
+    [SerializeField] private List<BuildingBase> buildings;
 
     private List<GameObject> resourceAreas = new();
 
@@ -38,13 +40,11 @@ public class ComputerEnemy : MonoBehaviour
         {
             Worker worker = Instantiate(workerPrefab, transform.position, Quaternion.identity).GetComponent<Worker>();
             workers.Add(worker);
+            availableWorkers.Add(worker);
         }
 
-        //int randomWorker = Random.Range(0, workers.Count);
-        //Worker currentWorker = workers[randomWorker];
-        //currentWorker.
-
         PlaceBuilding(resourcesAndBuildings[GetResourceIndexByItemdata(woodItem)].itemData);
+        AssignWorker(GetBuildingIndexByType(woodItem), availableWorkers[0]);
     }
 
     private void Update()
@@ -61,7 +61,47 @@ public class ComputerEnemy : MonoBehaviour
 
     private void MakeChoise()
     {
-        
+        //Check if has barrack, if not place one
+        //if not enough humans, build home
+        //if not enough resources !?!??!
+
+
+        //Check if have enough items to train soldier.
+        //Check if any buildings have too little/no workers.
+        //place building.
+    }
+
+    private bool HasEnoughResources(BuildingBase building)
+    {
+        bool hasAllResources = false;
+
+        foreach (var item in building.GetRecipes())
+        {
+            if (item.data == resourceItemManager.GetSlotByItemData(item.data).data)
+            {
+                if (resourceItemManager.GetSlotByItemData(item.data).amount >= item.amountNeeded)
+                {
+                    hasAllResources = true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        if (hasAllResources)
+        {
+            foreach (var item in building.GetRecipes())
+            {
+                if (resourceItemManager.GetSlotByItemData(item.data).data == item.data)
+                {
+                    resourceItemManager.GetSlotByItemData(item.data).amount -= item.amountNeeded;
+                }
+            }
+        }
+
+        return hasAllResources;
     }
 
     private void PlaceBuilding(ItemData itemData)
@@ -81,19 +121,46 @@ public class ComputerEnemy : MonoBehaviour
         originalPos.y = terrain.SampleHeight(originalPos) +
             resourcesAndBuildings[GetResourceIndexByItemdata(woodItem)].building.transform.localScale.y;
 
-        GameObject spawnedBuilding = Instantiate(resourcesAndBuildings[GetResourceIndexByItemdata(woodItem)].building
-            , originalPos, Quaternion.identity);
-
-        if (Physics.Raycast(spawnedBuilding.transform.position + new Vector3(0, 1, 0), -Vector3.up, out RaycastHit hit, groundLayer))
+        if (HasEnoughResources(resourcesAndBuildings[GetResourceIndexByItemdata(woodItem)].building.GetComponent<BuildingBase>()))
         {
-            spawnedBuilding.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
-            buildings.Add(spawnedBuilding);
+            GameObject spawnedBuilding = Instantiate(resourcesAndBuildings[GetResourceIndexByItemdata(woodItem)].building
+                , originalPos, Quaternion.identity);
 
-            for (int i = 0; i < 2; i++)
+            if (Physics.Raycast(spawnedBuilding.transform.position + new Vector3(0, 1, 0), -Vector3.up, out RaycastHit hit, groundLayer))
             {
-                int randomWorker = Random.Range(0, workers.Count);
-                spawnedBuilding.GetComponent<BuildingBase>().AddWorkerToBuilding(workers[randomWorker]);
+                spawnedBuilding.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+                buildings.Add(spawnedBuilding.GetComponent<BuildingBase>());
+                spawnedBuilding.GetComponent<BuildingBase>().SetResourceItemManagerByType(ResourceItemManager.Type.AI);
             }
+        }
+        else
+        {
+            print("Not enough resources for : " + resourcesAndBuildings[GetResourceIndexByItemdata(woodItem)].building.name);
+        }
+    }
+
+    private BuildingBase GetBuildingIndexByType(ItemData itemData)
+    {
+        foreach (var building in buildings)
+        {
+            if (building.GetItemData() == itemData)
+            {
+                return building;
+            }
+        }
+
+        return null;
+    }
+
+    private void AssignWorker(BuildingBase building, Worker worker)
+    {
+        if (availableWorkers.Contains(worker))
+        {
+            building.AddWorkerToBuilding(worker);
+        }
+        else
+        {
+            print("worker : " + worker + " not available");
         }
     }
 
