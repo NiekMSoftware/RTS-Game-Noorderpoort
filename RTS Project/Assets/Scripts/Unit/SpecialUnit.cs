@@ -16,22 +16,21 @@ public class SpecialUnit : Unit
         
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        Death();
+        if (unitHealth <= 0)
+        {
+            UnitDeath();
+        }
         unitHealth = health;
     }
 
-    protected override void Death()
+    public void UnitDeath()
     {
         print("Death");
-        if(unitHealth <= 0)
-        {
-            print("Destroyed GO");
-            refSpecialUnitManager.UnitList.Remove(gameObject);
-            Destroy(gameObject);
-        }
-    }
+        refSpecialUnitManager.RemoveThis(gameObject);
+        
+    }    
     //Special creatures have a lot of health. They randomly spawn (in the fog of war) every X minutes.
     //They can be captured by “killing” it and feeding it until it’s tamed.
     //You can then use it as a unit. it can die just like any other unit.

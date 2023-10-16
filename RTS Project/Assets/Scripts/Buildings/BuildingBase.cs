@@ -11,10 +11,14 @@ public class BuildingBase : MonoBehaviour
     [SerializeField] private string jobName;
     [SerializeField] private Jobs jobs;
     [SerializeField] private States currentState;
+    [SerializeField] private int scanRange = 200;
+    [SerializeField] private Recipe[] recipes;
+
+    private ResourceItemManager resourceItemManager;
+
     private List<Material> savedMaterials = new();
     private GameObject particleObject;
     private List<GameObject> resourceAreas = new();
-    private int scanRange = 200;
 
     private Material buildingMaterial;
 
@@ -25,6 +29,23 @@ public class BuildingBase : MonoBehaviour
         Building,
         Normal
     }
+
+    public Recipe[] GetRecipes()
+    {
+        return recipes;
+    }
+
+    public void SetResourceItemManagerByType(ResourceItemManager.Type type)
+    {
+        foreach (var item in FindObjectsOfType<ResourceItemManager>())
+        {
+            if (item.type == type)
+            {
+                resourceItemManager = item;
+            }
+        }
+    }
+
     public GameObject FindClosestResourceManager(Transform buildingBase, ItemData itemdata)
     {
         foreach (Transform resourceType in FindAnyObjectByType<ResourceAreaSpawner>().GetComponentInChildren<Transform>())
@@ -73,6 +94,7 @@ public class BuildingBase : MonoBehaviour
     {
         buildingMaterial = _material;
         particleObject = _particleObject;
+        SetResourceItemManagerByType(ResourceItemManager.Type.Player);
     }
 
     public IEnumerator Build(float buildTime)
@@ -89,7 +111,6 @@ public class BuildingBase : MonoBehaviour
         particle.Play();
         FindClosestResourceManager(transform, currentStorage[0].data);
         yield return new WaitForSeconds(particle.main.duration);
-        particle.GetComponent<ParticleSystemRenderer>().material.color = Color.white;
 
         yield return null;
     }
@@ -104,10 +125,14 @@ public class BuildingBase : MonoBehaviour
         return null;
     }
 
+    public ItemData GetItemData()
+    {
+        return currentStorage[0].GetData();
+    }
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(this.gameObject.transform.position, 20);
+        Gizmos.DrawWireSphere(transform.position, scanRange);
     }
     public void AddItemToStorage(ItemData itemData)
     {
@@ -157,8 +182,7 @@ public class BuildingBase : MonoBehaviour
         }
         else if (workers.Count < maxWorkers)
         {
-
-            worker.InitializeWorker(gameObject, jobs, FindClosestResourceManager(this.transform, currentStorage[0].data));
+            worker.InitializeWorker(gameObject, jobs, FindClosestResourceManager(this.transform, currentStorage[0].data), resourceItemManager);
             workers.Add(worker);
         }
     }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5920055782100835412}
   - component: {fileID: 7653102867414918291}
   - component: {fileID: 3786322739519887216}
-  - component: {fileID: 4948552307928526063}
+  - component: {fileID: 2121331087622604721}
   m_Layer: 0
   m_Name: SpecialUnitTest
   m_TagString: Untagged
@@ -33,7 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5920055782100835412
 MeshFilter:
@@ -106,7 +106,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4948552307928526063
+--- !u!114 &2121331087622604721
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c5b12b920007fa4e896b56c4e79e233, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitHealth: 0
+  unitHealth: 1
   unitMaxHealth: 0
   unitHealing: 0
   unitSpeed: 0
@@ -135,3 +135,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   health: 1
+  refSpecialUnitManager: {fileID: 0}

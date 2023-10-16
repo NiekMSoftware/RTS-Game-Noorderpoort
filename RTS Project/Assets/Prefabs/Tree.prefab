@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 6029000072312721442}
   - component: {fileID: 3266933957997051367}
   - component: {fileID: 7950675862453578318}
+  - component: {fileID: 2239339823428170901}
+  - component: {fileID: 6810519219939849580}
   m_Layer: 12
   m_Name: Tree
   m_TagString: StoneResource
@@ -101,3 +103,40 @@ MonoBehaviour:
     data: {fileID: 11400000, guid: 4178d3d151ebd1a4295d48f9a7f482c9, type: 2}
     amount: 15
     maxAmount: 33
+--- !u!65 &2239339823428170901
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8952031714232469564}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3.1951241, y: 6.443638, z: 7.030714}
+  m_Center: {x: 1.0026765, y: 3.1192412, z: -0.023929954}
+--- !u!208 &6810519219939849580
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8952031714232469564}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1.598, y: 3.2220001, z: 3.515}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 1.003, y: 3.1190002, z: -0.024}
+  m_TimeToStationary: 0.5
