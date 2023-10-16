@@ -13,6 +13,7 @@ public class BuildingBase : MonoBehaviour
     [SerializeField] private States currentState;
     [SerializeField] private int scanRange = 200;
     [SerializeField] private Recipe[] recipes;
+    [SerializeField] private Points points;
 
     private ResourceItemManager resourceItemManager;
 
@@ -23,6 +24,12 @@ public class BuildingBase : MonoBehaviour
     private Material buildingMaterial;
 
     public enum Jobs { Wood, Stone, Metal }
+
+    public class Points
+    {
+        public PointManager.PointType type;
+        public float pointsToReceive;
+    }
 
     public enum States
     {

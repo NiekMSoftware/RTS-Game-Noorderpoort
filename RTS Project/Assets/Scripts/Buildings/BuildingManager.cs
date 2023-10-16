@@ -12,6 +12,8 @@ public class BuildingManager : MonoBehaviour
     [SerializeField] private Building[] buildings;
     [SerializeField] private ResourceItemManager resources;
     [SerializeField] private Terrain terrain;
+    [SerializeField] private Button[] buttons;
+    [SerializeField] private PointManager pointManager;
 
     [Header("Build Progresses")]
     [SerializeField] private GameObject buildProgressPrefab;
@@ -35,7 +37,6 @@ public class BuildingManager : MonoBehaviour
     [SerializeField] private LayerMask groundLayerMask;
     [SerializeField] private float degreesToRotate = 90f;
     [SerializeField] private float buildErrorFloatUpSpeed;
-    [SerializeField] private Button[] buttons;
     [SerializeField] private float maxAngle;
     [SerializeField] private float maxHeight;
 
@@ -244,6 +245,8 @@ public class BuildingManager : MonoBehaviour
         {
             buildings[buildings[currentIndex].buildingsToUnlock[i]].isUnlocked = true;
         }
+
+        //TODO: add points to point system
 
         UpdateButtons();
 

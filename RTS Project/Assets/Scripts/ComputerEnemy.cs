@@ -61,14 +61,7 @@ public class ComputerEnemy : MonoBehaviour
 
     private void MakeChoise()
     {
-        //Check if has barrack, if not place one
-        //if not enough humans, build home
-        //if not enough resources !?!??!
 
-
-        //Check if have enough items to train soldier.
-        //Check if any buildings have too little/no workers.
-        //place building.
     }
 
     private bool HasEnoughResources(BuildingBase building)
