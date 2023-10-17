@@ -7,7 +7,7 @@ public class ComputerEnemy : MonoBehaviour
     [SerializeField] private GameObject workerPrefab;
     [SerializeField] private ResourceItemManager resources;
     [SerializeField] private BuildingManager buildingManager;
-    [SerializeField] private ResourceAndBuilding[] resourcesAndBuildings;
+    [SerializeField] private Buildings[] resourcesAndBuildings;
     [SerializeField] private ItemData woodItem;
     [SerializeField] private ItemData stoneItem;
     [SerializeField] private ItemData metalItem;
@@ -19,20 +19,43 @@ public class ComputerEnemy : MonoBehaviour
     [SerializeField] private float amountOfSecondsPerChoise = 3;
     [SerializeField] private ResourceItemManager resourceItemManager;
     [SerializeField] private PointManager pointManager;
+    [SerializeField] private float minResourcePoints;
 
     [SerializeField] private List<Worker> workers;
     [SerializeField] private List<Worker> availableWorkers;
     [SerializeField] private List<BuildingBase> buildings;
+    [SerializeField] private AIStates state;
 
     private List<GameObject> resourceAreas = new();
 
     private float choiseTimer;
 
+    private float playerOffenseDefenseScore;
+    private float AIOffenseDefenseScore;
+
+    public enum BuildingType
+    {
+        Resource,
+        Defensive,
+        Offensive
+    }
+
     [System.Serializable]
-    public class ResourceAndBuilding
+    public class Buildings
     {
         public GameObject building;
+        public BuildingType buildingType;
+        public bool isStarter;
         public ItemData itemData;
+    }
+
+    public enum AIStates
+    {
+        Start,
+        Exploring,
+        Defending,
+        PreparingAttack,
+        Attacking
     }
 
     private void Start()
@@ -62,7 +85,62 @@ public class ComputerEnemy : MonoBehaviour
 
     private void MakeChoise()
     {
+        switch (state)
+        {
+            case AIStates.Start:
+                if (pointManager.GetPointsByType(PointManager.Type.AI).resourcePoints >= minResourcePoints)
+                {
+                    state = AIStates.Exploring;
+                }
+                break;
 
+            case AIStates.Exploring:
+                //Add exploring code
+
+                UpdateScores();
+
+                //if the players army is beter than the ai's, defend
+                //otherwise prepare attack
+                if (playerOffenseDefenseScore > AIOffenseDefenseScore)
+                {
+                    print("Player better, defending");
+                    state = AIStates.Defending;
+                }
+                else
+                {
+                    print("AI better, attacking");
+                    state = AIStates.PreparingAttack;
+                }
+                break;
+
+            case AIStates.Defending:
+                UpdateScores();
+
+                if (playerOffenseDefenseScore < AIOffenseDefenseScore)
+                {
+                    state = AIStates.Attacking;
+                }
+                break;
+
+            case AIStates.PreparingAttack:
+                UpdateScores();
+
+                if (playerOffenseDefenseScore < AIOffenseDefenseScore)
+                {
+                    state = AIStates.Attacking;
+                }
+                break;
+
+            case AIStates.Attacking:
+                //Select all soldiers and attack player
+                break;
+        }
+    }
+
+    private void UpdateScores()
+    {
+        playerOffenseDefenseScore = pointManager.GetPointsByType(PointManager.Type.Player).offensivePoints + pointManager.GetPointsByType(PointManager.Type.Player).defensivePoints;
+        AIOffenseDefenseScore = pointManager.GetPointsByType(PointManager.Type.AI).offensivePoints + pointManager.GetPointsByType(PointManager.Type.AI).defensivePoints;
     }
 
     private bool HasEnoughResources(BuildingBase building)

@@ -154,8 +154,8 @@ Transform:
   - {fileID: 2118764349}
   - {fileID: 331108828}
   - {fileID: 468779473}
-  - {fileID: 1849405532}
   - {fileID: 411846362}
+  - {fileID: 1849405532}
   - {fileID: 1437358350}
   - {fileID: 993642094}
   - {fileID: 392051082}
@@ -1222,11 +1222,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3889022044362339208, guid: 15487bef90308ce46b42e6411d55c4cf,
-        type: 3}
-      propertyPath: m_text
-      value: Metal mine
-      objectReference: {fileID: 0}
     - target: {fileID: 3919309531634727837, guid: 15487bef90308ce46b42e6411d55c4cf,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -1297,15 +1292,15 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 331108829}
-    - target: {fileID: 7947785363473463996, guid: 15487bef90308ce46b42e6411d55c4cf,
-        type: 3}
-      propertyPath: m_text
-      value: LumberJack
-      objectReference: {fileID: 0}
     - target: {fileID: 7984909835000894417, guid: 15487bef90308ce46b42e6411d55c4cf,
         type: 3}
       propertyPath: m_Name
       value: Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 7984909835000894417, guid: 15487bef90308ce46b42e6411d55c4cf,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8428664492750074738, guid: 15487bef90308ce46b42e6411d55c4cf,
         type: 3}

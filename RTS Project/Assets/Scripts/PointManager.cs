@@ -15,7 +15,7 @@ public class PointManager : MonoBehaviour
         none,
         resource,
         offensive,
-        defensive
+        defensive,
     }
 
     [System.Serializable]
@@ -25,6 +25,18 @@ public class PointManager : MonoBehaviour
         public float resourcePoints;
         public float offensivePoints;
         public float defensivePoints;
+        public float warPoints
+        {
+            get
+            {
+                return offensivePoints + defensivePoints;
+            }
+
+            private set
+            {
+                warPoints = value;
+            }
+        }
     }
 
     public void AddPoints(float amount, PointType pointType, Type type)
