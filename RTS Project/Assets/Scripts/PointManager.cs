@@ -18,6 +18,7 @@ public class PointManager : MonoBehaviour
         defensive
     }
 
+    [System.Serializable]
     public class Points
     {
         public Type type;

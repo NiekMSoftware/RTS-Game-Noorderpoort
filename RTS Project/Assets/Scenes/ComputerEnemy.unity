@@ -160,6 +160,7 @@ Transform:
   - {fileID: 993642094}
   - {fileID: 392051082}
   - {fileID: 34008687716219366}
+  - {fileID: 1084786152}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -269,6 +270,11 @@ PrefabInstance:
       propertyPath: gridManager
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 4960871854027342727, guid: 14d717b6b9bb25049a85cee8480ea724,
+        type: 3}
+      propertyPath: pointManager
+      value: 
+      objectReference: {fileID: 1084786153}
     - target: {fileID: 4960871854027342727, guid: 14d717b6b9bb25049a85cee8480ea724,
         type: 3}
       propertyPath: buildErrorParent
@@ -777,37 +783,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5668088711890978245, guid: 24f651634f67b3d40a844924ef7bc32a,
-        type: 3}
-      propertyPath: itemSlots.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5668088711890978245, guid: 24f651634f67b3d40a844924ef7bc32a,
-        type: 3}
-      propertyPath: itemSlots.Array.data[2].data
-      value: 
-      objectReference: {fileID: 11400000, guid: 161a6795559e79647b98c0f3e168464e,
-        type: 2}
-    - target: {fileID: 5668088711890978245, guid: 24f651634f67b3d40a844924ef7bc32a,
-        type: 3}
-      propertyPath: itemSlots.Array.data[0].amount
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 5668088711890978245, guid: 24f651634f67b3d40a844924ef7bc32a,
-        type: 3}
-      propertyPath: itemSlots.Array.data[1].amount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5668088711890978245, guid: 24f651634f67b3d40a844924ef7bc32a,
-        type: 3}
-      propertyPath: itemSlots.Array.data[2].amount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5668088711890978245, guid: 24f651634f67b3d40a844924ef7bc32a,
-        type: 3}
-      propertyPath: itemSlots.Array.data[2].maxAmount
-      value: 99999
       objectReference: {fileID: 0}
     - target: {fileID: 7071059947000653681, guid: 24f651634f67b3d40a844924ef7bc32a,
         type: 3}
@@ -1633,6 +1608,59 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 713222366}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1084786151
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1084786152}
+  - component: {fileID: 1084786153}
+  m_Layer: 0
+  m_Name: Pointmanager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1084786152
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1084786151}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 226539239}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1084786153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1084786151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3520cc9908d297146bbfa488ccaf7746, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  points:
+  - type: 0
+    resourcePoints: 0
+    offensivePoints: 0
+    defensivePoints: 0
+  - type: 1
+    resourcePoints: 0
+    offensivePoints: 0
+    defensivePoints: 0
 --- !u!224 &1422069670 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5314710920988549199, guid: 15487bef90308ce46b42e6411d55c4cf,
@@ -1781,6 +1809,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 0c0ea06af6a171e42a725e0fb10167fc,
         type: 2}
+    - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
+        type: 3}
+      propertyPath: pointManager
+      value: 
+      objectReference: {fileID: 1084786153}
     - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
         type: 3}
       propertyPath: buildingManager
