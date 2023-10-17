@@ -22,19 +22,19 @@ public class PointManager : MonoBehaviour
     public class Points
     {
         public Type type;
-        public float resourcePoints;
-        public float offensivePoints;
-        public float defensivePoints;
-        public float warPoints
+        public float resourceScore;
+        public float offensiveScore;
+        public float defensiveScore;
+        public float warScore
         {
             get
             {
-                return offensivePoints + defensivePoints;
+                return offensiveScore + defensiveScore;
             }
 
             private set
             {
-                warPoints = value;
+                warScore = value;
             }
         }
     }
@@ -46,15 +46,15 @@ public class PointManager : MonoBehaviour
         switch (pointType)
         {
             case PointType.resource:
-                points.resourcePoints += amount;
+                points.resourceScore += amount;
                 break;
 
             case PointType.offensive:
-                points.offensivePoints += amount;
+                points.offensiveScore += amount;
                 break;
 
             case PointType.defensive:
-                points.defensivePoints += amount;
+                points.defensiveScore += amount;
                 break;
         }
     }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class ComputerEnemy : MonoBehaviour
 {
@@ -7,12 +8,12 @@ public class ComputerEnemy : MonoBehaviour
     [SerializeField] private GameObject workerPrefab;
     [SerializeField] private ResourceItemManager resources;
     [SerializeField] private BuildingManager buildingManager;
-    [SerializeField] private Buildings[] resourcesAndBuildings;
+    [SerializeField] private Buildings[] buildings;
     [SerializeField] private ItemData woodItem;
     [SerializeField] private ItemData stoneItem;
     [SerializeField] private ItemData metalItem;
     [SerializeField] private Terrain terrain;
-    [SerializeField] private LayerMask resourceLayer;
+    [SerializeField] private LayerMask occupanyLayer;
     [SerializeField] private LayerMask groundLayer;
     [Tooltip("Higher is more accurate but also less performent")]
     [SerializeField] private float buildingPlaceAccuracy = 50;
@@ -23,15 +24,15 @@ public class ComputerEnemy : MonoBehaviour
 
     [SerializeField] private List<Worker> workers;
     [SerializeField] private List<Worker> availableWorkers;
-    [SerializeField] private List<BuildingBase> buildings;
+    [SerializeField] private List<BuildingBase> placedBuildings;
     [SerializeField] private AIStates state;
 
     private List<GameObject> resourceAreas = new();
 
     private float choiseTimer;
 
-    private float playerOffenseDefenseScore;
-    private float AIOffenseDefenseScore;
+    private PointManager.Points aiPoints;
+    private PointManager.Points playerPoints;
 
     public enum BuildingType
     {
@@ -53,6 +54,7 @@ public class ComputerEnemy : MonoBehaviour
     {
         Start,
         Exploring,
+        Check,
         Defending,
         PreparingAttack,
         Attacking
@@ -67,8 +69,11 @@ public class ComputerEnemy : MonoBehaviour
             availableWorkers.Add(worker);
         }
 
-        PlaceBuilding(resourcesAndBuildings[GetResourceIndexByItemdata(woodItem)].itemData);
+        PlaceResourceBuilding(buildings[GetResourceIndexByItemdata(woodItem)].itemData);
         AssignWorker(GetBuildingIndexByType(woodItem), availableWorkers[0]);
+
+        aiPoints = pointManager.GetPointsByType(PointManager.Type.AI);
+        playerPoints = pointManager.GetPointsByType(PointManager.Type.Player);
     }
 
     private void Update()
@@ -88,7 +93,16 @@ public class ComputerEnemy : MonoBehaviour
         switch (state)
         {
             case AIStates.Start:
-                if (pointManager.GetPointsByType(PointManager.Type.AI).resourcePoints >= minResourcePoints)
+                foreach (var building in buildings)
+                {
+                    //if building is a starter building and isn't built yet, build it.
+                    if (building.isStarter && !placedBuildings.Contains(building.building.GetComponent<BuildingBase>()))
+                    {
+                        PlaceBuilding(building.building);
+                    }
+                }
+
+                if (aiPoints.resourceScore >= minResourcePoints)
                 {
                     state = AIStates.Exploring;
                 }
@@ -97,11 +111,14 @@ public class ComputerEnemy : MonoBehaviour
             case AIStates.Exploring:
                 //Add exploring code
 
-                UpdateScores();
+                state = AIStates.Check;
 
+                break;
+
+            case AIStates.Check:
                 //if the players army is beter than the ai's, defend
                 //otherwise prepare attack
-                if (playerOffenseDefenseScore > AIOffenseDefenseScore)
+                if (playerPoints.warScore > aiPoints.warScore)
                 {
                     print("Player better, defending");
                     state = AIStates.Defending;
@@ -114,20 +131,20 @@ public class ComputerEnemy : MonoBehaviour
                 break;
 
             case AIStates.Defending:
-                UpdateScores();
+                //Build defending buildings and create defending troops
 
-                if (playerOffenseDefenseScore < AIOffenseDefenseScore)
+                if (playerPoints.defensiveScore > aiPoints.defensiveScore)
                 {
-                    state = AIStates.Attacking;
+                    state = AIStates.Check;
                 }
                 break;
 
             case AIStates.PreparingAttack:
-                UpdateScores();
+                //Build barracks and create offensive troops
 
-                if (playerOffenseDefenseScore < AIOffenseDefenseScore)
+                if (aiPoints.offensiveScore < playerPoints.offensiveScore)
                 {
-                    state = AIStates.Attacking;
+                    state = AIStates.Check;
                 }
                 break;
 
@@ -135,12 +152,6 @@ public class ComputerEnemy : MonoBehaviour
                 //Select all soldiers and attack player
                 break;
         }
-    }
-
-    private void UpdateScores()
-    {
-        playerOffenseDefenseScore = pointManager.GetPointsByType(PointManager.Type.Player).offensivePoints + pointManager.GetPointsByType(PointManager.Type.Player).defensivePoints;
-        AIOffenseDefenseScore = pointManager.GetPointsByType(PointManager.Type.AI).offensivePoints + pointManager.GetPointsByType(PointManager.Type.AI).defensivePoints;
     }
 
     private bool HasEnoughResources(BuildingBase building)
@@ -176,7 +187,44 @@ public class ComputerEnemy : MonoBehaviour
         return hasAllResources;
     }
 
-    private void PlaceBuilding(ItemData itemData)
+    private void PlaceBuilding(GameObject building)
+    {
+        //Make the building be placed as close as possible to the main building/computerenemy's location
+
+        Vector3 direction = transform.position - new Vector3(0, Random.Range(0, 360), 0);
+        Debug.DrawRay(transform.position, direction * 1000, Color.green, 30);
+
+        Vector3 originalPos = building.transform.position;
+
+        while (Physics.CheckSphere(originalPos, 5f, occupanyLayer))
+        {
+            originalPos += direction / buildingPlaceAccuracy;
+        }
+
+        originalPos = Vector3Int.FloorToInt(originalPos);
+
+        originalPos.y = terrain.SampleHeight(originalPos) +
+            buildings[GetResourceIndexByItemdata(woodItem)].building.transform.localScale.y;
+
+        if (HasEnoughResources(buildings[GetResourceIndexByItemdata(woodItem)].building.GetComponent<BuildingBase>()))
+        {
+            BuildingBase spawnedBuilding = Instantiate(building, originalPos, Quaternion.identity).GetComponent<BuildingBase>();
+
+            if (Physics.Raycast(spawnedBuilding.transform.position + new Vector3(0, 1, 0), -Vector3.up, out RaycastHit hit, groundLayer))
+            {
+                spawnedBuilding.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+                spawnedBuilding.SetResourceItemManagerByType(ResourceItemManager.Type.AI);
+                pointManager.AddPoints(spawnedBuilding.GetPoints().pointsToReceive, spawnedBuilding.GetPoints().type, PointManager.Type.AI);
+                placedBuildings.Add(spawnedBuilding);
+            }
+        }
+        else
+        {
+            print("Not enough resources for : " + buildings[GetResourceIndexByItemdata(woodItem)].building.name);
+        }
+    }
+
+    private void PlaceResourceBuilding(ItemData itemData)
     {
         ResourceObjectManager closestResource = FindClosestResourceManager(itemData);
 
@@ -185,17 +233,19 @@ public class ComputerEnemy : MonoBehaviour
 
         Vector3 originalPos = closestResource.transform.position;
 
-        while (Physics.CheckSphere(originalPos, 5f, resourceLayer))
+        while (Physics.CheckSphere(originalPos, 5f, occupanyLayer))
         {
             originalPos += direction / buildingPlaceAccuracy;
         }
 
-        originalPos.y = terrain.SampleHeight(originalPos) +
-            resourcesAndBuildings[GetResourceIndexByItemdata(woodItem)].building.transform.localScale.y;
+        originalPos = Vector3Int.FloorToInt(originalPos);
 
-        if (HasEnoughResources(resourcesAndBuildings[GetResourceIndexByItemdata(woodItem)].building.GetComponent<BuildingBase>()))
+        originalPos.y = terrain.SampleHeight(originalPos) +
+            buildings[GetResourceIndexByItemdata(woodItem)].building.transform.localScale.y;
+
+        if (HasEnoughResources(buildings[GetResourceIndexByItemdata(woodItem)].building.GetComponent<BuildingBase>()))
         {
-            BuildingBase spawnedBuilding = Instantiate(resourcesAndBuildings[GetResourceIndexByItemdata(woodItem)].building
+            BuildingBase spawnedBuilding = Instantiate(buildings[GetResourceIndexByItemdata(woodItem)].building
                 , originalPos, Quaternion.identity).GetComponent<BuildingBase>();
 
             if (Physics.Raycast(spawnedBuilding.transform.position + new Vector3(0, 1, 0), -Vector3.up, out RaycastHit hit, groundLayer))
@@ -203,18 +253,18 @@ public class ComputerEnemy : MonoBehaviour
                 spawnedBuilding.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
                 spawnedBuilding.SetResourceItemManagerByType(ResourceItemManager.Type.AI);
                 pointManager.AddPoints(spawnedBuilding.GetPoints().pointsToReceive, spawnedBuilding.GetPoints().type, PointManager.Type.AI);
-                buildings.Add(spawnedBuilding);
+                placedBuildings.Add(spawnedBuilding);
             }
         }
         else
         {
-            print("Not enough resources for : " + resourcesAndBuildings[GetResourceIndexByItemdata(woodItem)].building.name);
+            print("Not enough resources for : " + buildings[GetResourceIndexByItemdata(woodItem)].building.name);
         }
     }
 
     private BuildingBase GetBuildingIndexByType(ItemData itemData)
     {
-        foreach (var building in buildings)
+        foreach (var building in placedBuildings)
         {
             if (building.GetItemData() == itemData)
             {
@@ -277,9 +327,9 @@ public class ComputerEnemy : MonoBehaviour
     {
         int index = 0;
 
-        foreach (var item in resourcesAndBuildings)
+        foreach (var building in buildings)
         {
-            if (item.itemData == itemData)
+            if (building.itemData == itemData)
             {
                 return index;
             }

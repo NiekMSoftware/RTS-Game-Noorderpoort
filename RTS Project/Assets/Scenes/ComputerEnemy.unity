@@ -97,7 +97,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: e4420bcad450e3749b782d2d223bd126,
+    type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -1649,13 +1650,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   points:
   - type: 0
-    resourcePoints: 0
-    offensivePoints: 0
-    defensivePoints: 0
+    resourceScore: 0
+    offensiveScore: 0
+    defensiveScore: 0
   - type: 1
-    resourcePoints: 0
-    offensivePoints: 0
-    defensivePoints: 0
+    resourceScore: 0
+    offensiveScore: 0
+    defensiveScore: 0
 --- !u!224 &1422069670 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5314710920988549199, guid: 15487bef90308ce46b42e6411d55c4cf,
@@ -1826,8 +1827,59 @@ PrefabInstance:
       objectReference: {fileID: 5668088712000634338}
     - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
         type: 3}
+      propertyPath: buildings.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
+        type: 3}
+      propertyPath: buildings.Array.data[0].building
+      value: 
+      objectReference: {fileID: 2432438935407483892, guid: 8140ef950e5920644a01c70b6f40bd1d,
+        type: 3}
+    - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
+        type: 3}
+      propertyPath: buildings.Array.data[0].itemData
+      value: 
+      objectReference: {fileID: 11400000, guid: 4178d3d151ebd1a4295d48f9a7f482c9,
+        type: 2}
+    - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
+        type: 3}
+      propertyPath: buildings.Array.data[1].building
+      value: 
+      objectReference: {fileID: 2432438935407483892, guid: 3fe74175db7cfc64e8eb83e219921af4,
+        type: 3}
+    - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
+        type: 3}
+      propertyPath: buildings.Array.data[1].itemData
+      value: 
+      objectReference: {fileID: 11400000, guid: 0c0ea06af6a171e42a725e0fb10167fc,
+        type: 2}
+    - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
+        type: 3}
+      propertyPath: buildings.Array.data[2].building
+      value: 
+      objectReference: {fileID: 2432438935407483892, guid: 0cbe5c561572e4f49aeaaabb216c2753,
+        type: 3}
+    - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
+        type: 3}
+      propertyPath: buildings.Array.data[2].itemData
+      value: 
+      objectReference: {fileID: 11400000, guid: 161a6795559e79647b98c0f3e168464e,
+        type: 2}
+    - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
+        type: 3}
       propertyPath: resourcesAndBuildings.Array.size
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
+        type: 3}
+      propertyPath: buildings.Array.data[0].isStarter
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
+        type: 3}
+      propertyPath: buildings.Array.data[1].isStarter
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
         type: 3}
