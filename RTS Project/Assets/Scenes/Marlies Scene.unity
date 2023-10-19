@@ -760,6 +760,11 @@ MonoBehaviour:
   stopSpawning: 0
   specialUnit: {fileID: 2121331087622604721, guid: a3fd11bbf25d1d245b39327fd77cdede,
     type: 3}
+  terrain: {fileID: 0}
+  MinPostionX: 0
+  MaxPostionX: 5
+  MinPostionZ: 0
+  MaxPostionZ: 5
 --- !u!1 &1393413177
 GameObject:
   m_ObjectHideFlags: 0
