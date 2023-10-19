@@ -19,10 +19,18 @@ public class PointManager : MonoBehaviour
     }
 
     [System.Serializable]
+    public class ResourcePoint
+    {
+        public ItemData item;
+        public float amount;
+    }
+
+    [System.Serializable]
     public class Points
     {
         public Type type;
-        public float resourceScore;
+        public float totalResourceScore;
+        public ResourcePoint[] resourcePoints;
         public float offensiveScore;
         public float defensiveScore;
         public float warScore
@@ -37,16 +45,33 @@ public class PointManager : MonoBehaviour
                 warScore = value;
             }
         }
+
+        public ResourcePoint GetResourcePointByItem(ItemData itemData)
+        {
+            foreach (var resourcePoint in resourcePoints)
+            {
+                if (resourcePoint.item == itemData)
+                {
+                    return resourcePoint;
+                }
+            }
+
+            return null;
+        }
     }
 
-    public void AddPoints(float amount, PointType pointType, Type type)
+    public void AddPoints(float amount, PointType pointType, Type type, ResourcePoint resourcePoint = null)
     {
         Points points = GetPointsByType(type);
 
         switch (pointType)
         {
             case PointType.resource:
-                points.resourceScore += amount;
+                points.totalResourceScore += amount;
+                if (resourcePoint != null)
+                {
+                    resourcePoint.amount += amount;
+                }
                 break;
 
             case PointType.offensive:

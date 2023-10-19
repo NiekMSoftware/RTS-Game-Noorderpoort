@@ -47,6 +47,7 @@ public class Worker : Unit
     public void InitializeWorker(GameObject _workerHouse, BuildingBase.Jobs _jobName,
         GameObject _resourceObjectManager, ResourceItemManager _resourceItemManager)
     {
+        print("added new worker!");
         resourceObjectManager = _resourceObjectManager.GetComponent<ResourceObjectManager>();
         workerHouse = _workerHouse;
         jobName = _jobName.ToString();

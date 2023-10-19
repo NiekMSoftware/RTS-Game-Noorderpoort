@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildingHp: 50
-  maxWorkers: 5
+  maxWorkers: 2
   currentStorage:
   - data: {fileID: 11400000, guid: 161a6795559e79647b98c0f3e168464e, type: 2}
     amount: 0

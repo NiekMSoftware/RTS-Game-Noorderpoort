@@ -1,6 +1,3 @@
-using System;
-using System.Drawing;
-using Unity.Mathematics;
 using UnityEngine;
 
 
@@ -27,7 +24,7 @@ public class CameraMovement : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Time.timeScale = 15f;
+            Time.timeScale = 3f;
         }
         Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit hit);
         Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * 1000, UnityEngine.Color.red);
@@ -39,7 +36,7 @@ public class CameraMovement : MonoBehaviour
         {
             if (!isRotating)
             {
-                rotatePoint = hitPoint; 
+                rotatePoint = hitPoint;
             }
             isRotating = true;
             allowMovement = false;
@@ -49,7 +46,7 @@ public class CameraMovement : MonoBehaviour
             isRotating = false;
             Invoke(nameof(AllowMovementInvoker), 0.5f);
         }
-        
+
         if (isRotating)
         {
             float horizontalMouseInput = Input.GetAxis("Mouse X");
@@ -125,7 +122,7 @@ public class CameraMovement : MonoBehaviour
             }
             else if (isShiftPressed && !isCtrlPressed)
             {
-                actualZoomHeight += zoomSpeed * 10f * Time.deltaTime; 
+                actualZoomHeight += zoomSpeed * 10f * Time.deltaTime;
             }
 
             actualZoomHeight = Mathf.Clamp(actualZoomHeight, minZoomHeight, maxZoomHeight);

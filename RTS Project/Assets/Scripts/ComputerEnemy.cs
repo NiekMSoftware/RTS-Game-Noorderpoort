@@ -8,9 +8,6 @@ public class ComputerEnemy : MonoBehaviour
     [SerializeField] private ResourceItemManager resources;
     [SerializeField] private BuildingManager buildingManager;
     [SerializeField] private Buildings[] buildings;
-    [SerializeField] private ItemData woodItem;
-    [SerializeField] private ItemData stoneItem;
-    [SerializeField] private ItemData metalItem;
     [SerializeField] private Terrain terrain;
     [SerializeField] private LayerMask occupanyLayer;
     [SerializeField] private LayerMask groundLayer;
@@ -33,6 +30,21 @@ public class ComputerEnemy : MonoBehaviour
     private PointManager.Points aiPoints;
     private PointManager.Points playerPoints;
 
+    [SerializeField] private List<MissingResource> ResourcesToGather;
+
+    [System.Serializable]
+    public class MissingResource
+    {
+        public MissingResource(int amount, ItemData item)
+        {
+            this.amount = amount;
+            this.item = item;
+        }
+
+        public int amount;
+        public ItemData item;
+    }
+
     public enum BuildingType
     {
         Resource,
@@ -47,11 +59,13 @@ public class ComputerEnemy : MonoBehaviour
         public BuildingType buildingType;
         public bool isStarter;
         public ItemData itemData;
+        public bool hasBeenPlaced;
     }
 
     public enum AIStates
     {
         Start,
+        ResourceGathering,
         Exploring,
         Check,
         Defending,
@@ -67,9 +81,6 @@ public class ComputerEnemy : MonoBehaviour
             workers.Add(worker);
             availableWorkers.Add(worker);
         }
-
-        //PlaceResourceBuilding(buildings[GetResourceIndexByItemdata(woodItem)].itemData);
-        //AssignWorker(GetBuildingIndexByType(woodItem), availableWorkers[0]);
 
         aiPoints = pointManager.GetPointsByType(PointManager.Type.AI);
         playerPoints = pointManager.GetPointsByType(PointManager.Type.Player);
@@ -95,7 +106,7 @@ public class ComputerEnemy : MonoBehaviour
                 foreach (var building in buildings)
                 {
                     //if building is a starter building and isn't built yet, build it.
-                    if (building.isStarter && !BuildingTypeHasBeenPlaced(building.building))
+                    if (building.isStarter && !building.hasBeenPlaced)
                     {
                         if (building.buildingType == BuildingType.Resource)
                         {
@@ -108,9 +119,44 @@ public class ComputerEnemy : MonoBehaviour
                     }
                 }
 
-                if (aiPoints.resourceScore >= minResourcePoints)
+                if (aiPoints.totalResourceScore >= minResourcePoints)
                 {
                     state = AIStates.Exploring;
+                }
+                break;
+
+            case AIStates.ResourceGathering:
+                if (ResourcesToGather.Count > 0)
+                {
+                    if (resourceItemManager.GetSlotByItemData(ResourcesToGather[0].item).amount >= ResourcesToGather[0].amount)
+                    {
+                        ResourcesToGather.RemoveAt(0);
+                        print("enough resources");
+                        state = AIStates.Check;
+                        return;
+                    }
+
+                    print("not enough resources");
+                    foreach (var placedBuilding in placedBuildings)
+                    {
+                        for (int i = 0; i < placedBuilding.GetMaxWorkers() + 1; i++)
+                        {
+                            if (availableWorkers.Count > 0)
+                            {
+                                if (placedBuilding.GetWorkers().Count <= i)
+                                {
+                                    print("assigned worker");
+                                    AssignWorker(placedBuilding, GetRandomAvailableWorker());
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                print("no workers available");
+                                return;
+                            }
+                        }
+                    }
                 }
                 break;
 
@@ -124,15 +170,22 @@ public class ComputerEnemy : MonoBehaviour
             case AIStates.Check:
                 //if the players army is beter than the ai's, defend
                 //otherwise prepare attack
-                if (playerPoints.warScore > aiPoints.warScore)
+                if (aiPoints.totalResourceScore < minResourcePoints)
                 {
-                    print("Player better, defending");
-                    state = AIStates.Defending;
+                    state = AIStates.Start;
                 }
                 else
                 {
-                    print("AI better, preparing attack");
-                    state = AIStates.PreparingAttack;
+                    if (playerPoints.warScore > aiPoints.warScore)
+                    {
+                        print("Player better, defending");
+                        state = AIStates.Defending;
+                    }
+                    else
+                    {
+                        print("AI better, preparing attack");
+                        state = AIStates.PreparingAttack;
+                    }
                 }
                 break;
 
@@ -158,19 +211,6 @@ public class ComputerEnemy : MonoBehaviour
                 //Select all soldiers and attack player
                 break;
         }
-    }
-
-    private bool BuildingTypeHasBeenPlaced(GameObject building)
-    {
-        foreach (var placedBuilding in placedBuildings)
-        {
-            if (placedBuilding.gameObject == building)
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private bool HasEnoughResources(BuildingBase building)
@@ -235,11 +275,15 @@ public class ComputerEnemy : MonoBehaviour
                 spawnedBuilding.SetResourceItemManagerByType(ResourceItemManager.Type.AI);
                 pointManager.AddPoints(spawnedBuilding.GetPoints().pointsToReceive, spawnedBuilding.GetPoints().type, PointManager.Type.AI);
                 placedBuildings.Add(spawnedBuilding);
+                building.hasBeenPlaced = true;
             }
         }
         else
         {
-            print("Not enough resources for : " + buildings[GetResourceIndexByItemdata(woodItem)].building.name);
+            print("Not enough resources for : " + buildings[GetResourceIndexByItemdata(building.itemData)].building.name);
+            ResourcesToGather.Add(new MissingResource(building.building.GetComponent<BuildingBase>().GetRecipes()[0].amountNeeded,
+                building.itemData));
+            state = AIStates.ResourceGathering;
         }
     }
 
@@ -262,14 +306,14 @@ public class ComputerEnemy : MonoBehaviour
         originalPos = Vector3Int.FloorToInt(originalPos);
 
         //Get building by resource
-        GameObject building = buildings[GetResourceIndexByItemdata(itemData)].building;
+        Buildings building = buildings[GetResourceIndexByItemdata(itemData)];
 
         //Set y height to terrain
-        originalPos.y = terrain.SampleHeight(originalPos) + building.transform.localScale.y;
+        originalPos.y = terrain.SampleHeight(originalPos) + building.building.transform.localScale.y;
 
-        if (HasEnoughResources(building.GetComponent<BuildingBase>()))
+        if (HasEnoughResources(building.building.GetComponent<BuildingBase>()))
         {
-            BuildingBase spawnedBuilding = Instantiate(building, originalPos, Quaternion.identity).GetComponent<BuildingBase>();
+            BuildingBase spawnedBuilding = Instantiate(building.building, originalPos, Quaternion.identity).GetComponent<BuildingBase>();
 
             if (Physics.Raycast(spawnedBuilding.transform.position + new Vector3(0, 1, 0), -Vector3.up, out RaycastHit hit, groundLayer))
             {
@@ -277,18 +321,23 @@ public class ComputerEnemy : MonoBehaviour
                 spawnedBuilding.SetResourceItemManagerByType(ResourceItemManager.Type.AI);
                 pointManager.AddPoints(spawnedBuilding.GetPoints().pointsToReceive, spawnedBuilding.GetPoints().type, PointManager.Type.AI);
                 placedBuildings.Add(spawnedBuilding);
+                building.hasBeenPlaced = true;
             }
         }
         else
         {
-            print("Not enough resources for : " + building.name);
+            print("Not enough resources for : " + building.building.name);
+            ResourcesToGather.Add(new MissingResource(building.building.GetComponent<BuildingBase>().GetRecipes()[0].amountNeeded,
+                building.building.GetComponent<BuildingBase>().GetRecipes()[0].data));
+            state = AIStates.ResourceGathering;
         }
     }
 
-    private BuildingBase GetBuildingIndexByType(ItemData itemData)
+    private BuildingBase GetBuildingByType(ItemData itemData)
     {
         foreach (var building in placedBuildings)
         {
+            print(building.GetItemData());
             if (building.GetItemData() == itemData)
             {
                 return building;
@@ -298,10 +347,26 @@ public class ComputerEnemy : MonoBehaviour
         return null;
     }
 
+    private Worker GetRandomAvailableWorker()
+    {
+        int randomNum = Random.Range(0, availableWorkers.Count);
+
+        if (availableWorkers[randomNum])
+        {
+            return availableWorkers[randomNum];
+        }
+        else
+        {
+            print("no worker available");
+            return null;
+        }
+    }
+
     private void AssignWorker(BuildingBase building, Worker worker)
     {
         if (availableWorkers.Contains(worker))
         {
+            pointManager.AddPoints(1, PointManager.PointType.resource, PointManager.Type.AI);
             building.AddWorkerToBuilding(worker);
         }
         else

@@ -195,7 +195,7 @@ public class BuildingBase : MonoBehaviour
         }
         else if (workers.Count < maxWorkers)
         {
-            worker.InitializeWorker(gameObject, jobs, FindClosestResourceManager(this.transform, currentStorage[0].data), resourceItemManager);
+            worker.InitializeWorker(gameObject, jobs, FindClosestResourceManager(transform, currentStorage[0].data), resourceItemManager);
             workers.Add(worker);
         }
     }
@@ -279,5 +279,15 @@ public class BuildingBase : MonoBehaviour
                 }
             }
         }
+    }
+
+    public List<Worker> GetWorkers()
+    {
+        return workers;
+    }
+
+    public int GetMaxWorkers()
+    {
+        return maxWorkers;
     }
 }
