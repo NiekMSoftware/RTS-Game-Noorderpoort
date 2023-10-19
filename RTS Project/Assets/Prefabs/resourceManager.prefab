@@ -55,3 +55,6 @@ MonoBehaviour:
   - data: {fileID: 11400000, guid: 161a6795559e79647b98c0f3e168464e, type: 2}
     amount: 0
     maxAmount: 99999
+  - data: {fileID: 11400000, guid: 161a6795559e79647b98c0f3e168464e, type: 2}
+    amount: 100
+    maxAmount: 99999
