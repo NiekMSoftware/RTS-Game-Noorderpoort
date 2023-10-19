@@ -1,6 +1,3 @@
-using System;
-using System.Drawing;
-using Unity.Mathematics;
 using UnityEngine;
 
 
@@ -14,7 +11,7 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private Transform orientation;
     [SerializeField] private Transform particleSpawnPoint;
     private bool isRotating = false;
-    private Vector3 hitPoint;
+    public Vector3 hitPoint;
     private float rotationSpeed = 1000f;
     private bool allowMovement = true;
     private float cameraHeight = 20f;
@@ -22,6 +19,7 @@ public class CameraMovement : MonoBehaviour
     private Vector3 hitPointDown = Vector3.zero;
     float targetHeight = 100f;
     float actualZoomHeight = 0f;
+    private Vector3 hitPointUp = Vector3.zero;
 
     private void Update()
     {
@@ -35,11 +33,13 @@ public class CameraMovement : MonoBehaviour
         hitPoint = hit.point;
         Physics.Raycast(Camera.main.transform.position, -Camera.main.transform.up, out RaycastHit hitDown);
         hitPointDown = hitDown.point;
+
+
         if (Input.GetMouseButton(2))
         {
             if (!isRotating)
             {
-                rotatePoint = hitPoint; 
+                rotatePoint = hitPoint;
             }
             isRotating = true;
             allowMovement = false;
@@ -49,7 +49,7 @@ public class CameraMovement : MonoBehaviour
             isRotating = false;
             Invoke(nameof(AllowMovementInvoker), 0.5f);
         }
-        
+
         if (isRotating)
         {
             float horizontalMouseInput = Input.GetAxis("Mouse X");
@@ -125,19 +125,33 @@ public class CameraMovement : MonoBehaviour
             }
             else if (isShiftPressed && !isCtrlPressed)
             {
-                actualZoomHeight += zoomSpeed * 10f * Time.deltaTime; 
+                actualZoomHeight += zoomSpeed * 10f * Time.deltaTime;
+            }
+            if (Vector3.Distance(hitPoint, transform.position) < 100)
+            {
+
             }
 
             actualZoomHeight = Mathf.Clamp(actualZoomHeight, minZoomHeight, maxZoomHeight);
 
             targetHeight = hit.point.y + actualZoomHeight;
+            if (targetHeight < hitPointDown.y)
+            {
+                targetHeight = hitPointDown.y + minZoomHeight;
+            }
 
+            
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.up * 1000, out RaycastHit hitUp))
+            {
+                hitPointUp = hitUp.point;
+                print("under terrain");
+            }
+            print(hitPoint);
 
-            cameraHeight = Mathf.Lerp(cameraHeight, targetHeight, Time.deltaTime * 3f);
+            cameraHeight = Mathf.Lerp(cameraHeight, targetHeight, Time.deltaTime * 5f);
             //cameraHeight = Mathf.Clamp(cameraHeight - zoom * zoomSpeed, minZoomHeight, maxZoomHeight);
 
             transform.position = new Vector3(transform.position.x, cameraHeight, transform.position.z);
-
 
             //orientation.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
             //transform.position = new Vector3(transform.position.x, hitPointDown.y + cameraHeight + 20, transform.position.z);
