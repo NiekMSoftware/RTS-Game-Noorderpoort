@@ -5,33 +5,58 @@ using UnityEngine.AI;
 
 public class SoldierUnit : Unit
 {
-    public NavMeshAgent navMeshAgent;
-    public float startWaitTime = 4;
-    public float timeToRotate = 2;
-    public float speedWalk = 6;
-    public float speedRun = 9;
+    public float damageInterval = 2.0f;
+    public float damageAmount = 10.0f;
+    public LayerMask enemyLayer;
 
-    public float viewRadius = 15;
-    public float viewAngle = 90;
-    public LayerMask playerMask;
-    public LayerMask obstacleMask;
-    public float meshResolution = 1f;
-    public int edgeIterations = 4;
-    public float edgeDistance = 0.5f;
+    private Transform targetBuilding;
+    private bool isAttacking = false;
+    private float damageTimer = 0.0f;
 
-    public Transform[] waypoints;
-    int m_CurrentWaypointIndex;
-
-    Vector3 playerLastPosition = Vector3.zero;
-    Vector3 m_PayerPosition;
-
-    
-
-    public SoldierUnit()
+    private void Update()
     {
-       void Start ()
+        if (isAttacking)
         {
+            damageTimer += Time.deltaTime;
 
+            if (damageTimer >= damageInterval)
+            {
+                DealDamageToEnemiesInRange();
+                damageTimer = 0.0f;
+            }
+        }
+    }
+
+    public void AssignToBuilding(Transform buildingTransform)
+    {
+        targetBuilding = buildingTransform;
+        isAttacking = true;
+    }
+
+    private void DealDamageToEnemiesInRange()
+    {
+        Collider[] colliders = Physics.OverlapBox(
+            transform.position, Vector3.one, Quaternion.identity, enemyLayer);
+
+        foreach (var collider in colliders)
+        {
+            if (collider.gameObject != gameObject)
+            {
+                SoldierUnit enemySoldier = collider.GetComponent<SoldierUnit>();
+                if (enemySoldier != null)
+                {
+                    enemySoldier.TakeDamage(damageAmount);
+                }
+            }
+        }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        unitHealth -= Mathf.FloorToInt(damage);
+        if (unitHealth < 0)
+        {
+            Death();
         }
     }
 
@@ -39,9 +64,8 @@ public class SoldierUnit : Unit
     {
         if (unitHealth <= 0)
         {
-           //Play death anim
+            // Play death animation.
         }
     }
-
-   
 }
+
