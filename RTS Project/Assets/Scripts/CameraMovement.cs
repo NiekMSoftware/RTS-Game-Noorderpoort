@@ -146,7 +146,6 @@ public class CameraMovement : MonoBehaviour
                 hitPointUp = hitUp.point;
                 print("under terrain");
             }
-            print(hitPoint);
 
             cameraHeight = Mathf.Lerp(cameraHeight, targetHeight, Time.deltaTime * 5f);
             //cameraHeight = Mathf.Clamp(cameraHeight - zoom * zoomSpeed, minZoomHeight, maxZoomHeight);
