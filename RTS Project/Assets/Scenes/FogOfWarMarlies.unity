@@ -229,12 +229,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa1ce45e9a6305440a9decc7bd6c4aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RefPlayerMovement: {fileID: 961963994}
   FogOfWarPlane: {fileID: 1237936600}
   Player: {fileID: 961963993}
   FogLayer:
     serializedVersion: 2
     m_Bits: 8192
   radius: 5
+  MaxAlpha: 1
+  vertices: []
+  colors: []
 --- !u!114 &414048678
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -399,6 +403,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
+  PlayerMoving: 0
 --- !u!54 &961963995
 Rigidbody:
   m_ObjectHideFlags: 0
