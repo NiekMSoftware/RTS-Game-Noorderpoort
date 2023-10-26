@@ -53,8 +53,8 @@ MonoBehaviour:
     amount: 0
     maxAmount: 10000
   workers: []
-  jobName: StoneBOi
-  jobs: 0
+  jobName: Metal Miner
+  jobs: 2
   currentState: 0
   scanRange: 500
   recipes:
