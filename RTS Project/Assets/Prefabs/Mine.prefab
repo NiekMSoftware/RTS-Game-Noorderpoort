@@ -53,7 +53,7 @@ MonoBehaviour:
     amount: 0
     maxAmount: 10000
   workers: []
-  jobName: StoneBOi
+  jobName: Stone Miner
   jobs: 1
   currentState: 0
   scanRange: 500
