@@ -6,33 +6,29 @@ using System.Linq;
 
 public class UIManager : MonoBehaviour
 {
-    public TextMeshProUGUI woodResourceNumber;
-    public TextMeshProUGUI stoneResourceNumber;
-    public TextMeshProUGUI metalResourceNumber;
-
+    [SerializeField] private TextMeshProUGUI[] resourceTexts;
     private ResourceItemManager resourceItemManager;
 
     private void Start()
-    {   
+    {
         resourceItemManager = GameObject.Find("ResourceManager").GetComponent<ResourceItemManager>();
     }
 
     private void Update()
     {
-        woodResourceNumber.text = resourceItemManager.itemSlots[0].amount.ToString();
-        stoneResourceNumber.text = resourceItemManager.itemSlots[1].amount.ToString();
-        metalResourceNumber.text = resourceItemManager.itemSlots[2].amount.ToString();
-
-        if (resourceItemManager.itemSlots[0].amount == 0)
+        for (int i = 0; i < resourceTexts.Length; i++)
         {
-            woodResourceNumber.color = Color.red;
+            int amount = resourceItemManager.itemSlots[i].amount;
+            resourceTexts[i].text = amount.ToString();
+
+            if (amount == 0)
+            {
+                resourceTexts[i].color = Color.red;
+            }
+            else
+            {
+                resourceTexts[i].color = Color.white;
+            }
         }
-        else
-        {
-            woodResourceNumber.color = Color.white;
-        }
-
-
-
     }
 }
