@@ -13,7 +13,7 @@ public class BuildingBase : MonoBehaviour
     [SerializeField] private States currentState;
     [SerializeField] private int scanRange = 200;
     [SerializeField] private Recipe[] recipes;
-    [SerializeField] private Points points;
+    [SerializeField] private BuildingPoints points;
 
     private ResourceItemManager resourceItemManager;
 
@@ -25,20 +25,20 @@ public class BuildingBase : MonoBehaviour
 
     public enum Jobs { Wood, Stone, Metal }
 
-    [System.Serializable]
-    public class Points
-    {
-        public PointManager.PointType type;
-        public float pointsToReceive;
-    }
-
     public enum States
     {
         Building,
         Normal
     }
 
-    public Points GetPoints()
+    [System.Serializable]
+    public class BuildingPoints
+    {
+        public PointManager.PointType pointType;
+        public int amount;
+    }
+
+    public BuildingPoints GetPoints()
     {
         return points;
     }
@@ -183,21 +183,24 @@ public class BuildingBase : MonoBehaviour
         }
     }
 
-    public void AddWorkerToBuilding(Worker worker)
+    public bool AddWorkerToBuilding(Worker worker)
     {
         if (workers.Contains(worker))
         {
-            return;
+            return false;
         }
         else if (worker.GetCurrentBuilding() != null)
         {
-            return;
+            return false;
         }
         else if (workers.Count < maxWorkers)
         {
             worker.InitializeWorker(gameObject, jobs, FindClosestResourceManager(transform, currentStorage[0].data), resourceItemManager);
             workers.Add(worker);
+            return true;
         }
+
+        return false;
     }
 
     protected void RemoveWorkerFromBuilding(Worker worker)
