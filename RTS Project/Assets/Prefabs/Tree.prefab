@@ -101,8 +101,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slot:
     data: {fileID: 11400000, guid: 4178d3d151ebd1a4295d48f9a7f482c9, type: 2}
-    amount: 15
-    maxAmount: 33
+    amount: 100
+    maxAmount: 10000
 --- !u!65 &2239339823428170901
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -131,7 +131,7 @@ NavMeshObstacle:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8952031714232469564}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Shape: 1
   m_Extents: {x: 1.598, y: 3.2220001, z: 3.515}

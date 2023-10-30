@@ -731,7 +731,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1368249674}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -760,6 +760,11 @@ MonoBehaviour:
   stopSpawning: 0
   specialUnit: {fileID: 2121331087622604721, guid: a3fd11bbf25d1d245b39327fd77cdede,
     type: 3}
+  terrain: {fileID: 0}
+  MinPostionX: 0
+  MaxPostionX: 5
+  MinPostionZ: 0
+  MaxPostionZ: 5
 --- !u!1 &1393413177
 GameObject:
   m_ObjectHideFlags: 0

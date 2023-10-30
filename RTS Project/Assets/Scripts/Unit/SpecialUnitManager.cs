@@ -15,6 +15,11 @@ public class SpecialUnitManager : MonoBehaviour
     public bool stopSpawning = false;
 
     public SpecialUnit specialUnit;
+    public Terrain terrain;
+    public int MinPostionX;
+    public int MaxPostionX;
+    public int MinPostionZ;
+    public int MaxPostionZ;
 
     void Start()
     {
@@ -30,7 +35,9 @@ public class SpecialUnitManager : MonoBehaviour
     }
     public void SpawnObject()
     {
-        currentUnitObject = Instantiate(specialUnitObject, transform.position, transform.rotation);
+        Vector3 RPosition = new Vector3(Random.Range(MinPostionX, MaxPostionX), 0, Random.Range(MinPostionZ, MaxPostionZ));
+        Vector3 randomSpawnPosition = new Vector3(RPosition.x, terrain.SampleHeight(RPosition), RPosition.z);
+        currentUnitObject = Instantiate(specialUnitObject, randomSpawnPosition, Quaternion.identity);
         SpecialUnit currentSpecialUnit = currentUnitObject.GetComponent<SpecialUnit>();
         currentSpecialUnit.refSpecialUnitManager = this;
         UnitList.Add(currentUnitObject);
@@ -49,7 +56,7 @@ public class SpecialUnitManager : MonoBehaviour
                 {
                     print(unit.name);
                     currentSpecialUnit = unit.GetComponent<SpecialUnit>();
-                    currentSpecialUnit.health--; 
+                    currentSpecialUnit.GoDownHealth--; 
                     stopSpawning = false;
                 }
             }                                

@@ -9,8 +9,9 @@ public class Worker : Unit
     [SerializeField] private ResourceObjectManager resourceObjectManager;
     [SerializeField] protected ItemSlot currentStorage;
     [SerializeField] protected int maxStorage = 3;
-    [SerializeField] protected float workerHp = 5f;
-    [SerializeField] private ItemData resourceItem;
+
+    [SerializeField] private ResourceItemManager resourceItemManager;
+    private ItemData resourceItem;
 
     private bool canGather = true;
     private bool canDeposit = true;
@@ -43,12 +44,18 @@ public class Worker : Unit
         }
 
     }
-    public void InitializeWorker(GameObject _workerHouse, BuildingBase.Jobs _jobName, GameObject _resourceObjectManager)
+    public void InitializeWorker(GameObject _workerHouse, BuildingBase.Jobs _jobName,
+        GameObject _resourceObjectManager, ResourceItemManager _resourceItemManager)
     {
+        print("added new worker!");
         resourceObjectManager = _resourceObjectManager.GetComponent<ResourceObjectManager>();
         workerHouse = _workerHouse;
         jobName = _jobName.ToString();
+        buildingBase = workerHouse.GetComponent<BuildingBase>();
+        resourceItem = buildingBase.GetItemData();
+        resourceItemManager = _resourceItemManager;
     }
+
     protected void AddItemToWorkerStorage(ItemData itemData)
     {
         if (itemData == resourceItem)
@@ -100,6 +107,7 @@ public class Worker : Unit
             {
                 RemoveItemFromWorkerStorage(resourceItem);
                 buildingBase.AddItemToStorage(resourceItem);
+                resourceItemManager.GetSlotByItemData(resourceItem).amount++;
             }
             yield return new WaitForSeconds(1f);
         }
@@ -115,7 +123,6 @@ public class Worker : Unit
             case State.Assigning:
                 if (workerHouse)
                 {
-                    buildingBase = workerHouse.GetComponent<BuildingBase>();
                     myAgent.isStopped = false;
                     myAgent.SetDestination(workerHouse.transform.position);
 
@@ -178,8 +185,6 @@ public class Worker : Unit
                     resourceTarget = resourceObjectManager.FindClosestResource(buildingBase.transform, resourceItem, this);
                 }
 
-                print(currentStorage);
-
                 // If inventory isnt full in building and working go to moving
                 if (currentStorage.GetAmount() < maxStorage &&
                     buildingBase.GetStorage(resourceItem).GetAmount() < buildingBase.GetStorage(resourceItem).GetMaxAmount()
@@ -187,7 +192,6 @@ public class Worker : Unit
                 {
                     currentState = State.Moving;
                 }
-
 
                 // Go back to the workerhouse
                 if (Vector3.Distance(transform.position, workerHouse.transform.position) <= transferRange)

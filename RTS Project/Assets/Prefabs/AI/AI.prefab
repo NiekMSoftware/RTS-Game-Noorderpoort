@@ -162,15 +162,15 @@ MonoBehaviour:
     m_Bits: 64
   resourceTarget: {fileID: 0}
   workerHouse: {fileID: 0}
-  scanRange: 100
-  resourceManager: {fileID: 0}
+  resourceObjectManager: {fileID: 0}
   currentStorage:
     data: {fileID: 11400000, guid: 0c0ea06af6a171e42a725e0fb10167fc, type: 2}
     amount: 0
     maxAmount: 3
   maxStorage: 3
   workerHp: 5
-  resourceItem: {fileID: 11400000, guid: 0c0ea06af6a171e42a725e0fb10167fc, type: 2}
+  resourceItem: {fileID: 11400000, guid: 4178d3d151ebd1a4295d48f9a7f482c9, type: 2}
+  currentState: 4
   assigned: 0
 --- !u!1 &7024833265930589587
 GameObject:

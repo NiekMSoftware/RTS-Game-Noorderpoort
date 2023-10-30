@@ -22,7 +22,7 @@ public class ResourceAreaSpawner : MonoBehaviour
         public float amountToSpawn;
     }
 
-    private void Start()
+    private void Awake()
     {
         Stopwatch sw = Stopwatch.StartNew();
 
