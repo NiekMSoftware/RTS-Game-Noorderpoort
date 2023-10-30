@@ -7,16 +7,24 @@ public class ResourceObjectManager : MonoBehaviour
     public List<GameObject> occupiedResources = new List<GameObject>();
     private float scanRange = 20f;
 
+    public void SetResources(GameObject resource)
+    {
+        resources.Add(resource);
+    }
+
+    //private void Awake()
+    //{
+    //    foreach (Transform resource in transform.GetComponentInChildren<Transform>())
+    //    {
+    //        if (!resources.Contains(resource.gameObject))
+    //        {
+    //            resources.Add(resource.gameObject);
+    //        }
+    //    }
+    //}
+
     public GameObject FindClosestResource(Transform buildingBase, ItemData itemdata, Worker worker)
     {
-        foreach (Transform resource in transform.GetComponentInChildren<Transform>())
-        {
-            if (!resources.Contains(resource.gameObject))
-            {
-                resources.Add(resource.gameObject);
-            }
-        }
-
         GameObject closestResource = null;
         float closestDistance = scanRange;
         Vector3 currentPosition = buildingBase.transform.position;

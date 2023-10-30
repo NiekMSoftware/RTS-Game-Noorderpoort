@@ -1,177 +1,172 @@
-using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
     public static GridManager Instance;
 
-    public static Tile[,] grid;
+    public Tile[,] grid;
     [SerializeField] private Vector2Int gridSize;
     [SerializeField] private Vector3 gridOffset;
     [SerializeField] private LayerMask buildingLayer;
     [SerializeField] private LayerMask tempBuildingLayer;
+    [SerializeField] private LayerMask gridLayer;
     [SerializeField] private BuildingManager buildingManager;
+    [SerializeField] private GameObject tilePrefab;
 
-    private List<Vector3Int> tilePositions = new();
+    private List<Vector3> tilePos = new();
 
     private void Awake()
     {
         Instance = this;
 
+        //Invoke(nameof(SetupGrid), 1);
         SetupGrid();
     }
 
-    public class Tile
-    {
-        public Vector3 pos;
-        public bool isOccupied;
-
-        public Tile[] GetNeighbours()
-        {
-            List<Tile> neighbours = new();
-
-            for (int x = 0; x < 3; x++)
-            {
-                for (int y = 0; y < 3; y++)
-                {
-                    if (grid[x, y] != this)
-                    {
-                        neighbours.Add(grid[x, y]);
-                    }
-                }
-            }
-
-            return neighbours.ToArray();
-        }
-    }
-
-    [ContextMenu("Setup Grid")]
     private void SetupGrid()
     {
+        Stopwatch stopWatch = Stopwatch.StartNew();
+
         grid = new Tile[gridSize.x, gridSize.y];
 
-        for (int x = 0; x < grid.GetLength(0); x++)
+        for (int x = 0; x < gridSize.x; x++)
         {
-            for (int z = 0; z < grid.GetLength(1); z++)
+            for (int z = 0; z < gridSize.y; z++)
             {
-                Tile tile = new();
-                grid[x, z] = tile;
-                grid[x, z].pos = new Vector3Int(x, 0, z) + gridOffset;
-                tilePositions.Add(Vector3Int.FloorToInt(grid[x, z].pos));
+                Vector3 pos = new Vector3(x, 0, z) + gridOffset;
+                grid[x, z] = SpawnTile(pos);
+                grid[x, z].Init(pos, this);
             }
         }
 
-        foreach (var item in grid[1, 1].GetNeighbours())
-        {
-            item.isOccupied = true;
-        }
-
-        //CheckOccupancy();
+        stopWatch.Stop();
+        print("Setupgrid : " + stopWatch.ElapsedMilliseconds + "ms");
     }
 
-    public Vector3Int GetClosestPointOnGrid(Vector3 pos)
+    public bool GetOccupany(Vector3 pos, GameObject building)
     {
-        print("get");
-        float shortestDistance = 100;
-        int index = 0;
+        building.layer = (int)Mathf.Log(tempBuildingLayer.value, 2);
 
-        for (int i = 0; i < tilePositions.Count; i++)
+        if (Physics.Raycast(pos, Vector3.down, out RaycastHit hit, Mathf.Infinity, gridLayer))
         {
-            if (Vector3.Distance(tilePositions[i], pos) < shortestDistance)
+            Tile startTile = hit.transform.GetComponent<Tile>();
+            tilePos.Add(startTile.pos);
+
+            Collider[] colliders = new Collider[1];
+            Physics.OverlapSphereNonAlloc(startTile.pos, 0.1f, colliders, buildingLayer);
+
+            if (colliders[0] != null)
             {
-                index = i;
-                shortestDistance = Vector3.Distance(tilePositions[i], pos);
+                print("nooo!");
+                building.layer = (int)Mathf.Log(buildingLayer.value, 2);
+                return true;
             }
+
+            List<Tile> tiles = new();
+            List<Tile> tempTiles = new();
+            tiles.Add(startTile);
+
+            for (int i = 0; i < 3; i++)
+            {
+                for (int e = 0; e < tiles.Count; e++)
+                {
+                    foreach (var tile in tiles[e].GetNeighbours())
+                    {
+                        Collider[] colliders2 = new Collider[1];
+                        Physics.OverlapSphereNonAlloc(tile.pos, 0.1f, colliders2, buildingLayer);
+
+                        if (colliders2[0] != null)
+                        {
+                            building.layer = (int)Mathf.Log(buildingLayer.value, 2);
+                            return true;
+                        }
+                    }
+                }
+
+
+                tiles.Clear();
+                tiles = new List<Tile>(tempTiles);
+                tempTiles.Clear();
+            }
+
+            building.layer = (int)Mathf.Log(buildingLayer.value, 2);
+            return false;
         }
 
-        return tilePositions[index];
-    }
-
-    public bool GetOccupanyPendingObject()
-    {
-        //Tile[] tiles = CheckOccupancyPendingObject();
-
-        //foreach (var tile in tiles)
-        //{
-        //    if (tile.isOccupied)
-        //    {
-        //        return true;
-        //    }
-        //}
-
+        building.layer = (int)Mathf.Log(buildingLayer.value, 2);
         return false;
     }
 
-    public void CheckOccupancy()
+    public void SetOccupancy(Vector3 pos)
     {
-        for (int x = 0; x < grid.GetLength(0); x++)
-        {
-            for (int z = 0; z < grid.GetLength(1); z++)
-            {
-                Collider[] colliders = new Collider[1];
-                Physics.OverlapSphereNonAlloc(grid[x, z].pos, 0.1f, colliders, buildingLayer);
+        UnityEngine.Debug.DrawRay(pos, Vector3.down * 100, Color.red, 60f);
 
-                if (colliders[0] != null)
+        if (Physics.Raycast(pos, Vector3.down, out RaycastHit hit, Mathf.Infinity, gridLayer))
+        {
+            Tile startTile = hit.transform.GetComponent<Tile>();
+            tilePos.Add(startTile.pos);
+
+            Collider[] colliders = new Collider[1];
+            Physics.OverlapSphereNonAlloc(startTile.pos, 0.1f, colliders, buildingLayer);
+
+            if (colliders[0] != null)
+            {
+                startTile.isOccupied = true;
+                startTile.GetComponent<MeshRenderer>().material.color = Color.red;
+            }
+            else
+            {
+                startTile.isOccupied = false;
+                startTile.GetComponent<MeshRenderer>().material.color = Color.white;
+            }
+
+            List<Tile> tiles = new();
+            List<Tile> tempTiles = new();
+            tiles.Add(startTile);
+
+            for (int i = 0; i < 3; i++)
+            {
+                for (int e = 0; e < tiles.Count; e++)
                 {
-                    grid[x, z].isOccupied = true;
+                    foreach (var tile in tiles[e].GetNeighbours())
+                    {
+                        Collider[] colliders2 = new Collider[1];
+                        Physics.OverlapSphereNonAlloc(tile.pos, 0.1f, colliders2, buildingLayer);
+
+                        if (colliders2[0] != null)
+                        {
+                            tile.isOccupied = true;
+                            tile.GetComponent<MeshRenderer>().material.color = Color.red;
+                            tempTiles.Add(tile);
+                        }
+                        else
+                        {
+                            tile.isOccupied = false;
+                            tile.GetComponent<MeshRenderer>().material.color = Color.white;
+                        }
+                    }
                 }
-                else
-                {
-                    grid[x, z].isOccupied = false;
-                }
+
+
+                tiles.Clear();
+                tiles = new List<Tile>(tempTiles);
+                tempTiles.Clear();
             }
         }
     }
 
-    public Tile[] CheckOccupancyPendingObject()
+    private Tile SpawnTile(Vector3 pos)
     {
-        List<Tile> tiles = new();
-
-        buildingManager.GetPendingObject().layer = (int)Mathf.Log(tempBuildingLayer.value, 2);
-
-        for (int x = 0; x < grid.GetLength(0); x++)
-        {
-            for (int z = 0; z < grid.GetLength(1); z++)
-            {
-                Collider[] colliders = new Collider[1];
-                Physics.OverlapSphereNonAlloc(grid[x, z].pos, 0.1f, colliders, tempBuildingLayer);
-
-                if (colliders[0] != null)
-                {
-                    Tile tile = new()
-                    {
-                        pos = grid[x, z].pos,
-                        isOccupied = grid[x, z].isOccupied,
-                    };
-
-                    tiles.Add(tile);
-                }
-            }
-        }
-
-        buildingManager.GetPendingObject().layer = (int)Mathf.Log(buildingLayer.value, 2);
-
-        return tiles.ToArray();
+        return Instantiate(tilePrefab, pos, Quaternion.identity, transform).GetComponent<Tile>();
     }
 
     private void OnDrawGizmos()
     {
-        if (grid == null) return;
-
-        for (int x = 0; x < grid.GetLength(0); x++)
+        foreach (Vector3 pos in tilePos)
         {
-            for (int z = 0; z < grid.GetLength(1); z++)
-            {
-                Gizmos.color = Color.white;
-
-                if (grid[x, z].isOccupied)
-                {
-                    Gizmos.color = Color.red;
-                }
-
-                Gizmos.DrawWireCube(new Vector3(grid[x, z].pos.x, 0, grid[x, z].pos.z), new Vector3(0.9f, 0, 0.9f));
-            }
+            Gizmos.DrawWireSphere(pos, 0.1f);
         }
     }
 }

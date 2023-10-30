@@ -66,11 +66,16 @@ MonoBehaviour:
     prefabToSpawn: {fileID: 8952031714232469564, guid: d3f81d9c9f1ccaf4d9e022455daae196,
       type: 3}
     texture: {fileID: 2800000, guid: 405390574dde6304aa0dc4ebf5dfc180, type: 3}
-    amountToSpawn: 10
+    amountToSpawn: 20
   resourceLayer:
     serializedVersion: 2
     m_Bits: 4096
   terrain: {fileID: 0}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  maxAngle: 20
+  maxHeight: 50
 --- !u!1 &6924859471375939796
 GameObject:
   m_ObjectHideFlags: 0
@@ -160,7 +165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ad3162f9754c54e9ff7f7020694367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentResource: 2
+  currentResource: 1
 --- !u!1 &9196394981039170553
 GameObject:
   m_ObjectHideFlags: 0

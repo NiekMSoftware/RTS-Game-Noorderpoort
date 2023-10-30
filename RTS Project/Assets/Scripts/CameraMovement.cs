@@ -1,18 +1,25 @@
 using UnityEngine;
 
+
 public class CameraMovement : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 1f;
     [SerializeField] private float zoomSpeed = 5000f;
     [SerializeField] private float borderSize = 0.07f;
-    [SerializeField] private float maxZoomHeight = 50f;
-    [SerializeField] private float minZoomHeight = 10f;
-    private bool isRotating = false;
-    private Vector3 hitPoint;
-    private float rotationSpeed = 3.5f;
-    private bool allowMovement = true;
+    [SerializeField] private float maxZoomHeight = 200f;
+    [SerializeField] private float minZoomHeight = 15f;
     [SerializeField] private Transform orientation;
     [SerializeField] private Transform particleSpawnPoint;
+    private bool isRotating = false;
+    public Vector3 hitPoint;
+    private float rotationSpeed = 1000f;
+    private bool allowMovement = true;
+    private float cameraHeight = 20f;
+    private Vector3 rotatePoint = Vector3.zero;
+    private Vector3 hitPointDown = Vector3.zero;
+    float targetHeight = 100f;
+    float actualZoomHeight = 0f;
+    private Vector3 hitPointUp = Vector3.zero;
 
     private void Update()
     {
@@ -21,25 +28,48 @@ public class CameraMovement : MonoBehaviour
             Time.timeScale = 15f;
         }
         Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit hit);
+        Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * 1000, UnityEngine.Color.red);
+
         hitPoint = hit.point;
+        Physics.Raycast(Camera.main.transform.position, -Camera.main.transform.up, out RaycastHit hitDown);
+        hitPointDown = hitDown.point;
+
+
         if (Input.GetMouseButton(2))
         {
+            if (!isRotating)
+            {
+                rotatePoint = hitPoint;
+            }
             isRotating = true;
             allowMovement = false;
         }
         else
         {
             isRotating = false;
-            Invoke(nameof(AllowMovementInvoker), 0.75f);
+            Invoke(nameof(AllowMovementInvoker), 0.5f);
         }
-        
+
         if (isRotating)
         {
-            float horizontalInput = Input.GetAxis("Mouse X");
-            transform.RotateAround(hitPoint, Vector3.up, horizontalInput * rotationSpeed);
+            float horizontalMouseInput = Input.GetAxis("Mouse X");
+            float verticalMouseInput = Input.GetAxis("Mouse Y");
+            verticalMouseInput = Mathf.Clamp(verticalMouseInput, -1f, 1f);
+            if (transform.eulerAngles.x < 10)
+            {
+                verticalMouseInput = Mathf.Clamp(verticalMouseInput, 0f, 1f);
+            }
+            else if (transform.eulerAngles.x > 60)
+            {
+                verticalMouseInput = Mathf.Clamp(verticalMouseInput, -1f, 0f);
+
+            }
+
+            transform.RotateAround(rotatePoint, Vector3.up, horizontalMouseInput * Time.deltaTime * rotationSpeed);
+            transform.RotateAround(rotatePoint, Camera.main.transform.right, verticalMouseInput * Time.deltaTime * rotationSpeed);
 
             Vector3 currentEulerAngles = transform.rotation.eulerAngles;
-            transform.rotation = Quaternion.Euler(currentEulerAngles);
+            transform.rotation = Quaternion.Euler(currentEulerAngles.x, currentEulerAngles.y, 0);
         }
 
         float horizontal = Input.GetAxis("Horizontal");
@@ -64,18 +94,71 @@ public class CameraMovement : MonoBehaviour
             //{
             //    horizontal = -1;
             //}
+
+            if (transform.position.y > hitPoint.y + maxZoomHeight)
+            {
+                zoom = Mathf.Clamp(zoom, 0f, 1f);
+                //if (zoom != 0f) 
+                //{
+                //    zoom = 1.1f;
+                //    cameraHeight = cameraHeight * zoom;
+                //}
+            }
+            if (transform.position.y < hitPoint.y + minZoomHeight)
+            {
+                zoom = Mathf.Clamp(zoom, -1f, 0f);
+                //if (zoom != 0f)
+                //{
+                //    zoom = -1.1f;
+                //    cameraHeight = cameraHeight * zoom;
+                //}
+            }
+
+
+            bool isCtrlPressed = Input.GetKey(KeyCode.LeftControl);
+
+            bool isShiftPressed = Input.GetKey(KeyCode.LeftShift);
+
+            if (isCtrlPressed && !isShiftPressed)
+            {
+                actualZoomHeight -= zoomSpeed * 10f * Time.deltaTime;
+            }
+            else if (isShiftPressed && !isCtrlPressed)
+            {
+                actualZoomHeight += zoomSpeed * 10f * Time.deltaTime;
+            }
+            if (Vector3.Distance(hitPoint, transform.position) < 100)
+            {
+
+            }
+
+            actualZoomHeight = Mathf.Clamp(actualZoomHeight, minZoomHeight, maxZoomHeight);
+
+            targetHeight = hit.point.y + actualZoomHeight;
+            if (targetHeight < hitPointDown.y)
+            {
+                targetHeight = hitPointDown.y + minZoomHeight;
+            }
+
+            
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.up * 1000, out RaycastHit hitUp))
+            {
+                hitPointUp = hitUp.point;
+                print("under terrain");
+            }
+
+            cameraHeight = Mathf.Lerp(cameraHeight, targetHeight, Time.deltaTime * 5f);
+            //cameraHeight = Mathf.Clamp(cameraHeight - zoom * zoomSpeed, minZoomHeight, maxZoomHeight);
+
+            transform.position = new Vector3(transform.position.x, cameraHeight, transform.position.z);
+
+            //orientation.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
+            //transform.position = new Vector3(transform.position.x, hitPointDown.y + cameraHeight + 20, transform.position.z);
+            transform.position += Time.deltaTime * moveSpeed * orientation.TransformDirection(new Vector3(horizontal * (transform.position.y - hitPoint.y), 0, vertical * (transform.position.y - hitPoint.y)));
+            //transform.position += Time.deltaTime * zoomSpeed * transform.TransformDirection(new Vector3(0, 0, zoom * 750));
         }
-        if (transform.position.y > hitPoint.y + maxZoomHeight)
-        {
-            zoom = Mathf.Clamp(zoom, 0f, 1f);
-        }
-        if (transform.position.y < hitPoint.y + minZoomHeight)
-        {
-            zoom = Mathf.Clamp(zoom, -1f, 0f);
-        }
-        
-        transform.position += Time.deltaTime * moveSpeed * orientation.TransformDirection(new Vector3(horizontal * (transform.position.y - hitPoint.y), 0, vertical* (transform.position.y - hitPoint.y)));
-        transform.position += Time.deltaTime * zoomSpeed * transform.TransformDirection(new Vector3(0, 0, zoom * 750));
+
+        orientation.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
     }
 
     private void AllowMovementInvoker()

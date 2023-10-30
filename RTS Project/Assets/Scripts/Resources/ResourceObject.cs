@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ResourceObject : MonoBehaviour
@@ -25,7 +23,6 @@ public class ResourceObject : MonoBehaviour
         if (slot.amount > 0)
         {
             slot.IncreaseAmount(-1);
-
         }
         else
         {

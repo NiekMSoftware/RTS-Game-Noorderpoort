@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6029000072312721442}
   - component: {fileID: 3266933957997051367}
   - component: {fileID: 7950675862453578318}
+  - component: {fileID: 5099763310703388216}
   m_Layer: 12
   m_Name: Rocks
   m_TagString: StoneResource
@@ -32,7 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6029000072312721442
 MeshFilter:
@@ -100,3 +101,19 @@ MonoBehaviour:
     data: {fileID: 11400000, guid: 0c0ea06af6a171e42a725e0fb10167fc, type: 2}
     amount: 15
     maxAmount: 33
+--- !u!208 &5099763310703388216
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8952031714232469564}
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.734, y: 0.71400005, z: 0.975}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -0.10700001, y: 0.34100002, z: -0.095000006}
+  m_TimeToStationary: 0.5
