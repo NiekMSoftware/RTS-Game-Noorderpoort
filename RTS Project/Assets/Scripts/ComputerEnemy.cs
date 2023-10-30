@@ -5,8 +5,6 @@ public class ComputerEnemy : MonoBehaviour
 {
     [SerializeField] private float amountOfWorkersAtStart;
     [SerializeField] private GameObject workerPrefab;
-    [SerializeField] private ResourceItemManager resources;
-    [SerializeField] private BuildingManager buildingManager;
     [SerializeField] private Buildings[] buildings;
     [SerializeField] private Terrain terrain;
     [SerializeField] private LayerMask occupanyLayer;
@@ -177,15 +175,12 @@ public class ComputerEnemy : MonoBehaviour
                                         if (placedBuilding.GetWorkers().Count <= i)
                                         {
                                             AssignWorker(placedBuilding, GetRandomAvailableWorker());
-                                            shouldPlaceNewBuilding = false;
                                             return;
                                         }
                                         else
                                         {
                                             print("building already full of workers" + placedBuilding.GetItemData());
-                                            //Place new building
-                                            shouldPlaceNewBuilding = true;
-                                            itemData = placedBuilding.GetItemData();
+                                            //Place new building at new resource
                                         }
                                     }
                                     else
@@ -195,18 +190,6 @@ public class ComputerEnemy : MonoBehaviour
                                         return;
                                     }
                                 }
-
-                                print("end of another loop");
-                                if (shouldPlaceNewBuilding)
-                                    return;
-                            }
-
-                            print("end of loop");
-
-                            if (shouldPlaceNewBuilding)
-                            {
-                                print("try place resourceBuilding");
-                                PlaceResourceBuilding(itemData);
                             }
                         }
                     }
