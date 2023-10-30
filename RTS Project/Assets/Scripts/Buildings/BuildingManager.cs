@@ -9,10 +9,11 @@ using UnityEngine.UI;
 public class BuildingManager : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private PlaceableObject[] objects;
+    [SerializeField] private Building[] buildings;
     [SerializeField] private ResourceItemManager resources;
-    //[SerializeField] private GridManager gridManager;
     [SerializeField] private Terrain terrain;
+    [SerializeField] private Button[] buttons;
+    [SerializeField] private PointManager pointManager;
 
     [Header("Build Progresses")]
     [SerializeField] private GameObject buildProgressPrefab;
@@ -36,7 +37,6 @@ public class BuildingManager : MonoBehaviour
     [SerializeField] private LayerMask groundLayerMask;
     [SerializeField] private float degreesToRotate = 90f;
     [SerializeField] private float buildErrorFloatUpSpeed;
-    [SerializeField] private Button[] buttons;
     [SerializeField] private float maxAngle;
     [SerializeField] private float maxHeight;
 
@@ -47,11 +47,10 @@ public class BuildingManager : MonoBehaviour
     private bool rayHit;
 
     [System.Serializable]
-    class PlaceableObject
+    class Building
     {
-        public GameObject model;
+        public GameObject building;
         public float yHeight;
-        public Recipe[] recipes;
         public bool multiPlace;
         public Gradient buildParticleRandomColor;
         public float buildTime;
@@ -66,11 +65,11 @@ public class BuildingManager : MonoBehaviour
 
     private void UpdateButtons()
     {
-        for (int i = 0; i < objects.Length; i++)
+        for (int i = 0; i < buildings.Length; i++)
         {
             buttons[i].interactable = false;
 
-            if (objects[i].isUnlocked)
+            if (buildings[i].isUnlocked)
             {
                 buttons[i].interactable = true;
             }
@@ -144,22 +143,19 @@ public class BuildingManager : MonoBehaviour
                         List<ItemSlot> savedSlots = new();
 
                         //loop through all recipe items and all resources and check if the player has enough resources to build the building
-                        foreach (var itemNeeded in objects[currentIndex].recipes)
+                        foreach (var itemNeeded in buildings[currentIndex].building.GetComponent<BuildingBase>().GetRecipes())
                         {
-                            foreach (var itemGot in resources.GetAllResources())
+                            if (itemNeeded.data == resources.GetSlotByItemData(itemNeeded.data).data)
                             {
-                                if (itemNeeded.data == itemGot.data)
+                                if (resources.GetSlotByItemData(itemNeeded.data).amount >= itemNeeded.amountNeeded)
                                 {
-                                    if (itemGot.amount >= itemNeeded.amountNeeded)
-                                    {
-                                        savedSlots.Add(itemGot);
-                                        hasEverything = true;
-                                    }
-                                    else
-                                    {
-                                        SpawnError($"needs {itemNeeded.amountNeeded - itemGot.amount} more : {itemNeeded.data.name}");
-                                        hasEverything = false;
-                                    }
+                                    savedSlots.Add(resources.GetSlotByItemData(itemNeeded.data));
+                                    hasEverything = true;
+                                }
+                                else
+                                {
+                                    SpawnError($"needs {itemNeeded.amountNeeded - resources.GetSlotByItemData(itemNeeded.data).amount} more : {itemNeeded.data.name}");
+                                    hasEverything = false;
                                 }
                             }
                         }
@@ -167,14 +163,11 @@ public class BuildingManager : MonoBehaviour
                         //remove items only when the player can actually build it
                         if (hasEverything)
                         {
-                            foreach (var itemNeeded in objects[currentIndex].recipes)
+                            foreach (var itemNeeded in buildings[currentIndex].building.GetComponent<BuildingBase>().GetRecipes())
                             {
-                                foreach (var itemGot in resources.GetAllResources())
+                                if (itemNeeded.data == resources.GetSlotByItemData(itemNeeded.data).data)
                                 {
-                                    if (itemNeeded.data == itemGot.data)
-                                    {
-                                        itemGot.amount -= itemNeeded.amountNeeded;
-                                    }
+                                    resources.GetSlotByItemData(itemNeeded.data).amount -= itemNeeded.amountNeeded;
                                 }
                             }
 
@@ -240,22 +233,24 @@ public class BuildingManager : MonoBehaviour
         ParticleSystem spawnedParticle = Instantiate(buildParticle, pos, Quaternion.identity).GetComponent<ParticleSystem>();
         spawnedParticle.Play();
 
-        BuildingBase spawnedBuilding = Instantiate(objects[currentIndex].model, pendingObject.transform.position, pendingObject.transform.rotation).GetComponent<BuildingBase>();
+        BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pendingObject.transform.position, pendingObject.transform.rotation).GetComponent<BuildingBase>();
         spawnedBuilding.Init(buildingMaterial, buildParticle);
-        StartCoroutine(spawnedBuilding.Build(objects[currentIndex].buildTime));
+        StartCoroutine(spawnedBuilding.Build(buildings[currentIndex].buildTime));
 
         BuildProgress buildProgress = Instantiate(buildProgressPrefab, new Vector3(spawnedBuilding.transform.position.x,
             spawnedBuilding.transform.position.y + spawnedBuilding.transform.localScale.y + buildProgressHeight, spawnedBuilding.transform.position.z), Quaternion.identity).GetComponent<BuildProgress>();
-        buildProgress.Init(objects[currentIndex].buildTime);
+        buildProgress.Init(buildings[currentIndex].buildTime);
 
-        for (int i = 0; i < objects[currentIndex].buildingsToUnlock.Length; i++)
+        for (int i = 0; i < buildings[currentIndex].buildingsToUnlock.Length; i++)
         {
-            objects[objects[currentIndex].buildingsToUnlock[i]].isUnlocked = true;
+            buildings[buildings[currentIndex].buildingsToUnlock[i]].isUnlocked = true;
         }
+
+        pointManager.AddPoints(spawnedBuilding.GetPoints().amount, spawnedBuilding.GetPoints().pointType, PointManager.EntityType.Player);
 
         UpdateButtons();
 
-        if (!objects[currentIndex].multiPlace)
+        if (!buildings[currentIndex].multiPlace)
         {
             ResetObject();
         }
@@ -277,11 +272,11 @@ public class BuildingManager : MonoBehaviour
             Vector3 gridPos = Vector3Int.RoundToInt(hit.point);
             if (terrain)
             {
-                gridPos.y = terrain.SampleHeight(gridPos) + objects[currentIndex].model.transform.localScale.y;
+                gridPos.y = terrain.SampleHeight(gridPos) + buildings[currentIndex].building.transform.localScale.y;
             }
             else
             {
-                gridPos.y = objects[currentIndex].model.transform.localScale.y;
+                gridPos.y = buildings[currentIndex].building.transform.localScale.y;
             }
             pos = gridPos;
 
@@ -298,7 +293,7 @@ public class BuildingManager : MonoBehaviour
     {
         ResetObject();
 
-        pendingObject = Instantiate(objects[index].model, pos, transform.rotation);
+        pendingObject = Instantiate(buildings[index].building, pos, transform.rotation);
 
         ChangeObjectMaterial(pendingObject, correctPlaceMaterial);
 

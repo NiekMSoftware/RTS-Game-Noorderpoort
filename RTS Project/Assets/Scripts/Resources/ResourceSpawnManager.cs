@@ -72,6 +72,8 @@ public class ResourceSpawnManager : MonoBehaviour
         float _randomSizeNum = Random.Range(spawnObject.transform.localScale.x * minSpawnSize, spawnObject.transform.localScale.x * maxSpawnSize);
         _randomSize = new Vector3(_randomSizeNum, _randomSizeNum, _randomSizeNum);
         _spawnedObject.transform.localScale = _randomSize;
+
+        GetComponent<ResourceObjectManager>().SetResources(_spawnedObject);
     }
 
     private void OnDrawGizmos()

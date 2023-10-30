@@ -22,7 +22,7 @@ public class ResourceAreaSpawner : MonoBehaviour
         public float amountToSpawn;
     }
 
-    private void Start()
+    private void Awake()
     {
         Stopwatch sw = Stopwatch.StartNew();
 
@@ -57,8 +57,6 @@ public class ResourceAreaSpawner : MonoBehaviour
                     {
                         Vector3 normalizedNormal = hit.normal.normalized;
                         float rayAngle = Vector3.Angle(Vector3.up, normalizedNormal);
-
-                        print(rayAngle);
 
                         if (rayAngle <= maxAngle)
                         {
