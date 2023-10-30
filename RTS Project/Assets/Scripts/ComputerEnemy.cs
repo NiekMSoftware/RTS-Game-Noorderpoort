@@ -22,15 +22,16 @@ public class ComputerEnemy : MonoBehaviour
     [SerializeField] private List<Worker> availableWorkers;
     [SerializeField] private List<BuildingBase> placedBuildings;
     [SerializeField] private AIStates state;
+    [SerializeField] private int pointsToAddAssignWorker;
 
     private List<GameObject> resourceAreas = new();
 
     private float choiseTimer;
 
-    private PointManager.Points aiPoints;
-    private PointManager.Points playerPoints;
+    private Points aiPoints;
+    private Points playerPoints;
 
-    [SerializeField] private List<MissingResource> ResourcesToGather;
+    [SerializeField] private List<MissingResource> resourcesToGather;
 
     [System.Serializable]
     public class MissingResource
@@ -82,8 +83,8 @@ public class ComputerEnemy : MonoBehaviour
             availableWorkers.Add(worker);
         }
 
-        aiPoints = pointManager.GetPointsByType(PointManager.Type.AI);
-        playerPoints = pointManager.GetPointsByType(PointManager.Type.Player);
+        aiPoints = pointManager.GetPointsByType(PointManager.EntityType.AI);
+        playerPoints = pointManager.GetPointsByType(PointManager.EntityType.Player);
     }
 
     private void Update()
@@ -103,11 +104,14 @@ public class ComputerEnemy : MonoBehaviour
         switch (state)
         {
             case AIStates.Start:
+                bool placedAllStarterBuildings = true;
+
                 foreach (var building in buildings)
                 {
                     //if building is a starter building and isn't built yet, build it.
                     if (building.isStarter && !building.hasBeenPlaced)
                     {
+                        placedAllStarterBuildings = false;
                         if (building.buildingType == BuildingType.Resource)
                         {
                             PlaceResourceBuilding(building.itemData);
@@ -119,44 +123,94 @@ public class ComputerEnemy : MonoBehaviour
                     }
                 }
 
-                if (aiPoints.totalResourceScore >= minResourcePoints)
+                if (placedAllStarterBuildings)
                 {
-                    state = AIStates.Exploring;
+                    if (aiPoints.totalResourceScore >= minResourcePoints)
+                    {
+                        state = AIStates.Exploring;
+                    }
+                    else
+                    {
+                        float lowestResourcePoints = Mathf.Infinity;
+                        PointManager.ResourcePoint lowestResourcePoint = null;
+
+                        foreach (var resourcePoint in aiPoints.resourcePoints)
+                        {
+                            if (resourcePoint.amount < lowestResourcePoints)
+                            {
+                                lowestResourcePoints = resourcePoint.amount;
+                                lowestResourcePoint = resourcePoint;
+                            }
+                        }
+
+                        PlaceResourceBuilding(lowestResourcePoint.item);
+                    }
                 }
                 break;
 
             case AIStates.ResourceGathering:
-                if (ResourcesToGather.Count > 0)
+                if (resourcesToGather.Count > 0)
                 {
-                    if (resourceItemManager.GetSlotByItemData(ResourcesToGather[0].item).amount >= ResourcesToGather[0].amount)
+                    if (resourceItemManager.GetSlotByItemData(resourcesToGather[0].item).amount >= resourcesToGather[0].amount)
                     {
-                        ResourcesToGather.RemoveAt(0);
+                        resourcesToGather.RemoveAt(0);
                         print("enough resources");
                         state = AIStates.Check;
                         return;
                     }
 
+                    bool shouldPlaceNewBuilding = false;
+                    ItemData itemData = null;
+
                     print("not enough resources");
                     foreach (var placedBuilding in placedBuildings)
                     {
-                        for (int i = 0; i < placedBuilding.GetMaxWorkers() + 1; i++)
+                        foreach (var resource in resourcesToGather)
                         {
-                            if (availableWorkers.Count > 0)
+                            if (resource.item == placedBuilding.GetItemData())
                             {
-                                if (placedBuilding.GetWorkers().Count <= i)
+                                //Add workers
+                                for (int i = 0; i < placedBuilding.GetMaxWorkers() + 1; i++)
                                 {
-                                    print("assigned worker");
-                                    AssignWorker(placedBuilding, GetRandomAvailableWorker());
-                                    return;
+                                    if (availableWorkers.Count > 0)
+                                    {
+                                        if (placedBuilding.GetWorkers().Count <= i)
+                                        {
+                                            AssignWorker(placedBuilding, GetRandomAvailableWorker());
+                                            shouldPlaceNewBuilding = false;
+                                            return;
+                                        }
+                                        else
+                                        {
+                                            print("building already full of workers" + placedBuilding.GetItemData());
+                                            //Place new building
+                                            shouldPlaceNewBuilding = true;
+                                            itemData = placedBuilding.GetItemData();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //Place house
+                                        print("no workers available");
+                                        return;
+                                    }
                                 }
+
+                                print("end of another loop");
+                                if (shouldPlaceNewBuilding)
+                                    return;
                             }
-                            else
+
+                            print("end of loop");
+
+                            if (shouldPlaceNewBuilding)
                             {
-                                print("no workers available");
-                                return;
+                                print("try place resourceBuilding");
+                                PlaceResourceBuilding(itemData);
                             }
                         }
                     }
+
                 }
                 break;
 
@@ -273,7 +327,8 @@ public class ComputerEnemy : MonoBehaviour
             {
                 spawnedBuilding.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
                 spawnedBuilding.SetResourceItemManagerByType(ResourceItemManager.Type.AI);
-                pointManager.AddPoints(spawnedBuilding.GetPoints().pointsToReceive, spawnedBuilding.GetPoints().type, PointManager.Type.AI);
+                pointManager.AddPoints(spawnedBuilding.GetPoints().amount, spawnedBuilding.GetPoints().pointType, PointManager.EntityType.AI,
+                    aiPoints.GetResourcePointByItem(building.itemData));
                 placedBuildings.Add(spawnedBuilding);
                 building.hasBeenPlaced = true;
             }
@@ -281,7 +336,7 @@ public class ComputerEnemy : MonoBehaviour
         else
         {
             print("Not enough resources for : " + buildings[GetResourceIndexByItemdata(building.itemData)].building.name);
-            ResourcesToGather.Add(new MissingResource(building.building.GetComponent<BuildingBase>().GetRecipes()[0].amountNeeded,
+            resourcesToGather.Add(new MissingResource(building.building.GetComponent<BuildingBase>().GetRecipes()[0].amountNeeded,
                 building.itemData));
             state = AIStates.ResourceGathering;
         }
@@ -319,7 +374,8 @@ public class ComputerEnemy : MonoBehaviour
             {
                 spawnedBuilding.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
                 spawnedBuilding.SetResourceItemManagerByType(ResourceItemManager.Type.AI);
-                pointManager.AddPoints(spawnedBuilding.GetPoints().pointsToReceive, spawnedBuilding.GetPoints().type, PointManager.Type.AI);
+                pointManager.AddPoints(spawnedBuilding.GetPoints().amount, spawnedBuilding.GetPoints().pointType, PointManager.EntityType.AI,
+                    aiPoints.GetResourcePointByItem(itemData));
                 placedBuildings.Add(spawnedBuilding);
                 building.hasBeenPlaced = true;
             }
@@ -327,7 +383,7 @@ public class ComputerEnemy : MonoBehaviour
         else
         {
             print("Not enough resources for : " + building.building.name);
-            ResourcesToGather.Add(new MissingResource(building.building.GetComponent<BuildingBase>().GetRecipes()[0].amountNeeded,
+            resourcesToGather.Add(new MissingResource(building.building.GetComponent<BuildingBase>().GetRecipes()[0].amountNeeded,
                 building.building.GetComponent<BuildingBase>().GetRecipes()[0].data));
             state = AIStates.ResourceGathering;
         }
@@ -366,8 +422,12 @@ public class ComputerEnemy : MonoBehaviour
     {
         if (availableWorkers.Contains(worker))
         {
-            pointManager.AddPoints(1, PointManager.PointType.resource, PointManager.Type.AI);
-            building.AddWorkerToBuilding(worker);
+            if (building.AddWorkerToBuilding(worker))
+            {
+                print("assigned worker");
+                pointManager.AddPoints(pointsToAddAssignWorker, building.GetPoints().pointType, PointManager.EntityType.AI,
+                    aiPoints.GetResourcePointByItem(building.GetItemData()));
+            }
         }
         else
         {

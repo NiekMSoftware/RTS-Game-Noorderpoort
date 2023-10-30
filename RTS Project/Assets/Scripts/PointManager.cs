@@ -4,7 +4,8 @@ public class PointManager : MonoBehaviour
 {
     public Points[] points;
 
-    public enum Type
+    [System.Serializable]
+    public enum EntityType
     {
         Player,
         AI
@@ -25,52 +26,22 @@ public class PointManager : MonoBehaviour
         public float amount;
     }
 
-    [System.Serializable]
-    public class Points
-    {
-        public Type type;
-        public float totalResourceScore;
-        public ResourcePoint[] resourcePoints;
-        public float offensiveScore;
-        public float defensiveScore;
-        public float warScore
-        {
-            get
-            {
-                return offensiveScore + defensiveScore;
-            }
-
-            private set
-            {
-                warScore = value;
-            }
-        }
-
-        public ResourcePoint GetResourcePointByItem(ItemData itemData)
-        {
-            foreach (var resourcePoint in resourcePoints)
-            {
-                if (resourcePoint.item == itemData)
-                {
-                    return resourcePoint;
-                }
-            }
-
-            return null;
-        }
-    }
-
-    public void AddPoints(float amount, PointType pointType, Type type, ResourcePoint resourcePoint = null)
+    public void AddPoints(float amount, PointType pointType, EntityType type, ResourcePoint resourcePoint = null)
     {
         Points points = GetPointsByType(type);
 
         switch (pointType)
         {
             case PointType.resource:
-                points.totalResourceScore += amount;
                 if (resourcePoint != null)
                 {
                     resourcePoint.amount += amount;
+                }
+
+                points.totalResourceScore = 0;
+                foreach (var oneOfTheResourcePoints in points.resourcePoints)
+                {
+                    points.totalResourceScore += oneOfTheResourcePoints.amount;
                 }
                 break;
 
@@ -84,7 +55,7 @@ public class PointManager : MonoBehaviour
         }
     }
 
-    public Points GetPointsByType(Type type)
+    public Points GetPointsByType(EntityType type)
     {
         foreach (var point in points)
         {

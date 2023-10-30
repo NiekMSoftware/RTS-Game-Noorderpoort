@@ -101,8 +101,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slot:
     data: {fileID: 11400000, guid: 4178d3d151ebd1a4295d48f9a7f482c9, type: 2}
-    amount: 15
-    maxAmount: 33
+    amount: 100
+    maxAmount: 10000
 --- !u!65 &2239339823428170901
 BoxCollider:
   m_ObjectHideFlags: 0

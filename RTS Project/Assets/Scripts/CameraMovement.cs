@@ -140,13 +140,13 @@ public class CameraMovement : MonoBehaviour
                 targetHeight = hitPointDown.y + minZoomHeight;
             }
 
-            
+
             if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.up * 1000, out RaycastHit hitUp))
             {
                 hitPointUp = hitUp.point;
                 print("under terrain");
             }
-            print(hitPoint);
+            //print(hitPoint);
 
             cameraHeight = Mathf.Lerp(cameraHeight, targetHeight, Time.deltaTime * 5f);
             //cameraHeight = Mathf.Clamp(cameraHeight - zoom * zoomSpeed, minZoomHeight, maxZoomHeight);
