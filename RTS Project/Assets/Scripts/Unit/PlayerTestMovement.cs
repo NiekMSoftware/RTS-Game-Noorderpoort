@@ -28,9 +28,12 @@ public class PlayerTestMovement : MonoBehaviour
         transform.Translate(x,0,z);
         if (playerTransform.position != previousPosition)
         {
-            print("Player is moving");
             PlayerMoving = true;
-        }   
+        }
+        else
+        {
+            PlayerMoving = false;
+        }
         previousPosition = playerTransform.position;
     }
 }
