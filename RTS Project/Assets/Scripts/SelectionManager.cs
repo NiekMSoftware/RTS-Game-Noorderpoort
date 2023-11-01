@@ -40,10 +40,20 @@ public class SelectionManager : MonoBehaviour
                 if (Physics.Raycast(ray, out RaycastHit hit2, Mathf.Infinity, building))
                 {
                     //wanneer in selectedunits soldiers zitten, vind deze soldiers en voor elke soldier call AssignToBuilding
-                    
+
                     selectedBuilding = hit2.collider.gameObject;
                     BuildingSelected();
+
+                    foreach (GameObject selectedUnit in selectedUnits)
+                    {
+                        SoldierUnit soldier = selectedUnit.GetComponent<SoldierUnit>();
+                        if (soldier != null)
+                        {
+                            soldier.AssignToBuilding(selectedBuilding.transform);
+                        }
+                    }
                 }
+
                 if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, selectable))
                 {
                     if (Input.GetKey(KeyCode.LeftShift))
@@ -101,6 +111,7 @@ public class SelectionManager : MonoBehaviour
             DrawBoxVisual();
         }
     }
+
     private void BuildingSelected()
     {
         if (selectedUnits.Count > 0)
