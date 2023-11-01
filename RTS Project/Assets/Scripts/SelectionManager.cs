@@ -39,6 +39,7 @@ public class SelectionManager : MonoBehaviour
             {
                 if (Physics.Raycast(ray, out RaycastHit hit2, Mathf.Infinity, building))
                 {
+                    //wanneer in selectedunits soldiers zitten, vind deze soldiers en voor elke soldier call AssignToBuilding
                     selectedBuilding = hit2.collider.gameObject;
                     BuildingSelected();
                 }

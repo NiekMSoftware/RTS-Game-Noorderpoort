@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -85,7 +86,10 @@ public class Unit : MonoBehaviour
 
     #region Unit Location Controller
 
-    public void SetSelectionObject(bool value) => selectionObject.SetActive(value);
+    public void SetSelectionObject(bool value)
+    {
+        selectionObject.SetActive(value);
+    }
 
     public void SendUnitToLocation(Vector3 pos)
     {
