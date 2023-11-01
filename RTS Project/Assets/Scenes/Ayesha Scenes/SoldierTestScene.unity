@@ -517,24 +517,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba023a08ae0e2514d8d4817a63cbff60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitHealth: 50
-  unitMaxHealth: 50
-  unitHealing: 20
-  unitSpeed: 20
-  unitDamage: 30
+  unitHealth: 5
+  unitMaxHealth: 10
+  unitHealing: 15
+  unitSpeed: 5
+  unitDamage: 10
   job: 0
   typeUnit: 0
   selectionObject: {fileID: 198055752}
   myAgent: {fileID: 247986899}
   groundLayer:
     serializedVersion: 2
-    m_Bits: 8
-  marker: {fileID: 498492743}
+    m_Bits: 1
+  marker: {fileID: 198055752}
   clickableUnit:
     serializedVersion: 2
     m_Bits: 1
-  damageInterval: 2
-  damageAmount: 10
+  damageInterval: 4
+  damageAmount: 20
   enemyLayer:
     serializedVersion: 2
     m_Bits: 1
