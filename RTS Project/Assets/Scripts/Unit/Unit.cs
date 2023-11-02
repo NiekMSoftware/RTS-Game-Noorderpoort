@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -22,7 +19,7 @@ public class Unit : MonoBehaviour
 
     [Header("Enum Data")]
     [SerializeField] protected Jobs job;
-    [SerializeField] protected TypeUnit typeUnit;
+    [SerializeField] public TypeUnit typeUnit;
 
     [Header("Select Agent Movement")]
     [SerializeField] GameObject selectionObject;
@@ -31,9 +28,9 @@ public class Unit : MonoBehaviour
     [Space]
     [SerializeField] GameObject marker;
     [SerializeField] LayerMask clickableUnit;
-    
+
     Camera myCamera;
-    
+
     #region Enums
 
     protected enum Jobs
@@ -46,12 +43,12 @@ public class Unit : MonoBehaviour
         Nurse
     }
 
-    protected enum TypeUnit
+    public enum TypeUnit
     {
         None,
         Human,
         Animal,
-        DarkElves,
+        Enemy,
         Special
     }
 
@@ -72,7 +69,7 @@ public class Unit : MonoBehaviour
 
     protected virtual void Death()
     {
-        
+
     }
 
     protected virtual int Heal(int healing)
@@ -86,10 +83,7 @@ public class Unit : MonoBehaviour
 
     #region Unit Location Controller
 
-    public void SetSelectionObject(bool value)
-    {
-        selectionObject.SetActive(value);
-    }
+    public void SetSelectionObject(bool value) => selectionObject.SetActive(value);
 
     public void SendUnitToLocation(Vector3 pos)
     {
@@ -103,6 +97,6 @@ public class Unit : MonoBehaviour
             myAgent.SetDestination(transform.position);
         }
     }
-    
+
     #endregion
 }
