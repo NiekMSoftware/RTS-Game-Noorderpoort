@@ -10,7 +10,7 @@ public class Worker : Unit
     [SerializeField] protected ItemSlot currentStorage;
     [SerializeField] protected int maxStorage = 3;
 
-    private ResourceItemManager resourceItemManager;
+    [SerializeField] private ResourceItemManager resourceItemManager;
     private ItemData resourceItem;
 
     private bool canGather = true;

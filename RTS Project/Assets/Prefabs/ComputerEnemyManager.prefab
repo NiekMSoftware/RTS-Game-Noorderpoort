@@ -49,14 +49,40 @@ MonoBehaviour:
     type: 3}
   resources: {fileID: 0}
   buildingManager: {fileID: 0}
-  scanRange: 10000
-  building: {fileID: 2432438935407483892, guid: 3fe74175db7cfc64e8eb83e219921af4,
-    type: 3}
-  woodItem: {fileID: 11400000, guid: 4178d3d151ebd1a4295d48f9a7f482c9, type: 2}
+  buildings:
+  - building: {fileID: 2432438935407483892, guid: 8140ef950e5920644a01c70b6f40bd1d,
+      type: 3}
+    buildingType: 0
+    isStarter: 1
+    itemData: {fileID: 11400000, guid: 4178d3d151ebd1a4295d48f9a7f482c9, type: 2}
+    hasBeenPlaced: 0
+  - building: {fileID: 2432438935407483892, guid: 3fe74175db7cfc64e8eb83e219921af4,
+      type: 3}
+    buildingType: 0
+    isStarter: 1
+    itemData: {fileID: 11400000, guid: 0c0ea06af6a171e42a725e0fb10167fc, type: 2}
+    hasBeenPlaced: 0
+  - building: {fileID: 2432438935407483892, guid: 0cbe5c561572e4f49aeaaabb216c2753,
+      type: 3}
+    buildingType: 0
+    isStarter: 0
+    itemData: {fileID: 11400000, guid: 161a6795559e79647b98c0f3e168464e, type: 2}
+    hasBeenPlaced: 0
   terrain: {fileID: 0}
-  resourceLayer:
+  occupanyLayer:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 4224
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
   buildingPlaceAccuracy: 50
+  amountOfSecondsPerChoise: 3
+  resourceItemManager: {fileID: 0}
+  pointManager: {fileID: 0}
+  minResourcePoints: 5
   workers: []
-  buildings: []
+  availableWorkers: []
+  placedBuildings: []
+  state: 0
+  pointsToAddAssignWorker: 1
+  resourcesToGather: []

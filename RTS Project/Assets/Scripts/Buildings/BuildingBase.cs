@@ -13,7 +13,7 @@ public class BuildingBase : MonoBehaviour
     [SerializeField] private States currentState;
     [SerializeField] private int scanRange = 200;
     [SerializeField] private Recipe[] recipes;
-    [SerializeField] private Points points;
+    [SerializeField] private BuildingPoints points;
 
     private ResourceItemManager resourceItemManager;
 
@@ -25,12 +25,7 @@ public class BuildingBase : MonoBehaviour
 
     public enum Jobs { Wood, Stone, Metal }
 
-    [System.Serializable]
-    public class Points
-    {
-        public PointManager.PointType type;
-        public float pointsToReceive;
-    }
+    private OccupancyType occupancyType;
 
     public enum States
     {
@@ -38,7 +33,31 @@ public class BuildingBase : MonoBehaviour
         Normal
     }
 
-    public Points GetPoints()
+    public enum OccupancyType
+    {
+        None,
+        Player,
+        Enemy
+    }
+
+    public void SetOccupancyType(OccupancyType occupancyType)
+    {
+        this.occupancyType = occupancyType;
+    }
+
+    public OccupancyType GetOccupancyType()
+    {
+        return occupancyType;
+    }
+
+    [System.Serializable]
+    public class BuildingPoints
+    {
+        public PointManager.PointType pointType;
+        public int amount;
+    }
+
+    public BuildingPoints GetPoints()
     {
         return points;
     }
@@ -183,21 +202,24 @@ public class BuildingBase : MonoBehaviour
         }
     }
 
-    public void AddWorkerToBuilding(Worker worker)
+    public bool AddWorkerToBuilding(Worker worker)
     {
         if (workers.Contains(worker))
         {
-            return;
+            return false;
         }
         else if (worker.GetCurrentBuilding() != null)
         {
-            return;
+            return false;
         }
         else if (workers.Count < maxWorkers)
         {
             worker.InitializeWorker(gameObject, jobs, FindClosestResourceManager(transform, currentStorage[0].data), resourceItemManager);
             workers.Add(worker);
+            return true;
         }
+
+        return false;
     }
 
     protected void RemoveWorkerFromBuilding(Worker worker)

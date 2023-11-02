@@ -53,8 +53,8 @@ MonoBehaviour:
     amount: 0
     maxAmount: 10000
   workers: []
-  jobName: StoneBOi
-  jobs: 0
+  jobName: Metal Miner
+  jobs: 2
   currentState: 0
   scanRange: 500
   recipes:
@@ -63,8 +63,8 @@ MonoBehaviour:
   - data: {fileID: 11400000, guid: 4178d3d151ebd1a4295d48f9a7f482c9, type: 2}
     amountNeeded: 80
   points:
-    type: 1
-    pointsToReceive: 5
+    pointType: 1
+    amount: 1
 --- !u!65 &4694457708341824937
 BoxCollider:
   m_ObjectHideFlags: 0

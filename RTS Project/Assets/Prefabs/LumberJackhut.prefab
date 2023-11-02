@@ -32,7 +32,7 @@ Transform:
   m_Children:
   - {fileID: 6535320631260924044}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5247091873377409366
 MonoBehaviour:
@@ -53,7 +53,7 @@ MonoBehaviour:
     amount: 0
     maxAmount: 10000
   workers: []
-  jobName: StoneBOi
+  jobName: Lumberjack
   jobs: 0
   currentState: 0
   scanRange: 500
@@ -61,8 +61,8 @@ MonoBehaviour:
   - data: {fileID: 11400000, guid: 4178d3d151ebd1a4295d48f9a7f482c9, type: 2}
     amountNeeded: 10
   points:
-    type: 1
-    pointsToReceive: 1
+    pointType: 1
+    amount: 1
 --- !u!65 &4694457708341824937
 BoxCollider:
   m_ObjectHideFlags: 0
