@@ -11,7 +11,7 @@ public class SelectionManager : MonoBehaviour
     [SerializeField] private GameObject markerPrefab;
 
     [SerializeField] RectTransform boxVisual;
-    public GameObject selectedBuilding;
+    private GameObject selectedBuilding;
 
     Rect selectionBox;
 
@@ -37,25 +37,6 @@ public class SelectionManager : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                if (Physics.Raycast(ray, out RaycastHit hit2, Mathf.Infinity, building))
-                {
-                    //wanneer in selectedunits soldiers zitten, vind deze soldiers en voor elke soldier call AssignToBuilding
-
-                    print("Hi");
-                    selectedBuilding = hit2.collider.gameObject;
-                    BuildingSelected();
-
-                    foreach (GameObject selectedUnit in selectedUnits)
-                    {
-                        SoldierUnit soldier = selectedUnit.GetComponent<SoldierUnit>();
-                        if (soldier != null)
-                        {
-                            soldier.AssignToBuilding(selectedBuilding.transform);
-                        }
-                    }
-
-                    
-                }
 
                 if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, selectable))
                 {
@@ -81,6 +62,23 @@ public class SelectionManager : MonoBehaviour
             }
             else if (Input.GetMouseButtonDown(1))
             {
+                if (Physics.Raycast(ray, out RaycastHit hit2, Mathf.Infinity, building))
+                {
+                    //wanneer in selectedunits soldiers zitten, vind deze soldiers en voor elke soldier call AssignToBuilding
+
+                    Debug.Log("Hi");
+                    selectedBuilding = hit2.collider.gameObject;
+                    BuildingSelected();
+
+                    foreach (GameObject selectedUnit in selectedUnits)
+                    {
+                        SoldierUnit soldier = selectedUnit.GetComponent<SoldierUnit>();
+                        if (soldier != null)
+                        {
+                            soldier.AssignToBuilding(selectedBuilding.transform);
+                        }
+                    }              
+                }
                 if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, ground))
                 {
                     Instantiate(markerPrefab, hit.point, Quaternion.identity);
@@ -117,6 +115,7 @@ public class SelectionManager : MonoBehaviour
 
     private void BuildingSelected()
     {
+        Debug.Log("building selected");
         if (selectedUnits.Count > 0)
         {
             foreach (GameObject unit in selectedUnits)
