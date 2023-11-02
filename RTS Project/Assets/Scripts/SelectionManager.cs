@@ -11,7 +11,7 @@ public class SelectionManager : MonoBehaviour
     [SerializeField] private GameObject markerPrefab;
 
     [SerializeField] RectTransform boxVisual;
-    private GameObject selectedBuilding;
+    public GameObject selectedBuilding;
 
     Rect selectionBox;
 
@@ -41,6 +41,7 @@ public class SelectionManager : MonoBehaviour
                 {
                     //wanneer in selectedunits soldiers zitten, vind deze soldiers en voor elke soldier call AssignToBuilding
 
+                    print("Hi");
                     selectedBuilding = hit2.collider.gameObject;
                     BuildingSelected();
 
@@ -52,6 +53,8 @@ public class SelectionManager : MonoBehaviour
                             soldier.AssignToBuilding(selectedBuilding.transform);
                         }
                     }
+
+                    
                 }
 
                 if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, selectable))
