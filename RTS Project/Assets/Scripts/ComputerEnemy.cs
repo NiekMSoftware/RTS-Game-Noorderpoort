@@ -396,8 +396,8 @@ public class ComputerEnemy : MonoBehaviour
                 spawnedBuilding.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
                 spawnedBuilding.SetResourceItemManagerByType(ResourceItemManager.Type.AI);
                 spawnedBuilding.SetOccupancyType(BuildingBase.OccupancyType.Enemy);
-                pointManager.AddPoints(spawnedBuilding.GetPoints().pointsToReceive, spawnedBuilding.GetPoints().type, PointManager.Type.AI, 
-                    pointManager.GetPointsByType(PointManager.Type.AI).GetResourcePointByItem(building.building.GetComponent<BuildingBase>().GetRecipes()[0].data));
+                pointManager.AddPoints(spawnedBuilding.GetPoints().amount, spawnedBuilding.GetPoints().pointType, PointManager.EntityType.AI, 
+                    pointManager.GetPointsByType(PointManager.EntityType.AI).GetResourcePointByItem(building.building.GetComponent<BuildingBase>().GetRecipes()[0].data));
                 placedBuildings.Add(spawnedBuilding);
                 building.hasBeenPlaced = true;
             }

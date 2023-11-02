@@ -11,8 +11,10 @@ public class CameraManager : MonoBehaviour
 
     private Vector3 input;
 
-    private float targetAngle;
-    private float currentAngle;
+    private Vector2 rotationInput;
+    private Vector3 currentRotation;
+
+    private bool isColliding;
 
     private void Awake()
     {
@@ -27,10 +29,26 @@ public class CameraManager : MonoBehaviour
 
         Movement();
 
-        currentAngle = Mathf.Lerp(currentAngle, targetAngle, Time.deltaTime * rotationSmoothing);
-        transform.rotation = Quaternion.AngleAxis(currentAngle, Vector3.up);
+        Rotation();
 
         //Vector3 zoomDir = new Vector3
+    }
+
+    private void Rotation()
+    {
+        currentRotation = Vector3.Lerp(currentRotation, rotationInput, Time.deltaTime * rotationSmoothing);
+
+        //transform.rotation = Quaternion.Euler(currentRotation.x, currentRotation.y, 0);
+        rb.AddTorque(transform.up * currentRotation.x * rotationSpeed, ForceMode.Force);
+        rb.AddTorque(-transform.right * currentRotation.y * rotationSpeed, ForceMode.Force);
+
+        currentRotation = Vector3.zero;
+        rotationInput = Vector2.zero;
+        //Vector3 torque = new(currentRotation.x, currentRotation.y, 0);
+        //rb.AddRelativeTorque(torque, ForceMode.VelocityChange);
+
+        currentRotation = Vector3.zero;
+        rotationInput = Vector2.zero;
     }
 
     private void Movement()
@@ -52,8 +70,9 @@ public class CameraManager : MonoBehaviour
         input = (right + forward).normalized;
 
         //Rotation Input
-        if (!Input.GetMouseButtonDown(2)) return;
-        targetAngle += Input.GetAxisRaw("Mouse X") * rotationSpeed;
+        if (!Input.GetMouseButton(2)) return;
+
+        rotationInput += new Vector2(Input.GetAxisRaw("Mouse X") * rotationSpeed, Input.GetAxisRaw("Mouse Y") * rotationSpeed);
     }
 
     private void CheckBounds()
@@ -73,5 +92,15 @@ public class CameraManager : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(transform.position, 5f);
         Gizmos.DrawWireCube(Vector3.zero, new Vector3(range.x * 2f, 5f, range.y * 2f));
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        isColliding = true;
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        isColliding = false;
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SeedManager : MonoBehaviour
 {
-    [SerializeField] private bool useCustomSeed;
+    [SerializeField] private bool useCustomSeed = true;
     [SerializeField] private string gameSeed;
     [SerializeField] private int currentSeed;
 
