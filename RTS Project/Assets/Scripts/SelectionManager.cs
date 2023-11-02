@@ -11,7 +11,7 @@ public class SelectionManager : MonoBehaviour
     [SerializeField] private GameObject markerPrefab;
 
     [SerializeField] RectTransform boxVisual;
-    public GameObject selectedBuilding;
+    private GameObject selectedBuilding;
 
     Rect selectionBox;
 
@@ -39,29 +39,17 @@ public class SelectionManager : MonoBehaviour
             {
                 if (Physics.Raycast(ray, out RaycastHit hit2, Mathf.Infinity, building))
                 {
-                    //wanneer in selectedunits soldiers zitten, vind deze soldiers en voor elke soldier call AssignToBuilding
-
-                    print("Hi");
-                    selectedBuilding = hit2.collider.gameObject;
-                    BuildingSelected();
-
-                    foreach (GameObject selectedUnit in selectedUnits)
+                    if (hit2.collider.GetComponent<BuildingBase>().GetOccupancyType() == BuildingBase.OccupancyType.Player)
                     {
-                        SoldierUnit soldier = selectedUnit.GetComponent<SoldierUnit>();
-                        if (soldier != null)
-                        {
-                            soldier.AssignToBuilding(selectedBuilding.transform);
-                        }
+                        selectedBuilding = hit2.collider.gameObject;
+                        BuildingSelected();
                     }
-
-                    
                 }
-
                 if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, selectable))
                 {
                     if (Input.GetKey(KeyCode.LeftShift))
                     {
-                        if (!selectedUnits.Contains(hit.collider.gameObject))
+                        if (!selectedUnits.Contains(hit.collider.gameObject) && hit.collider.GetComponent<Unit>().typeUnit == Unit.TypeUnit.Human)
                         {
                             selectedUnits.Add(hit.collider.gameObject);
                             hit.collider.GetComponent<Unit>().SetSelectionObject(true);
@@ -70,8 +58,11 @@ public class SelectionManager : MonoBehaviour
                     else
                     {
                         DeselectAll();
-                        selectedUnits.Add(hit.collider.gameObject);
-                        hit.collider.GetComponent<Unit>().SetSelectionObject(true);
+                        if (hit.collider.GetComponent<Unit>().typeUnit == Unit.TypeUnit.Human)
+                        {
+                            selectedUnits.Add(hit.collider.gameObject);
+                            hit.collider.GetComponent<Unit>().SetSelectionObject(true);
+                        }
                     }
                 }
                 else
@@ -114,7 +105,6 @@ public class SelectionManager : MonoBehaviour
             DrawBoxVisual();
         }
     }
-
     private void BuildingSelected()
     {
         if (selectedUnits.Count > 0)
@@ -181,7 +171,7 @@ public class SelectionManager : MonoBehaviour
         {
             if (selectionBox.Contains(mainCamera.WorldToScreenPoint(unit.transform.position)))
             {
-                if (!selectedUnits.Contains(unit.gameObject))
+                if (!selectedUnits.Contains(unit.gameObject) && unit.typeUnit == Unit.TypeUnit.Human)
                 {
                     selectedUnits.Add(unit.gameObject);
                     unit.GetComponent<Unit>().SetSelectionObject(true);

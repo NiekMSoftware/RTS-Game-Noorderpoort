@@ -235,6 +235,7 @@ public class BuildingManager : MonoBehaviour
 
         BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pendingObject.transform.position, pendingObject.transform.rotation).GetComponent<BuildingBase>();
         spawnedBuilding.Init(buildingMaterial, buildParticle);
+        spawnedBuilding.SetOccupancyType(BuildingBase.OccupancyType.Player);
         StartCoroutine(spawnedBuilding.Build(buildings[currentIndex].buildTime));
 
         BuildProgress buildProgress = Instantiate(buildProgressPrefab, new Vector3(spawnedBuilding.transform.position.x,
