@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class ComputerEnemy : MonoBehaviour
 {
@@ -119,7 +121,26 @@ public class ComputerEnemy : MonoBehaviour
                     }
                 }
 
-                if (aiPoints.totalResourceScore >= minResourcePoints)
+                bool enoughPoints = false;
+
+                foreach (var resourcePoint in aiPoints.resourcePoints)
+                {
+                    print(resourcePoint.item);
+                    print(GetBuildingByType(resourcePoint.item).building);
+                    if (GetBuildingByType(resourcePoint.item).isStarter)
+                    {
+                        if (resourcePoint.amount >= minResourcePoints)
+                        {
+                            enoughPoints = true;
+                        }
+                        else
+                        {
+                            enoughPoints = false;
+                        }
+                    }
+                }
+
+                if (enoughPoints)
                 {
                     state = AIStates.Exploring;
                 }
@@ -143,7 +164,7 @@ public class ComputerEnemy : MonoBehaviour
                         {
                             if (availableWorkers.Count > 0)
                             {
-                                if (placedBuilding.GetWorkers().Count <= i)
+                                if (placedBuilding.GetWorkers().Count <= i - 1)
                                 {
                                     print("assigned worker");
                                     AssignWorker(placedBuilding, GetRandomAvailableWorker());
@@ -170,9 +191,27 @@ public class ComputerEnemy : MonoBehaviour
             case AIStates.Check:
                 //if the players army is beter than the ai's, defend
                 //otherwise prepare attack
-                if (aiPoints.totalResourceScore < minResourcePoints)
+
+                bool enoughPoints2 = false;
+
+                foreach (var resourcePoint in aiPoints.resourcePoints)
                 {
-                    state = AIStates.Start;
+                    if (GetBuildingByType(resourcePoint.item).isStarter)
+                    {
+                        if (aiPoints.GetResourcePointByItem(resourcePoint.item).amount >= minResourcePoints)
+                        {
+                            enoughPoints2 = true;
+                        }
+                        else
+                        {
+                            enoughPoints2 = false;
+                        }
+                    }
+                }
+
+                if (enoughPoints2)
+                {
+                    state = AIStates.Exploring;
                 }
                 else
                 {
@@ -319,7 +358,8 @@ public class ComputerEnemy : MonoBehaviour
             {
                 spawnedBuilding.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
                 spawnedBuilding.SetResourceItemManagerByType(ResourceItemManager.Type.AI);
-                pointManager.AddPoints(spawnedBuilding.GetPoints().pointsToReceive, spawnedBuilding.GetPoints().type, PointManager.Type.AI);
+                pointManager.AddPoints(spawnedBuilding.GetPoints().pointsToReceive, spawnedBuilding.GetPoints().type, PointManager.Type.AI, 
+                    pointManager.GetPointsByType(PointManager.Type.AI).GetResourcePointByItem(building.building.GetComponent<BuildingBase>().GetRecipes()[0].data));
                 placedBuildings.Add(spawnedBuilding);
                 building.hasBeenPlaced = true;
             }
@@ -333,12 +373,24 @@ public class ComputerEnemy : MonoBehaviour
         }
     }
 
-    private BuildingBase GetBuildingByType(ItemData itemData)
+    private BuildingBase GetPlacedBuildingByType(ItemData itemData)
     {
         foreach (var building in placedBuildings)
         {
-            print(building.GetItemData());
             if (building.GetItemData() == itemData)
+            {
+                return building;
+            }
+        }
+
+        return null;
+    }
+
+    private Buildings GetBuildingByType(ItemData itemData)
+    {
+        foreach (var building in buildings)
+        {
+            if (building.itemData == itemData)
             {
                 return building;
             }
@@ -366,7 +418,8 @@ public class ComputerEnemy : MonoBehaviour
     {
         if (availableWorkers.Contains(worker))
         {
-            pointManager.AddPoints(1, PointManager.PointType.resource, PointManager.Type.AI);
+            pointManager.AddPoints(1, PointManager.PointType.resource, PointManager.Type.AI,
+                 pointManager.GetPointsByType(PointManager.Type.AI).GetResourcePointByItem(building.GetRecipes()[0].data));
             building.AddWorkerToBuilding(worker);
         }
         else
