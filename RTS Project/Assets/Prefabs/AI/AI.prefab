@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2124331050788244938}
   - component: {fileID: 6909574573759632584}
   - component: {fileID: 6537541034667993825}
+  - component: {fileID: 7249678644486303370}
   m_Layer: 6
   m_Name: AI
   m_TagString: AI
@@ -35,7 +36,7 @@ Transform:
   m_Children:
   - {fileID: 5192092856214505012}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2870706043568077301
 MeshFilter:
@@ -168,10 +169,23 @@ MonoBehaviour:
     amount: 0
     maxAmount: 3
   maxStorage: 3
-  workerHp: 5
-  resourceItem: {fileID: 11400000, guid: 4178d3d151ebd1a4295d48f9a7f482c9, type: 2}
+  resourceItemManager: {fileID: 0}
   currentState: 4
   assigned: 0
+--- !u!114 &7249678644486303370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3721838096702204654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fab822ba78e28db48a00db31b88784b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scale: 0.84
+  color: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &7024833265930589587
 GameObject:
   m_ObjectHideFlags: 0
