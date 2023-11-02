@@ -39,14 +39,17 @@ public class SelectionManager : MonoBehaviour
             {
                 if (Physics.Raycast(ray, out RaycastHit hit2, Mathf.Infinity, building))
                 {
-                    selectedBuilding = hit2.collider.gameObject;
-                    BuildingSelected();
+                    if (hit2.collider.GetComponent<BuildingBase>().GetOccupancyType() == BuildingBase.OccupancyType.Player)
+                    {
+                        selectedBuilding = hit2.collider.gameObject;
+                        BuildingSelected();
+                    }
                 }
                 if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, selectable))
                 {
                     if (Input.GetKey(KeyCode.LeftShift))
                     {
-                        if (!selectedUnits.Contains(hit.collider.gameObject))
+                        if (!selectedUnits.Contains(hit.collider.gameObject) && hit.collider.GetComponent<Unit>().typeUnit == Unit.TypeUnit.Human)
                         {
                             selectedUnits.Add(hit.collider.gameObject);
                             hit.collider.GetComponent<Unit>().SetSelectionObject(true);
@@ -55,8 +58,11 @@ public class SelectionManager : MonoBehaviour
                     else
                     {
                         DeselectAll();
-                        selectedUnits.Add(hit.collider.gameObject);
-                        hit.collider.GetComponent<Unit>().SetSelectionObject(true);
+                        if (hit.collider.GetComponent<Unit>().typeUnit == Unit.TypeUnit.Human)
+                        {
+                            selectedUnits.Add(hit.collider.gameObject);
+                            hit.collider.GetComponent<Unit>().SetSelectionObject(true);
+                        }
                     }
                 }
                 else
@@ -165,7 +171,7 @@ public class SelectionManager : MonoBehaviour
         {
             if (selectionBox.Contains(mainCamera.WorldToScreenPoint(unit.transform.position)))
             {
-                if (!selectedUnits.Contains(unit.gameObject))
+                if (!selectedUnits.Contains(unit.gameObject) && unit.typeUnit == Unit.TypeUnit.Human)
                 {
                     selectedUnits.Add(unit.gameObject);
                     unit.GetComponent<Unit>().SetSelectionObject(true);
