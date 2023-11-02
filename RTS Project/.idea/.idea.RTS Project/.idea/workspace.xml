@@ -6,10 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="61fec265-b941-4aea-9e79-1061e99e3b0b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.RTS Project/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RTS Project/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Materials/BuildParticle.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/BuildParticle.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/PlaceBuildingEffect.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/PlaceBuildingEffect.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Materials/FogOfWarMaterials/New Material.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/FogOfWarMaterials/New Material.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Materials/Grid.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Grid.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Cylinder.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Cylinder.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Test GUI.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Test GUI.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Gui/BuildingUIAnimation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Gui/BuildingUIAnimation.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/Packages/com.unity.probuilder/Settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/Packages/com.unity.probuilder/Settings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,6 +127,9 @@
       <workItem from="1696492168747" duration="191000" />
       <workItem from="1697097893221" duration="2322000" />
       <workItem from="1697188327278" duration="3482000" />
+      <workItem from="1698913020483" duration="4272000" />
+      <workItem from="1698918445804" duration="4400000" />
+      <workItem from="1698925451185" duration="1058000" />
     </task>
     <servers />
   </component>
