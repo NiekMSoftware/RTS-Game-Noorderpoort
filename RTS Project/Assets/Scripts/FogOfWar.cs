@@ -87,4 +87,9 @@ public class FogOfWar : MonoBehaviour
         mesh.colors = colors;
         Profiler.EndSample();
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(Player.position, radius);
+    }
 }
