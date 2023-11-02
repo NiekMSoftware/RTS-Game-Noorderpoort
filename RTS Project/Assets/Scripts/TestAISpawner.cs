@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TestAISpawner : MonoBehaviour
@@ -18,7 +16,8 @@ public class TestAISpawner : MonoBehaviour
             {
                 Vector3 spawnPos = hit.point;
                 spawnPos.y = terrain.SampleHeight(hit.point) + aiToSpawn.transform.localScale.y;
-                Instantiate(aiToSpawn, spawnPos, Quaternion.identity);
+                GameObject spawnedAI = Instantiate(aiToSpawn, spawnPos, Quaternion.identity);
+                spawnedAI.GetComponent<Unit>().typeUnit = Unit.TypeUnit.Human;
             }
         }
     }
