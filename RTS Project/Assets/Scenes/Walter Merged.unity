@@ -606,7 +606,7 @@ PrefabInstance:
         type: 3}
       propertyPath: itemSlots.Array.data[1].data
       value: 
-      objectReference: {fileID: 11400000, guid: 161a6795559e79647b98c0f3e168464e,
+      objectReference: {fileID: 11400000, guid: 0c0ea06af6a171e42a725e0fb10167fc,
         type: 2}
     - target: {fileID: 5668088711890978245, guid: 24f651634f67b3d40a844924ef7bc32a,
         type: 3}
