@@ -35,7 +35,7 @@ Transform:
   m_Children:
   - {fileID: 5192092856214505012}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2870706043568077301
 MeshFilter:
@@ -168,8 +168,7 @@ MonoBehaviour:
     amount: 0
     maxAmount: 3
   maxStorage: 3
-  workerHp: 5
-  resourceItem: {fileID: 11400000, guid: 4178d3d151ebd1a4295d48f9a7f482c9, type: 2}
+  resourceItemManager: {fileID: 0}
   currentState: 4
   assigned: 0
 --- !u!1 &7024833265930589587
