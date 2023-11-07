@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.ProBuilder.Shapes;
 
 public class CameraManager : MonoBehaviour
 {
@@ -111,8 +112,8 @@ public class CameraManager : MonoBehaviour
         rb.AddTorque(globalTorque, ForceMode.Force);
         //rb.AddRelativeTorque(currentRotation.y * rotationSpeed * -transform.right, ForceMode.Force);
 
-        Vector3 eulerAngles = transform.eulerAngles;
-        transform.eulerAngles = new Vector3(eulerAngles.x, eulerAngles.y, 0);
+        //Vector3 eulerAngles = transform.eulerAngles;
+        //transform.eulerAngles = new Vector3(eulerAngles.x, eulerAngles.y, 0);
 
         currentRotation = Vector3.zero;
         rotationInput = Vector2.zero;
