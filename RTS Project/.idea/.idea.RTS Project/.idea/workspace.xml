@@ -5,20 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="61fec265-b941-4aea-9e79-1061e99e3b0b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Test GUI.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Test GUI/NavMesh-Gerard.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Test GUI/NavMesh-Gerard.asset.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Buildings/Barrack_Door.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Buildings/Barrack_Door.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.RTS Project/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RTS Project/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/AI/AI.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/AI/AI.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Player Buildings/Barrack.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Player Buildings/Barrack.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Test GUI.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Test GUI.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Buildings/Barrack.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Buildings/Barrack.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Gui/UIManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Gui/UIManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/SelectionManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/SelectionManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/NavMeshAreas.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/NavMeshAreas.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +19,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/17484a9af6b944dea5cd9be4dbb0da2c171c00/9d/4f21e67e/GameObject.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Buildings/Barrack_Door.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Gui/BuildingUIAnimation.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Unit/FieldOfViewEditor.cs" root0="FORCE_HIGHLIGHTING" />
@@ -138,7 +129,8 @@
       <workItem from="1698918445804" duration="4400000" />
       <workItem from="1698925451185" duration="1058000" />
       <workItem from="1698999010647" duration="2826000" />
-      <workItem from="1699517581247" duration="9040000" />
+      <workItem from="1699517581247" duration="9087000" />
+      <workItem from="1699529867128" duration="3792000" />
     </task>
     <servers />
   </component>

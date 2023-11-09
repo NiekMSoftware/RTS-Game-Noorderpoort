@@ -390,7 +390,7 @@ PrefabInstance:
     - target: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -10.787552
+      value: 0.012448311
       objectReference: {fileID: 0}
     - target: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
         type: 3}
@@ -569,7 +569,7 @@ PrefabInstance:
     - target: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -10.787552
+      value: 0.012448311
       objectReference: {fileID: 0}
     - target: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
         type: 3}
@@ -611,12 +611,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03430657f2f14514ba955174b175ae45, type: 3}
---- !u!4 &1336475730 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3078622439867273810, guid: 726f9dcb6ce19b3499c0e70356579adc,
-    type: 3}
-  m_PrefabInstance: {fileID: 6685800541104380544}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1358393943
 GameObject:
   m_ObjectHideFlags: 0
@@ -685,37 +679,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1540531324
+--- !u!1 &1540531324 stripped
 GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 1543227467606998400, guid: 726f9dcb6ce19b3499c0e70356579adc,
+    type: 3}
+  m_PrefabInstance: {fileID: 6685800541104380544}
   m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1540531325}
-  m_Layer: 7
-  m_Name: Spawn Pos
-  m_TagString: Untagged
-  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1540531325
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1540531324}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.186, y: -0.28125, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6685800541104380545}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1658610816
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -752,7 +721,7 @@ PrefabInstance:
     - target: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.9
+      value: 4.9
       objectReference: {fileID: 0}
     - target: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
         type: 3}
@@ -1254,31 +1223,36 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 895768541}
     m_Modifications:
+    - target: {fileID: 1543227467606998400, guid: 726f9dcb6ce19b3499c0e70356579adc,
+        type: 3}
+      propertyPath: m_Name
+      value: Soldier Exit
+      objectReference: {fileID: 0}
     - target: {fileID: 1860279640408473471, guid: 726f9dcb6ce19b3499c0e70356579adc,
         type: 3}
-      propertyPath: spawnPos
+      propertyPath: spawnPosSoldier
       value: 
-      objectReference: {fileID: 1336475730}
-    - target: {fileID: 1860279640408473471, guid: 726f9dcb6ce19b3499c0e70356579adc,
+      objectReference: {fileID: 1540531324}
+    - target: {fileID: 3078622439867273810, guid: 726f9dcb6ce19b3499c0e70356579adc,
         type: 3}
-      propertyPath: barrackDoor
-      value: 
-      objectReference: {fileID: 1540531325}
-    - target: {fileID: 1860279640408473471, guid: 726f9dcb6ce19b3499c0e70356579adc,
+      propertyPath: m_LocalPosition.z
+      value: 0.3125
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338330323617080737, guid: 726f9dcb6ce19b3499c0e70356579adc,
         type: 3}
-      propertyPath: barrackDoor1
-      value: 
-      objectReference: {fileID: 1540531325}
-    - target: {fileID: 1860279640408473471, guid: 726f9dcb6ce19b3499c0e70356579adc,
+      propertyPath: m_LocalPosition.x
+      value: 0.5815
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338330323617080737, guid: 726f9dcb6ce19b3499c0e70356579adc,
         type: 3}
-      propertyPath: barrackDoor2
-      value: 
-      objectReference: {fileID: 1336475730}
-    - target: {fileID: 1860279640408473471, guid: 726f9dcb6ce19b3499c0e70356579adc,
+      propertyPath: m_LocalPosition.y
+      value: -0.375
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338330323617080737, guid: 726f9dcb6ce19b3499c0e70356579adc,
         type: 3}
-      propertyPath: spawnPosition
-      value: 
-      objectReference: {fileID: 1540531325}
+      propertyPath: m_LocalPosition.z
+      value: -0.375
+      objectReference: {fileID: 0}
     - target: {fileID: 5156782261921279343, guid: 726f9dcb6ce19b3499c0e70356579adc,
         type: 3}
       propertyPath: m_Name
@@ -1339,13 +1313,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7988776410278182275, guid: 726f9dcb6ce19b3499c0e70356579adc,
+        type: 3}
+      propertyPath: m_Name
+      value: Soldier Enterance
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 7617377509933312893, guid: 726f9dcb6ce19b3499c0e70356579adc,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1540531325}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 726f9dcb6ce19b3499c0e70356579adc, type: 3}
 --- !u!4 &6685800541104380545 stripped

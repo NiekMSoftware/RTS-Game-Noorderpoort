@@ -6,11 +6,7 @@ using UnityEngine.AI;
 
 public class Barrack : MonoBehaviour
 {
-    // TODO: Clear out all pending Unit's in barrack and release them
-        //  (Release them, is clearing them out of the list 1 by 1 until 0 remains)
-        
-    [Header("Unit List")]
-    [SerializeField] private List<GameObject> unitList = new List<GameObject>(CAPACITY);
+    private List<GameObject> unitList = new List<GameObject>(CAPACITY);
     public List<GameObject> UnitList {
         get {
             return unitList;
@@ -20,12 +16,16 @@ public class Barrack : MonoBehaviour
         }
     }
     
+    [Header("Unit List")]
     [Tooltip("Change this to the Soldier")]
     public GameObject unitToSpawn;
     private const int CAPACITY = 5;
     private int currentIndex = 0;
 
     private bool canSpawn = false;
+
+    [Header("Spawn Pos of Soldier")] 
+    [SerializeField] private GameObject spawnPosSoldier;
     
     [Header("Barrack Properties")]
     [SerializeField] private float queue = 0f;  // queue to keep track of
@@ -41,18 +41,17 @@ public class Barrack : MonoBehaviour
     private void Start() {
         selectionManager = GameObject.FindWithTag("SelectionManager").GetComponent<SelectionManager>();
         // unitAgent = GameObject.FindWithTag("AI").GetComponent<NavMeshAgent>();
-
-        Time.timeScale = 1f;
     }
 
     private void Update() {
-        Counter();
+        if (canSpawn) {
+            Counter();
+        }
 
-        if (queue >= maxTimeUntilNext)
+        if (unitList.Count > 0) {
             canSpawn = true;
-        
-        if(canSpawn)
-            SpawnEnemy();
+            SpawnUnit();
+        }
     }
     
     public void AddUnitToBarrack() {
@@ -63,11 +62,28 @@ public class Barrack : MonoBehaviour
         }
     }
 
-    private void SpawnEnemy() {
-        print("spawning soldier");
-        if (currentIndex < unitList.Count) {
-            Instantiate(unitList[currentIndex], barrackDoor1);
-            currentIndex++;
+    private void SpawnUnit() {
+        if (queue >= maxTimeUntilNext) {
+            if (unitList.Count > 0) {
+                //TODO: Assign new gameobject as instantiated
+                    // new gameobject.position = barrackdoor1.position
+                if (unitList.Count > 0 && unitToSpawn != null && barrackDoor1 != null) {
+                    GameObject newSoldier = Instantiate(unitList[0]);
+                    newSoldier.transform.position = barrackDoor1.transform.position;
+                    newSoldier.transform.localScale = new Vector3(1, 1, 1);
+                    
+                    //TODO: Move the soldier to a random position near the Barrack
+                }
+
+                unitList.RemoveAt(0);
+            }
+            
+            // Check if the unitList is empty
+            if (unitList.Count == 0) {
+                canSpawn = false;
+            }
+
+            queue = 0;
         }
     }
 
