@@ -5,13 +5,13 @@ using UnityEngine.AI;
 
 public class SoldierUnit : Unit
 {
-    [SerializeField] private GameObject enemyHouse;
     public float damageInterval = 2.0f;
-    public float damageAmount = 10.0f;
+    public int damageAmount = 10;
     public LayerMask Building;
     public LayerMask Enemy;
     public GameObject EnemyGameObject;
     public GameObject SoldierGameObject;
+    public GameObject buildingGameObject;
 
     private bool isAttacking = false;
     private float damageTimer = 0.0f;
@@ -51,10 +51,16 @@ public class SoldierUnit : Unit
             if (damageTimer >= damageInterval)
             {
                 //DealDamageToEnemiesInRange();
-                buildingBase.buildingHp--;
+                buildingBase.buildingHp -= damageAmount;
                 print(buildingBase.buildingHp);
                 damageTimer = 0.0f;
-            }    
+            }
+            if(buildingBase.buildingHp <= 0)
+            {
+                Debug.Log("building Destroyed");
+                Destroy(buildingGameObject);
+                isAttacking = false;
+            }
         }
     }
 
@@ -68,9 +74,15 @@ public class SoldierUnit : Unit
 
             if (damageTimer >= damageInterval)
             {
-                unitHealth--;
+                unitHealth -= damageAmount;
                 print(unitHealth);              
                 damageTimer = 0.0f;
+            }
+            if (unitHealth <= 0)
+            {
+                Debug.Log("destoying enemy");
+                Destroy(EnemyGameObject);
+                isAttacking = false;
             }
         }
         /*Collider[] colliders = Physics.OverlapBox(

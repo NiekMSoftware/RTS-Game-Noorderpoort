@@ -415,9 +415,8 @@ MonoBehaviour:
   clickableUnit:
     serializedVersion: 2
     m_Bits: 64
-  enemyHouse: {fileID: 0}
-  damageInterval: 4
-  damageAmount: 20
+  damageInterval: 2
+  damageAmount: 10
   Building:
     serializedVersion: 2
     m_Bits: 128
@@ -426,6 +425,7 @@ MonoBehaviour:
     m_Bits: 16384
   EnemyGameObject: {fileID: 874608451}
   SoldierGameObject: {fileID: 327421853}
+  buildingGameObject: {fileID: 2126406381}
   buildingBase: {fileID: 2126406382}
   selectionmanager: {fileID: 1778073276}
   currentBuildingDist: 0
@@ -787,6 +787,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 6537541034667993825, guid: 03430657f2f14514ba955174b175ae45,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
         type: 3}
       propertyPath: m_RootOrder
@@ -805,7 +810,7 @@ PrefabInstance:
     - target: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 20
+      value: 3.41
       objectReference: {fileID: 0}
     - target: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
         type: 3}
