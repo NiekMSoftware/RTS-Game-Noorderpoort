@@ -25,10 +25,29 @@ public class BuildingBase : MonoBehaviour
 
     public enum Jobs { Wood, Stone, Metal }
 
+    private OccupancyType occupancyType;
+
     public enum States
     {
         Building,
         Normal
+    }
+
+    public enum OccupancyType
+    {
+        None,
+        Player,
+        Enemy
+    }
+
+    public void SetOccupancyType(OccupancyType occupancyType)
+    {
+        this.occupancyType = occupancyType;
+    }
+
+    public OccupancyType GetOccupancyType()
+    {
+        return occupancyType;
     }
 
     [System.Serializable]
