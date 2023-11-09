@@ -74,6 +74,12 @@ public class ComputerEnemy : MonoBehaviour
         Attacking
     }
 
+    private void Awake()
+    {
+        aiPoints = pointManager.GetPointsByType(PointManager.EntityType.AI);
+        playerPoints = pointManager.GetPointsByType(PointManager.EntityType.Player);
+    }
+
     private void Start()
     {
         for (int i = 0; i < amountOfWorkersAtStart; i++)
@@ -82,9 +88,6 @@ public class ComputerEnemy : MonoBehaviour
             workers.Add(worker);
             availableWorkers.Add(worker);
         }
-
-        aiPoints = pointManager.GetPointsByType(PointManager.EntityType.AI);
-        playerPoints = pointManager.GetPointsByType(PointManager.EntityType.Player);
     }
 
     private void Update()
@@ -118,7 +121,7 @@ public class ComputerEnemy : MonoBehaviour
                         }
                         else
                         {
-                            PlaceBuilding(building);
+                            PlaceNonResourceBuilding(building);
                         }
                     }
                 }
@@ -322,7 +325,42 @@ public class ComputerEnemy : MonoBehaviour
         return hasAllResources;
     }
 
-    private void PlaceBuilding(Buildings building)
+    private void PlaceBuilding(Vector3 position, Buildings building)
+    {
+        //snap position to an int value
+        position = Vector3Int.FloorToInt(position);
+
+        //Set Y position to that of the terrain
+        position.y = terrain.SampleHeight(position) + building.building.transform.localScale.y;
+
+        if (HasEnoughResources(buildings[GetResourceIndexByItemdata(building.itemData)].building.GetComponent<BuildingBase>()))
+        {
+            //Spawn building
+            BuildingBase spawnedBuilding = Instantiate(building.building, position, Quaternion.identity).GetComponent<BuildingBase>();
+
+            if (Physics.Raycast(spawnedBuilding.transform.position + new Vector3(0, 1, 0), -Vector3.up, out RaycastHit hit, groundLayer))
+            {
+                //Set rotation to that of the terrain/raycasthit
+                spawnedBuilding.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+
+                spawnedBuilding.SetResourceItemManagerByType(ResourceItemManager.Type.AI);
+                spawnedBuilding.SetOccupancyType(BuildingBase.OccupancyType.Enemy);
+                pointManager.AddPoints(spawnedBuilding.GetPoints().amount, spawnedBuilding.GetPoints().pointType, PointManager.EntityType.AI,
+                    pointManager.GetPointsByType(PointManager.EntityType.AI).GetResourcePointByItem(building.building.GetComponent<BuildingBase>().GetRecipes()[0].data));
+                placedBuildings.Add(spawnedBuilding);
+                building.hasBeenPlaced = true;
+            }
+        }
+        else
+        {
+            print("Not enough resources for : " + buildings[GetResourceIndexByItemdata(building.itemData)].building.name);
+            resourcesToGather.Add(new MissingResource(building.building.GetComponent<BuildingBase>().GetRecipes()[0].amountNeeded,
+                building.itemData));
+            state = AIStates.ResourceGathering;
+        }
+    }
+
+    private void PlaceNonResourceBuilding(Buildings building)
     {
         //Make the building be placed as close as possible to the main building/computerenemy's location
 
@@ -336,33 +374,7 @@ public class ComputerEnemy : MonoBehaviour
             originalPos += randomDirection / buildingPlaceAccuracy;
         }
 
-        originalPos = Vector3Int.FloorToInt(originalPos);
-
-        originalPos.y = terrain.SampleHeight(originalPos) +
-            buildings[GetResourceIndexByItemdata(building.itemData)].building.transform.localScale.y;
-
-        if (HasEnoughResources(buildings[GetResourceIndexByItemdata(building.itemData)].building.GetComponent<BuildingBase>()))
-        {
-            BuildingBase spawnedBuilding = Instantiate(building.building, originalPos, Quaternion.identity).GetComponent<BuildingBase>();
-
-            if (Physics.Raycast(spawnedBuilding.transform.position + new Vector3(0, 1, 0), -Vector3.up, out RaycastHit hit, groundLayer))
-            {
-                spawnedBuilding.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
-                spawnedBuilding.SetResourceItemManagerByType(ResourceItemManager.Type.AI);
-                spawnedBuilding.SetOccupancyType(BuildingBase.OccupancyType.Enemy);
-                pointManager.AddPoints(spawnedBuilding.GetPoints().amount, spawnedBuilding.GetPoints().pointType, PointManager.EntityType.AI,
-                    aiPoints.GetResourcePointByItem(building.itemData));
-                placedBuildings.Add(spawnedBuilding);
-                building.hasBeenPlaced = true;
-            }
-        }
-        else
-        {
-            print("Not enough resources for : " + buildings[GetResourceIndexByItemdata(building.itemData)].building.name);
-            resourcesToGather.Add(new MissingResource(building.building.GetComponent<BuildingBase>().GetRecipes()[0].amountNeeded,
-                building.itemData));
-            state = AIStates.ResourceGathering;
-        }
+        PlaceBuilding(originalPos, building);
     }
 
     private void PlaceResourceBuilding(ItemData itemData)
@@ -381,36 +393,10 @@ public class ComputerEnemy : MonoBehaviour
             originalPos += direction / buildingPlaceAccuracy;
         }
 
-        originalPos = Vector3Int.FloorToInt(originalPos);
-
         //Get building by resource
         Buildings building = buildings[GetResourceIndexByItemdata(itemData)];
 
-        //Set y height to terrain
-        originalPos.y = terrain.SampleHeight(originalPos) + building.building.transform.localScale.y;
-
-        if (HasEnoughResources(building.building.GetComponent<BuildingBase>()))
-        {
-            BuildingBase spawnedBuilding = Instantiate(building.building, originalPos, Quaternion.identity).GetComponent<BuildingBase>();
-
-            if (Physics.Raycast(spawnedBuilding.transform.position + new Vector3(0, 1, 0), -Vector3.up, out RaycastHit hit, groundLayer))
-            {
-                spawnedBuilding.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
-                spawnedBuilding.SetResourceItemManagerByType(ResourceItemManager.Type.AI);
-                spawnedBuilding.SetOccupancyType(BuildingBase.OccupancyType.Enemy);
-                pointManager.AddPoints(spawnedBuilding.GetPoints().amount, spawnedBuilding.GetPoints().pointType, PointManager.EntityType.AI, 
-                    pointManager.GetPointsByType(PointManager.EntityType.AI).GetResourcePointByItem(building.building.GetComponent<BuildingBase>().GetRecipes()[0].data));
-                placedBuildings.Add(spawnedBuilding);
-                building.hasBeenPlaced = true;
-            }
-        }
-        else
-        {
-            print("Not enough resources for : " + building.building.name);
-            resourcesToGather.Add(new MissingResource(building.building.GetComponent<BuildingBase>().GetRecipes()[0].amountNeeded,
-                building.building.GetComponent<BuildingBase>().GetRecipes()[0].data));
-            state = AIStates.ResourceGathering;
-        }
+        PlaceBuilding(originalPos, building);
     }
 
     private BuildingBase GetPlacedBuildingByType(ItemData itemData)
@@ -481,11 +467,17 @@ public class ComputerEnemy : MonoBehaviour
 
         foreach (var resourceManager in resourceManagers)
         {
+            //If the resource manager has resources at all
             if (resourceManager.resources.Count > 0)
             {
+                //When it is the correct resource item
                 if (resourceManager.resources[0].GetComponent<ResourceObject>().slot.data == itemdata)
                 {
-                    validResourceManagers.Add(resourceManager);
+                    //When the AI did not already place a building here
+                    if (!resourceManager.AIPlacedBuilding)
+                    {
+                        validResourceManagers.Add(resourceManager);
+                    }
                 }
             }
         }
@@ -504,6 +496,7 @@ public class ComputerEnemy : MonoBehaviour
             }
         }
 
+        closestResource.AIPlacedBuilding = true;
         return closestResource;
     }
 
