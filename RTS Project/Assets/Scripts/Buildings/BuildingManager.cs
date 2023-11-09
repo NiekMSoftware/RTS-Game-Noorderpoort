@@ -40,7 +40,7 @@ public class BuildingManager : MonoBehaviour
     [SerializeField] private float maxAngle;
     [SerializeField] private float maxHeight;
 
-    private GameObject pendingObject;
+    public GameObject pendingObject;
     private int currentIndex = -1;
     private Vector3 pos;
     private RaycastHit hit;
@@ -80,10 +80,12 @@ public class BuildingManager : MonoBehaviour
     {
         if (!pendingObject) return;
 
+        print("found pending object!");
+
         pendingObject.transform.position = pos;
 
         //Change pending object material based on if it can be placed or not
-        if (GetOccupany(pendingObject))
+        if (!CheckCanPlace(false))
         {
             ChangeObjectMaterial(pendingObject, incorrectPlaceMaterial);
         }
@@ -118,13 +120,16 @@ public class BuildingManager : MonoBehaviour
         //place object
         else if (Input.GetMouseButtonDown(0))
         {
-            CheckCanPlace();
+            if (CheckCanPlace(true))
+            {
+                BuildObject();
+            }
         }
     }
 
-    private void CheckCanPlace()
+    private bool CheckCanPlace(bool spawnError)
     {
-        if (EventSystem.current.IsPointerOverGameObject()) return;
+        if (EventSystem.current.IsPointerOverGameObject()) return false;
 
         if (rayHit)
         {
@@ -154,8 +159,13 @@ public class BuildingManager : MonoBehaviour
                                 }
                                 else
                                 {
-                                    SpawnError($"needs {itemNeeded.amountNeeded - resources.GetSlotByItemData(itemNeeded.data).amount} more : {itemNeeded.data.name}");
+                                    if (spawnError)
+                                    {
+                                        SpawnError($"needs {itemNeeded.amountNeeded - resources.GetSlotByItemData(itemNeeded.data).amount} " +
+                                            $"more : {itemNeeded.data.name}");
+                                    }
                                     hasEverything = false;
+                                    return false;
                                 }
                             }
                         }
@@ -163,38 +173,46 @@ public class BuildingManager : MonoBehaviour
                         //remove items only when the player can actually build it
                         if (hasEverything)
                         {
-                            foreach (var itemNeeded in buildings[currentIndex].building.GetComponent<BuildingBase>().GetRecipes())
-                            {
-                                if (itemNeeded.data == resources.GetSlotByItemData(itemNeeded.data).data)
-                                {
-                                    resources.GetSlotByItemData(itemNeeded.data).amount -= itemNeeded.amountNeeded;
-                                }
-                            }
-
                             savedSlots.Clear();
 
                             //build object
-                            BuildObject();
+                            return true;
                         }
                     }
                     else
                     {
-                        SpawnError("Can't place building here");
+                        if (spawnError)
+                        {
+                            SpawnError("Can't place building here");
+                        }
+                        return false;
                     }
                 }
                 else
                 {
-                    SpawnError("Too high");
+                    if (spawnError)
+                    {
+                        SpawnError("Too high");
+                    }
+                    return false;
                 }
             }
             else
             {
-                SpawnError("angle too steep");
+                if (spawnError)
+                {
+                    SpawnError("angle too steep");
+                }
+                return false;
             }
         }
-    }
 
-    public GameObject GetPendingObject() => pendingObject;
+        if (spawnError)
+        {
+            SpawnError("Other error");
+        }
+        return false;
+    }
 
     private void SpawnError(string text)
     {
@@ -222,6 +240,7 @@ public class BuildingManager : MonoBehaviour
 
     private void ResetObject()
     {
+        print("destroy pendingobject");
         Destroy(pendingObject);
         pendingObject = null;
         currentIndex = -1;
@@ -230,6 +249,14 @@ public class BuildingManager : MonoBehaviour
 
     private void BuildObject()
     {
+        foreach (var itemNeeded in buildings[currentIndex].building.GetComponent<BuildingBase>().GetRecipes())
+        {
+            if (itemNeeded.data == resources.GetSlotByItemData(itemNeeded.data).data)
+            {
+                resources.GetSlotByItemData(itemNeeded.data).amount -= itemNeeded.amountNeeded;
+            }
+        }
+
         ParticleSystem spawnedParticle = Instantiate(buildParticle, pos, Quaternion.identity).GetComponent<ParticleSystem>();
         spawnedParticle.Play();
 
@@ -298,7 +325,10 @@ public class BuildingManager : MonoBehaviour
 
         ChangeObjectMaterial(pendingObject, correctPlaceMaterial);
 
+        print("select object : " + index);
+
         currentIndex = index;
+        print("After instantiate : " + pendingObject);
     }
 
     private void ChangeObjectMaterial(GameObject go, Material material)
@@ -331,17 +361,12 @@ public class BuildingManager : MonoBehaviour
         building.layer = (int)Mathf.Log(tempBuildingLayerMask.value, 2);
         Transform trans = building.transform;
 
-        //Collider[] colliders = null;
         Collider[] colliders = Physics.OverlapBox(trans.position, trans.localScale / 2, trans.rotation, buildLayerMask);
 
         if (colliders.Length > 0)
         {
             return true;
         }
-        //if (colliders[0] != null)
-        //{
-        //    return true;
-        //}
 
         return false;
     }
