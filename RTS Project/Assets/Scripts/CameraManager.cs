@@ -106,7 +106,9 @@ public class CameraManager : MonoBehaviour
         //currentRotation = Vector3.Lerp(currentRotation, rotationInput, Time.deltaTime * rotationSmoothing);
         currentRotation = rotationInput;
 
-        rb.AddRelativeTorque(currentRotation.x * rotationSpeed * transform.up, ForceMode.Force);
+        Vector3 torque = currentRotation.x * rotationSpeed * transform.up;
+        Vector3 globalTorque = transform.TransformDirection(torque);
+        rb.AddTorque(globalTorque, ForceMode.Force);
         //rb.AddRelativeTorque(currentRotation.y * rotationSpeed * -transform.right, ForceMode.Force);
 
         Vector3 eulerAngles = transform.eulerAngles;
