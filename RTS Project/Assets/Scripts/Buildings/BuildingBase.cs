@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BuildingBase : MonoBehaviour
 {
-    [SerializeField] protected float buildingHp = 50f;
+    [SerializeField] public float buildingHp = 50f;
     [SerializeField] protected int maxWorkers = 5;
     [SerializeField] private ItemSlot[] currentStorage;
     [SerializeField] private List<Worker> workers = new();
@@ -14,6 +14,7 @@ public class BuildingBase : MonoBehaviour
     [SerializeField] private int scanRange = 200;
     [SerializeField] private Recipe[] recipes;
     [SerializeField] private BuildingPoints points;
+    [SerializeField] private LayerMask building;
 
     private ResourceItemManager resourceItemManager;
 
@@ -25,7 +26,7 @@ public class BuildingBase : MonoBehaviour
 
     public enum Jobs { Wood, Stone, Metal }
 
-    private OccupancyType occupancyType;
+    public OccupancyType occupancyType;
 
     public enum States
     {
@@ -307,7 +308,6 @@ public class BuildingBase : MonoBehaviour
     {
         return workers;
     }
-
     public int GetMaxWorkers()
     {
         return maxWorkers;

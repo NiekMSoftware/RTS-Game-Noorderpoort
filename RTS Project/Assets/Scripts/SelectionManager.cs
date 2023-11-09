@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public class SelectionManager : MonoBehaviour
@@ -6,6 +7,7 @@ public class SelectionManager : MonoBehaviour
     [SerializeField] private LayerMask selectable;
     [SerializeField] private LayerMask ground;
     [SerializeField] private LayerMask building;
+    [SerializeField] private LayerMask Enemy;
     [SerializeField] private List<GameObject> selectedUnits = new();
 
     [SerializeField] private GameObject markerPrefab;
@@ -13,12 +15,16 @@ public class SelectionManager : MonoBehaviour
     [SerializeField] RectTransform boxVisual;
     private GameObject selectedBuilding;
 
+    BuildingBase buildingBase = new BuildingBase();
+
     Rect selectionBox;
 
     Vector2 startPosition;
     Vector2 endPosition;
 
     private Camera mainCamera;
+
+    public Vector3 buildingPosition;
 
     private void Start()
     {
@@ -37,19 +43,12 @@ public class SelectionManager : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                if (Physics.Raycast(ray, out RaycastHit hit2, Mathf.Infinity, building))
-                {
-                    if (hit2.collider.GetComponent<BuildingBase>().GetOccupancyType() == BuildingBase.OccupancyType.Player)
-                    {
-                        selectedBuilding = hit2.collider.gameObject;
-                        BuildingSelected();
-                    }
-                }
+
                 if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, selectable))
                 {
                     if (Input.GetKey(KeyCode.LeftShift))
                     {
-                        if (!selectedUnits.Contains(hit.collider.gameObject) && hit.collider.GetComponent<Unit>().typeUnit == Unit.TypeUnit.Human)
+                        if (!selectedUnits.Contains(hit.collider.gameObject))
                         {
                             selectedUnits.Add(hit.collider.gameObject);
                             hit.collider.GetComponent<Unit>().SetSelectionObject(true);
@@ -58,11 +57,8 @@ public class SelectionManager : MonoBehaviour
                     else
                     {
                         DeselectAll();
-                        if (hit.collider.GetComponent<Unit>().typeUnit == Unit.TypeUnit.Human)
-                        {
-                            selectedUnits.Add(hit.collider.gameObject);
-                            hit.collider.GetComponent<Unit>().SetSelectionObject(true);
-                        }
+                        selectedUnits.Add(hit.collider.gameObject);
+                        hit.collider.GetComponent<Unit>().SetSelectionObject(true);
                     }
                 }
                 else
@@ -72,7 +68,27 @@ public class SelectionManager : MonoBehaviour
             }
             else if (Input.GetMouseButtonDown(1))
             {
-                if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, ground))
+                if (Physics.Raycast(ray, out RaycastHit hit2, Mathf.Infinity, building))
+                {
+                    //wanneer in selectedunits soldiers zitten, vind deze soldiers en voor elke soldier call AssignToBuilding
+
+                    Debug.Log("Selected building");
+                    selectedBuilding = hit2.collider.gameObject;
+                    //buildingBase.EnemyBuildingSelect();
+
+                    foreach (GameObject selectedUnit in selectedUnits)
+                    {
+                        SoldierUnit soldier = selectedUnit.GetComponent<SoldierUnit>();
+                        foreach (var unit in selectedUnits)
+                        {
+                            //soldier.AssignToBuilding(selectedBuilding.transform);
+                            unit.GetComponent<Unit>().SendUnitToLocation(hit2.point);
+                            print(hit2);
+                            buildingPosition = hit2.point;
+                        }
+                    }
+                }
+                else if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, ground))
                 {
                     Instantiate(markerPrefab, hit.point, Quaternion.identity);
                     foreach (var unit in selectedUnits)
@@ -105,6 +121,18 @@ public class SelectionManager : MonoBehaviour
             DrawBoxVisual();
         }
     }
+    /*private void EnemyBuildingSelected()
+    {
+        Debug.Log("building selected");
+        if (selectedUnits.Count > 0)
+        {
+            foreach (GameObject unit in selectedUnits)
+            {
+                selectedBuilding.GetComponent<BuildingBase>().AddSoldierToBuilding(unit.GetComponent<SoldierUnit>());
+            }
+        }
+    }*/
+
     private void BuildingSelected()
     {
         if (selectedUnits.Count > 0)
@@ -171,7 +199,7 @@ public class SelectionManager : MonoBehaviour
         {
             if (selectionBox.Contains(mainCamera.WorldToScreenPoint(unit.transform.position)))
             {
-                if (!selectedUnits.Contains(unit.gameObject) && unit.typeUnit == Unit.TypeUnit.Human)
+                if (!selectedUnits.Contains(unit.gameObject))
                 {
                     selectedUnits.Add(unit.gameObject);
                     unit.GetComponent<Unit>().SetSelectionObject(true);
