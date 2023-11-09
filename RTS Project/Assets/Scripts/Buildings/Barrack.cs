@@ -2,74 +2,74 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Barrack : MonoBehaviour
 {
     // TODO: Clear out all pending Unit's in barrack and release them
         //  (Release them, is clearing them out of the list 1 by 1 until 0 remains)
+        
+    [Header("Unit List")]
+    [SerializeField] private List<GameObject> unitList = new List<GameObject>(CAPACITY);
+    public List<GameObject> UnitList {
+        get {
+            return unitList;
+        }
+        set {
+            unitList = value;
+        }
+    }
     
-    [Header("Unit's List")]
-    private List<GameObject> unitList = new List<GameObject>(5);
+    [Tooltip("Change this to the Soldier")]
     public GameObject unitToSpawn;
     private const int CAPACITY = 5;
+    private int currentIndex = 0;
 
+    private bool canSpawn = false;
+    
     [Header("Barrack Properties")]
     [SerializeField] private float queue = 0f;  // queue to keep track of
     [SerializeField] private float maxTimeUntilNext = 5f;   // max time var, this will also be used on Invoke
-    [SerializeField] private Transform spawnPosition;
-    private bool waitUntilSpawned = false;
+    
+    [SerializeField] private Transform barrackDoor1;
+    [SerializeField] private Transform barrackDoor2;
+
+    [Header("Unit Selection")] 
+    public SelectionManager selectionManager;
+    public NavMeshAgent unitAgent;
 
     private void Start() {
-        InvokeRepeating(nameof(InvokeSpawnEnemies), 1f, 1f);
+        selectionManager = GameObject.FindWithTag("SelectionManager").GetComponent<SelectionManager>();
+        // unitAgent = GameObject.FindWithTag("AI").GetComponent<NavMeshAgent>();
+
+        Time.timeScale = 1f;
     }
 
     private void Update() {
-        CountDown();
-    }
+        Counter();
 
-    private void InvokeSpawnEnemies() {
-        if (unitList.Count >= 0) {
-            AddUnitToList();
-        }
-
-        if (unitList.Count >= CAPACITY) {
+        if (queue >= maxTimeUntilNext)
+            canSpawn = true;
+        
+        if(canSpawn)
             SpawnEnemy();
-        }
     }
     
-    private void AddUnitToList() {
-        // Reset the queue and spawn in Units
-        if (CountDown() >= maxTimeUntilNext) {
-            if(!waitUntilSpawned) {
-                // Check if the list isn't already full
-                if (unitList.Count != CAPACITY) {
-                    // Add unit to list
-                    unitList.Add(unitToSpawn);
-                    print($"Added unit {unitList.Count}");
-                    
-                    print("Spawned in units");
-                    Instantiate(unitToSpawn, spawnPosition);
-                }
-            }
-            
-            // // Check if the unit hit their capacity
-            if (unitList.Count == CAPACITY) {
-                waitUntilSpawned = true;
-            }
-            
-            queue = 0.0f;
+    public void AddUnitToBarrack() {
+        List<GameObject> selectedUnit = selectionManager.selectedUnits;
+        foreach (var unit in selectedUnit) {
+            unitAgent = unit.GetComponent<NavMeshAgent>();
+            unitAgent.SetDestination(barrackDoor2.position);
         }
     }
 
     private void SpawnEnemy() {
-        // Removing stuff :D
-        for (int i = unitList.Count - 1; i >= 0; i--) {
-            print("REMOVING ITEMS OUT OF LIST");
-            unitList.RemoveAt(i);
+        print("spawning soldier");
+        if (currentIndex < unitList.Count) {
+            Instantiate(unitList[currentIndex], barrackDoor1);
+            currentIndex++;
         }
-        
-        waitUntilSpawned = false;
     }
-    
-    private float CountDown() => queue += Time.deltaTime;
+
+    private float Counter() => queue += Time.deltaTime;
 }
