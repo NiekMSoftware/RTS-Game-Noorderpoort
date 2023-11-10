@@ -3,26 +3,23 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - AI
-  - Ground
-  - StoneResource
+  tags: []
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Ground
+  - 
   - Water
   - UI
-  - Clickable
-  - Building
-  - TempBuilding
-  - Grid
-  - Obstacle
-  - Target
-  - Resources
-  - FogOfWar
-  - Enemy
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 

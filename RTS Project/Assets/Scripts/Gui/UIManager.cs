@@ -11,7 +11,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        resourceItemManager = GameObject.Find("ResourceManager").GetComponent<ResourceItemManager>();
+        resourceItemManager = GameObject.Find("resourceManager").GetComponent<ResourceItemManager>();
     }
 
     private void Update()
