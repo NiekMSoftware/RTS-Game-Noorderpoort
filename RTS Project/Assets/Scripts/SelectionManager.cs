@@ -131,14 +131,14 @@ public class SelectionManager : MonoBehaviour
                 // Perhaps make it so we can use an if / else if - statement
                     // What this will do is add more accessibility
                     // Perhaps make this a SWITCH-statement if absolutely necessarily
-                if (selectedBuilding.TryGetComponent<BuildingBase>(out BuildingBase buildingBase)) 
+                if (selectedBuilding.TryGetComponent<ResourceBuildingBase>(out ResourceBuildingBase buildingBase)) 
                 {
                     print("Assigning unit to Worker");
                     buildingBase.AddWorkerToBuilding(unit.GetComponent<Worker>());
                 } 
                 else {
                     print("Assigning Unit to soldier");
-                    selectedBuilding.GetComponent<Barrack>().AddUnitToBarrack();   
+                    selectedBuilding.GetComponent<Barrack>().AddUnitToBarrack(null);   
                 }
             }
         }

@@ -12,7 +12,7 @@ public class SoldierUnit : Unit
     public LayerMask Building;
     public LayerMask Enemy;
     public List<GameObject> Enemies = new List<GameObject>();
-    public List<GameObject> Buildings = new List<GameObject>();
+    public List<BuildingBase> Buildings = new List<BuildingBase>();
     public GameObject EnemyGameObject;
     public GameObject SoldierGameObject;
     public GameObject buildingGameObject;
@@ -23,25 +23,15 @@ public class SoldierUnit : Unit
     public BuildingBase buildingBase;
     public SelectionManager selectionmanager;
     public float currentBuildingDist;
-    private ComputerEnemy computerEnemy;
 
     private void Start()
     {
         selectionmanager = FindObjectOfType<SelectionManager>();
-        computerEnemy = FindObjectOfType<ComputerEnemy>();
     }
 
     private void Update()
     {
-        //SpawnBuildings();
-        //pak dan de currentBuildingDist.
-        currentBuildingDist = Vector3.Distance(transform.position,selectionmanager.buildingPosition);
-        if (currentBuildingDist <= 1)
-        {
-            Debug.Log("Attacking");
-            isAttacking = true;
-            DealDamageToBuildings();
-        }
+        SpawnBuildings();
         if(EnemyGameObject != null)
         {
             if (Vector3.Distance(SoldierGameObject.transform.position, EnemyGameObject.transform.position) <5)
@@ -56,19 +46,19 @@ public class SoldierUnit : Unit
 
     private void SpawnBuildings()
     {
-        //ComputerEnemy kijk hoeveel gespawned is
-        //[SerializeField] private List<BuildingBase> placedBuildings;
-        //als buildings is gespawned dan in lijst.
-        //if (computerEnemy.placedBuildings)//placebuildings > 0
-        //{
-        //    Buildings.Add(buildingGameObject);
-        //    //print(Buildings.Count);
-        //    //print(buildingGameObject.name);
-        //    //print(selectionmanager.selectedBuilding.name);
+        buildingGameObject = selectionmanager.selectedBuilding;
+        buildingBase = buildingGameObject.GetComponent<BuildingBase>();
 
-        //}
-
-        //Buildings = computerEnemy.placedBuildings;
+        if (buildingGameObject != null)
+        {
+            currentBuildingDist = Vector3.Distance(transform.position, selectionmanager.buildingPosition);
+            if (currentBuildingDist <= 1)
+            {
+                Debug.Log("Attacking");
+                isAttacking = true;
+                DealDamageToBuildings();
+            }
+        }
     }
 
     //damage to buildings.
@@ -82,16 +72,14 @@ public class SoldierUnit : Unit
 
             if (damageTimer >= damageInterval)
             {
-                //DealDamageToEnemiesInRange();
-                this.buildingBase.buildingHp -= damageAmount;
+                buildingBase.buildingHp -= damageAmount;
                 print(buildingBase.buildingHp);
                 damageTimer = 0.0f;
             }
-            if(this.buildingBase.buildingHp <= 0)
+            if(buildingBase.buildingHp <= 0)
             {
                 Debug.Log("building Destroyed");
-                Buildings.RemoveAt(0);
-                Destroy(selectionmanager.selectedBuilding);
+                Destroy(buildingGameObject);
                 isAttacking = false;
 
                 if(selectionmanager.selectedBuilding == null)

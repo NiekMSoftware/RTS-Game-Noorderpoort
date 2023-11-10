@@ -430,7 +430,7 @@ MonoBehaviour:
   buildingGameObject: {fileID: 2126406381}
   PlaceHolder: {fileID: 6491407734025490448, guid: 875ca19df0aabc54a86d5dd7951ffc6e,
     type: 3}
-  buildingBase: {fileID: 2126406382}
+  buildingBase: {fileID: 0}
   selectionmanager: {fileID: 1778073276}
   currentBuildingDist: 0
 --- !u!195 &327421857
@@ -814,7 +814,7 @@ PrefabInstance:
     - target: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -8.21
       objectReference: {fileID: 0}
     - target: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
         type: 3}
@@ -824,7 +824,7 @@ PrefabInstance:
     - target: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.41
+      value: 14.67
       objectReference: {fileID: 0}
     - target: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
         type: 3}
@@ -1365,18 +1365,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2901503501992201114}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2126406382 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7758723340038666472, guid: 07f3ad3d549043343b9e517ad110a8b7,
-    type: 3}
-  m_PrefabInstance: {fileID: 2901503501992201114}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2126406381}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc5805b09e7797c43ad44c88cb534759, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &2901503501992201114
 PrefabInstance:
   m_ObjectHideFlags: 0
