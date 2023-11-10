@@ -122,17 +122,6 @@ public class SelectionManager : MonoBehaviour
             DrawBoxVisual();
         }
     }
-    /*private void EnemyBuildingSelected()
-    {
-        Debug.Log("building selected");
-        if (selectedUnits.Count > 0)
-        {
-            foreach (GameObject unit in selectedUnits)
-            {
-                selectedBuilding.GetComponent<BuildingBase>().AddSoldierToBuilding(unit.GetComponent<SoldierUnit>());
-            }
-        }
-    }*/
 
     private void BuildingSelected()
     {

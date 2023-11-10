@@ -9,6 +9,8 @@ public class SoldierUnit : Unit
     public int damageAmount = 10;
     public LayerMask Building;
     public LayerMask Enemy;
+    public List<GameObject> Enemies;
+    public List<GameObject> Buildings;
     public GameObject EnemyGameObject;
     public GameObject SoldierGameObject;
     public GameObject buildingGameObject;
@@ -21,20 +23,23 @@ public class SoldierUnit : Unit
 
     private void Update()
     {
+        //kijk welke building hij heeft uit de lijst pak dan de currentBuildingDist.
         currentBuildingDist = Vector3.Distance(transform.position,selectionmanager.buildingPosition);
-        //print(currentDist);
         if (currentBuildingDist <= 1)
         {
             Debug.Log("Attacking");
             isAttacking = true;
             DealDamageToBuildings();
         }
-        if (Vector3.Distance(SoldierGameObject.transform.position, EnemyGameObject.transform.position) <5)
+        if(EnemyGameObject != null)
         {
-            Debug.Log("Enemy in range");
-            Debug.Log("moving to enemy myself");
-            myAgent.SetDestination(EnemyGameObject.transform.position);
-            DealDamageToEnemiesInRange();
+            if (Vector3.Distance(SoldierGameObject.transform.position, EnemyGameObject.transform.position) <5)
+            {
+                Debug.Log("Enemy in range");
+                Debug.Log("moving to enemy myself");
+                myAgent.SetDestination(EnemyGameObject.transform.position);
+                DealDamageToEnemiesInRange();
+            }
         }
     }
 
