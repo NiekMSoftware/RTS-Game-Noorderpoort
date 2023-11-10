@@ -1742,6 +1742,11 @@ PrefabInstance:
       objectReference: {fileID: 331108829}
     - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
         type: 3}
+      propertyPath: minResourcePoints
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
+        type: 3}
       propertyPath: resourceItemManager
       value: 
       objectReference: {fileID: 5668088712000634338}
@@ -1895,11 +1900,6 @@ PrefabInstance:
         type: 3}
       propertyPath: gameSeed
       value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1385257948437945318, guid: 7243e0cae2d6727448fdaf3d2545716f,
-        type: 3}
-      propertyPath: useCustomSeed
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2266570287089781787, guid: 7243e0cae2d6727448fdaf3d2545716f,
         type: 3}
