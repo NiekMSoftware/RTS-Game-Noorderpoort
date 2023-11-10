@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BuildingBase : MonoBehaviour
 {
-    [SerializeField] protected float buildingHp = 50f;
+    [SerializeField] public float buildingHp = 50f;
     [SerializeField] private States currentState;
     [SerializeField] private Recipe[] recipes;
     [SerializeField] private BuildingPoints points;

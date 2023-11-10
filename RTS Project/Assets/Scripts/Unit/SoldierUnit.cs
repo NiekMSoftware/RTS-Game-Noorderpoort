@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -22,10 +23,12 @@ public class SoldierUnit : Unit
     public BuildingBase buildingBase;
     public SelectionManager selectionmanager;
     public float currentBuildingDist;
+    private ComputerEnemy computerEnemy;
 
     private void Start()
     {
         selectionmanager = FindObjectOfType<SelectionManager>();
+        computerEnemy = FindObjectOfType<ComputerEnemy>();
     }
 
     private void Update()
@@ -56,14 +59,16 @@ public class SoldierUnit : Unit
         //ComputerEnemy kijk hoeveel gespawned is
         //[SerializeField] private List<BuildingBase> placedBuildings;
         //als buildings is gespawned dan in lijst.
-        /*if ()//placebuildings > 0
-        {
-            Buildings.Add(buildingGameObject);
-            //print(Buildings.Count);
-            //print(buildingGameObject.name);
-            //print(selectionmanager.selectedBuilding.name);
-            
-        }*/
+        //if (computerEnemy.placedBuildings)//placebuildings > 0
+        //{
+        //    Buildings.Add(buildingGameObject);
+        //    //print(Buildings.Count);
+        //    //print(buildingGameObject.name);
+        //    //print(selectionmanager.selectedBuilding.name);
+
+        //}
+
+        //Buildings = computerEnemy.placedBuildings;
     }
 
     //damage to buildings.

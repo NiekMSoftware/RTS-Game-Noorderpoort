@@ -21,7 +21,7 @@ public class ComputerEnemy : MonoBehaviour
     [SerializeField] private List<Worker> availableWorkers;
     //TODO: change this to soldier
     [SerializeField] private List<Unit> soldiers;
-    [SerializeField] private List<BuildingBase> placedBuildings;
+    [SerializeField] public List<BuildingBase> placedBuildings;
     [SerializeField] private AIStates state;
     [SerializeField] private int pointsToAddAssignWorker;
 
