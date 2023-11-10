@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public class SelectionManager : MonoBehaviour
@@ -145,23 +144,24 @@ public class SelectionManager : MonoBehaviour
             {
                 // Change when worker is integrated into unit
                 // selectedBuilding.GetComponent<BuildingBase>().AddWorkerToBuilding(unit.GetComponent<Worker>());
-                
+
                 // Perhaps make it so we can use an if / else if - statement
-                    // What this will do is add more accessibility
-                    // Perhaps make this a SWITCH-statement if absolutely necessarily
-                if (selectedBuilding.TryGetComponent<ResourceBuildingBase>(out ResourceBuildingBase buildingBase)) 
+                // What this will do is add more accessibility
+                // Perhaps make this a SWITCH-statement if absolutely necessarily
+                if (selectedBuilding.TryGetComponent<ResourceBuildingBase>(out ResourceBuildingBase buildingBase))
                 {
                     print("Assigning unit to Worker");
                     buildingBase.AddWorkerToBuilding(unit.GetComponent<Worker>());
-                } 
-                else {
+                }
+                else
+                {
                     print("Assigning Unit to soldier");
-                    selectedBuilding.GetComponent<Barrack>().AddUnitToBarrack(null);   
+                    selectedBuilding.GetComponent<Barrack>().AddUnitToBarrack(null);
                 }
             }
         }
     }
-    
+
     private void DeselectAll()
     {
         foreach (GameObject unit in selectedUnits)
