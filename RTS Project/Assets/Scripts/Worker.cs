@@ -19,7 +19,7 @@ public class Worker : Unit
     private float gatherTime = 1f;
     public enum State { Moving, Idling, Gathering, Depositing, Assigning }
     public State currentState = State.Assigning;
-    private BuildingBase buildingBase;
+    private ResourceBuildingBase buildingBase;
     private string jobName;
 
     public bool assigned = false;
@@ -32,11 +32,11 @@ public class Worker : Unit
         currentStorage = itemSlot;
         myAgent = GetComponent<NavMeshAgent>();
     }
-    public BuildingBase GetCurrentBuilding()
+    public ResourceBuildingBase GetCurrentBuilding()
     {
         if (workerHouse)
         {
-            return workerHouse.GetComponent<BuildingBase>();
+            return workerHouse.GetComponent<ResourceBuildingBase>();
         }
         else
         {
@@ -44,14 +44,14 @@ public class Worker : Unit
         }
 
     }
-    public void InitializeWorker(GameObject _workerHouse, BuildingBase.Jobs _jobName,
+    public void InitializeWorker(GameObject _workerHouse, ResourceBuildingBase.Jobs _jobName,
         GameObject _resourceObjectManager, ResourceItemManager _resourceItemManager)
     {
         print("added new worker!");
         resourceObjectManager = _resourceObjectManager.GetComponent<ResourceObjectManager>();
         workerHouse = _workerHouse;
         jobName = _jobName.ToString();
-        buildingBase = workerHouse.GetComponent<BuildingBase>();
+        buildingBase = workerHouse.GetComponent<ResourceBuildingBase>();
         resourceItem = buildingBase.GetItemData();
         resourceItemManager = _resourceItemManager;
     }
