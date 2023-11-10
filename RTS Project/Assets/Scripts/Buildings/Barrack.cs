@@ -78,9 +78,13 @@ public class Barrack : BuildingBase
         {
             print("Barrack??? Can i be soldier Pretty please?? PLXPZLPZLPZLPZZPLZPZL");
             NavMeshAgent unitAgent = AIUnit.GetComponent<NavMeshAgent>();
-            Vector3 worldPos = barrackDoor1.transform.TransformPoint(barrackDoor1.transform.position);
+            Vector3 worldPos = transform.TransformPoint(barrackDoor1.transform.position);
             unitAgent.SetDestination(worldPos);
             print(unitAgent.name);
+            print(worldPos);
+            GameObject gameObject = new();
+            gameObject.name = "Gerard";
+            gameObject.transform.position = worldPos;
         }
     }
 
