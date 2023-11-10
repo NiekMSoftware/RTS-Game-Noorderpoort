@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1543227467606998400}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.186, y: -0.28125, z: 0}
+  m_LocalPosition: {x: 0.559, y: -0.28125, z: 0.162}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -59,14 +59,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5156782261921279343}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4.05, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 8, y: 8, z: 8}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3078622439867273810}
   - {fileID: 3338330323617080737}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1922811086135902095
 MeshFilter:
@@ -151,13 +151,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 840133b597cd75a4b8ce9bc8f6f2d49c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitList: []
+  buildingHp: 50
+  currentState: 0
+  recipes:
+  - data: {fileID: 11400000, guid: 4178d3d151ebd1a4295d48f9a7f482c9, type: 2}
+    amountNeeded: 30
+  - data: {fileID: 11400000, guid: 0c0ea06af6a171e42a725e0fb10167fc, type: 2}
+    amountNeeded: 50
+  points:
+    pointType: 2
+    amount: 1
   unitToSpawn: {fileID: 6687049504355165105, guid: c6b5ed013b2cf2c4689c875d2e2573a8,
     type: 3}
+  spawnPosSoldier: {fileID: 0}
   queue: 0
   maxTimeUntilNext: 5
-  barrackDoor1: {fileID: 3338330323617080737}
-  barrackDoor2: {fileID: 3078622439867273810}
+  barrackDoor1: {fileID: 4184783236928904395}
+  barrackDoor2: {fileID: 3338330323617080737}
   selectionManager: {fileID: 0}
   unitAgent: {fileID: 0}
 --- !u!1 &7988776410278182275
@@ -186,7 +196,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7988776410278182275}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.495, y: -0.344, z: 0}
+  m_LocalPosition: {x: 0.53, y: -0.344, z: -0.396}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
