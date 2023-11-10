@@ -14,7 +14,7 @@ public class SelectionManager : MonoBehaviour
     [SerializeField] private GameObject markerPrefab;
 
     [SerializeField] RectTransform boxVisual;
-    private GameObject selectedBuilding;
+    public GameObject selectedBuilding;
 
     BuildingBase buildingBase = new BuildingBase();
 
@@ -71,18 +71,14 @@ public class SelectionManager : MonoBehaviour
             {
                 if (Physics.Raycast(ray, out RaycastHit hit2, Mathf.Infinity, building))
                 {
-                    //wanneer in selectedunits soldiers zitten, vind deze soldiers en voor elke soldier call AssignToBuilding
-
                     Debug.Log("Selected building");
                     selectedBuilding = hit2.collider.gameObject;
-                    //buildingBase.EnemyBuildingSelect();
 
                     foreach (GameObject selectedUnit in selectedUnits)
                     {
                         SoldierUnit soldier = selectedUnit.GetComponent<SoldierUnit>();
                         foreach (var unit in selectedUnits)
                         {
-                            //soldier.AssignToBuilding(selectedBuilding.transform);
                             unit.GetComponent<Unit>().SendUnitToLocation(hit2.point);
                             print(hit2);
                             buildingPosition = hit2.point;

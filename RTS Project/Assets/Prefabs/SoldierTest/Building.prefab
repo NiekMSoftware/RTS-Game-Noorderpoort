@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7758723340038666472}
   m_Layer: 7
   m_Name: Building
-  m_TagString: Untagged
+  m_TagString: EnemyBuilding
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc5805b09e7797c43ad44c88cb534759, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingHp: 50
+  buildingHp: 10
   maxWorkers: 5
   currentStorage: []
   workers: []

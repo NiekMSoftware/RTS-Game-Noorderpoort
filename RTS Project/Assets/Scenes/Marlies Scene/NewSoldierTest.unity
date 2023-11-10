@@ -402,8 +402,8 @@ MonoBehaviour:
   unitHealth: 5
   unitMaxHealth: 10
   unitHealing: 15
-  unitSpeed: 5
-  unitDamage: 10
+  unitSpeed: 8
+  unitDamage: 5
   job: 0
   typeUnit: 0
   selectionObject: {fileID: 324712668}
@@ -414,20 +414,22 @@ MonoBehaviour:
   marker: {fileID: 0}
   clickableUnit:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   damageInterval: 2
   damageAmount: 10
   Building:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   Enemy:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 16384
   Enemies: []
   Buildings: []
   EnemyGameObject: {fileID: 874608451}
   SoldierGameObject: {fileID: 327421853}
   buildingGameObject: {fileID: 2126406381}
+  PlaceHolder: {fileID: 6491407734025490448, guid: 875ca19df0aabc54a86d5dd7951ffc6e,
+    type: 3}
   buildingBase: {fileID: 2126406382}
   selectionmanager: {fileID: 1778073276}
   currentBuildingDist: 0
@@ -1329,22 +1331,28 @@ PrefabInstance:
     - target: {fileID: 7064066154610920584, guid: ab8c5f369ea4a6b42a3816c54f83c38a,
         type: 3}
       propertyPath: Enemy.m_Bits
-      value: 0
+      value: 16384
       objectReference: {fileID: 0}
     - target: {fileID: 7064066154610920584, guid: ab8c5f369ea4a6b42a3816c54f83c38a,
         type: 3}
       propertyPath: ground.m_Bits
-      value: 0
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7064066154610920584, guid: ab8c5f369ea4a6b42a3816c54f83c38a,
         type: 3}
       propertyPath: building.m_Bits
-      value: 0
+      value: 128
       objectReference: {fileID: 0}
     - target: {fileID: 7064066154610920584, guid: ab8c5f369ea4a6b42a3816c54f83c38a,
         type: 3}
+      propertyPath: selectedBuilding
+      value: 
+      objectReference: {fileID: 6491407734025490448, guid: 875ca19df0aabc54a86d5dd7951ffc6e,
+        type: 3}
+    - target: {fileID: 7064066154610920584, guid: ab8c5f369ea4a6b42a3816c54f83c38a,
+        type: 3}
       propertyPath: selectable.m_Bits
-      value: 0
+      value: 64
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
