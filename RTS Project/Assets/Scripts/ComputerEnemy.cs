@@ -102,16 +102,19 @@ public class ComputerEnemy : MonoBehaviour
         }
     }
 
+    #region State Machine
+
     private void MakeChoise()
     {
         switch (state)
         {
             case AIStates.Start:
+                //Place all starter buildings
                 foreach (var building in buildings)
                 {
-                    //if building is a starter building and isn't built yet, build it.
                     if (building.isStarter && !building.hasBeenPlaced)
                     {
+                        //if it's a resource building, place a resourcebuilding, otherwise, just place a normal building
                         if (building.buildingType == BuildingType.Resource)
                         {
                             PlaceResourceBuilding(building.itemData);
@@ -123,14 +126,17 @@ public class ComputerEnemy : MonoBehaviour
                     }
                 }
 
+                //Check if the AI can continue to the exploring state
                 if (checkStartState())
                 {
                     state = AIStates.Exploring;
                 }
                 else
                 {
+                    //if not, increase points, by placing buildings and assigning workers
                     List<PointManager.ResourcePoint> startingBuildingItems = new();
 
+                    //Get all the starterbuildings itemdata
                     foreach (var building in buildings)
                     {
                         if (building.isStarter)
@@ -142,6 +148,7 @@ public class ComputerEnemy : MonoBehaviour
                     float lowestResourcePoints = Mathf.Infinity;
                     PointManager.ResourcePoint lowestResourcePoint = null;
 
+                    //Get the building with the lowest resource points, and that is a starter building
                     foreach (var item in startingBuildingItems)
                     {
                         foreach (var resourcePoint in aiPoints.resourcePoints)
@@ -154,8 +161,15 @@ public class ComputerEnemy : MonoBehaviour
                         }
                     }
 
-                    resourcesToGather.Add(new MissingResource((int)lowestResourcePoint.amount, lowestResourcePoint.item));
-                    state = AIStates.ResourceGathering;
+                    //Add more points
+                    //TODO: change this to maybe have a gain points function/state and just say add to 2 more points to whatever.
+                    if (resourcesToGather.Count <= 0)
+                    {
+                        resourcesToGather.Add(new MissingResource(
+                            resourceItemManager.GetSlotByItemData(lowestResourcePoint.item).amount + 50,
+                            lowestResourcePoint.item));
+                        state = AIStates.ResourceGathering;
+                    }
                 }
                 break;
 
@@ -187,11 +201,9 @@ public class ComputerEnemy : MonoBehaviour
                                     {
                                         if (placedBuilding.GetWorkers().Count <= i)
                                         {
-                                            print("try assign worker");
                                             shouldPlaceNewBuilding = false;
                                             if (AssignWorker(placedBuilding, GetRandomAvailableWorker()))
                                             {
-                                                print("return caus assign worker");
                                                 return;
                                             }
                                         }
@@ -284,77 +296,7 @@ public class ComputerEnemy : MonoBehaviour
                 break;
         }
     }
-
-    private bool checkStartState()
-    {
-        bool placedAllStarterBuildings = true;
-
-        foreach (var building in buildings)
-        {
-            //if building is a starter building and isn't built yet, build it.
-            if (building.isStarter && !building.hasBeenPlaced)
-            {
-                placedAllStarterBuildings = false;
-            }
-        }
-
-        bool enoughPoints = false;
-
-        foreach (var resourcePoint in aiPoints.resourcePoints)
-        {
-            if (GetBuildingByType(resourcePoint.item).isStarter)
-            {
-                if (resourcePoint.amount >= minResourcePoints)
-                {
-                    enoughPoints = true;
-                }
-                else
-                {
-                    enoughPoints = false;
-                }
-            }
-        }
-
-        if (enoughPoints && placedAllStarterBuildings)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    private bool HasEnoughResources(BuildingBase building)
-    {
-        bool hasAllResources = false;
-
-        foreach (var item in building.GetRecipes())
-        {
-            if (item.data == resourceItemManager.GetSlotByItemData(item.data).data)
-            {
-                if (resourceItemManager.GetSlotByItemData(item.data).amount >= item.amountNeeded)
-                {
-                    hasAllResources = true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
-
-        if (hasAllResources)
-        {
-            foreach (var item in building.GetRecipes())
-            {
-                if (resourceItemManager.GetSlotByItemData(item.data).data == item.data)
-                {
-                    resourceItemManager.GetSlotByItemData(item.data).amount -= item.amountNeeded;
-                }
-            }
-        }
-
-        return hasAllResources;
-    }
+    #endregion
 
     #region Place Building Logic
 
@@ -436,6 +378,79 @@ public class ComputerEnemy : MonoBehaviour
     }
 
     #endregion
+
+    #region Getters
+
+    private bool checkStartState()
+    {
+        bool placedAllStarterBuildings = true;
+
+        foreach (var building in buildings)
+        {
+            //if building is a starter building and isn't built yet, build it.
+            if (building.isStarter && !building.hasBeenPlaced)
+            {
+                placedAllStarterBuildings = false;
+            }
+        }
+
+        bool enoughPoints = false;
+
+        foreach (var resourcePoint in aiPoints.resourcePoints)
+        {
+            if (GetBuildingByType(resourcePoint.item).isStarter)
+            {
+                if (resourcePoint.amount >= minResourcePoints)
+                {
+                    enoughPoints = true;
+                }
+                else
+                {
+                    enoughPoints = false;
+                }
+            }
+        }
+
+        if (enoughPoints && placedAllStarterBuildings)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool HasEnoughResources(BuildingBase building)
+    {
+        bool hasAllResources = false;
+
+        foreach (var item in building.GetRecipes())
+        {
+            if (item.data == resourceItemManager.GetSlotByItemData(item.data).data)
+            {
+                if (resourceItemManager.GetSlotByItemData(item.data).amount >= item.amountNeeded)
+                {
+                    hasAllResources = true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        if (hasAllResources)
+        {
+            foreach (var item in building.GetRecipes())
+            {
+                if (resourceItemManager.GetSlotByItemData(item.data).data == item.data)
+                {
+                    resourceItemManager.GetSlotByItemData(item.data).amount -= item.amountNeeded;
+                }
+            }
+        }
+
+        return hasAllResources;
+    }
 
     private BuildingBase GetPlacedBuildingByType(ItemData itemData)
     {
@@ -557,4 +572,6 @@ public class ComputerEnemy : MonoBehaviour
 
         return -1;
     }
+
+    #endregion
 }
