@@ -39,6 +39,7 @@ public class BuildingManager : MonoBehaviour
     [SerializeField] private float buildErrorFloatUpSpeed;
     [SerializeField] private float maxAngle;
     [SerializeField] private float maxHeight;
+    [SerializeField] private float minHeight;
 
     public GameObject pendingObject;
     private int currentIndex = -1;
@@ -137,7 +138,7 @@ public class BuildingManager : MonoBehaviour
 
             if (rayAngle <= maxAngle)
             {
-                if (pendingObject.transform.position.y <= maxHeight)
+                if (pendingObject.transform.position.y <= maxHeight && pendingObject.transform.position.y >= minHeight)
                 {
                     pendingObject.SetActive(true);
                     //check collision
@@ -192,7 +193,8 @@ public class BuildingManager : MonoBehaviour
                 {
                     if (spawnError)
                     {
-                        SpawnError("Too high");
+                        //TODO: improve error
+                        SpawnError("Too high or too low");
                     }
                     return false;
                 }

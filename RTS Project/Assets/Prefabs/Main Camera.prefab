@@ -65,7 +65,7 @@ Transform:
   m_Children:
   - {fileID: 341264856937314044}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 60, y: 0, z: 0}
 --- !u!20 &16223035649402080
 Camera:
@@ -185,7 +185,8 @@ MonoBehaviour:
   moveSpeed: 1
   zoomSpeed: 5
   borderSize: 0.07
-  maxZoomHeight: 50
+  maxZoomHeight: 500
   minZoomHeight: 10
-  orientation: {fileID: 341264856937314044}
+  orientation: {fileID: 0}
   particleSpawnPoint: {fileID: 0}
+  hitPoint: {x: 0, y: 0, z: 0}

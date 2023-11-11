@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 645092546158786554}
-  - component: {fileID: 4266027399086801542}
   - component: {fileID: 7629649435915151637}
   m_Layer: 7
   m_Name: MainBuildingTest
@@ -34,35 +33,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4266027399086801542
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5970937043620177259}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e99496344083c5345ad812831fa82be5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buildingHp: 50
-  maxWorkers: 2
-  currentStorage:
-  - data: {fileID: 11400000, guid: 4178d3d151ebd1a4295d48f9a7f482c9, type: 2}
-    amount: 0
-    maxAmount: 10000
-  workers: []
-  jobName: Lumberjack
-  jobs: 0
-  currentState: 0
-  scanRange: 500
-  recipes:
-  - data: {fileID: 11400000, guid: 4178d3d151ebd1a4295d48f9a7f482c9, type: 2}
-    amountNeeded: 10
-  points:
-    pointType: 1
-    amount: 1
 --- !u!65 &7629649435915151637
 BoxCollider:
   m_ObjectHideFlags: 0

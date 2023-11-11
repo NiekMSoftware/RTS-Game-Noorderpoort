@@ -7,18 +7,13 @@ using System.Linq;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI[] resourceTexts;
-    private ResourceItemManager resourceItemManager;
-
-    private void Start()
-    {
-        resourceItemManager = GameObject.Find("resourceManager").GetComponent<ResourceItemManager>();
-    }
+    [SerializeField] private ResourceItemManager playerResourceItemManager;
 
     private void Update()
     {
         for (int i = 0; i < resourceTexts.Length; i++)
         {
-            int amount = resourceItemManager.itemSlots[i].amount;
+            int amount = playerResourceItemManager.itemSlots[i].amount;
             resourceTexts[i].text = amount.ToString();
 
             if (amount == 0)
