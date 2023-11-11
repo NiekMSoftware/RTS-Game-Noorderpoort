@@ -21,6 +21,7 @@ public class SoldierUnit : Unit
     private bool isAttacking = false;
     private float damageTimer = 0.0f;
     public BuildingBase buildingBase;
+    public Unit enemyHp;
     public SelectionManager selectionmanager;
     public float currentBuildingDist;
 
@@ -32,8 +33,10 @@ public class SoldierUnit : Unit
     private void Update()
     {
         SpawnBuildings();
+        EnemyGameObject = selectionmanager.selectedEnemy;
         if(EnemyGameObject != null)
         {
+            //DealDamageToEnemiesInRange();
             if (Vector3.Distance(SoldierGameObject.transform.position, EnemyGameObject.transform.position) <5)
             {
                 Debug.Log("Enemy in range");
@@ -93,6 +96,7 @@ public class SoldierUnit : Unit
     //damage to enemies
     private void DealDamageToEnemiesInRange()
     {
+        enemyHp = EnemyGameObject.GetComponent<Unit>();
         if (Vector3.Distance(SoldierGameObject.transform.position, EnemyGameObject.transform.position) < 1)
         {
             Debug.Log("Attacking Enemy");
@@ -100,15 +104,19 @@ public class SoldierUnit : Unit
 
             if (damageTimer >= damageInterval)
             {
-                unitHealth -= damageAmount;
-                print(unitHealth);              
+                enemyHp.UnitHealth -= damageAmount;
+                print(enemyHp.UnitHealth);              
                 damageTimer = 0.0f;
             }
-            if (unitHealth <= 0)
+            if (enemyHp.UnitHealth <= 0)
             {
                 Debug.Log("destoying enemy");
                 Destroy(EnemyGameObject);
                 isAttacking = false;
+            }
+            if(selectionmanager.selectedEnemy == null)
+            {
+                selectionmanager.selectedEnemy = PlaceHolder;
             }
         }
         /*Collider[] colliders = Physics.OverlapBox(

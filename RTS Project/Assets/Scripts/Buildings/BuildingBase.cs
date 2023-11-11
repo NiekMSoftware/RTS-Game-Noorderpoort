@@ -16,7 +16,7 @@ public class BuildingBase : MonoBehaviour
 
     public enum Jobs { Wood, Stone, Metal }
 
-    private OccupancyType occupancyType;
+    [SerializeField] private OccupancyType occupancyType;
 
     public enum States
     {

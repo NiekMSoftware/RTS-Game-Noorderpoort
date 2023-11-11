@@ -15,6 +15,7 @@ public class SelectionManager : MonoBehaviour
 
     [SerializeField] RectTransform boxVisual;
     public GameObject selectedBuilding;
+    public GameObject selectedEnemy;
 
     BuildingBase buildingBase = new BuildingBase();
 
@@ -26,6 +27,7 @@ public class SelectionManager : MonoBehaviour
     private Camera mainCamera;
 
     public Vector3 buildingPosition;
+    public Vector3 enemyPosition;
 
     private void Start()
     {
@@ -91,6 +93,22 @@ public class SelectionManager : MonoBehaviour
                     foreach (var unit in selectedUnits)
                     {
                         unit.GetComponent<Unit>().SendUnitToLocation(hit.point);
+                    }
+                }
+                if (Physics.Raycast(ray, out RaycastHit hitEnemy, Mathf.Infinity, Enemy))
+                {
+                    Debug.Log("Selected building");
+                    selectedEnemy = hitEnemy.collider.gameObject;
+
+                    foreach (GameObject selectedUnit in selectedUnits)
+                    {
+                        SoldierUnit soldier = selectedUnit.GetComponent<SoldierUnit>();
+                        foreach (var unit in selectedUnits)
+                        {
+                            unit.GetComponent<Unit>().SendUnitToLocation(hitEnemy.point);
+                            print(hitEnemy);
+                            enemyPosition = hitEnemy.point;
+                        }
                     }
                 }
             }
