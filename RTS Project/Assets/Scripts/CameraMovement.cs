@@ -14,7 +14,7 @@ public class CameraMovement : MonoBehaviour
     public Vector3 hitPoint;
     private float rotationSpeed = 1000f;
     private bool allowMovement = true;
-    private float cameraHeight = 20f;
+    private float cameraHeight = 150f;
     private Vector3 rotatePoint = Vector3.zero;
     private Vector3 hitPointDown = Vector3.zero;
     float targetHeight = 100f;
@@ -148,14 +148,11 @@ public class CameraMovement : MonoBehaviour
             }
 
             cameraHeight = Mathf.Lerp(cameraHeight, targetHeight, Time.deltaTime * 5f);
-            //cameraHeight = Mathf.Clamp(cameraHeight - zoom * zoomSpeed, minZoomHeight, maxZoomHeight);
 
             transform.position = new Vector3(transform.position.x, cameraHeight, transform.position.z);
 
             //orientation.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
-            //transform.position = new Vector3(transform.position.x, hitPointDown.y + cameraHeight + 20, transform.position.z);
             transform.position += Time.deltaTime * moveSpeed * orientation.TransformDirection(new Vector3(horizontal * (transform.position.y - hitPoint.y), 0, vertical * (transform.position.y - hitPoint.y)));
-            //transform.position += Time.deltaTime * zoomSpeed * transform.TransformDirection(new Vector3(0, 0, zoom * 750));
         }
 
         orientation.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
