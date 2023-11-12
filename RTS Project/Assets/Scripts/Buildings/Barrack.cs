@@ -24,6 +24,7 @@ public class Barrack : BuildingBase
     private int currentIndex = 0;
 
     private bool canSpawn = false;
+    private bool hasSpawned = false;
 
     [Header("Spawn Pos of Soldier")]
     [SerializeField] private GameObject spawnPosSoldier;
@@ -96,27 +97,33 @@ public class Barrack : BuildingBase
         {
             if (unitList.Count > 0)
             {
-                //TODO: Assign new gameobject as instantiated
-                // new gameobject.position = barrackdoor1.position
-                if (unitList.Count > 0 && unitToSpawn != null && barrackDoor1 != null)
-                {
-                    spawnedUnit = Instantiate(unitList[0]).GetComponent<Unit>();
-                    spawnedUnit.transform.position = barrackDoor1.transform.position;
-                    spawnedUnit.transform.localScale = new Vector3(1, 1, 1);
+                if (!hasSpawned) {
+                    //TODO: Assign new gameobject as instantiated
+                    // new gameobject.position = barrackdoor1.position
+                    if (unitList.Count > 0 && unitToSpawn != null && barrackDoor1 != null)
+                    {
+                        print("Spawning Soldier");
+                        spawnedUnit = Instantiate(unitList[0]).GetComponent<Unit>();
+                        
+                        spawnedUnit.transform.position = barrackDoor1.transform.position;
+                        spawnedUnit.transform.localScale = new Vector3(1, 1, 1);
 
-                    //TODO: Move the soldier to a random position near the Barrack
+                        unitList.RemoveAt(0);
+                        hasSpawned = true;
+
+                        //TODO: Move the soldier to a random position near the Barrack
+                    }
                 }
-
-                unitList.RemoveAt(0);
             }
 
             // Check if the unitList is empty
             if (unitList.Count == 0)
             {
+                // Turn off everything related
                 canSpawn = false;
+                hasSpawned = false;
+                queue = 0;
             }
-
-            queue = 0;
         }
     }
 
