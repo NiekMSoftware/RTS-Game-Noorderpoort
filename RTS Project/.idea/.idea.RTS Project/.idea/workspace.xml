@@ -6,9 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="61fec265-b941-4aea-9e79-1061e99e3b0b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.RTS Project/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RTS Project/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Player Buildings/Barrack.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Player Buildings/Barrack.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Test GUI.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Test GUI.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Cylinder.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Cylinder.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Buildings/Barrack.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Buildings/Barrack.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/MinimapTexture.renderTexture" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Textures/MinimapTexture.renderTexture" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -131,6 +131,9 @@
       <workItem from="1698999010647" duration="2826000" />
       <workItem from="1699517581247" duration="9087000" />
       <workItem from="1699529867128" duration="3792000" />
+      <workItem from="1699800393825" duration="1372000" />
+      <workItem from="1699823679945" duration="105000" />
+      <workItem from="1699823920851" duration="1993000" />
     </task>
     <servers />
   </component>
