@@ -16,8 +16,6 @@ public class SelectionManager : MonoBehaviour
     public GameObject selectedBuilding;
     public GameObject selectedEnemy;
 
-    BuildingBase buildingBase = new BuildingBase();
-
     Rect selectionBox;
 
     Vector2 startPosition;
@@ -74,6 +72,7 @@ public class SelectionManager : MonoBehaviour
                 {
                     Debug.Log("Selected building");
                     selectedBuilding = hit2.collider.gameObject;
+                    BuildingSelected();
 
                     foreach (GameObject selectedUnit in selectedUnits)
                     {
@@ -81,7 +80,6 @@ public class SelectionManager : MonoBehaviour
                         foreach (var unit in selectedUnits)
                         {
                             unit.GetComponent<Unit>().SendUnitToLocation(hit2.point);
-                            print(hit2);
                             buildingPosition = hit2.point;
                         }
                     }
@@ -96,7 +94,6 @@ public class SelectionManager : MonoBehaviour
                 }
                 if (Physics.Raycast(ray, out RaycastHit hitEnemy, Mathf.Infinity, Enemy))
                 {
-                    Debug.Log("Selected building");
                     selectedEnemy = hitEnemy.collider.gameObject;
 
                     foreach (GameObject selectedUnit in selectedUnits)

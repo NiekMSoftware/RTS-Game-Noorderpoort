@@ -81,8 +81,6 @@ public class BuildingManager : MonoBehaviour
     {
         if (!pendingObject) return;
 
-        print("found pending object!");
-
         pendingObject.transform.position = pos;
 
         //Change pending object material based on if it can be placed or not
@@ -242,7 +240,6 @@ public class BuildingManager : MonoBehaviour
 
     private void ResetObject()
     {
-        print("destroy pendingobject");
         Destroy(pendingObject);
         pendingObject = null;
         currentIndex = -1;
@@ -302,7 +299,7 @@ public class BuildingManager : MonoBehaviour
             Vector3 gridPos = Vector3Int.RoundToInt(hit.point);
             if (terrain)
             {
-                gridPos.y = terrain.SampleHeight(gridPos) + buildings[currentIndex].building.transform.localScale.y;
+                gridPos.y = terrain.SampleHeight(gridPos) + (buildings[currentIndex].building.transform.localScale.y / 2);
             }
             else
             {
@@ -327,10 +324,7 @@ public class BuildingManager : MonoBehaviour
 
         ChangeObjectMaterial(pendingObject, correctPlaceMaterial);
 
-        print("select object : " + index);
-
         currentIndex = index;
-        print("After instantiate : " + pendingObject);
     }
 
     private void ChangeObjectMaterial(GameObject go, Material material)
