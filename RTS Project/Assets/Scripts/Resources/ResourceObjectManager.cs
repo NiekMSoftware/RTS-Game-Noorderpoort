@@ -6,6 +6,7 @@ public class ResourceObjectManager : MonoBehaviour
     public List<GameObject> resources = new List<GameObject>();
     public List<GameObject> occupiedResources = new List<GameObject>();
     private float scanRange = 20f;
+    public bool AIPlacedBuilding;
 
     public void SetResources(GameObject resource)
     {

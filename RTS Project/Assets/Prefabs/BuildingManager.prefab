@@ -162,7 +162,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
   pointManager: {fileID: 0}
   buildProgressPrefab: {fileID: 863354181301575538, guid: bac4b3a229a7de0498d4928b343b3bfb,
     type: 3}
@@ -190,3 +189,5 @@ MonoBehaviour:
   buildErrorFloatUpSpeed: 1
   maxAngle: 125.9
   maxHeight: 50
+  minHeight: 10
+  pendingObject: {fileID: 0}

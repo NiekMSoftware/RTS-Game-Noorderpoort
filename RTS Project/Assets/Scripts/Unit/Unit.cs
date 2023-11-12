@@ -8,8 +8,9 @@ public class Unit : MonoBehaviour
     [SerializeField] protected int unitHealth;
     [SerializeField] protected int unitMaxHealth;
     [SerializeField] protected int unitHealing;
+    public int UnitHealth { get { return unitHealth; } set { unitHealth = value; } }
 
-    [Space]
+        [Space]
     [SerializeField] protected int unitSpeed;
     [SerializeField] protected int unitDamage;
 

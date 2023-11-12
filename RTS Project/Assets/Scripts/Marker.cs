@@ -10,7 +10,5 @@ public class Marker : MonoBehaviour
         yield return new WaitForSeconds(destroyTime);
 
         Destroy(gameObject);
-
-        yield return null;
     }
 }

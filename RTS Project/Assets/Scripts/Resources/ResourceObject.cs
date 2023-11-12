@@ -6,6 +6,7 @@ public class ResourceObject : MonoBehaviour
 {
     [SerializeField] public ItemSlot slot;
     private ResourceObjectManager resourceManager;
+
     private void Awake()
     {
         resourceManager = FindObjectOfType<ResourceObjectManager>();

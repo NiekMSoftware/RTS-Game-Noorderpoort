@@ -331,7 +331,8 @@ GameObject:
   - component: {fileID: 198055755}
   - component: {fileID: 198055754}
   - component: {fileID: 198055753}
-  m_Layer: 0
+  - component: {fileID: 198055757}
+  m_Layer: 7
   m_Name: Building
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -355,7 +356,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -424,6 +425,33 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &198055757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 198055752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc5805b09e7797c43ad44c88cb534759, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingHp: 50
+  maxWorkers: 5
+  maxSoldiers: 5
+  currentStorage: []
+  workers: []
+  soldiers: []
+  jobName: 
+  jobs: 0
+  currentState: 0
+  scanRange: 200
+  recipes: []
+  points:
+    pointType: 0
+    amount: 0
+  occupancyType: 2
 --- !u!1 &247986898
 GameObject:
   m_ObjectHideFlags: 0
@@ -445,7 +473,7 @@ GameObject:
   m_TagString: AI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!195 &247986899
 NavMeshAgent:
@@ -456,7 +484,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 247986898}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.1
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -466,7 +494,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 1
+  m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!136 &247986901
@@ -577,20 +605,25 @@ MonoBehaviour:
   unitDamage: 10
   job: 0
   typeUnit: 0
-  selectionObject: {fileID: 198055752}
+  selectionObject: {fileID: 262794300}
   myAgent: {fileID: 247986899}
   groundLayer:
     serializedVersion: 2
     m_Bits: 1
-  marker: {fileID: 198055752}
+  marker: {fileID: 0}
   clickableUnit:
     serializedVersion: 2
     m_Bits: 64
+  enemyHouse: {fileID: 0}
   damageInterval: 4
   damageAmount: 20
-  enemyLayer:
+  Building:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 0
+  Enemy:
+    serializedVersion: 2
+    m_Bits: 0
+  buildingbase: {fileID: 0}
 --- !u!114 &247986906
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -598,7 +631,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 247986898}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dacdf40a663ad0b43840765d2de62f6e, type: 3}
   m_Name: 
@@ -750,7 +783,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 262794300}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -0.5, z: 0}
+  m_LocalPosition: {x: 0, y: -0.795, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -769,7 +802,7 @@ GameObject:
   - component: {fileID: 498492746}
   - component: {fileID: 498492745}
   - component: {fileID: 498492744}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -855,8 +888,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 498492743}
   m_LocalRotation: {x: -0, y: -0.69561464, z: -0, w: 0.7184152}
-  m_LocalPosition: {x: -0.46, y: -3.85, z: 20.6}
-  m_LocalScale: {x: 2.0279, y: 2.9372675, z: 3.7067847}
+  m_LocalPosition: {x: -0.46000004, y: -3.8500004, z: 20.6}
+  m_LocalScale: {x: 2.0279, y: 2.9372675, z: 3.7067852}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -874,6 +907,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AI
+      objectReference: {fileID: 0}
+    - target: {fileID: 3721838096702204654, guid: 03430657f2f14514ba955174b175ae45,
+        type: 3}
+      propertyPath: m_Layer
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 9150157795128708509, guid: 03430657f2f14514ba955174b175ae45,
         type: 3}
@@ -1034,7 +1072,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 693723705}
   m_LocalRotation: {x: -0, y: 0.019282553, z: -0, w: 0.9998141}
-  m_LocalPosition: {x: -1, y: -5.3511667, z: 14.721962}
+  m_LocalPosition: {x: -1, y: -5.3511667, z: 14.5}
   m_LocalScale: {x: 3.8282938, y: 1, z: 3.0337532}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -12,6 +12,7 @@ public class ResourceAreaSpawner : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float maxAngle;
     [SerializeField] private float maxHeight;
+    [SerializeField] private float minHeight;
 
     [System.Serializable]
     class SpawnableResource
@@ -60,7 +61,7 @@ public class ResourceAreaSpawner : MonoBehaviour
 
                         if (rayAngle <= maxAngle)
                         {
-                            if (position.y <= maxHeight)
+                            if (position.y <= maxHeight && position.y >= minHeight)
                             {
                                 if (!Physics.CheckSphere(position, checkRadius, resourceLayer))
                                 {

@@ -6,8 +6,7 @@ TagManager:
   tags:
   - AI
   - Ground
-  - StoneResource
-  - SelectionManager
+  - EnemyBuilding
   layers:
   - Default
   - TransparentFX
@@ -22,8 +21,8 @@ TagManager:
   - Obstacle
   - Target
   - Resources
-  - MiniMap
-  - 
+  - FogOfWar
+  - Enemy
   - 
   - 
   - 
