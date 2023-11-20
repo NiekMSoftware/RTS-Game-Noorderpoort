@@ -56,6 +56,14 @@ public class Worker : Unit
         resourceItemManager = _resourceItemManager;
     }
 
+    public void UnAssignWorker()
+    {
+        workerHouse = null;
+        resourceTarget = null;
+        resourceObjectManager = null;
+        currentStorage.amount = 0;
+    }
+
     protected void AddItemToWorkerStorage(ItemData itemData)
     {
         if (itemData == resourceItem)

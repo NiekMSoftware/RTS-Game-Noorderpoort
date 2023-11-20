@@ -41,7 +41,7 @@ public class SelectionManager : MonoBehaviour
         {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0))//left mouse button
             {
 
                 if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, selectable))
@@ -66,7 +66,7 @@ public class SelectionManager : MonoBehaviour
                     DeselectAll();
                 }
             }
-            else if (Input.GetMouseButtonDown(1))
+            else if (Input.GetMouseButtonDown(1))//right mouse button
             {
                 if (Physics.Raycast(ray, out RaycastHit hit2, Mathf.Infinity, building))
                 {
@@ -107,6 +107,15 @@ public class SelectionManager : MonoBehaviour
                         }
                     }
                 }
+            }
+            else if (Input.GetMouseButtonDown(2))//middle mouse
+            {
+                if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, selectable) && hit.collider.GetComponent<Worker>())
+                {
+                    hit.collider.gameObject.GetComponent<Worker>().UnAssignWorker();
+                    print("123");
+                }
+
             }
         }
 
