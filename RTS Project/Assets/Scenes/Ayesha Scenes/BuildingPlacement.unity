@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -545,7 +545,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -814,7 +815,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -916,13 +918,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f94e019d61bc3f145a68c41165eb1dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objects:
-  - {fileID: 6664230956610545413, guid: fb3a63f14325dec4fa1f27bb6eaac316, type: 3}
-  - {fileID: 6687049504355165105, guid: c6b5ed013b2cf2c4689c875d2e2573a8, type: 3}
-  - {fileID: 9125055226363149098, guid: ada37840f86d6c3418794b747e8b8e90, type: 3}
-  layerMask:
+  buildings: []
+  resources: {fileID: 0}
+  terrain: {fileID: 0}
+  buttons: []
+  pointManager: {fileID: 0}
+  buildProgressPrefab: {fileID: 0}
+  buildProgressHeight: 0
+  buildParticle: {fileID: 0}
+  buildingMaterial: {fileID: 0}
+  correctPlaceMaterial: {fileID: 0}
+  incorrectPlaceMaterial: {fileID: 0}
+  buildErrorPrefab: {fileID: 0}
+  buildErrorParent: {fileID: 0}
+  buildLayerMask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 0
+  tempBuildingLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  degreesToRotate: 90
+  buildErrorFloatUpSpeed: 0
+  maxAngle: 0
+  maxHeight: 0
+  minHeight: 0
+  pendingObject: {fileID: 0}
 --- !u!4 &832008262
 Transform:
   m_ObjectHideFlags: 0
@@ -1336,7 +1359,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
