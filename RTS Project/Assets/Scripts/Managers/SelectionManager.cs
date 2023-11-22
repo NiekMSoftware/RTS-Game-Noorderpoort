@@ -53,7 +53,6 @@ public class SelectionManager : MonoBehaviour
                 if (Physics.Raycast(ray, out RaycastHit hit1, Mathf.Infinity, building))
                 {
                     selectedBuilding2 = hit1.transform.GetComponent<BuildingBase>();
-                    selectedBuilding2.DeselectBuilding();
                     selectedBuilding2.SelectBuilding();
                 }
 

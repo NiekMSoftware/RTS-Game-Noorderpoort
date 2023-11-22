@@ -14,8 +14,9 @@ public class PlayerWorkerSpawner : MonoBehaviour
             Vector3 position = transform.position;
             position.x += Random.Range(spawnScale.x, spawnScale.y);
             position.z += Random.Range(spawnScale.x, spawnScale.y);
-            position.y = terrain.SampleHeight(position) + (prefab.transform.lossyScale.y * 2);
-            Instantiate(prefab, position, Quaternion.identity, transform);
+            position.y = terrain.SampleHeight(position) + (prefab.transform.lossyScale.y);
+            GameObject spawnedAI = Instantiate(prefab, position, Quaternion.identity, transform);
+            //spawnedAI.GetComponent<NavMeshAgent>().Warp(position);
         }
     }
 
