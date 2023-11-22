@@ -61,6 +61,9 @@ public class Worker : Unit
         resourceTarget = null;
         resourceObjectManager = null;
         currentStorage.amount = 0;
+        currentState = State.Idling;
+        buildingBase = null;
+        myAgent.ResetPath();
     }
 
     protected void AddItemToWorkerStorage(ItemData itemData)
@@ -184,31 +187,34 @@ public class Worker : Unit
                 break;
 
             case State.Idling:
+                if (buildingBase)
+                {
+                    // If there are resources, go find resource to get
+                    if (!resourceTarget && resourceObjectManager.resources.Count > resourceObjectManager.occupiedResources.Count)
+                    {
+                        currentState = State.Moving;
+                        resourceTarget = resourceObjectManager.FindClosestResource(buildingBase.transform, resourceItem, this);
+                    }
 
-                // If there are resources, go find resource to get
-                if (!resourceTarget && resourceObjectManager.resources.Count > resourceObjectManager.occupiedResources.Count)
-                {
-                    currentState = State.Moving;
-                    resourceTarget = resourceObjectManager.FindClosestResource(buildingBase.transform, resourceItem, this);
+                    // If inventory isnt full in building and working go to moving
+                    if (currentStorage.GetAmount() < maxStorage &&
+                        buildingBase.GetStorage(resourceItem).GetAmount() < buildingBase.GetStorage(resourceItem).GetMaxAmount()
+                        && resourceTarget)
+                    {
+                        currentState = State.Moving;
+                    }
+
+                    // Go back to the workerhouse
+                    if (Vector3.Distance(transform.position, workerHouse.transform.position) <= transferRange)
+                    {
+                        myAgent.isStopped = true;
+                    }
+                    else
+                    {
+                        myAgent.SetDestination(workerHouse.transform.position);
+                    }
                 }
 
-                // If inventory isnt full in building and working go to moving
-                if (currentStorage.GetAmount() < maxStorage &&
-                    buildingBase.GetStorage(resourceItem).GetAmount() < buildingBase.GetStorage(resourceItem).GetMaxAmount()
-                    && resourceTarget)
-                {
-                    currentState = State.Moving;
-                }
-
-                // Go back to the workerhouse
-                if (Vector3.Distance(transform.position, workerHouse.transform.position) <= transferRange)
-                {
-                    myAgent.isStopped = true;
-                }
-                else
-                {
-                    myAgent.SetDestination(workerHouse.transform.position);
-                }
                 break;
 
             case State.Gathering:

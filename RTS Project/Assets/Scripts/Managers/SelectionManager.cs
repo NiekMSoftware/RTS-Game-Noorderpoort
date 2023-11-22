@@ -126,9 +126,7 @@ public class SelectionManager : MonoBehaviour
                 if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, selectable) && hit.collider.GetComponent<Worker>())
                 {
                     hit.collider.gameObject.GetComponent<Worker>().UnAssignWorker();
-                    print("123");
                 }
-
             }
         }
 
