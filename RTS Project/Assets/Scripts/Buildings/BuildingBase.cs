@@ -9,8 +9,6 @@ public class BuildingBase : MonoBehaviour
     [SerializeField] private Recipe[] recipes;
     [SerializeField] private BuildingPoints points;
     [SerializeField] private Outline outline;
-    [SerializeField] private float outlineAnimationSpeed;
-    [SerializeField] private float outlineAnimationMaxSize;
 
     private List<Material> savedMaterials = new();
     private GameObject particleObject;
@@ -209,17 +207,17 @@ public class BuildingBase : MonoBehaviour
         {
             if (!hasGrown)
             {
-                while (outline.OutlineWidth < outlineAnimationMaxSize)
+                while (outline.OutlineWidth < uiManager.GetOutlineAnimationMaxSize())
                 {
                     outline.OutlineWidth += 0.1f;
 
-                    if (outline.OutlineWidth >= outlineAnimationMaxSize)
+                    if (outline.OutlineWidth >= uiManager.GetOutlineAnimationMaxSize())
                     {
                         hasGrown = true;
-                        yield return new WaitForSeconds(1);
+                        yield return new WaitForSeconds(uiManager.GetOutlineAnimationFinishedWaitTime());
                     }
 
-                    yield return new WaitForSeconds(outlineAnimationSpeed);
+                    yield return new WaitForSeconds(uiManager.GetOutlineAnimationSpeed());
                 }
             }
             else
@@ -233,7 +231,7 @@ public class BuildingBase : MonoBehaviour
                         isDone = true;
                     }
 
-                    yield return new WaitForSeconds(outlineAnimationSpeed);
+                    yield return new WaitForSeconds(uiManager.GetOutlineAnimationSpeed());
                 }
             }
         }
