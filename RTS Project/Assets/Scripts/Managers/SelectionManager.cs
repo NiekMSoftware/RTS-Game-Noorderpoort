@@ -13,15 +13,15 @@ public class SelectionManager : MonoBehaviour
     [SerializeField] private GameObject markerPrefab;
 
     [SerializeField] RectTransform boxVisual;
-    public GameObject selectedBuilding;
     public GameObject selectedEnemy;
 
-    private BuildingBase selectedBuilding2;
+    private BuildingBase selectedBuilding;
+    private GameObject buildingToAttack;
 
     Rect selectionBox;
 
-    Vector2 startPosition;
-    Vector2 endPosition;
+    Vector2 boxStartPosition;
+    Vector2 boxEndPosition;
 
     private Camera mainCamera;
 
@@ -32,71 +32,72 @@ public class SelectionManager : MonoBehaviour
     {
         mainCamera = Camera.main;
 
-        startPosition = Vector2.zero;
-        endPosition = Vector2.zero;
+        boxStartPosition = Vector2.zero;
+        boxEndPosition = Vector2.zero;
         DrawBoxVisual();
     }
 
     private void Update()
     {
-        if (Input.anyKeyDown)
+        /*if (Input.anyKeyDown)
         {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
 
             if (Input.GetMouseButtonDown(0))//left mouse button
             {
-                if (selectedBuilding2 != null)
+                if (selectedBuilding != null)
                 {
-                    selectedBuilding2.DeselectBuilding();
+                    selectedBuilding.DeselectBuilding();
                 }
 
-                if (Physics.Raycast(ray, out RaycastHit hit1, Mathf.Infinity, building))
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, building))
                 {
-                    selectedBuilding2 = hit1.transform.GetComponent<BuildingBase>();
-                    selectedBuilding2.SelectBuilding();
+                    selectedBuilding = hit.transform.GetComponent<BuildingBase>();
+                    selectedBuilding.SelectBuilding();
                 }
 
-                if (Physics.Raycast(ray, out RaycastHit hit2, Mathf.Infinity, selectable))
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, selectable))
                 {
                     if (Input.GetKey(KeyCode.LeftShift))
                     {
-                        if (!selectedUnits.Contains(hit2.collider.gameObject))
+                        if (!selectedUnits.Contains(hit.collider.gameObject))
                         {
-                            selectedUnits.Add(hit2.collider.gameObject);
-                            hit2.collider.GetComponent<Unit>().SetSelectionObject(true);
+                            selectedUnits.Add(hit.collider.gameObject);
+                            hit.collider.GetComponent<Unit>().SetSelectionObject(true);
                         }
                     }
                     else
                     {
-                        DeselectAll();
-                        selectedUnits.Add(hit2.collider.gameObject);
-                        hit2.collider.GetComponent<Unit>().SetSelectionObject(true);
+                        DeselectAllUnits();
+                        selectedUnits.Add(hit.collider.gameObject);
+                        hit.collider.GetComponent<Unit>().SetSelectionObject(true);
                     }
                 }
                 else
                 {
-                    DeselectAll();
+                    DeselectAllUnits();
                 }
             }
             else if (Input.GetMouseButtonDown(1))//right mouse button
             {
-                if (Physics.Raycast(ray, out RaycastHit hit2, Mathf.Infinity, building))
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, building))
                 {
                     Debug.Log("Selected building");
-                    selectedBuilding = hit2.collider.gameObject;
-                    BuildingSelected();
+                    BuildingSelected(hit.transform.gameObject);
+                    buildingToAttack = hit.transform.gameObject;
 
                     foreach (GameObject selectedUnit in selectedUnits)
                     {
                         SoldierUnit soldier = selectedUnit.GetComponent<SoldierUnit>();
                         foreach (var unit in selectedUnits)
                         {
-                            unit.GetComponent<Unit>().SendUnitToLocation(hit2.point);
-                            buildingPosition = hit2.point;
+                            unit.GetComponent<Unit>().SendUnitToLocation(hit.point);
+                            buildingPosition = hit.point;
                         }
                     }
                 }
-                else if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, ground))
+                else if (Physics.Raycast(ray, out hit, Mathf.Infinity, ground))
                 {
                     Instantiate(markerPrefab, hit.point, Quaternion.identity);
                     foreach (var unit in selectedUnits)
@@ -104,55 +105,55 @@ public class SelectionManager : MonoBehaviour
                         unit.GetComponent<Unit>().SendUnitToLocation(hit.point);
                     }
                 }
-                if (Physics.Raycast(ray, out RaycastHit hitEnemy, Mathf.Infinity, Enemy))
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, Enemy))
                 {
-                    selectedEnemy = hitEnemy.collider.gameObject;
+                    selectedEnemy = hit.collider.gameObject;
 
                     foreach (GameObject selectedUnit in selectedUnits)
                     {
                         SoldierUnit soldier = selectedUnit.GetComponent<SoldierUnit>();
                         foreach (var unit in selectedUnits)
                         {
-                            unit.GetComponent<Unit>().SendUnitToLocation(hitEnemy.point);
-                            print(hitEnemy);
-                            enemyPosition = hitEnemy.point;
+                            unit.GetComponent<Unit>().SendUnitToLocation(hit.point);
+                            print(hit);
+                            enemyPosition = hit.point;
                         }
                     }
                 }
             }
             else if (Input.GetMouseButtonDown(2))//middle mouse
             {
-                if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, selectable) && hit.collider.GetComponent<Worker>())
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, selectable) && hit.collider.GetComponent<Worker>())
                 {
                     hit.collider.gameObject.GetComponent<Worker>().UnAssignWorker();
                 }
             }
-        }
+        }*/
 
         if (Input.GetMouseButtonDown(0))
         {
-            startPosition = Input.mousePosition;
+            boxStartPosition = Input.mousePosition;
             selectionBox = new Rect();
         }
 
         if (Input.GetMouseButton(0))
         {
-            endPosition = Input.mousePosition;
+            boxEndPosition = Input.mousePosition;
             DrawBoxVisual();
-            DrawSelection();
+            CalculateSelection();
         }
 
         if (Input.GetMouseButtonUp(0))
         {
             UnitSelection();
 
-            startPosition = Vector2.zero;
-            endPosition = Vector2.zero;
+            boxStartPosition = Vector2.zero;
+            boxEndPosition = Vector2.zero;
             DrawBoxVisual();
         }
     }
 
-    private void BuildingSelected()
+    private void BuildingSelected(GameObject hit)
     {
         if (selectedUnits.Count > 0)
         {
@@ -180,7 +181,7 @@ public class SelectionManager : MonoBehaviour
         }
     }
 
-    private void DeselectAll()
+    private void DeselectAllUnits()
     {
         foreach (GameObject unit in selectedUnits)
         {
@@ -191,8 +192,10 @@ public class SelectionManager : MonoBehaviour
 
     void DrawBoxVisual()
     {
-        Vector2 boxStart = startPosition;
-        Vector2 boxEnd = endPosition;
+        Vector2 boxStart = boxStartPosition;
+        //Vector2 boxStart = new Vector2(selectionBox.left, selectionBox.top);
+        //Vector2 boxEnd = new Vector2(selectionBox.right, selectionBox.bottom);
+        Vector2 boxEnd = boxEndPosition;
 
         Vector2 boxCenter = (boxStart + boxEnd) / 2;
         boxVisual.position = boxCenter;
@@ -200,30 +203,31 @@ public class SelectionManager : MonoBehaviour
         Vector2 boxSize = new(Mathf.Abs(boxStart.x - boxEnd.x), Mathf.Abs(boxStart.y - boxEnd.y));
 
         boxVisual.sizeDelta = boxSize;
+
     }
 
-    void DrawSelection()
+    void CalculateSelection()
     {
-        if (Input.mousePosition.x < startPosition.x)
+        if (Input.mousePosition.x < boxStartPosition.x)
         {
             selectionBox.xMin = Input.mousePosition.x;
-            selectionBox.xMax = startPosition.x;
+            selectionBox.xMax = boxStartPosition.x;
         }
         else
         {
             selectionBox.xMax = Input.mousePosition.x;
-            selectionBox.xMin = startPosition.x;
+            selectionBox.xMin = boxStartPosition.x;
         }
 
-        if (Input.mousePosition.y < startPosition.y)
+        if (Input.mousePosition.y < boxStartPosition.y)
         {
             selectionBox.yMin = Input.mousePosition.y;
-            selectionBox.yMax = startPosition.y;
+            selectionBox.yMax = boxStartPosition.y;
         }
         else
         {
             selectionBox.yMax = Input.mousePosition.y;
-            selectionBox.yMin = startPosition.y;
+            selectionBox.yMin = boxStartPosition.y;
         }
     }
 
@@ -243,4 +247,6 @@ public class SelectionManager : MonoBehaviour
             }
         }
     }
+
+    public GameObject GetBuildingToAttack() => buildingToAttack;
 }

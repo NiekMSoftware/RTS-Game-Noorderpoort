@@ -178,4 +178,14 @@ public class ResourceBuildingBase : BuildingBase
     {
         return maxWorkers;
     }
+
+    public override void DestroyBuilding()
+    {
+        foreach (var worker in workers)
+        {
+            RemoveWorkerFromBuilding(worker);
+        }
+
+        base.DestroyBuilding();
+    }
 }
