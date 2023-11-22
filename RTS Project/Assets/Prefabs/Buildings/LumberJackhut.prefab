@@ -56,8 +56,8 @@ MonoBehaviour:
     pointType: 1
     amount: 1
   outline: {fileID: 7619373554289024790}
-  outlineAnimationSpeed: 0.01
-  outlineAnimationMaxSize: 5
+  outlineAnimationSpeed: 0.0001
+  outlineAnimationMaxSize: 8
   occupancyType: 0
   maxWorkers: 2
   currentStorage:

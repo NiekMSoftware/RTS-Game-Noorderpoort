@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3766747821306631617}
   - component: {fileID: 5247091873377409366}
   - component: {fileID: 4694457708341824937}
+  - component: {fileID: -1451564478840672773}
   m_Layer: 7
   m_Name: MetalMine
   m_TagString: Untagged
@@ -47,16 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildingHp: 50
-  maxWorkers: 2
-  currentStorage:
-  - data: {fileID: 11400000, guid: 161a6795559e79647b98c0f3e168464e, type: 2}
-    amount: 0
-    maxAmount: 10000
-  workers: []
-  jobName: Metal Miner
-  jobs: 2
   currentState: 0
-  scanRange: 500
   recipes:
   - data: {fileID: 11400000, guid: 0c0ea06af6a171e42a725e0fb10167fc, type: 2}
     amountNeeded: 30
@@ -65,6 +57,19 @@ MonoBehaviour:
   points:
     pointType: 1
     amount: 1
+  outline: {fileID: -1451564478840672773}
+  outlineAnimationSpeed: 0.0001
+  outlineAnimationMaxSize: 8
+  occupancyType: 0
+  maxWorkers: 2
+  currentStorage:
+  - data: {fileID: 11400000, guid: 161a6795559e79647b98c0f3e168464e, type: 2}
+    amount: 0
+    maxAmount: 10000
+  workers: []
+  jobName: Metal Miner
+  jobs: 2
+  scanRange: 500
 --- !u!65 &4694457708341824937
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -86,6 +91,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.4566565, y: 3.0277228, z: 2.0760422}
   m_Center: {x: 0, y: 0.46866614, z: 0}
+--- !u!114 &-1451564478840672773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2432438935407483892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1001 &6717301365051993959
 PrefabInstance:
   m_ObjectHideFlags: 0

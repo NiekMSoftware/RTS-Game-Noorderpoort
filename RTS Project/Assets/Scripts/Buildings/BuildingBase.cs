@@ -17,11 +17,20 @@ public class BuildingBase : MonoBehaviour
 
     private Material buildingMaterial;
 
+    private UIManager uiManager;
+
+    private float outlineDefaultSize;
+
     public enum Jobs { Wood, Stone, Metal }
 
     private void Awake()
     {
+        outline = GetComponent<Outline>();
+
+        uiManager = FindObjectOfType<UIManager>();
+
         outline.enabled = false;
+        outlineDefaultSize = outline.OutlineWidth;
     }
 
     [SerializeField] private OccupancyType occupancyType;
@@ -114,6 +123,20 @@ public class BuildingBase : MonoBehaviour
                 mr2.materials = materials;
             }
         }
+    }
+
+    public void SelectBuilding()
+    {
+        print("select building!");
+        uiManager.SetBuildingSelectPanel(true);
+        outline.OutlineWidth = outlineDefaultSize;
+        outline.enabled = true;
+    }
+
+    public void DeselectBuilding()
+    {
+        uiManager.SetBuildingSelectPanel(false);
+        outline.enabled = false;
     }
 
     private void ApplyObjectMaterials()

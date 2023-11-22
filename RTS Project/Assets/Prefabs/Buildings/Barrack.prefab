@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 3650219716435031286}
   - component: {fileID: 6174070010329359275}
   - component: {fileID: 1860279640408473471}
+  - component: {fileID: 6091475512797295991}
   m_Layer: 7
   m_Name: Barrack
   m_TagString: Untagged
@@ -161,6 +162,10 @@ MonoBehaviour:
   points:
     pointType: 2
     amount: 1
+  outline: {fileID: 0}
+  outlineAnimationSpeed: 0.0001
+  outlineAnimationMaxSize: 8
+  occupancyType: 0
   unitToSpawn: {fileID: 6687049504355165105, guid: c6b5ed013b2cf2c4689c875d2e2573a8,
     type: 3}
   spawnPosSoldier: {fileID: 0}
@@ -170,6 +175,24 @@ MonoBehaviour:
   barrackDoor2: {fileID: 3338330323617080737}
   selectionManager: {fileID: 0}
   unitAgent: {fileID: 0}
+--- !u!114 &6091475512797295991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5156782261921279343}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &7988776410278182275
 GameObject:
   m_ObjectHideFlags: 0

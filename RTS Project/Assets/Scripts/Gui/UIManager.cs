@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
-using System.Linq;
+using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI[] resourceTexts;
     [SerializeField] private ResourceItemManager playerResourceItemManager;
+    [SerializeField] private GameObject buildingSelectPanel;
 
     private void Update()
     {
@@ -26,4 +24,6 @@ public class UIManager : MonoBehaviour
             }
         }
     }
+
+    public void SetBuildingSelectPanel(bool value) => buildingSelectPanel.SetActive(value);
 }

@@ -16,6 +16,8 @@ public class SelectionManager : MonoBehaviour
     public GameObject selectedBuilding;
     public GameObject selectedEnemy;
 
+    private BuildingBase selectedBuilding2;
+
     Rect selectionBox;
 
     Vector2 startPosition;
@@ -43,22 +45,33 @@ public class SelectionManager : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
+                if (selectedBuilding2 != null)
+                {
+                    selectedBuilding2.DeselectBuilding();
+                }
 
-                if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, selectable))
+                if (Physics.Raycast(ray, out RaycastHit hit1, Mathf.Infinity, building))
+                {
+                    selectedBuilding2 = hit1.transform.GetComponent<BuildingBase>();
+                    selectedBuilding2.DeselectBuilding();
+                    selectedBuilding2.SelectBuilding();
+                }
+
+                if (Physics.Raycast(ray, out RaycastHit hit2, Mathf.Infinity, selectable))
                 {
                     if (Input.GetKey(KeyCode.LeftShift))
                     {
-                        if (!selectedUnits.Contains(hit.collider.gameObject))
+                        if (!selectedUnits.Contains(hit2.collider.gameObject))
                         {
-                            selectedUnits.Add(hit.collider.gameObject);
-                            hit.collider.GetComponent<Unit>().SetSelectionObject(true);
+                            selectedUnits.Add(hit2.collider.gameObject);
+                            hit2.collider.GetComponent<Unit>().SetSelectionObject(true);
                         }
                     }
                     else
                     {
                         DeselectAll();
-                        selectedUnits.Add(hit.collider.gameObject);
-                        hit.collider.GetComponent<Unit>().SetSelectionObject(true);
+                        selectedUnits.Add(hit2.collider.gameObject);
+                        hit2.collider.GetComponent<Unit>().SetSelectionObject(true);
                     }
                 }
                 else
