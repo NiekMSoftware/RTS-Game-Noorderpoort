@@ -1,9 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class SoldierUnit : Unit
 {
@@ -16,7 +12,6 @@ public class SoldierUnit : Unit
     public GameObject EnemyGameObject;
     public GameObject SoldierGameObject;
     public GameObject buildingGameObject;
-    [SerializeField] private GameObject PlaceHolder;
 
     private bool isAttacking = false;
     private float damageTimer = 0.0f;
@@ -34,10 +29,10 @@ public class SoldierUnit : Unit
     {
         SpawnBuildings();
         EnemyGameObject = selectionmanager.selectedEnemy;
-        if(EnemyGameObject != null)
+        if (EnemyGameObject != null)
         {
             //DealDamageToEnemiesInRange();
-            if (Vector3.Distance(SoldierGameObject.transform.position, EnemyGameObject.transform.position) <5)
+            if (Vector3.Distance(SoldierGameObject.transform.position, EnemyGameObject.transform.position) < 5)
             {
                 Debug.Log("Enemy in range");
                 Debug.Log("moving to enemy myself");
@@ -49,8 +44,9 @@ public class SoldierUnit : Unit
 
     private void SpawnBuildings()
     {
-        buildingGameObject = selectionmanager.selectedBuilding;
-        buildingBase = buildingGameObject.GetComponent<BuildingBase>();
+        buildingGameObject = selectionmanager.GetBuildingToAttack();
+        if (buildingBase)
+            buildingBase = buildingGameObject.GetComponent<BuildingBase>();
 
         if (buildingGameObject != null)
         {
@@ -69,7 +65,7 @@ public class SoldierUnit : Unit
     {
         if (isAttacking)
         {
-            Debug.Log("isAttacking is True");          
+            Debug.Log("isAttacking is True");
 
             damageTimer += Time.deltaTime;
 
@@ -79,16 +75,11 @@ public class SoldierUnit : Unit
                 print(buildingBase.buildingHp);
                 damageTimer = 0.0f;
             }
-            if(buildingBase.buildingHp <= 0)
+            if (buildingBase.buildingHp <= 0)
             {
                 Debug.Log("building Destroyed");
                 Destroy(buildingGameObject);
                 isAttacking = false;
-
-                if(selectionmanager.selectedBuilding == null)
-                {
-                    selectionmanager.selectedBuilding = PlaceHolder;
-                }
             }
         }
     }
@@ -105,7 +96,7 @@ public class SoldierUnit : Unit
             if (damageTimer >= damageInterval)
             {
                 enemyHp.UnitHealth -= damageAmount;
-                print(enemyHp.UnitHealth);              
+                print(enemyHp.UnitHealth);
                 damageTimer = 0.0f;
             }
             if (enemyHp.UnitHealth <= 0)
@@ -114,10 +105,10 @@ public class SoldierUnit : Unit
                 Destroy(EnemyGameObject);
                 isAttacking = false;
             }
-            if(selectionmanager.selectedEnemy == null)
-            {
-                selectionmanager.selectedEnemy = PlaceHolder;
-            }
+            //if (selectionmanager.selectedEnemy == null)
+            //{
+            //    selectionmanager.selectedEnemy = placeHolder;
+            //}
         }
         /*Collider[] colliders = Physics.OverlapBox(
             transform.position, Vector3.one, Quaternion.identity, Enemy);

@@ -123,6 +123,14 @@ public class BuildingBase : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Delete))
+        {
+            DestroyBuilding();
+        }
+    }
+
     public void SelectBuilding()
     {
         print("select building!");
@@ -135,6 +143,12 @@ public class BuildingBase : MonoBehaviour
     {
         uiManager.SetBuildingSelectPanel(false);
         outline.enabled = false;
+    }
+
+    public virtual void DestroyBuilding()
+    {
+        uiManager.SetBuildingSelectPanel(false);
+        Destroy(gameObject);
     }
 
     private void ApplyObjectMaterials()
