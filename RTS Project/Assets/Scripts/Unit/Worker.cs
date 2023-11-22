@@ -22,7 +22,6 @@ public class Worker : Unit
     private ResourceBuildingBase buildingBase;
     private string jobName;
 
-    public bool assigned = false;
 
     private void Start()
     {
@@ -53,17 +52,22 @@ public class Worker : Unit
         buildingBase = workerHouse.GetComponent<ResourceBuildingBase>();
         resourceItem = buildingBase.GetItemData();
         resourceItemManager = _resourceItemManager;
+        currentState = State.Assigning;
     }
 
     public void UnAssignWorker()
     {
-        workerHouse = null;
-        resourceTarget = null;
-        resourceObjectManager = null;
-        currentStorage.amount = 0;
-        currentState = State.Idling;
-        buildingBase = null;
-        myAgent.ResetPath();
+        if (workerHouse)
+        {
+            buildingBase.RemoveWorkerFromBuilding(this);
+            workerHouse = null;
+            resourceTarget = null;
+            resourceObjectManager = null;
+            currentStorage.amount = 0;
+            currentState = State.Idling;
+            buildingBase = null;
+            myAgent.ResetPath();
+        }
     }
 
     protected void AddItemToWorkerStorage(ItemData itemData)
