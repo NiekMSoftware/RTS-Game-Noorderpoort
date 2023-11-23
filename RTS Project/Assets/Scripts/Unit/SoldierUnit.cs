@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class SoldierUnit : Unit
 {
+    //wat moet er nog gefixt worden?
+    //- selectedenemy check maken voor als enemy destroyed wordt.
     public float damageInterval = 2.0f;
     public int damageAmount = 10;
     public LayerMask Building;
