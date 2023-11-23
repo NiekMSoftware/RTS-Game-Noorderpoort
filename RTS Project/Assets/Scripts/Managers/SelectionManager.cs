@@ -78,14 +78,18 @@ public class SelectionManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))//left mouse button
         {
-            SelectUnits(ray);
+            bool hasSelectedSuccessfully = SelectUnits(ray);
 
             SelectBuilding(ray);
+
+            if (!hasSelectedSuccessfully)
+            {
+                DeselectAllUnits();
+            }
         }
         else if (Input.GetMouseButtonDown(1))//right mouse button
         {
             MoveUnits(ray);
-            AttackEnemies(ray);
         }
         else if (Input.GetMouseButtonDown(2))//middle mouse
         {
@@ -141,7 +145,7 @@ public class SelectionManager : MonoBehaviour
         }
     }
 
-    private void SelectUnits(Ray ray)
+    private bool SelectUnits(Ray ray)
     {
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, selectable))
         {
@@ -159,11 +163,11 @@ public class SelectionManager : MonoBehaviour
                 selectedUnits.Add(hit.collider.gameObject);
                 hit.collider.GetComponent<Unit>().SetSelectionObject(true);
             }
+
+            return true;
         }
-        else
-        {
-            DeselectAllUnits();
-        }
+
+        return false;
     }
 
     private void SelectBuilding(Ray ray)
@@ -183,14 +187,13 @@ public class SelectionManager : MonoBehaviour
             buildingToAttack = hit.transform.gameObject;
             print(buildingToAttack);
 
+            print(selectedUnits.Count);
+
             foreach (GameObject selectedUnit in selectedUnits)
             {
-                SoldierUnit soldier = selectedUnit.GetComponent<SoldierUnit>();
-                foreach (var unit in selectedUnits)
-                {
-                    unit.GetComponent<Unit>().SendUnitToLocation(hit.point);
-                    buildingPosition = hit.point;
-                }
+                print("moving");
+                selectedUnit.GetComponent<Unit>().SendUnitToLocation(hit.point);
+                buildingPosition = hit.point;
             }
         }
     }
