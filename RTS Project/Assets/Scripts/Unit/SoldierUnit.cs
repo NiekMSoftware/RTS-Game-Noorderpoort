@@ -5,6 +5,8 @@ public class SoldierUnit : Unit
 {
     //wat moet er nog gefixt worden?
     //- selectedenemy check maken voor als enemy destroyed wordt.
+    //- building null check
+    //- fix enemy in range attack
     public float damageInterval = 2.0f;
     public int damageAmount = 10;
     public LayerMask Building;
@@ -29,7 +31,7 @@ public class SoldierUnit : Unit
 
     private void Update()
     {
-        SpawnBuildings();
+        ChooseBuildingToAttack();
         EnemyGameObject = selectionmanager.selectedEnemy;
         if (EnemyGameObject != null)
         {
@@ -44,14 +46,18 @@ public class SoldierUnit : Unit
         }
     }
 
-    private void SpawnBuildings()
+    private void ChooseBuildingToAttack()
     {
         buildingGameObject = selectionmanager.GetBuildingToAttack();
         if (buildingBase)
             buildingBase = buildingGameObject.GetComponent<BuildingBase>();
 
+
+        print("found building base1");
+
         if (buildingGameObject != null)
         {
+            print("found building base2");
             currentBuildingDist = Vector3.Distance(transform.position, selectionmanager.buildingPosition);
             if (currentBuildingDist <= 1)
             {
@@ -103,7 +109,7 @@ public class SoldierUnit : Unit
             }
             if (enemyHp.UnitHealth <= 0)
             {
-                Debug.Log("destoying enemy");
+                Debug.Log("destroying enemy");
                 Destroy(EnemyGameObject);
                 isAttacking = false;
             }

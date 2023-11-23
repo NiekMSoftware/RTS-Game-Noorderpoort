@@ -181,6 +181,7 @@ public class SelectionManager : MonoBehaviour
 
             BuildingSelected(hit.transform.gameObject);
             buildingToAttack = hit.transform.gameObject;
+            print(buildingToAttack);
 
             foreach (GameObject selectedUnit in selectedUnits)
             {
