@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    public GameObject Prefab;
+    public GameObject cubePrefab;
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            Instantiate(Prefab, transform.position, Quaternion.identity);
+            Instantiate(cubePrefab, transform.position, Quaternion.identity);
         }
     }
 }
