@@ -18,6 +18,8 @@ public class SelectionManager : MonoBehaviour
     private BuildingBase selectedBuilding;
     private GameObject buildingToAttack;
 
+    private Marker marker;
+
     Rect selectionBox;
 
     Vector2 boxStartPosition;
@@ -39,97 +41,13 @@ public class SelectionManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.anyKeyDown)
-        {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+        HandleSelection();
 
-            if (Input.GetMouseButtonDown(0))//left mouse button
-            {
-                if (selectedBuilding != null)
-                {
-                    selectedBuilding.DeselectBuilding();
-                }
+        BoxSelection();
+    }
 
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, building))
-                {
-                    selectedBuilding = hit.transform.GetComponent<BuildingBase>();
-                    selectedBuilding.SelectBuilding();
-                }
-
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, selectable))
-                {
-                    if (Input.GetKey(KeyCode.LeftShift))
-                    {
-                        if (!selectedUnits.Contains(hit.collider.gameObject))
-                        {
-                            selectedUnits.Add(hit.collider.gameObject);
-                            hit.collider.GetComponent<Unit>().SetSelectionObject(true);
-                        }
-                    }
-                    else
-                    {
-                        DeselectAllUnits();
-                        selectedUnits.Add(hit.collider.gameObject);
-                        hit.collider.GetComponent<Unit>().SetSelectionObject(true);
-                    }
-                }
-                else
-                {
-                    DeselectAllUnits();
-                }
-            }
-            else if (Input.GetMouseButtonDown(1))//right mouse button
-            {
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, building))
-                {
-                    Debug.Log("Selected building");
-                    BuildingSelected(hit.transform.gameObject);
-                    buildingToAttack = hit.transform.gameObject;
-
-                    foreach (GameObject selectedUnit in selectedUnits)
-                    {
-                        SoldierUnit soldier = selectedUnit.GetComponent<SoldierUnit>();
-                        foreach (var unit in selectedUnits)
-                        {
-                            unit.GetComponent<Unit>().SendUnitToLocation(hit.point);
-                            buildingPosition = hit.point;
-                        }
-                    }
-                }
-                else if (Physics.Raycast(ray, out hit, Mathf.Infinity, ground))
-                {
-                    Instantiate(markerPrefab, hit.point, Quaternion.identity);
-                    foreach (var unit in selectedUnits)
-                    {
-                        unit.GetComponent<Unit>().SendUnitToLocation(hit.point);
-                    }
-                }
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, Enemy))
-                {
-                    selectedEnemy = hit.collider.gameObject;
-
-                    foreach (GameObject selectedUnit in selectedUnits)
-                    {
-                        SoldierUnit soldier = selectedUnit.GetComponent<SoldierUnit>();
-                        foreach (var unit in selectedUnits)
-                        {
-                            unit.GetComponent<Unit>().SendUnitToLocation(hit.point);
-                            print(hit);
-                            enemyPosition = hit.point;
-                        }
-                    }
-                }
-            }
-            else if (Input.GetMouseButtonDown(2))//middle mouse
-            {
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, selectable) && hit.collider.GetComponent<Worker>())
-                {
-                    hit.collider.gameObject.GetComponent<Worker>().UnAssignWorker();
-                }
-            }
-        }
-
+    private void BoxSelection()
+    {
         if (Input.GetMouseButtonDown(0))
         {
             boxStartPosition = Input.mousePosition;
@@ -150,6 +68,129 @@ public class SelectionManager : MonoBehaviour
             boxStartPosition = Vector2.zero;
             boxEndPosition = Vector2.zero;
             DrawBoxVisual();
+        }
+    }
+
+    private void HandleSelection()
+    {
+        if (!Input.anyKeyDown) return;
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+
+        if (Input.GetMouseButtonDown(0))//left mouse button
+        {
+            SelectUnits(ray);
+
+            SelectBuilding(ray);
+        }
+        else if (Input.GetMouseButtonDown(1))//right mouse button
+        {
+            MoveUnits(ray);
+            AttackEnemies(ray);
+        }
+        else if (Input.GetMouseButtonDown(2))//middle mouse
+        {
+            UnassignWorkerTest(ray);
+        }
+    }
+
+    private void UnassignWorkerTest(Ray ray)
+    {
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, selectable) && hit.collider.GetComponent<Worker>())
+        {
+            hit.collider.gameObject.GetComponent<Worker>().UnAssignWorker();
+        }
+    }
+
+    private void AttackEnemies(Ray ray)
+    {
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Enemy))
+        {
+            selectedEnemy = hit.collider.gameObject;
+
+            foreach (GameObject selectedUnit in selectedUnits)
+            {
+                SoldierUnit soldier = selectedUnit.GetComponent<SoldierUnit>();
+                foreach (var unit in selectedUnits)
+                {
+                    unit.GetComponent<Unit>().SendUnitToLocation(hit.point);
+                    print(hit);
+                    enemyPosition = hit.point;
+                }
+            }
+        }
+    }
+
+    private void MoveUnits(Ray ray)
+    {
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, ground))
+        {
+            if (selectedUnits.Count <= 0) return;
+
+            if (marker)
+            {
+                Destroy(marker.gameObject);
+            }
+
+            marker = Instantiate(markerPrefab, hit.point, Quaternion.identity).GetComponent<Marker>();
+            foreach (var unitObject in selectedUnits)
+            {
+                Unit unit = unitObject.GetComponent<Unit>();
+                unit.SendUnitToLocation(hit.point);
+                marker.SetUnit(unit);
+            }
+        }
+    }
+
+    private void SelectUnits(Ray ray)
+    {
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, selectable))
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                if (!selectedUnits.Contains(hit.collider.gameObject))
+                {
+                    selectedUnits.Add(hit.collider.gameObject);
+                    hit.collider.GetComponent<Unit>().SetSelectionObject(true);
+                }
+            }
+            else
+            {
+                DeselectAllUnits();
+                selectedUnits.Add(hit.collider.gameObject);
+                hit.collider.GetComponent<Unit>().SetSelectionObject(true);
+            }
+        }
+        else
+        {
+            DeselectAllUnits();
+        }
+    }
+
+    private void SelectBuilding(Ray ray)
+    {
+        if (selectedBuilding != null)
+        {
+            selectedBuilding.DeselectBuilding();
+        }
+
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, building))
+        {
+            print("Selected building");
+            if (hit.transform.TryGetComponent(out selectedBuilding))
+                selectedBuilding.SelectBuilding();
+
+            BuildingSelected(hit.transform.gameObject);
+            buildingToAttack = hit.transform.gameObject;
+
+            foreach (GameObject selectedUnit in selectedUnits)
+            {
+                SoldierUnit soldier = selectedUnit.GetComponent<SoldierUnit>();
+                foreach (var unit in selectedUnits)
+                {
+                    unit.GetComponent<Unit>().SendUnitToLocation(hit.point);
+                    buildingPosition = hit.point;
+                }
+            }
         }
     }
 
@@ -193,8 +234,6 @@ public class SelectionManager : MonoBehaviour
     void DrawBoxVisual()
     {
         Vector2 boxStart = boxStartPosition;
-        //Vector2 boxStart = new Vector2(selectionBox.left, selectionBox.top);
-        //Vector2 boxEnd = new Vector2(selectionBox.right, selectionBox.bottom);
         Vector2 boxEnd = boxEndPosition;
 
         Vector2 boxCenter = (boxStart + boxEnd) / 2;
