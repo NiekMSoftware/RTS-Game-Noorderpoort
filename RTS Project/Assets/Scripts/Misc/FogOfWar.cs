@@ -7,6 +7,8 @@ using UnityEngine.UIElements;
 
 public class FogOfWar : MonoBehaviour
 {
+    // als de player al een stuk heeft weggehaald moet je het niet mee tellen.
+    //alles buiten de camera hoeft niet meegetelt te worden tijdens de updates.
     public PlayerTestMovement RefPlayerMovement;
     public GameObject FogOfWarPlane;
     public Transform Player;
@@ -16,8 +18,8 @@ public class FogOfWar : MonoBehaviour
     private float radiusSqr { get { return radius * radius; } }
 
     private Mesh mesh;
-    public Vector3[] vertices;
-    public Color[] colors;
+    private Vector3[] vertices;
+    private Color[] colors;
     // Start is called before the first frame update
     void Start()
     {
