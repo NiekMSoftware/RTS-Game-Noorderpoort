@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -438,15 +438,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildingHp: 50
-  maxWorkers: 5
-  maxSoldiers: 5
-  currentStorage: []
-  workers: []
-  soldiers: []
-  jobName: 
-  jobs: 0
   currentState: 0
-  scanRange: 200
   recipes: []
   points:
     pointType: 0
@@ -614,7 +606,6 @@ MonoBehaviour:
   clickableUnit:
     serializedVersion: 2
     m_Bits: 64
-  enemyHouse: {fileID: 0}
   damageInterval: 4
   damageAmount: 20
   Building:
@@ -623,7 +614,16 @@ MonoBehaviour:
   Enemy:
     serializedVersion: 2
     m_Bits: 0
-  buildingbase: {fileID: 0}
+  Enemies: []
+  Buildings: []
+  EnemyGameObject: {fileID: 0}
+  SoldierGameObject: {fileID: 0}
+  buildingGameObject: {fileID: 0}
+  PlaceHolder: {fileID: 0}
+  buildingBase: {fileID: 0}
+  enemyHp: {fileID: 0}
+  selectionmanager: {fileID: 0}
+  currentBuildingDist: 0
 --- !u!114 &247986906
 MonoBehaviour:
   m_ObjectHideFlags: 0

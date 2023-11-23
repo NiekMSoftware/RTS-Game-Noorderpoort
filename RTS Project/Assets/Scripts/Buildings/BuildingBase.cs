@@ -8,13 +8,28 @@ public class BuildingBase : MonoBehaviour
     [SerializeField] private States currentState;
     [SerializeField] private Recipe[] recipes;
     [SerializeField] private BuildingPoints points;
+    [SerializeField] private Outline outline;
 
     private List<Material> savedMaterials = new();
     private GameObject particleObject;
 
     private Material buildingMaterial;
 
+    private UIManager uiManager;
+
+    private float outlineDefaultSize;
+
     public enum Jobs { Wood, Stone, Metal }
+
+    private void Awake()
+    {
+        outline = GetComponent<Outline>();
+
+        uiManager = FindObjectOfType<UIManager>();
+
+        outline.enabled = false;
+        outlineDefaultSize = outline.OutlineWidth;
+    }
 
     [SerializeField] private OccupancyType occupancyType;
 
@@ -108,6 +123,34 @@ public class BuildingBase : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Delete))
+        {
+            DestroyBuilding();
+        }
+    }
+
+    public void SelectBuilding()
+    {
+        print("select building!");
+        uiManager.SetBuildingSelectPanel(true);
+        outline.OutlineWidth = outlineDefaultSize;
+        outline.enabled = true;
+    }
+
+    public void DeselectBuilding()
+    {
+        uiManager.SetBuildingSelectPanel(false);
+        outline.enabled = false;
+    }
+
+    public virtual void DestroyBuilding()
+    {
+        uiManager.SetBuildingSelectPanel(false);
+        Destroy(gameObject);
+    }
+
     private void ApplyObjectMaterials()
     {
         if (gameObject.TryGetComponent(out MeshRenderer mr))
@@ -155,5 +198,60 @@ public class BuildingBase : MonoBehaviour
                 }
             }
         }
+    }
+
+    public Outline GetOutline() => outline;
+
+    public void StartAnimateOutline()
+    {
+        hasGrown = false;
+        isDone = false;
+        outline.OutlineWidth = 0f;
+        outline.enabled = true;
+
+        StartCoroutine(AnimateOutline());
+    }
+
+    private bool hasGrown;
+    private bool isDone;
+
+    private IEnumerator AnimateOutline()
+    {
+        while (!isDone)
+        {
+            if (!hasGrown)
+            {
+                while (outline.OutlineWidth < uiManager.GetOutlineAnimationMaxSize())
+                {
+                    outline.OutlineWidth += 0.1f;
+
+                    if (outline.OutlineWidth >= uiManager.GetOutlineAnimationMaxSize())
+                    {
+                        hasGrown = true;
+                        yield return new WaitForSeconds(uiManager.GetOutlineAnimationFinishedWaitTime());
+                    }
+
+                    yield return new WaitForSeconds(uiManager.GetOutlineAnimationSpeed());
+                }
+            }
+            else
+            {
+                while (outline.OutlineWidth > 0f)
+                {
+                    outline.OutlineWidth -= 0.1f;
+
+                    if (outline.OutlineWidth <= 0f)
+                    {
+                        isDone = true;
+                    }
+
+                    yield return new WaitForSeconds(uiManager.GetOutlineAnimationSpeed());
+                }
+            }
+        }
+
+        outline.enabled = false;
+
+        yield return null;
     }
 }

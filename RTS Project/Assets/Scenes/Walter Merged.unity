@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -954,7 +954,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
+  m_VoxelSize: 0.083333336
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: a1eb2290fb9231644966f98913e30ecc, type: 2}
   m_BuildHeightMesh: 0
@@ -1424,6 +1424,7 @@ MonoBehaviour:
   - {fileID: 812643458}
   - {fileID: 1201967035}
   - {fileID: 350531959}
+  playerResourceItemManager: {fileID: 0}
 --- !u!114 &1558910858 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6444107700623512841, guid: 6bb7140ab92b8c9449f606d4fef4abdf,

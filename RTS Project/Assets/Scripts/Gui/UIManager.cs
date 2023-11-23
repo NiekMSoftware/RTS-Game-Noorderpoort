@@ -1,13 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
-using System.Linq;
+using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI[] resourceTexts;
     [SerializeField] private ResourceItemManager playerResourceItemManager;
+    [SerializeField] private GameObject buildingSelectPanel;
+    [SerializeField] private float outlineAnimationSpeed;
+    [SerializeField] private float outlineAnimationMaxSize;
+    [SerializeField] private float outlineAnimationFinishedWaitTime;
 
     private void Update()
     {
@@ -26,4 +27,12 @@ public class UIManager : MonoBehaviour
             }
         }
     }
+
+    public void SetBuildingSelectPanel(bool value) => buildingSelectPanel.SetActive(value);
+
+    public float GetOutlineAnimationSpeed() => outlineAnimationSpeed;
+
+    public float GetOutlineAnimationMaxSize() => outlineAnimationMaxSize;
+
+    public float GetOutlineAnimationFinishedWaitTime() => outlineAnimationFinishedWaitTime;
 }

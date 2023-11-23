@@ -598,19 +598,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3da07764186293c4ebf58944135ae0d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
   itemSlots: []
---- !u!114 &2112081014 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4414087274017751903, guid: 15487bef90308ce46b42e6411d55c4cf,
-    type: 3}
-  m_PrefabInstance: {fileID: 5368674722086123783}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1028398070274771331
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1025,7 +1014,7 @@ PrefabInstance:
         type: 3}
       propertyPath: buttons.Array.data[3]
       value: 
-      objectReference: {fileID: 2112081014}
+      objectReference: {fileID: 0}
     - target: {fileID: 5290549236025193350, guid: 14d717b6b9bb25049a85cee8480ea724,
         type: 3}
       propertyPath: m_Name

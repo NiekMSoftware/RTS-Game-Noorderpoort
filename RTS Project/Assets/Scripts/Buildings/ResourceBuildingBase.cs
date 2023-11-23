@@ -144,6 +144,7 @@ public class ResourceBuildingBase : BuildingBase
 
     public bool AddWorkerToBuilding(Worker worker)
     {
+        print("addworkertobuilding");
         if (workers.Contains(worker))
         {
             return false;
@@ -163,7 +164,7 @@ public class ResourceBuildingBase : BuildingBase
         return false;
     }
 
-    protected void RemoveWorkerFromBuilding(Worker worker)
+    public void RemoveWorkerFromBuilding(Worker worker)
     {
         workers.Remove(worker);
     }
@@ -176,5 +177,15 @@ public class ResourceBuildingBase : BuildingBase
     public int GetMaxWorkers()
     {
         return maxWorkers;
+    }
+
+    public override void DestroyBuilding()
+    {
+        foreach (var worker in workers)
+        {
+            RemoveWorkerFromBuilding(worker);
+        }
+
+        base.DestroyBuilding();
     }
 }
