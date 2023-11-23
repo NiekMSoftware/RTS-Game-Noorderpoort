@@ -7,8 +7,8 @@ public class SelectionManager : MonoBehaviour
     [SerializeField] private LayerMask ground;
     [SerializeField] private LayerMask building;
     [SerializeField] private LayerMask Enemy;
-    public List<GameObject> selectedUnits = new();
 
+    public List<GameObject> selectedUnits = new();
 
     [SerializeField] private GameObject markerPrefab;
 
@@ -39,7 +39,7 @@ public class SelectionManager : MonoBehaviour
 
     private void Update()
     {
-        /*if (Input.anyKeyDown)
+        if (Input.anyKeyDown)
         {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -128,7 +128,7 @@ public class SelectionManager : MonoBehaviour
                     hit.collider.gameObject.GetComponent<Worker>().UnAssignWorker();
                 }
             }
-        }*/
+        }
 
         if (Input.GetMouseButtonDown(0))
         {

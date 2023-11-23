@@ -24,8 +24,9 @@ public class Worker : Unit
 
     public bool assigned = false;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         ItemSlot itemSlot = new();
         itemSlot.SetData(resourceItem);
         itemSlot.SetAmount(0);
