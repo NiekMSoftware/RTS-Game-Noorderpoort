@@ -29,6 +29,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3721838096702204654}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 19.5, y: 1.12, z: -18.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -36,7 +37,6 @@ Transform:
   m_Children:
   - {fileID: 5192092856214505012}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2870706043568077301
 MeshFilter:
@@ -178,8 +178,8 @@ MonoBehaviour:
   unitSpeed: 6
   unitDamage: 5
   job: 0
-  typeUnit: 0
-  selectionObject: {fileID: 0}
+  typeUnit: 3
+  selectionObject: {fileID: 7024833265930589587}
   myAgent: {fileID: 6909574573759632584}
   groundLayer:
     serializedVersion: 2
@@ -188,6 +188,7 @@ MonoBehaviour:
   clickableUnit:
     serializedVersion: 2
     m_Bits: 64
+  selectionColor: {r: 0, g: 0, b: 0, a: 0}
   damageInterval: 2
   damageAmount: 10
   Building:
@@ -198,14 +199,11 @@ MonoBehaviour:
     m_Bits: 16384
   Enemies: []
   Buildings: []
-  EnemyGameObject: {fileID: 130443921006063449, guid: ac0e488fa050e814da5daa409f620119,
-    type: 3}
+  enemy: {fileID: 0}
   SoldierGameObject: {fileID: 3721838096702204654}
-  buildingGameObject: {fileID: 0}
-  PlaceHolder: {fileID: 6491407734025490448, guid: 875ca19df0aabc54a86d5dd7951ffc6e,
-    type: 3}
-  buildingBase: {fileID: 0}
-  selectionmanager: {fileID: 0}
+  buildingToAttack: {fileID: 0}
+  enemyHp: {fileID: 0}
+  selectionManager: {fileID: 0}
   currentBuildingDist: 0
 --- !u!1 &7024833265930589587
 GameObject:
@@ -233,13 +231,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7024833265930589587}
+  serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -0.012, y: -0.94, z: 0}
   m_LocalScale: {x: 1.8043, y: 1.8043, z: 1.8043}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9150157795128708509}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!33 &1707644151148643686
 MeshFilter:

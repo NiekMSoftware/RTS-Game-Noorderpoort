@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class NewSelectionManager : MonoBehaviour
 {
     [SerializeField] private List<Unit> selectedUnits = new();
     [SerializeField] private RectTransform selectionBoxVisual;
+    [SerializeField] private GameObject markerPrefab;
 
     [SerializeField] private LayerMask unitLayer;
     [SerializeField] private LayerMask groundLayer;
@@ -15,6 +17,11 @@ public class NewSelectionManager : MonoBehaviour
     private Vector2 boxEndPosition;
 
     private Camera mainCamera;
+
+    private BuildingBase buildingToAttack;
+    private Unit enemyToAttack;
+
+    private Marker marker;
 
     private void Awake()
     {
@@ -32,6 +39,8 @@ public class NewSelectionManager : MonoBehaviour
         HandleBoxSelect();
     }
 
+    #region Handle Unit/Building Selection
+
     private void HandleSelection()
     {
         if (!Input.anyKeyDown) return;
@@ -39,24 +48,179 @@ public class NewSelectionManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))//left mouse button
         {
-            //bool hasSelectedSuccessfully = SelectSingleUnit(ray);
+            bool hasSelectedSuccessfully = SelectSingleUnit(ray);
 
-            //SelectBuilding(ray);
+            SelectBuilding(ray);
 
-            //if (!hasSelectedSuccessfully)
-            //{
-            //    DeselectAllUnits();
-            //}
+            if (!hasSelectedSuccessfully)
+            {
+                DeselectAllUnits();
+            }
         }
         else if (Input.GetMouseButtonDown(1))//right mouse button
         {
-            //MoveUnits(ray);
+            MoveUnits(ray);
         }
         else if (Input.GetMouseButtonDown(2))//middle mouse
         {
-            //UnassignWorkerTest(ray);
+            UnassignWorkerTest(ray);
         }
     }
+
+    private void UnassignWorkerTest(Ray ray)
+    {
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, unitLayer) && hit.collider.GetComponent<Worker>())
+        {
+            hit.collider.gameObject.GetComponent<Worker>().UnAssignWorker();
+        }
+    }
+
+    private void SelectBuilding(Ray ray)
+    {
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, buildingLayer))
+        {
+            print("Selected Building");
+            if (!hit.transform.TryGetComponent(out BuildingBase building)) return;
+
+            if (selectedUnits.Count > 0)
+            {
+                foreach (Unit unit in selectedUnits)
+                {
+                    switch (unit)
+                    {
+                        case Unit soldier when unit is SoldierUnit:
+                            //Send soldier to enemy building
+                            if (building.GetOccupancyType() == BuildingBase.OccupancyType.Enemy)
+                            {
+                                //Change to buildingbase when soldierunit is changed
+                                buildingToAttack = building;
+
+                                soldier.SendUnitToLocation(building.transform.position);
+                            }
+                            break;
+
+                        case Worker worker when unit is Worker:
+                            switch (building)
+                            {
+                                case Barrack barrack when building is Barrack:
+                                    //Send worker to barrack
+                                    barrack.AddUnitToBarrack(worker);
+                                    break;
+
+                                case ResourceBuildingBase workerBuilding when building is ResourceBuildingBase:
+                                    //Send worker to building
+                                    workerBuilding.AddWorkerToBuilding(worker);
+                                    break;
+                            }
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                //Select building
+                building.SelectBuilding();
+            }
+        }
+    }
+
+    private void MoveUnits(Ray ray)
+    {
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, groundLayer))
+        {
+            if (selectedUnits.Count <= 0) return;
+
+            if (marker)
+            {
+                Destroy(marker.gameObject);
+            }
+
+            marker = Instantiate(markerPrefab, hit.point, Quaternion.identity).GetComponent<Marker>();
+            foreach (var unit in selectedUnits)
+            {
+                print("try move units");
+                if (unit.TryGetComponent(out SoldierUnit soldier))
+                {
+                    print("deselect soldier's enemy");
+                    soldier.enemy = null;
+                    enemyToAttack = null;
+                }
+
+                unit.SendUnitToLocation(hit.point);
+                marker.SetUnit(unit);
+            }
+        }
+    }
+
+    private bool SelectSingleUnit(Ray ray)
+    {
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, unitLayer))
+        {
+            Unit unit = hit.transform.GetComponent<Unit>();
+
+            print("select single unit");
+
+            switch (unit.typeUnit)
+            {
+                case Unit.TypeUnit.Human:
+                    if (Input.GetKey(KeyCode.LeftShift))
+                    {
+                        if (!selectedUnits.Contains(unit))
+                        {
+                            AddUnit(unit);
+                        }
+                    }
+                    else
+                    {
+                        DeselectAllUnits();
+                        AddUnit(unit);
+                    }
+                    break;
+
+                case Unit.TypeUnit.Enemy:
+                    AttackEnemy(hit, unit);
+                    break;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private void AttackEnemy(RaycastHit hit, Unit enemy)
+    {
+        print("set enemytoattack");
+        enemyToAttack = enemy;
+
+        foreach (var soldier in selectedUnits)
+        {
+            if (soldier is SoldierUnit)
+            {
+                soldier.SendUnitToLocation(hit.point);
+            }
+        }
+    }
+
+    private void DeselectAllUnits()
+    {
+        foreach (Unit unit in selectedUnits)
+        {
+            unit.SetSelectionObject(false);
+        }
+
+        selectedUnits.Clear();
+    }
+
+    private void AddUnit(Unit unit)
+    {
+        selectedUnits.Add(unit);
+        unit.SetSelectionObject(true);
+    }
+
+    #endregion
+
+    #region Box Selection
 
     private void HandleBoxSelect()
     {
@@ -83,21 +247,6 @@ public class NewSelectionManager : MonoBehaviour
         }
     }
 
-    private void SelectSingleUnit(Ray ray)
-    {
-        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, unitLayer))
-        {
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-
-            }
-            else
-            {
-                //AddUnit(hit)
-            }
-        }
-    }
-
     private void BoxSelectUnits()
     {
         Unit[] allUnits = FindObjectsOfType<Unit>();
@@ -108,16 +257,13 @@ public class NewSelectionManager : MonoBehaviour
             {
                 if (!selectedUnits.Contains(unit))
                 {
-                    AddUnit(unit);
+                    if (unit.typeUnit == Unit.TypeUnit.Human)
+                    {
+                        AddUnit(unit);
+                    }
                 }
             }
         }
-    }
-
-    private void AddUnit(Unit unit)
-    {
-        selectedUnits.Add(unit);
-        unit.SetSelectionObject(true);
     }
 
     private void DrawBoxVisual()
@@ -133,7 +279,7 @@ public class NewSelectionManager : MonoBehaviour
         selectionBoxVisual.sizeDelta = boxSize;
     }
 
-    void CalculateSelection()
+    private void CalculateSelection()
     {
         if (Input.mousePosition.x < boxStartPosition.x)
         {
@@ -157,4 +303,14 @@ public class NewSelectionManager : MonoBehaviour
             selectionBox.yMin = boxStartPosition.y;
         }
     }
+
+    #endregion
+
+    #region Public Getters
+
+    public BuildingBase GetBuildingToAttack() => buildingToAttack;
+
+    public Unit GetEnemyToAttack() => enemyToAttack;
+
+    #endregion
 }
