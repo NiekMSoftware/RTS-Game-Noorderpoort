@@ -37,7 +37,6 @@ Transform:
   m_Children:
   - {fileID: 5192092856214505012}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2870706043568077301
 MeshFilter:
@@ -173,7 +172,6 @@ MonoBehaviour:
   maxStorage: 3
   resourceItemManager: {fileID: 0}
   currentState: 4
-  assigned: 0
 --- !u!54 &3631595101206008243
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -228,7 +226,7 @@ Transform:
   m_GameObject: {fileID: 7024833265930589587}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.012, y: -0.94, z: 0}
+  m_LocalPosition: {x: -0.012, y: -0.73, z: 0}
   m_LocalScale: {x: 2.47, y: 2.47, z: 2.47}
   m_ConstrainProportionsScale: 1
   m_Children: []
