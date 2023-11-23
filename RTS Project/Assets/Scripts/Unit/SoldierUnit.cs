@@ -4,9 +4,10 @@ using UnityEngine;
 public class SoldierUnit : Unit
 {
     //wat moet er nog gefixt worden?
-    //- selectedenemy check maken voor als enemy destroyed wordt.
+    //- selected enemy check maken voor als enemy destroyed wordt.
     //- building null check
     //- fix enemy in range attack
+    //- building wordt niet aangeroepen waardoor soldier niet aanvalt.
     public float damageInterval = 2.0f;
     public int damageAmount = 10;
     public LayerMask Building;
@@ -59,6 +60,7 @@ public class SoldierUnit : Unit
         {
             print("found building base2");
             currentBuildingDist = Vector3.Distance(transform.position, selectionmanager.buildingPosition);
+            print("found building position");
             if (currentBuildingDist <= 1)
             {
                 Debug.Log("Attacking");

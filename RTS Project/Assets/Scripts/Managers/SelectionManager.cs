@@ -16,7 +16,7 @@ public class SelectionManager : MonoBehaviour
     public GameObject selectedEnemy;
 
     private BuildingBase selectedBuilding;
-    private GameObject buildingToAttack;
+    [SerializeField] private GameObject buildingToAttack;
 
     private Marker marker;
 
@@ -181,12 +181,46 @@ public class SelectionManager : MonoBehaviour
         {
             print("Selected building");
             if (hit.transform.TryGetComponent(out selectedBuilding))
+            {
                 selectedBuilding.SelectBuilding();
+                buildingToAttack = selectedBuilding.gameObject;
+            }
+                
+            /*
+            //BuildingSelected(hit.transform.gameObject);
+            if (selectedUnits.Count > 0)
+            {
+                foreach (GameObject unit in selectedUnits)
+                {
+                    // Change when worker is integrated into unit
+                    // selectedBuilding.GetComponent<BuildingBase>().AddWorkerToBuilding(unit.GetComponent<Worker>());
 
-            BuildingSelected(hit.transform.gameObject);
-            buildingToAttack = hit.transform.gameObject;
-            print(buildingToAttack);
+                    // Perhaps make it so we can use an if / else if - statement
+                    // What this will do is add more accessibility
+                    // Perhaps make this a SWITCH-statement if absolutely necessarily
+                    
+                    if (selectedBuilding.GetOccupancyType() == BuildingBase.OccupancyType.Enemy)
+                    {
+                        buildingToAttack = hit.transform.gameObject;
+                    }
+                    else
+                    {
+                        if (selectedBuilding.TryGetComponent<ResourceBuildingBase>(out ResourceBuildingBase buildingBase))
+                        {
+                            print("Assigning unit to Worker");
+                            buildingBase.AddWorkerToBuilding(unit.GetComponent<Worker>());
+                        }
+                        else
+                        {
+                            print("Assigning Unit to soldier");
+                            selectedBuilding.GetComponent<Barrack>().AddUnitToBarrack(null);
+                        }
+                    }
 
+                    selectedBuilding.GetComponent<BuildingBase>().StartAnimateOutline();
+                }
+            }
+*/
             print(selectedUnits.Count);
 
             foreach (GameObject selectedUnit in selectedUnits)
@@ -198,33 +232,10 @@ public class SelectionManager : MonoBehaviour
         }
     }
 
-    private void BuildingSelected(GameObject hit)
+    /*private void BuildingSelected(GameObject hit)
     {
-        if (selectedUnits.Count > 0)
-        {
-            foreach (GameObject unit in selectedUnits)
-            {
-                // Change when worker is integrated into unit
-                // selectedBuilding.GetComponent<BuildingBase>().AddWorkerToBuilding(unit.GetComponent<Worker>());
-
-                // Perhaps make it so we can use an if / else if - statement
-                // What this will do is add more accessibility
-                // Perhaps make this a SWITCH-statement if absolutely necessarily
-                if (selectedBuilding.TryGetComponent<ResourceBuildingBase>(out ResourceBuildingBase buildingBase))
-                {
-                    print("Assigning unit to Worker");
-                    buildingBase.AddWorkerToBuilding(unit.GetComponent<Worker>());
-                }
-                else
-                {
-                    print("Assigning Unit to soldier");
-                    selectedBuilding.GetComponent<Barrack>().AddUnitToBarrack(null);
-                }
-
-                selectedBuilding.GetComponent<BuildingBase>().StartAnimateOutline();
-            }
-        }
-    }
+        
+    }*/
 
     private void DeselectAllUnits()
     {
