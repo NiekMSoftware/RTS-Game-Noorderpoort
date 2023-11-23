@@ -10,7 +10,7 @@ public class Unit : MonoBehaviour
     [SerializeField] protected int unitHealing;
     public int UnitHealth { get { return unitHealth; } set { unitHealth = value; } }
 
-        [Space]
+    [Space]
     [SerializeField] protected int unitSpeed;
     [SerializeField] protected int unitDamage;
 
@@ -29,8 +29,15 @@ public class Unit : MonoBehaviour
     [Space]
     [SerializeField] GameObject marker;
     [SerializeField] LayerMask clickableUnit;
+    [SerializeField] protected Color selectionColor;
 
     Camera myCamera;
+
+    protected virtual void Start()
+    {
+        selectionObject.SetActive(false);
+        selectionObject.GetComponent<MeshRenderer>().material.color = selectionColor;
+    }
 
     #region Enums
 
