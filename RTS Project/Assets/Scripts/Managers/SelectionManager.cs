@@ -194,7 +194,7 @@ public class SelectionManager : MonoBehaviour
                     // Change when worker is integrated into unit
                     // selectedBuilding.GetComponent<BuildingBase>().AddWorkerToBuilding(unit.GetComponent<Worker>());
 
-                    // Perhaps make it so we can use an if / else if - statement
+                    // Perhaps make it so we can use an if / else if - statnt
                     // What this will do is add more accessibility
                     // Perhaps make this a SWITCH-statement if absolutely necessarily
                     

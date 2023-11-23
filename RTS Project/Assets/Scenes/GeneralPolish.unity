@@ -1328,11 +1328,6 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 732866239184625619, guid: ab8c5f369ea4a6b42a3816c54f83c38a,
         type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 732866239184625619, guid: ab8c5f369ea4a6b42a3816c54f83c38a,
-        type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.1204972
       objectReference: {fileID: 0}
@@ -1386,47 +1381,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: UnitSelectionSystem
       objectReference: {fileID: 0}
-    - target: {fileID: 1678940331253426876, guid: ab8c5f369ea4a6b42a3816c54f83c38a,
+    - target: {fileID: 6606951222471610092, guid: ab8c5f369ea4a6b42a3816c54f83c38a,
         type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7064066154610920584, guid: ab8c5f369ea4a6b42a3816c54f83c38a,
-        type: 3}
-      propertyPath: boxVisual
+      propertyPath: selectionBoxVisual
       value: 
       objectReference: {fileID: 1509152209}
-    - target: {fileID: 7064066154610920584, guid: ab8c5f369ea4a6b42a3816c54f83c38a,
-        type: 3}
-      propertyPath: Enemy.m_Bits
-      value: 16384
-      objectReference: {fileID: 0}
-    - target: {fileID: 7064066154610920584, guid: ab8c5f369ea4a6b42a3816c54f83c38a,
-        type: 3}
-      propertyPath: markerPrefab
-      value: 
-      objectReference: {fileID: 2349340977249974520, guid: e8eb32d6833c2d8449c1cb6a0f1f82ed,
-        type: 3}
-    - target: {fileID: 7064066154610920584, guid: ab8c5f369ea4a6b42a3816c54f83c38a,
-        type: 3}
-      propertyPath: selectedEnemy
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 7064066154610920584, guid: ab8c5f369ea4a6b42a3816c54f83c38a,
-        type: 3}
-      propertyPath: selectedBuilding
-      value: 
-      objectReference: {fileID: 6491407734025490448, guid: 875ca19df0aabc54a86d5dd7951ffc6e,
-        type: 3}
-    m_RemovedComponents:
-    - {fileID: 7064066154610920584, guid: ab8c5f369ea4a6b42a3816c54f83c38a, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1678940331253426876, guid: ab8c5f369ea4a6b42a3816c54f83c38a,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1437358352}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ab8c5f369ea4a6b42a3816c54f83c38a, type: 3}
 --- !u!4 &1437358350 stripped
 Transform:
@@ -1434,37 +1397,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1437358349}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1437358351 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1678940331253426876, guid: ab8c5f369ea4a6b42a3816c54f83c38a,
-    type: 3}
-  m_PrefabInstance: {fileID: 1437358349}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1437358352
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1437358351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93778e25b22e50c40ba602158998117a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  selectedUnits: []
-  selectionBoxVisual: {fileID: 1509152209}
-  markerPrefab: {fileID: 2349340977249974520, guid: e8eb32d6833c2d8449c1cb6a0f1f82ed,
-    type: 3}
-  unitLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  buildingLayer:
-    serializedVersion: 2
-    m_Bits: 128
 --- !u!1001 &1443863059
 PrefabInstance:
   m_ObjectHideFlags: 0

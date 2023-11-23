@@ -18,7 +18,8 @@ public class NewSelectionManager : MonoBehaviour
 
     private Camera mainCamera;
 
-    private GameObject buildingToAttack;
+    private BuildingBase buildingToAttack;
+    private Unit enemyToAttack;
 
     private Marker marker;
 
@@ -92,7 +93,7 @@ public class NewSelectionManager : MonoBehaviour
                             if (building.GetOccupancyType() == BuildingBase.OccupancyType.Enemy)
                             {
                                 //Change to buildingbase when soldierunit is changed
-                                buildingToAttack = building.gameObject;
+                                buildingToAttack = building;
 
                                 soldier.SendUnitToLocation(building.transform.position);
                             }
@@ -135,9 +136,16 @@ public class NewSelectionManager : MonoBehaviour
             }
 
             marker = Instantiate(markerPrefab, hit.point, Quaternion.identity).GetComponent<Marker>();
-            foreach (var unitObject in selectedUnits)
+            foreach (var unit in selectedUnits)
             {
-                Unit unit = unitObject.GetComponent<Unit>();
+                print("try move units");
+                if (unit.TryGetComponent(out SoldierUnit soldier))
+                {
+                    print("deselect soldier's enemy");
+                    soldier.enemy = null;
+                    enemyToAttack = null;
+                }
+
                 unit.SendUnitToLocation(hit.point);
                 marker.SetUnit(unit);
             }
@@ -150,23 +158,48 @@ public class NewSelectionManager : MonoBehaviour
         {
             Unit unit = hit.transform.GetComponent<Unit>();
 
-            if (Input.GetKey(KeyCode.LeftShift))
+            print("select single unit");
+
+            switch (unit.typeUnit)
             {
-                if (!selectedUnits.Contains(unit))
-                {
-                    AddUnit(unit);
-                }
-            }
-            else
-            {
-                DeselectAllUnits();
-                AddUnit(unit);
+                case Unit.TypeUnit.Human:
+                    if (Input.GetKey(KeyCode.LeftShift))
+                    {
+                        if (!selectedUnits.Contains(unit))
+                        {
+                            AddUnit(unit);
+                        }
+                    }
+                    else
+                    {
+                        DeselectAllUnits();
+                        AddUnit(unit);
+                    }
+                    break;
+
+                case Unit.TypeUnit.Enemy:
+                    AttackEnemy(hit, unit);
+                    break;
             }
 
             return true;
         }
 
         return false;
+    }
+
+    private void AttackEnemy(RaycastHit hit, Unit enemy)
+    {
+        print("set enemytoattack");
+        enemyToAttack = enemy;
+
+        foreach (var soldier in selectedUnits)
+        {
+            if (soldier is SoldierUnit)
+            {
+                soldier.SendUnitToLocation(hit.point);
+            }
+        }
     }
 
     private void DeselectAllUnits()
@@ -224,7 +257,10 @@ public class NewSelectionManager : MonoBehaviour
             {
                 if (!selectedUnits.Contains(unit))
                 {
-                    AddUnit(unit);
+                    if (unit.typeUnit == Unit.TypeUnit.Human)
+                    {
+                        AddUnit(unit);
+                    }
                 }
             }
         }
@@ -272,7 +308,9 @@ public class NewSelectionManager : MonoBehaviour
 
     #region Public Getters
 
-    public GameObject GetBuildingToAttack() => buildingToAttack;
+    public BuildingBase GetBuildingToAttack() => buildingToAttack;
+
+    public Unit GetEnemyToAttack() => enemyToAttack;
 
     #endregion
 }
