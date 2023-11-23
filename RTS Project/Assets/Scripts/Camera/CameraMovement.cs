@@ -10,7 +10,6 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private float minZoomHeight = 15f;
     [SerializeField] private Transform orientation;
     [SerializeField] private Transform particleSpawnPoint;
-    [SerializeField] private GameObject camRotator;
     private bool isRotating = false;
     public Vector3 hitPoint;
     private float rotationSpeed = 1000f;
@@ -22,14 +21,6 @@ public class CameraMovement : MonoBehaviour
     float actualZoomHeight = 0f;
     private Vector3 hitPointUp = Vector3.zero;
 
-    private Rigidbody rb;
-
-    private void Start()
-    {
-        rb = camRotator.GetComponent<Rigidbody>();
-
-        rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
-    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -73,10 +64,10 @@ public class CameraMovement : MonoBehaviour
                 verticalMouseInput = Mathf.Clamp(verticalMouseInput, -1f, 0f);
 
             }
-            rb.AddTorque(Vector3.up * horizontalMouseInput * rotationSpeed * Time.deltaTime);
-            rb.AddTorque(orientation.right * -verticalMouseInput * rotationSpeed * Time.deltaTime);
 
-            // Clamp rotation to prevent tilting
+            transform.RotateAround(rotatePoint, Vector3.up, horizontalMouseInput * Time.deltaTime * rotationSpeed);
+            transform.RotateAround(rotatePoint, Camera.main.transform.right, verticalMouseInput * Time.deltaTime * rotationSpeed);
+
             Vector3 currentEulerAngles = transform.rotation.eulerAngles;
             transform.rotation = Quaternion.Euler(currentEulerAngles.x, currentEulerAngles.y, 0);
         }
