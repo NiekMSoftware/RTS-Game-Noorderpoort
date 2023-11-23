@@ -332,6 +332,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6475130287855665572, guid: 04da167e17f3d7a4bba0b9dbd8eb0b96,
         type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6475130287855665572, guid: 04da167e17f3d7a4bba0b9dbd8eb0b96,
+        type: 3}
       propertyPath: orientation
       value: 
       objectReference: {fileID: 622926702}
@@ -1226,7 +1231,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &1303828364
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1449,6 +1454,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectedUnits: []
   selectionBoxVisual: {fileID: 1509152209}
+  markerPrefab: {fileID: 2349340977249974520, guid: e8eb32d6833c2d8449c1cb6a0f1f82ed,
+    type: 3}
+  unitLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  buildingLayer:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1001 &1443863059
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2365,6 +2381,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: LumberJackhut
+      objectReference: {fileID: 0}
+    - target: {fileID: 2432438935407483892, guid: 8140ef950e5920644a01c70b6f40bd1d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3766747821306631617, guid: 8140ef950e5920644a01c70b6f40bd1d,
         type: 3}

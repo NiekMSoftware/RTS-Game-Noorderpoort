@@ -185,8 +185,7 @@ public class SelectionManager : MonoBehaviour
                 selectedBuilding.SelectBuilding();
                 buildingToAttack = selectedBuilding.gameObject;
             }
-                
-            /*
+
             //BuildingSelected(hit.transform.gameObject);
             if (selectedUnits.Count > 0)
             {
@@ -220,7 +219,7 @@ public class SelectionManager : MonoBehaviour
                     selectedBuilding.GetComponent<BuildingBase>().StartAnimateOutline();
                 }
             }
-*/
+
             print(selectedUnits.Count);
 
             foreach (GameObject selectedUnit in selectedUnits)
