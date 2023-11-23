@@ -29,6 +29,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3721838096702204654}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 19.5, y: 1.12, z: -18.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -36,7 +37,6 @@ Transform:
   m_Children:
   - {fileID: 5192092856214505012}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2870706043568077301
 MeshFilter:
@@ -161,6 +161,7 @@ MonoBehaviour:
   clickableUnit:
     serializedVersion: 2
     m_Bits: 64
+  selectionColor: {r: 0.32941175, g: 0.65675884, b: 1, a: 0.78431374}
   resourceTarget: {fileID: 0}
   workerHouse: {fileID: 0}
   resourceObjectManager: {fileID: 0}
@@ -171,7 +172,6 @@ MonoBehaviour:
   maxStorage: 3
   resourceItemManager: {fileID: 0}
   currentState: 4
-  assigned: 0
 --- !u!54 &3631595101206008243
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -210,13 +210,13 @@ GameObject:
   - component: {fileID: 5192092856214505012}
   - component: {fileID: 1707644151148643686}
   - component: {fileID: 8065026522787017419}
-  m_Layer: 0
-  m_Name: Quad
+  m_Layer: 6
+  m_Name: SelectionCirlce
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5192092856214505012
 Transform:
   m_ObjectHideFlags: 0
@@ -224,13 +224,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7024833265930589587}
+  serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.012, y: -0.94, z: 0}
-  m_LocalScale: {x: 1.8043, y: 1.8043, z: 1.8043}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: -0.012, y: -0.73, z: 0}
+  m_LocalScale: {x: 2.47, y: 2.47, z: 2.47}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 9150157795128708509}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!33 &1707644151148643686
 MeshFilter:

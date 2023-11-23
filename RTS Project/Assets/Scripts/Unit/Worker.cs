@@ -23,8 +23,9 @@ public class Worker : Unit
     private string jobName;
 
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         ItemSlot itemSlot = new();
         itemSlot.SetData(resourceItem);
         itemSlot.SetAmount(0);
