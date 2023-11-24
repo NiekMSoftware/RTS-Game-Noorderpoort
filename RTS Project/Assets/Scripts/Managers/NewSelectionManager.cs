@@ -91,10 +91,6 @@ public class NewSelectionManager : MonoBehaviour
         {
             MoveUnits(ray);
         }
-        else if (Input.GetMouseButtonDown(2))//middle mouse
-        {
-            UnassignWorkerTest(ray);
-        }
     }
 
     private void UnassignWorkerTest(Ray ray)

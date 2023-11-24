@@ -139,7 +139,6 @@ public class BuildingBase : MonoBehaviour
 
     public virtual void SelectBuilding()
     {
-        print("select building!");
         uiManager.SetBuildingUI(true, this);
         outline.OutlineWidth = outlineDefaultSize;
         outline.enabled = true;

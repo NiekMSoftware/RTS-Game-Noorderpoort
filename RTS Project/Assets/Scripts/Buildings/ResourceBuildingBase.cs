@@ -164,7 +164,6 @@ public class ResourceBuildingBase : BuildingBase
 
     public bool AddWorkerToBuilding(Worker worker)
     {
-        print("addworkertobuilding");
         if (workers.Contains(worker))
         {
             return false;
@@ -186,6 +185,7 @@ public class ResourceBuildingBase : BuildingBase
 
     public void RemoveWorkerFromBuilding(Worker worker)
     {
+        worker.UnAssignWorker();
         workers.Remove(worker);
     }
 

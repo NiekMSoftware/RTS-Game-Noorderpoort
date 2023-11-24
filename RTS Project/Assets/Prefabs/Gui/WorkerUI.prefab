@@ -531,7 +531,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   title: {fileID: 4658947411839260974}
-  image: {fileID: 0}
+  icon: {fileID: 8423105115227769104}
   fireButton: {fileID: 8359093364226505653}
 --- !u!1 &8977951310260090426
 GameObject:

@@ -1,3 +1,5 @@
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -31,8 +33,13 @@ public class Unit : MonoBehaviour
     [SerializeField] GameObject marker;
     [SerializeField] LayerMask clickableUnit;
     [SerializeField] protected Color selectionColor;
+    [SerializeField] private int cameraResoltion = 64;
+    [SerializeField] private float cameraFPS = 5;
 
     private Camera unitCamera;
+    private RenderTexture renderTexture;
+
+    private bool isSelected;
 
     private void Awake()
     {
@@ -45,16 +52,38 @@ public class Unit : MonoBehaviour
         selectionObject.GetComponent<MeshRenderer>().material.color = selectionColor;
 
         unitCamera.gameObject.SetActive(false);
+        unitCamera.enabled = false;
     }
 
     public void Select()
     {
+        renderTexture = new(cameraResoltion, cameraResoltion, 0);
+        unitCamera.targetTexture = renderTexture;
         unitCamera.gameObject.SetActive(true);
+        isSelected = true;
     }
 
     public void Deselect()
     {
+        Destroy(renderTexture);
+        unitCamera.targetTexture = null;
         unitCamera.gameObject.SetActive(false);
+        isSelected = false;
+    }
+
+    float elapsed = 0;
+
+    protected virtual void Update()
+    {
+        if (isSelected)
+        {
+            elapsed += Time.deltaTime;
+            if (elapsed > 1 / cameraFPS)
+            {
+                elapsed = 0;
+                unitCamera.Render();
+            }
+        }
     }
 
     #region Enums
@@ -125,4 +154,6 @@ public class Unit : MonoBehaviour
     }
 
     #endregion
+
+    public RenderTexture GetRenderTexture() => renderTexture;      
 }

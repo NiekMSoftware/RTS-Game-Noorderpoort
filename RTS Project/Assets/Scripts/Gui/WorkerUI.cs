@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class WorkerUI : MonoBehaviour
 {
     public TMP_Text title;
-    public Image image;
+    public RawImage icon;
     public Button fireButton;
 
     private Worker worker;
@@ -22,6 +22,15 @@ public class WorkerUI : MonoBehaviour
         this.title.SetText(title);
         this.worker = worker;
         this.buildingSelect = buildingSelect;
+
+        UpdateUI();
+    }
+
+    public void UpdateUI()
+    {
+        if (worker == null) return;
+
+        icon.texture = worker.GetRenderTexture();
     }
 
     private void FireWorker()

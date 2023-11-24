@@ -93,7 +93,12 @@ public class BuildingSelect : MonoBehaviour
         if (currentBuilding is ResourceBuildingBase)
         {
             TMP_Text assignWorkerButtonText = assignWorkersButton.GetComponentInChildren<TMP_Text>();
-            assignWorkerButtonText.SetText(isSelectingWorkers ? "Done" : "Assign Workers"); 
+            assignWorkerButtonText.SetText(isSelectingWorkers ? "Done" : "Assign Workers");
+
+            foreach (var singleWorkerUI in singleWorkerInfoUIs)
+            {
+                singleWorkerUI.GetComponent<WorkerUI>().UpdateUI();
+            }
         }
     }
 

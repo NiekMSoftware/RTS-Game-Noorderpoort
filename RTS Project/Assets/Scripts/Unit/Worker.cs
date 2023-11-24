@@ -58,17 +58,14 @@ public class Worker : Unit
 
     public void UnAssignWorker()
     {
-        if (workerHouse)
-        {
-            buildingBase.RemoveWorkerFromBuilding(this);
-            workerHouse = null;
-            resourceTarget = null;
-            resourceObjectManager = null;
-            currentStorage.amount = 0;
-            currentState = State.Idling;
-            buildingBase = null;
-            myAgent.ResetPath();
-        }
+        buildingBase.RemoveWorkerFromBuilding(this);
+        workerHouse = null;
+        resourceTarget = null;
+        resourceObjectManager = null;
+        currentStorage.amount = 0;
+        currentState = State.Idling;
+        buildingBase = null;
+        myAgent.ResetPath();
     }
 
     protected void AddItemToWorkerStorage(ItemData itemData)
@@ -131,8 +128,10 @@ public class Worker : Unit
 
         yield return null;
     }
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+
         switch (currentState)
         {
             case State.Assigning:
