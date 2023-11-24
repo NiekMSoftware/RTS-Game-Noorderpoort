@@ -137,7 +137,7 @@ public class BuildingBase : MonoBehaviour
         }
     }
 
-    public void SelectBuilding()
+    public virtual void SelectBuilding()
     {
         print("select building!");
         uiManager.SetBuildingUI(true, this);
@@ -145,7 +145,7 @@ public class BuildingBase : MonoBehaviour
         outline.enabled = true;
     }
 
-    public void DeselectBuilding()
+    public virtual void DeselectBuilding()
     {
         uiManager.SetBuildingUI(false, this);
         outline.enabled = false;

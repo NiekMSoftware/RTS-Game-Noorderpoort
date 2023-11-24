@@ -6,7 +6,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI[] resourceTexts;
     [SerializeField] private ResourceItemManager playerResourceItemManager;
     [SerializeField] private BuildingSelect buildingSelectMenu;
-    [SerializeField] private GameObject unitSelectMenu;
+    [SerializeField] private UnitSelect unitSelectMenu;
     [SerializeField] private float outlineDefaultSize;
     [SerializeField] private float outlineAnimationSpeed;
     [SerializeField] private float outlineAnimationMaxSize;
@@ -14,7 +14,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        unitSelectMenu.SetActive(false);
+        unitSelectMenu.gameObject.SetActive(false);
         buildingSelectMenu.gameObject.SetActive(false);
     }
 
@@ -40,6 +40,12 @@ public class UIManager : MonoBehaviour
     {
         buildingSelectMenu.SetBuilding(building);
         buildingSelectMenu.gameObject.SetActive(value);
+    }
+
+    public void SetUnitUI(bool value, Unit unit)
+    {
+        unitSelectMenu.gameObject.SetActive(value);
+        unitSelectMenu.Init(unit);
     }
 
     public float GetOutlineAnimationSpeed() => outlineAnimationSpeed;

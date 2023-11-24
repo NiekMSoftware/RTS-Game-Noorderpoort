@@ -343,7 +343,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5436179816822693864}
   - component: {fileID: 1353509213816823796}
-  - component: {fileID: 5943931227478014885}
+  - component: {fileID: 8423105115227769104}
   m_Layer: 5
   m_Name: Icon
   m_TagString: Untagged
@@ -378,7 +378,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6538560599183264988}
   m_CullTransparentMesh: 1
---- !u!114 &5943931227478014885
+--- !u!114 &8423105115227769104
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -387,7 +387,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6538560599183264988}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -398,16 +398,13 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6d2e99971c27e7d458c20fca2fd7e2b5, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_Texture: {fileID: 8400000, guid: 03e389d4ee84a2445b85ebe0da0d2f64, type: 2}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
 --- !u!1 &6793078395831896400
 GameObject:
   m_ObjectHideFlags: 0
@@ -492,6 +489,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6374017271915743795}
+  - component: {fileID: 8250583797077105164}
   m_Layer: 5
   m_Name: WorkerUI
   m_TagString: Untagged
@@ -520,6 +518,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 578.65, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8250583797077105164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8865910452380197294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfcbe7a2f0023a1419fdea64f8854c64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: {fileID: 4658947411839260974}
+  image: {fileID: 0}
+  fireButton: {fileID: 8359093364226505653}
 --- !u!1 &8977951310260090426
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class NewSelectionManager : MonoBehaviour
 {
     [SerializeField] private List<Unit> selectedUnits = new();
     [SerializeField] private RectTransform selectionBoxVisual;
     [SerializeField] private GameObject markerPrefab;
+    [SerializeField] private BuildingSelect buildingSelectUI;
 
     [SerializeField] private LayerMask unitLayer;
     [SerializeField] private LayerMask groundLayer;
@@ -24,6 +26,8 @@ public class NewSelectionManager : MonoBehaviour
 
     private BuildingBase selectedBuilding;
 
+    private UIManager uiManager;
+
     private void Awake()
     {
         mainCamera = Camera.main;
@@ -31,6 +35,8 @@ public class NewSelectionManager : MonoBehaviour
         boxStartPosition = Vector2.zero;
         boxEndPosition = Vector2.zero;
         DrawBoxVisual();
+
+        uiManager = FindObjectOfType<UIManager>();
     }
 
     public void Update()
@@ -38,6 +44,24 @@ public class NewSelectionManager : MonoBehaviour
         HandleSelection();
 
         HandleBoxSelect();
+
+        if (selectedUnits.Count == 1)
+        {
+            uiManager.SetUnitUI(true, selectedUnits[0]);
+            selectedUnits[0].Select();
+        }
+        else
+        {
+            if (selectedUnits.Count > 0)
+            {
+                for (int i = 0; i < selectedUnits.Count; i++)
+                {
+                    selectedUnits[i].Deselect();
+                }
+            }
+
+            uiManager.SetUnitUI(false, null);
+        }
     }
 
     #region Handle Unit/Building Selection
@@ -45,6 +69,7 @@ public class NewSelectionManager : MonoBehaviour
     private void HandleSelection()
     {
         if (!Input.anyKeyDown) return;
+        if (EventSystem.current.IsPointerOverGameObject()) return;
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
         if (Input.GetMouseButtonDown(0))//left mouse button
@@ -52,9 +77,8 @@ public class NewSelectionManager : MonoBehaviour
             bool hasSelectedSuccessfully = SelectSingleUnit(ray);
 
             if (selectedBuilding != null)
-            {
-                selectedBuilding.DeselectBuilding();
-            }
+                if (!buildingSelectUI.GetIsSelecting())
+                    selectedBuilding.DeselectBuilding();
 
             SelectBuilding(ray);
 
@@ -210,7 +234,7 @@ public class NewSelectionManager : MonoBehaviour
         }
     }
 
-    private void DeselectAllUnits()
+    public void DeselectAllUnits()
     {
         foreach (Unit unit in selectedUnits)
         {
@@ -319,6 +343,8 @@ public class NewSelectionManager : MonoBehaviour
     public BuildingBase GetBuildingToAttack() => buildingToAttack;
 
     public Unit GetEnemyToAttack() => enemyToAttack;
+
+    public List<Unit> GetSelectedUnits() => selectedUnits;
 
     #endregion
 }

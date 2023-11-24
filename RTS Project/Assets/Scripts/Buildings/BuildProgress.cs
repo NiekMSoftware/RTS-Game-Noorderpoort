@@ -27,4 +27,9 @@ public class BuildProgress : MonoBehaviour
         tween.OnComplete(() => Destroy(gameObject));
         tween.Play();
     }
+
+    private void Update()
+    {
+        transform.LookAt(Camera.main.transform.position);
+    }
 }

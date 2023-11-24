@@ -86,6 +86,26 @@ public class ResourceBuildingBase : BuildingBase
         SetResourceItemManagerByType(ResourceItemManager.Type.Player);
     }
 
+    public override void SelectBuilding()
+    {
+        base.SelectBuilding();
+
+        foreach (var worker in workers)
+        {
+            worker.Select();
+        }
+    }
+
+    public override void DeselectBuilding()
+    {
+        base.DeselectBuilding();
+
+        foreach (var worker in workers)
+        {
+            worker.Deselect();
+        }
+    }
+
     public ItemSlot GetStorage(ItemData itemdata)
     {
         foreach (ItemSlot slot in currentStorage)
