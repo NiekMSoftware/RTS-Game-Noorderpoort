@@ -139,7 +139,7 @@ PrefabInstance:
     - target: {fileID: 2291421862288690918, guid: 9c602ac6483414a4c8e083370de4d41b,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.36576462
+      value: 3.08
       objectReference: {fileID: 0}
     - target: {fileID: 2291421862288690918, guid: 9c602ac6483414a4c8e083370de4d41b,
         type: 3}
@@ -149,7 +149,7 @@ PrefabInstance:
     - target: {fileID: 2291421862288690918, guid: 9c602ac6483414a4c8e083370de4d41b,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.3148346
+      value: 2.05
       objectReference: {fileID: 0}
     - target: {fileID: 2291421862288690918, guid: 9c602ac6483414a4c8e083370de4d41b,
         type: 3}
@@ -222,7 +222,7 @@ Transform:
   m_GameObject: {fileID: 133134952}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 7.55, z: 0}
+  m_LocalPosition: {x: 0, y: 7.55, z: 0.89}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -242,6 +242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cubePrefab: {fileID: 5324649439494047616, guid: 9c602ac6483414a4c8e083370de4d41b,
     type: 3}
+  spawnInterval: 3
 --- !u!1 &244658212
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,6 +369,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cubePrefab: {fileID: 5324649439494047616, guid: 9c602ac6483414a4c8e083370de4d41b,
     type: 3}
+  spawnInterval: 5
 --- !u!1001 &531647191
 PrefabInstance:
   m_ObjectHideFlags: 0
