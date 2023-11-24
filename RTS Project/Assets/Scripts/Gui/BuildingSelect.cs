@@ -105,9 +105,11 @@ public class BuildingSelect : MonoBehaviour
             {
                 if (unit is Worker worker)
                 {
-                    workerBuilding.AddWorkerToBuilding(worker);
-                    worker.Select();
-                    Setup();
+                    if (workerBuilding.AddWorkerToBuilding(worker))
+                    {
+                        worker.Select();
+                        Setup();
+                    }
                 }
             }
         }
