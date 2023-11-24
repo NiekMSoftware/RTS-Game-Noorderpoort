@@ -20,6 +20,9 @@ public class FogOfWar : MonoBehaviour
     private Mesh mesh;
     private Vector3[] vertices;
     private Color[] colors;
+
+    private List<bool> visitedVertices;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,27 +45,36 @@ public class FogOfWar : MonoBehaviour
     public void DoRaycast()
     {
         Profiler.BeginSample("Doing RayCast");
-        //pakt de positie van de Player.
-        Ray r = new Ray(transform.position, Player.position - transform.position);
-        RaycastHit hit;
+
+        Vector3 cameraPosition = Camera.main.transform.position;
+
+        Ray camR = new Ray(cameraPosition, Player.position - cameraPosition);
+        RaycastHit Camhit;
+        
 
         if (RefPlayerMovement.PlayerMoving)
         {
             //kijkt wanneer de RayCast met de FogLayer collides.
-            if(Physics.Raycast(r, out hit, 100, FogLayer,QueryTriggerInteraction.Collide))
+            if(Physics.Raycast(camR, out Camhit, 100, FogLayer,QueryTriggerInteraction.Collide))
             {          
                 for(int i= 0;i<vertices.Length;i++)
                 {             
                     Vector3 v = FogOfWarPlane.transform.TransformPoint(vertices[i]);
-                    float dist = Vector3.SqrMagnitude(v - hit.point);
+                    float dist = Vector3.SqrMagnitude(v - Camhit.point);
                     if(dist < radiusSqr)
                     {
                         float alpha = MathF.Min(colors[i].a, dist/radiusSqr);
                         colors[i].a = alpha;
                         FogToDestroy = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
                     }
-                    UpdateColor();
+                    //if vertices are outside of radius then make them half see through. 
+                    else if (visitedVertices[i])
+                    {
+                        // If vertices are outside of the radius, make them half see-through.
+                        colors[i].a = 0.5f;
+                    }
                 }
+                UpdateColor();
             }
         }
         Profiler.EndSample();
@@ -76,9 +88,12 @@ public class FogOfWar : MonoBehaviour
         vertices = mesh.vertices;
         //radiusSqr = radius * radius;
         colors = new Color[vertices.Length];
-        for(int i=0; i<colors.Length; i++)
+
+        visitedVertices = new List<bool>(new bool[vertices.Length]);
+
+        for (int i=0; i<colors.Length; i++)
         {
-            colors[i] = Color.black;            
+            colors[i] = Color.black;   
         }
         UpdateColor();      
     }
