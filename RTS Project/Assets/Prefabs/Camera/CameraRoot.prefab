@@ -26,13 +26,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1672083875613161135}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4552464480163061828}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &4526933175680857799
 Camera:
@@ -162,6 +162,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3682689932484673805}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 60.6, y: 0, z: -11.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -169,7 +170,6 @@ Transform:
   m_Children:
   - {fileID: 4552464480163061828}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8906249663753121190
 MonoBehaviour:
@@ -184,17 +184,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraHolder: {fileID: 4552464480163061828}
-  orientation: {fileID: 0}
-  zoomOrientation: {fileID: 0}
   debugText: {fileID: 0}
+  collider: {fileID: 0}
   moveSpeed: 20000
   range: {x: 1000, y: 1000}
-  rotationSpeed: 3
-  rotationSmoothing: 5
-  rotationRangeY: {x: 0.8, y: 0.9}
-  zoomSpeed: 10
+  rotationSpeed: 25
+  rotationSmoothing: 15
+  rotationRangeY: {x: 0.1, y: 0.5}
+  zoomSpeed: 100
   zoomSmoothing: 1000000
   zoomRange: {x: 10, y: 200}
+  zoomAngle: 45
 --- !u!54 &8058456788979641075
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -206,7 +206,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 5
   m_AngularDrag: 5
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_CenterOfMass: {x: 1, y: 1, z: 1}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
@@ -219,9 +219,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 0
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 64
-  m_CollisionDetection: 3
+  m_CollisionDetection: 1
 --- !u!1 &4616412533369700228
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,15 +246,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4616412533369700228}
-  m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.5735764, y: 0, z: 0, w: 0.8191521}
   m_LocalPosition: {x: 0, y: 30.4, z: -30.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6316270029732248971}
   m_Father: {fileID: 686791840962566843}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 70, y: 0, z: 0}
 --- !u!65 &8417510600490227759
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -262,7 +262,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4616412533369700228}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: e1fd1e777e2736043a6bc5b17a4825f9, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
