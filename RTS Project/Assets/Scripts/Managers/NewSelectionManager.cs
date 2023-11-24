@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class NewSelectionManager : MonoBehaviour
 {
@@ -22,6 +21,8 @@ public class NewSelectionManager : MonoBehaviour
     private Unit enemyToAttack;
 
     private Marker marker;
+
+    private BuildingBase selectedBuilding;
 
     private void Awake()
     {
@@ -49,6 +50,11 @@ public class NewSelectionManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))//left mouse button
         {
             bool hasSelectedSuccessfully = SelectSingleUnit(ray);
+
+            if (selectedBuilding != null)
+            {
+                selectedBuilding.DeselectBuilding();
+            }
 
             SelectBuilding(ray);
 
@@ -81,6 +87,8 @@ public class NewSelectionManager : MonoBehaviour
         {
             print("Selected Building");
             if (!hit.transform.TryGetComponent(out BuildingBase building)) return;
+
+            selectedBuilding = building;
 
             if (selectedUnits.Count > 0)
             {

@@ -174,6 +174,7 @@ public class SelectionManager : MonoBehaviour
     {
         if (selectedBuilding != null)
         {
+            print("deselect building");
             selectedBuilding.DeselectBuilding();
         }
 
@@ -197,7 +198,7 @@ public class SelectionManager : MonoBehaviour
                     // Perhaps make it so we can use an if / else if - statnt
                     // What this will do is add more accessibility
                     // Perhaps make this a SWITCH-statement if absolutely necessarily
-                    
+
                     if (selectedBuilding.GetOccupancyType() == BuildingBase.OccupancyType.Enemy)
                     {
                         buildingToAttack = hit.transform.gameObject;

@@ -5,10 +5,18 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI[] resourceTexts;
     [SerializeField] private ResourceItemManager playerResourceItemManager;
-    [SerializeField] private GameObject buildingSelectPanel;
+    [SerializeField] private BuildingSelect buildingSelectMenu;
+    [SerializeField] private GameObject unitSelectMenu;
+    [SerializeField] private float outlineDefaultSize;
     [SerializeField] private float outlineAnimationSpeed;
     [SerializeField] private float outlineAnimationMaxSize;
     [SerializeField] private float outlineAnimationFinishedWaitTime;
+
+    private void Start()
+    {
+        unitSelectMenu.SetActive(false);
+        buildingSelectMenu.gameObject.SetActive(false);
+    }
 
     private void Update()
     {
@@ -28,11 +36,17 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void SetBuildingSelectPanel(bool value) => buildingSelectPanel.SetActive(value);
+    public void SetBuildingUI(bool value, BuildingBase building)
+    {
+        buildingSelectMenu.SetBuilding(building);
+        buildingSelectMenu.gameObject.SetActive(value);
+    }
 
     public float GetOutlineAnimationSpeed() => outlineAnimationSpeed;
 
     public float GetOutlineAnimationMaxSize() => outlineAnimationMaxSize;
 
     public float GetOutlineAnimationFinishedWaitTime() => outlineAnimationFinishedWaitTime;
+
+    public float GetOutlineDefaultSize() => outlineDefaultSize;
 }
