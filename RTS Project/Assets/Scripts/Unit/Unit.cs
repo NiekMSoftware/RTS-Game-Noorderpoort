@@ -43,7 +43,7 @@ public class Unit : MonoBehaviour
 
     private bool isSelected;
 
-    private GameObject destination;
+    private string currentAction;
 
     private void Awake()
     {
@@ -63,7 +63,6 @@ public class Unit : MonoBehaviour
     {
         if (isSelected) return;
 
-        print("select");
         renderTexture = new(cameraResoltion, cameraResoltion, 0)
         {
             name = gameObject.name + " Render Texture"
@@ -75,7 +74,6 @@ public class Unit : MonoBehaviour
 
     public void Deselect()
     {
-        print("deselect");
         Destroy(renderTexture);
         unitCamera.targetTexture = null;
         unitCamera.gameObject.SetActive(false);
@@ -91,7 +89,6 @@ public class Unit : MonoBehaviour
             elapsed += Time.deltaTime;
             if (elapsed > 1 / cameraFPS)
             {
-                print("update texture");
                 elapsed = 0;
                 unitCamera.Render();
             }
@@ -169,7 +166,7 @@ public class Unit : MonoBehaviour
 
     public RenderTexture GetRenderTexture() => renderTexture;
 
-    public GameObject GetDestination() => destination;
+    public string GetCurrentAction() => currentAction;
 
-    public void SetDestination(GameObject destination) => this.destination = destination;
+    public void SetCurrentAction(string currentAction) => this.currentAction = currentAction;
 }

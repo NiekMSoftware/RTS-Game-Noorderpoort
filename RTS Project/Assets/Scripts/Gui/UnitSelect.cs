@@ -1,5 +1,4 @@
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -19,10 +18,12 @@ public class UnitSelect : MonoBehaviour
     private Unit currentUnit;
     private NavMeshAgent agent;
 
+    private NewSelectionManager selectionManager;
+
     private void Awake()
     {
         closeButton.onClick.RemoveAllListeners();
-        closeButton.onClick.AddListener(() => gameObject.SetActive(false));
+        closeButton.onClick.AddListener(Deselect);
 
         locationButton.onClick.RemoveAllListeners();
         locationButton.onClick.AddListener(GoToDestination);
@@ -33,6 +34,12 @@ public class UnitSelect : MonoBehaviour
         mainCamera.transform.position = agent.destination;
     }
 
+    private void Deselect()
+    {
+        selectionManager.DeselectAllUnits();
+        gameObject.SetActive(false);
+    }
+
     private void Setup()
     {
         if (currentUnit == null) return;
@@ -40,22 +47,21 @@ public class UnitSelect : MonoBehaviour
         agent = currentUnit.GetComponent<NavMeshAgent>();
         icon.texture = currentUnit.GetRenderTexture();
         nameText.SetText(currentUnit.name);
-        if (agent.destination == currentUnit.transform.position || agent.isStopped == true || agent.velocity == Vector3.zero)
-        {
-            locationText.gameObject.SetActive(false);
-        }
-        else
-        {
-            locationText.gameObject.SetActive(true);
 
-            if (currentUnit.GetDestination() == null)
+        if (currentUnit.GetCurrentAction() == null)
+        {
+            if (agent.destination == currentUnit.transform.position || agent.isStopped == true || agent.velocity == Vector3.zero)
             {
-                locationText.SetText("Going to: Target Position");
+                locationText.SetText("Idling");
             }
             else
             {
-                locationText.SetText("Going to: " + currentUnit.GetDestination().name);
+                locationText.SetText("Doing something");
             }
+        }
+        else
+        {
+            locationText.SetText(currentUnit.GetCurrentAction());
         }
     }
 
@@ -68,10 +74,10 @@ public class UnitSelect : MonoBehaviour
         healthText.SetText((((float)currentUnit.UnitHealth / (float)currentUnit.UnitMaxHealth) * 100) + "%");
     }
 
-    public void Init(Unit unit)
+    public void Init(Unit unit, NewSelectionManager selectionManager)
     {
+        this.selectionManager = selectionManager;
         currentUnit = unit;
-        print(currentUnit);
         Setup();
     }
 }

@@ -122,7 +122,7 @@ public class NewSelectionManager : MonoBehaviour
                                 buildingToAttack = building;
 
                                 soldier.SendUnitToLocation(building.transform.position);
-                                soldier.SetDestination(building.gameObject);
+                                soldier.SetCurrentAction("Attacking " + building.buildingName);
                             }
                             break;
 
@@ -132,13 +132,15 @@ public class NewSelectionManager : MonoBehaviour
                                 case Barrack barrack when building is Barrack:
                                     //Send worker to barrack
                                     barrack.AddUnitToBarrack(worker);
-                                    worker.SetDestination(barrack.gameObject);
+                                    worker.SetCurrentAction("Going to train at " + barrack.buildingName);
                                     break;
 
                                 case ResourceBuildingBase workerBuilding when building is ResourceBuildingBase:
                                     //Send worker to building
-                                    workerBuilding.AddWorkerToBuilding(worker);
-                                    worker.SetDestination(workerBuilding.gameObject);
+                                    if (workerBuilding.AddWorkerToBuilding(worker))
+                                    {
+                                        worker.SetCurrentAction("Goint to work at " + workerBuilding.buildingName);
+                                    }
                                     break;
                             }
                             break;
@@ -167,10 +169,8 @@ public class NewSelectionManager : MonoBehaviour
             marker = Instantiate(markerPrefab, hit.point, Quaternion.identity).GetComponent<Marker>();
             foreach (var unit in selectedUnits)
             {
-                print("try move units");
                 if (unit.TryGetComponent(out SoldierUnit soldier))
                 {
-                    print("deselect soldier's enemy");
                     soldier.enemy = null;
                     enemyToAttack = null;
                 }
@@ -186,8 +186,6 @@ public class NewSelectionManager : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, unitLayer))
         {
             Unit unit = hit.transform.GetComponent<Unit>();
-
-            print("select single unit");
 
             switch (unit.typeUnit)
             {
@@ -219,7 +217,6 @@ public class NewSelectionManager : MonoBehaviour
 
     private void AttackEnemy(RaycastHit hit, Unit enemy)
     {
-        print("set enemytoattack");
         enemyToAttack = enemy;
 
         foreach (var soldier in selectedUnits)

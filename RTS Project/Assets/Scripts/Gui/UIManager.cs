@@ -20,6 +20,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private float outlineAnimationFinishedWaitTime;
 
     private Camera mainCamera;
+    private NewSelectionManager selectionManager;
 
     private void Start()
     {
@@ -30,6 +31,7 @@ public class UIManager : MonoBehaviour
         unitsWorklessButton.onClick.AddListener(FindWorklessWorker);
 
         mainCamera = Camera.main;
+        selectionManager = FindObjectOfType<NewSelectionManager>();
     }
 
     private void Update()
@@ -110,7 +112,7 @@ public class UIManager : MonoBehaviour
     public void SetUnitUI(bool value, Unit unit)
     {
         unitSelectMenu.gameObject.SetActive(value);
-        unitSelectMenu.Init(unit);
+        unitSelectMenu.Init(unit, selectionManager);
     }
 
     public float GetOutlineAnimationSpeed() => outlineAnimationSpeed;

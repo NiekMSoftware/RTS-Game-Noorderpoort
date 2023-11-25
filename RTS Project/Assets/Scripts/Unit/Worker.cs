@@ -139,7 +139,7 @@ public class Worker : Unit
                 {
                     myAgent.isStopped = false;
                     myAgent.SetDestination(workerHouse.transform.position);
-                    SetDestination(workerHouse);
+                    SetCurrentAction("Going to " + workerHouse.name);
 
                     if (Vector3.Distance(transform.position, workerHouse.transform.position) <= transferRange)
                     {
@@ -158,13 +158,13 @@ public class Worker : Unit
                     else
                     {
                         myAgent.SetDestination(resourceTarget.transform.position);
-                        SetDestination(resourceTarget);
+                        SetCurrentAction("Going to " + resourceTarget.name);
                     }
                 }
                 else if (currentStorage.GetAmount() == maxStorage)
                 {
                     myAgent.SetDestination(workerHouse.transform.position);
-                    SetDestination(workerHouse);
+                    SetCurrentAction("Going to " + workerHouse.name);
                 }
 
                 if (resourceTarget)
@@ -219,13 +219,15 @@ public class Worker : Unit
                     else
                     {
                         myAgent.SetDestination(workerHouse.transform.position);
-                        SetDestination(workerHouse);
+                        SetCurrentAction("Going to " + workerHouse.name);
                     }
                 }
 
                 break;
 
             case State.Gathering:
+                if (resourceTarget)
+                    SetCurrentAction("Gathering " + resourceTarget.name);
                 myAgent.isStopped = true;
                 if (canGather)
                 {
@@ -235,6 +237,8 @@ public class Worker : Unit
                 break;
 
             case State.Depositing:
+                if (workerHouse && resourceItem)
+                    SetCurrentAction($"Depositing {resourceItem.name} to {workerHouse.name}");
                 myAgent.isStopped = true;
                 // kijk uit voor de edge case als een worker vol is en een gebouw vol is
                 if (buildingBase.GetStorage(resourceItem).GetAmount() == buildingBase.GetStorage(resourceItem).GetMaxAmount())
