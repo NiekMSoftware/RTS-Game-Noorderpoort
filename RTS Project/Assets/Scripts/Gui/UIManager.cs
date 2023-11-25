@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text unitsNoHomeText;
     [SerializeField] private TMP_Text unitsWorkingText;
     [SerializeField] private TMP_Text unitsWorklessText;
+    [SerializeField] private Button unitsWorklessButton;
     [SerializeField] private BuildingSelect buildingSelectMenu;
     [SerializeField] private UnitSelect unitSelectMenu;
     [SerializeField] private float outlineDefaultSize;
@@ -17,10 +19,17 @@ public class UIManager : MonoBehaviour
     [SerializeField] private float outlineAnimationMaxSize;
     [SerializeField] private float outlineAnimationFinishedWaitTime;
 
+    private Camera mainCamera;
+
     private void Start()
     {
         unitSelectMenu.gameObject.SetActive(false);
         buildingSelectMenu.gameObject.SetActive(false);
+
+        unitsWorklessButton.onClick.RemoveAllListeners();
+        unitsWorklessButton.onClick.AddListener(FindWorklessWorker);
+
+        mainCamera = Camera.main;
     }
 
     private void Update()
@@ -73,6 +82,23 @@ public class UIManager : MonoBehaviour
         unitsNoHomeText.SetText(noHomeAmount.ToString());
         unitsWorkingText.SetText(workingAmount.ToString());
         unitsWorklessText.SetText(worklessAmount.ToString());
+    }
+
+    private void FindWorklessWorker()
+    {
+        Unit[] allUnits = FindObjectsOfType<Unit>();
+
+        for (int i = 0; i < allUnits.Length; i++)
+        {
+            if (allUnits[i] is Worker worker)
+            {
+                if (!worker.GetHasWork())
+                {
+                    mainCamera.transform.position = worker.transform.position;
+                    return;
+                }
+            }
+        }
     }
 
     public void SetBuildingUI(bool value, BuildingBase building)

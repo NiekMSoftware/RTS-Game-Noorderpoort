@@ -122,6 +122,7 @@ public class NewSelectionManager : MonoBehaviour
                                 buildingToAttack = building;
 
                                 soldier.SendUnitToLocation(building.transform.position);
+                                soldier.SetDestination(building.gameObject);
                             }
                             break;
 
@@ -131,11 +132,13 @@ public class NewSelectionManager : MonoBehaviour
                                 case Barrack barrack when building is Barrack:
                                     //Send worker to barrack
                                     barrack.AddUnitToBarrack(worker);
+                                    worker.SetDestination(barrack.gameObject);
                                     break;
 
                                 case ResourceBuildingBase workerBuilding when building is ResourceBuildingBase:
                                     //Send worker to building
                                     workerBuilding.AddWorkerToBuilding(worker);
+                                    worker.SetDestination(workerBuilding.gameObject);
                                     break;
                             }
                             break;

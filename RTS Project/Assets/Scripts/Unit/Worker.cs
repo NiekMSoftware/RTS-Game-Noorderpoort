@@ -22,7 +22,6 @@ public class Worker : Unit
     private ResourceBuildingBase buildingBase;
     private string jobName;
 
-
     protected override void Start()
     {
         base.Start();
@@ -32,6 +31,7 @@ public class Worker : Unit
         currentStorage = itemSlot;
         myAgent = GetComponent<NavMeshAgent>();
     }
+
     public ResourceBuildingBase GetCurrentBuilding()
     {
         if (workerHouse)
@@ -139,6 +139,7 @@ public class Worker : Unit
                 {
                     myAgent.isStopped = false;
                     myAgent.SetDestination(workerHouse.transform.position);
+                    SetDestination(workerHouse);
 
                     if (Vector3.Distance(transform.position, workerHouse.transform.position) <= transferRange)
                     {
@@ -157,11 +158,13 @@ public class Worker : Unit
                     else
                     {
                         myAgent.SetDestination(resourceTarget.transform.position);
+                        SetDestination(resourceTarget);
                     }
                 }
                 else if (currentStorage.GetAmount() == maxStorage)
                 {
                     myAgent.SetDestination(workerHouse.transform.position);
+                    SetDestination(workerHouse);
                 }
 
                 if (resourceTarget)
@@ -216,6 +219,7 @@ public class Worker : Unit
                     else
                     {
                         myAgent.SetDestination(workerHouse.transform.position);
+                        SetDestination(workerHouse);
                     }
                 }
 

@@ -43,6 +43,8 @@ public class Unit : MonoBehaviour
 
     private bool isSelected;
 
+    private GameObject destination;
+
     private void Awake()
     {
         unitCamera = GetComponentInChildren<Camera>();
@@ -166,4 +168,8 @@ public class Unit : MonoBehaviour
     #endregion
 
     public RenderTexture GetRenderTexture() => renderTexture;
+
+    public GameObject GetDestination() => destination;
+
+    public void SetDestination(GameObject destination) => this.destination = destination;
 }
