@@ -13,6 +13,8 @@ public class Unit : MonoBehaviour
     
     public int UnitHealth { get { return unitHealth; } set { unitHealth = value; } }
 
+    public int UnitMaxHealth { get { return unitMaxHealth; } set { UnitMaxHealth = value; } }
+
     [Space]
     [SerializeField] protected int unitSpeed;
     [SerializeField] protected int unitDamage;
@@ -57,7 +59,13 @@ public class Unit : MonoBehaviour
 
     public void Select()
     {
-        renderTexture = new(cameraResoltion, cameraResoltion, 0);
+        if (isSelected) return;
+
+        print("select");
+        renderTexture = new(cameraResoltion, cameraResoltion, 0)
+        {
+            name = gameObject.name + " Render Texture"
+        };
         unitCamera.targetTexture = renderTexture;
         unitCamera.gameObject.SetActive(true);
         isSelected = true;
@@ -65,6 +73,7 @@ public class Unit : MonoBehaviour
 
     public void Deselect()
     {
+        print("deselect");
         Destroy(renderTexture);
         unitCamera.targetTexture = null;
         unitCamera.gameObject.SetActive(false);
@@ -80,6 +89,7 @@ public class Unit : MonoBehaviour
             elapsed += Time.deltaTime;
             if (elapsed > 1 / cameraFPS)
             {
+                print("update texture");
                 elapsed = 0;
                 unitCamera.Render();
             }
@@ -155,5 +165,5 @@ public class Unit : MonoBehaviour
 
     #endregion
 
-    public RenderTexture GetRenderTexture() => renderTexture;      
+    public RenderTexture GetRenderTexture() => renderTexture;
 }

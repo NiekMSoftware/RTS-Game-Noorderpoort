@@ -25,6 +25,7 @@ public class NewSelectionManager : MonoBehaviour
     private Marker marker;
 
     private BuildingBase selectedBuilding;
+    private Unit selectedUnit;
 
     private UIManager uiManager;
 
@@ -41,6 +42,14 @@ public class NewSelectionManager : MonoBehaviour
 
     public void Update()
     {
+        if (selectedUnits.Count != 1 && selectedUnit)
+        {
+            selectedUnit.Deselect();
+            selectedUnit = null;
+
+            uiManager.SetUnitUI(false, null);
+        }
+
         HandleSelection();
 
         HandleBoxSelect();
@@ -48,19 +57,8 @@ public class NewSelectionManager : MonoBehaviour
         if (selectedUnits.Count == 1)
         {
             uiManager.SetUnitUI(true, selectedUnits[0]);
-            selectedUnits[0].Select();
-        }
-        else
-        {
-            if (selectedUnits.Count > 0)
-            {
-                for (int i = 0; i < selectedUnits.Count; i++)
-                {
-                    selectedUnits[i].Deselect();
-                }
-            }
-
-            uiManager.SetUnitUI(false, null);
+            selectedUnit = selectedUnits[0];
+            selectedUnit.Select();
         }
     }
 

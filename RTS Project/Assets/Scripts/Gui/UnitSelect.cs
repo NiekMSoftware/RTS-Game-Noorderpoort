@@ -9,8 +9,6 @@ public class UnitSelect : MonoBehaviour
     [SerializeField] private Slider healthSlider;
     [SerializeField] private TMP_Text healthText;
 
-    private int maxUnitHealth = 50;
-
     private Unit currentUnit;
 
     private void Awake()
@@ -30,13 +28,15 @@ public class UnitSelect : MonoBehaviour
     {
         if (!currentUnit) return;
 
-        healthSlider.value = currentUnit.UnitHealth;
-        healthText.SetText(((currentUnit.UnitHealth / maxUnitHealth) * 100) + "%");
+        healthSlider.maxValue = (float)currentUnit.UnitMaxHealth;
+        healthSlider.value = (float)currentUnit.UnitHealth;
+        healthText.SetText((((float)currentUnit.UnitHealth / (float)currentUnit.UnitMaxHealth) * 100) + "%");
     }
 
     public void Init(Unit unit)
     {
         currentUnit = unit;
+        print(currentUnit);
         Setup();
     }
 }
