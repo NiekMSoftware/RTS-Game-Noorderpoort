@@ -3,8 +3,13 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI[] resourceTexts;
+    [SerializeField] private TMP_Text[] resourceTexts;
+    [SerializeField] private TMP_Text[] resourceTextsToolTip;
     [SerializeField] private ResourceItemManager playerResourceItemManager;
+    [SerializeField] private TMP_Text unitsHasHomeText;
+    [SerializeField] private TMP_Text unitsNoHomeText;
+    [SerializeField] private TMP_Text unitsWorkingText;
+    [SerializeField] private TMP_Text unitsWorklessText;
     [SerializeField] private BuildingSelect buildingSelectMenu;
     [SerializeField] private UnitSelect unitSelectMenu;
     [SerializeField] private float outlineDefaultSize;
@@ -22,8 +27,13 @@ public class UIManager : MonoBehaviour
     {
         for (int i = 0; i < resourceTexts.Length; i++)
         {
-            int amount = playerResourceItemManager.itemSlots[i].amount;
-            resourceTexts[i].text = amount.ToString();
+            ItemSlot currentItemSlot = playerResourceItemManager.itemSlots[i];
+            int amount = currentItemSlot.amount;
+            resourceTexts[i].SetText(amount.ToString());
+
+            int maxAmount = currentItemSlot.maxAmount;
+            string name = currentItemSlot.data.name;
+            resourceTextsToolTip[i].SetText($"{name} : {amount}/{maxAmount}");
 
             if (amount == 0)
             {
@@ -34,6 +44,35 @@ public class UIManager : MonoBehaviour
                 resourceTexts[i].color = Color.white;
             }
         }
+    }
+
+    public void UpdateWorkerUI()
+    {
+        Unit[] allUnits = FindObjectsOfType<Unit>();
+        int hasHomeAmount = 0;
+        int noHomeAmount = 0;
+        int workingAmount = 0;
+        int worklessAmount = 0;
+
+        for (int i = 0; i < allUnits.Length; i++)
+        {
+            if (allUnits[i] is Worker worker)
+            {
+                if (worker.GetHasWork())
+                {
+                    workingAmount++;
+                }
+                else
+                {
+                    worklessAmount++;
+                }
+            }
+        }
+
+        unitsHasHomeText.SetText(hasHomeAmount.ToString());
+        unitsNoHomeText.SetText(noHomeAmount.ToString());
+        unitsWorkingText.SetText(workingAmount.ToString());
+        unitsWorklessText.SetText(worklessAmount.ToString());
     }
 
     public void SetBuildingUI(bool value, BuildingBase building)

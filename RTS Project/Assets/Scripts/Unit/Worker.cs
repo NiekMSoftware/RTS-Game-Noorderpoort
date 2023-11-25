@@ -259,4 +259,6 @@ public class Worker : Unit
                 break;
         }
     }
+
+    public bool GetHasWork() => workerHouse;
 }
