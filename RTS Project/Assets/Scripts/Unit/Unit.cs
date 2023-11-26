@@ -1,5 +1,4 @@
-using System.Collections;
-using Unity.VisualScripting;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,10 +9,13 @@ public class Unit : MonoBehaviour
     [SerializeField] protected int unitHealth;
     [SerializeField] protected int unitMaxHealth;
     [SerializeField] protected int unitHealing;
+    [SerializeField] protected string unitName;
     
     public int UnitHealth { get { return unitHealth; } set { unitHealth = value; } }
 
     public int UnitMaxHealth { get { return unitMaxHealth; } set { UnitMaxHealth = value; } }
+
+    public string UnitName { get { return unitName; } set { unitName = value; } }
 
     [Space]
     [SerializeField] protected int unitSpeed;
@@ -26,6 +28,7 @@ public class Unit : MonoBehaviour
     [Header("Enum Data")]
     [SerializeField] protected Jobs job;
     [SerializeField] public TypeUnit typeUnit;
+    [SerializeField] private Sex sex;
 
     [Header("Select Agent Movement")]
     [SerializeField] GameObject selectionObject;
@@ -57,6 +60,35 @@ public class Unit : MonoBehaviour
 
         unitCamera.gameObject.SetActive(false);
         unitCamera.enabled = false;
+
+        RandomSex();
+
+        RandomName();
+    }
+
+    private void RandomName()
+    {
+        TextAsset file = null;
+
+        if (sex == Sex.Female)
+        {
+            file = Resources.Load<TextAsset>("FemaleNames");
+        }
+        else if (sex == Sex.Male)
+        {
+            file = Resources.Load<TextAsset>("MaleNames");
+        }
+
+        string[] names = file.text.Split('\n');
+        int randomNum = Random.Range(0, names.Length);
+        UnitName = names[randomNum];
+    }
+
+    private void RandomSex()
+    {
+        var values = System.Enum.GetValues(typeof(Sex));
+        int randomNum = Random.Range(0, values.Length);
+        sex = (Sex)values.GetValue(randomNum);
     }
 
     public void Select()
@@ -114,6 +146,12 @@ public class Unit : MonoBehaviour
         Animal,
         Enemy,
         Special
+    }
+
+    protected enum Sex
+    {
+        Female,
+        Male
     }
 
     #endregion

@@ -46,7 +46,7 @@ public class UnitSelect : MonoBehaviour
 
         agent = currentUnit.GetComponent<NavMeshAgent>();
         icon.texture = currentUnit.GetRenderTexture();
-        nameText.SetText(currentUnit.name);
+        nameText.SetText(currentUnit.UnitName);
 
         if (currentUnit.GetCurrentAction() == null)
         {
