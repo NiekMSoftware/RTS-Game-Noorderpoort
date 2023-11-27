@@ -25,6 +25,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6537541034667993825, guid: 03430657f2f14514ba955174b175ae45,
         type: 3}
+      propertyPath: typeUnit
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6537541034667993825, guid: 03430657f2f14514ba955174b175ae45,
+        type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
