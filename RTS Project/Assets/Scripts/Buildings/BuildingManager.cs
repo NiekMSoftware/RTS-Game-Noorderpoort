@@ -265,7 +265,7 @@ public class BuildingManager : MonoBehaviour
         StartCoroutine(spawnedBuilding.Build(buildings[currentIndex].buildTime));
 
         BuildProgress buildProgress = Instantiate(buildProgressPrefab, new Vector3(spawnedBuilding.transform.position.x,
-            spawnedBuilding.transform.position.y + spawnedBuilding.transform.localScale.y + buildProgressHeight, spawnedBuilding.transform.position.z), Quaternion.identity).GetComponent<BuildProgress>();
+            spawnedBuilding.transform.position.y + spawnedBuilding.transform.localScale.y + buildProgressHeight, spawnedBuilding.transform.position.z), Quaternion.identity, spawnedBuilding.transform).GetComponent<BuildProgress>();
         buildProgress.Init(buildings[currentIndex].buildTime);
 
         for (int i = 0; i < buildings[currentIndex].buildingsToUnlock.Length; i++)

@@ -67,6 +67,7 @@ public class ResourceSpawnManager : MonoBehaviour
         Quaternion finalRotation = initialRotation * randomYRotationQuaternion;
 
         GameObject _spawnedObject = Instantiate(spawnObject, _spawnLocation, finalRotation, transform);
+        _spawnedObject.name = spawnObject.name;
 
         Vector3 _randomSize;
         float _randomSizeNum = Random.Range(spawnObject.transform.localScale.x * minSpawnSize, spawnObject.transform.localScale.x * maxSpawnSize);

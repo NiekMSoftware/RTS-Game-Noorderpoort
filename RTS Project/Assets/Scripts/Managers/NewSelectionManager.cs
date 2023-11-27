@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class NewSelectionManager : MonoBehaviour
 {
     [SerializeField] private List<Unit> selectedUnits = new();
     [SerializeField] private RectTransform selectionBoxVisual;
     [SerializeField] private GameObject markerPrefab;
+    [SerializeField] private BuildingSelect buildingSelectUI;
 
     [SerializeField] private LayerMask unitLayer;
     [SerializeField] private LayerMask groundLayer;
@@ -23,6 +24,11 @@ public class NewSelectionManager : MonoBehaviour
 
     private Marker marker;
 
+    private BuildingBase selectedBuilding;
+    private Unit selectedUnit;
+
+    private UIManager uiManager;
+
     private void Awake()
     {
         mainCamera = Camera.main;
@@ -30,13 +36,30 @@ public class NewSelectionManager : MonoBehaviour
         boxStartPosition = Vector2.zero;
         boxEndPosition = Vector2.zero;
         DrawBoxVisual();
+
+        uiManager = FindObjectOfType<UIManager>();
     }
 
     public void Update()
     {
+        if (selectedUnits.Count != 1 && selectedUnit)
+        {
+            selectedUnit.Deselect();
+            selectedUnit = null;
+
+            uiManager.SetUnitUI(false, null);
+        }
+
         HandleSelection();
 
         HandleBoxSelect();
+
+        if (selectedUnits.Count == 1)
+        {
+            uiManager.SetUnitUI(true, selectedUnits[0]);
+            selectedUnit = selectedUnits[0];
+            selectedUnit.Select();
+        }
     }
 
     #region Handle Unit/Building Selection
@@ -44,11 +67,16 @@ public class NewSelectionManager : MonoBehaviour
     private void HandleSelection()
     {
         if (!Input.anyKeyDown) return;
+        if (EventSystem.current.IsPointerOverGameObject()) return;
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
         if (Input.GetMouseButtonDown(0))//left mouse button
         {
             bool hasSelectedSuccessfully = SelectSingleUnit(ray);
+
+            if (selectedBuilding != null)
+                if (!buildingSelectUI.GetIsSelecting())
+                    selectedBuilding.DeselectBuilding();
 
             SelectBuilding(ray);
 
@@ -60,10 +88,6 @@ public class NewSelectionManager : MonoBehaviour
         else if (Input.GetMouseButtonDown(1))//right mouse button
         {
             MoveUnits(ray);
-        }
-        else if (Input.GetMouseButtonDown(2))//middle mouse
-        {
-            UnassignWorkerTest(ray);
         }
     }
 
@@ -82,6 +106,8 @@ public class NewSelectionManager : MonoBehaviour
             print("Selected Building");
             if (!hit.transform.TryGetComponent(out BuildingBase building)) return;
 
+            selectedBuilding = building;
+
             if (selectedUnits.Count > 0)
             {
                 foreach (Unit unit in selectedUnits)
@@ -96,6 +122,7 @@ public class NewSelectionManager : MonoBehaviour
                                 buildingToAttack = building;
 
                                 soldier.SendUnitToLocation(building.transform.position);
+                                soldier.SetCurrentAction("Attacking " + building.buildingName);
                             }
                             break;
 
@@ -105,11 +132,15 @@ public class NewSelectionManager : MonoBehaviour
                                 case Barrack barrack when building is Barrack:
                                     //Send worker to barrack
                                     barrack.AddUnitToBarrack(worker);
+                                    worker.SetCurrentAction("Going to train at " + barrack.buildingName);
                                     break;
 
                                 case ResourceBuildingBase workerBuilding when building is ResourceBuildingBase:
                                     //Send worker to building
-                                    workerBuilding.AddWorkerToBuilding(worker);
+                                    if (workerBuilding.AddWorkerToBuilding(worker))
+                                    {
+                                        worker.SetCurrentAction("Goint to work at " + workerBuilding.buildingName);
+                                    }
                                     break;
                             }
                             break;
@@ -138,10 +169,8 @@ public class NewSelectionManager : MonoBehaviour
             marker = Instantiate(markerPrefab, hit.point, Quaternion.identity).GetComponent<Marker>();
             foreach (var unit in selectedUnits)
             {
-                print("try move units");
                 if (unit.TryGetComponent(out SoldierUnit soldier))
                 {
-                    print("deselect soldier's enemy");
                     soldier.enemy = null;
                     enemyToAttack = null;
                 }
@@ -157,8 +186,6 @@ public class NewSelectionManager : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, unitLayer))
         {
             Unit unit = hit.transform.GetComponent<Unit>();
-
-            print("select single unit");
 
             switch (unit.typeUnit)
             {
@@ -190,7 +217,6 @@ public class NewSelectionManager : MonoBehaviour
 
     private void AttackEnemy(RaycastHit hit, Unit enemy)
     {
-        print("set enemytoattack");
         enemyToAttack = enemy;
 
         foreach (var soldier in selectedUnits)
@@ -202,7 +228,7 @@ public class NewSelectionManager : MonoBehaviour
         }
     }
 
-    private void DeselectAllUnits()
+    public void DeselectAllUnits()
     {
         foreach (Unit unit in selectedUnits)
         {
@@ -311,6 +337,8 @@ public class NewSelectionManager : MonoBehaviour
     public BuildingBase GetBuildingToAttack() => buildingToAttack;
 
     public Unit GetEnemyToAttack() => enemyToAttack;
+
+    public List<Unit> GetSelectedUnits() => selectedUnits;
 
     #endregion
 }

@@ -10,6 +10,8 @@ public class BuildingBase : MonoBehaviour
     [SerializeField] private BuildingPoints points;
     [SerializeField] private Outline outline;
 
+    public string buildingName;
+
     private List<Material> savedMaterials = new();
     private GameObject particleObject;
 
@@ -28,7 +30,11 @@ public class BuildingBase : MonoBehaviour
         uiManager = FindObjectOfType<UIManager>();
 
         outline.enabled = false;
+        outline.OutlineWidth = uiManager.GetOutlineDefaultSize();
         outlineDefaultSize = outline.OutlineWidth;
+
+        if (buildingName == string.Empty)
+            buildingName = name;
     }
 
     [SerializeField] private OccupancyType occupancyType;
@@ -131,23 +137,22 @@ public class BuildingBase : MonoBehaviour
         }
     }
 
-    public void SelectBuilding()
+    public virtual void SelectBuilding()
     {
-        print("select building!");
-        uiManager.SetBuildingSelectPanel(true);
+        uiManager.SetBuildingUI(true, this);
         outline.OutlineWidth = outlineDefaultSize;
         outline.enabled = true;
     }
 
-    public void DeselectBuilding()
+    public virtual void DeselectBuilding()
     {
-        uiManager.SetBuildingSelectPanel(false);
+        uiManager.SetBuildingUI(false, this);
         outline.enabled = false;
     }
 
     public virtual void DestroyBuilding()
     {
-        uiManager.SetBuildingSelectPanel(false);
+        uiManager.SetBuildingUI(false, this);
         Destroy(gameObject);
     }
 
