@@ -174,10 +174,18 @@ public class ResourceBuildingBase : BuildingBase
         }
         else if (workers.Count < maxWorkers)
         {
-            worker.InitializeWorker(gameObject, jobs, FindClosestResourceManager(transform, currentStorage[0].data),
+            if (FindClosestResourceManager(transform, currentStorage[0].data) != null)
+            {
+                worker.InitializeWorker(gameObject, jobs, FindClosestResourceManager(transform, currentStorage[0].data),
                 resourceItemManager);
-            workers.Add(worker);
-            return true;
+                workers.Add(worker);
+                return true;
+            }
+            else
+            {
+                Debug.LogWarning("No resourceManager in range");
+            }
+
         }
 
         return false;
