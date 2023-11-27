@@ -86,6 +86,26 @@ public class ResourceBuildingBase : BuildingBase
         SetResourceItemManagerByType(ResourceItemManager.Type.Player);
     }
 
+    public override void SelectBuilding()
+    {
+        base.SelectBuilding();
+
+        foreach (var worker in workers)
+        {
+            worker.Select();
+        }
+    }
+
+    public override void DeselectBuilding()
+    {
+        base.DeselectBuilding();
+
+        foreach (var worker in workers)
+        {
+            worker.Deselect();
+        }
+    }
+
     public ItemSlot GetStorage(ItemData itemdata)
     {
         foreach (ItemSlot slot in currentStorage)
@@ -144,7 +164,6 @@ public class ResourceBuildingBase : BuildingBase
 
     public bool AddWorkerToBuilding(Worker worker)
     {
-        print("addworkertobuilding");
         if (workers.Contains(worker))
         {
             return false;
@@ -166,6 +185,7 @@ public class ResourceBuildingBase : BuildingBase
 
     public void RemoveWorkerFromBuilding(Worker worker)
     {
+        worker.UnAssignWorker();
         workers.Remove(worker);
     }
 
