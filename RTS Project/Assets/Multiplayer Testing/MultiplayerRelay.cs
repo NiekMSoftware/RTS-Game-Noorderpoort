@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
@@ -12,6 +13,28 @@ using UnityEngine;
 
 public class MultiplayerRelay : MonoBehaviour
 {
+    //begin chatgbt
+    private static MultiplayerRelay _instance;
+
+    public static MultiplayerRelay Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<MultiplayerRelay>();
+                if (_instance == null)
+                {
+                    GameObject obj = new GameObject();
+                    obj.name = typeof(MultiplayerRelay).Name;
+                    _instance = obj.AddComponent<MultiplayerRelay>();
+                }
+            }
+            return _instance;
+        }
+    }
+
+    //einde chatgbt
     private async void Start()
     {
         await UnityServices.InitializeAsync();
@@ -26,8 +49,7 @@ public class MultiplayerRelay : MonoBehaviour
 
     }
 
-    [ContextMenu("Create Relay")]
-    private async void CreateRelay()
+    public async Task<string> CreateRelay()
     {
         try
         {
@@ -38,19 +60,23 @@ public class MultiplayerRelay : MonoBehaviour
             Debug.Log(joinCode);
 
             RelayServerData relayServerData = new RelayServerData(allocation, "dtls");
+
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
 
 
             NetworkManager.Singleton.StartHost();
+
+            return joinCode;
         }
         catch (RelayServiceException e)
         {
             Debug.Log(e);
+            return null;
         }
 
     }
 
-    private async void JoinRelay(string joinCode)
+    public async void JoinRelay(string joinCode)
     {
         try
         {
@@ -58,6 +84,7 @@ public class MultiplayerRelay : MonoBehaviour
             JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
 
             RelayServerData relayServerData = new RelayServerData(joinAllocation, "dtls");
+
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
 
             NetworkManager.Singleton.StartClient();
