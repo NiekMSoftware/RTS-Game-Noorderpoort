@@ -27,21 +27,12 @@ public class LobbyListUI : MonoBehaviour {
         createLobbyButton.onClick.AddListener(CreateLobbyButtonClick);
     }
 
-    private void Start()
-    {
-        if (LobbyManager.Instance != null)
-        {
-            LobbyManager.Instance.OnLobbyListChanged += LobbyManager_OnLobbyListChanged;
-            LobbyManager.Instance.OnJoinedLobby += LobbyManager_OnJoinedLobby;
-            LobbyManager.Instance.OnLeftLobby += LobbyManager_OnLeftLobby;
-            LobbyManager.Instance.OnKickedFromLobby += LobbyManager_OnKickedFromLobby;
-        }
-        else
-        {
-            Debug.LogError("LobbyManager.Instance is null.");
-        }
+    private void Start() {
+        LobbyManager.Instance.OnLobbyListChanged += LobbyManager_OnLobbyListChanged;
+        LobbyManager.Instance.OnJoinedLobby += LobbyManager_OnJoinedLobby;
+        LobbyManager.Instance.OnLeftLobby += LobbyManager_OnLeftLobby;
+        LobbyManager.Instance.OnKickedFromLobby += LobbyManager_OnKickedFromLobby;
     }
-
 
     private void LobbyManager_OnKickedFromLobby(object sender, LobbyManager.LobbyEventArgs e) {
         Show();
