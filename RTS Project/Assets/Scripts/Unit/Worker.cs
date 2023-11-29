@@ -15,7 +15,7 @@ public class Worker : Unit
 
     private bool canGather = true;
     private bool canDeposit = true;
-    private float transferRange = 2.5f;
+    private float transferRange = 5f;
     private float gatherTime = 1f;
     public enum State { Moving, Idling, Gathering, Depositing, Assigning }
     public State currentState = State.Assigning;
@@ -153,7 +153,7 @@ public class Worker : Unit
                 {
                     if (!resourceTarget)
                     {
-                        resourceTarget = resourceObjectManager.FindClosestResource(buildingBase.transform, resourceItem, this);
+                        resourceTarget = resourceObjectManager.FindClosestResource(buildingBase, resourceItem, this);
                     }
                     else
                     {
@@ -200,7 +200,7 @@ public class Worker : Unit
                     if (!resourceTarget && resourceObjectManager.resources.Count > resourceObjectManager.occupiedResources.Count)
                     {
                         currentState = State.Moving;
-                        resourceTarget = resourceObjectManager.FindClosestResource(buildingBase.transform, resourceItem, this);
+                        resourceTarget = resourceObjectManager.FindClosestResource(buildingBase, resourceItem, this);
                     }
 
                     // If inventory isnt full in building and working go to moving

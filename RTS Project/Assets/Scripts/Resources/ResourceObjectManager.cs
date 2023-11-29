@@ -5,7 +5,6 @@ public class ResourceObjectManager : MonoBehaviour
 {
     public List<GameObject> resources = new List<GameObject>();
     public List<GameObject> occupiedResources = new List<GameObject>();
-    private float scanRange = 20f;
     public bool AIPlacedBuilding;
 
     public void SetResources(GameObject resource)
@@ -24,9 +23,10 @@ public class ResourceObjectManager : MonoBehaviour
     //    }
     //}
 
-    public GameObject FindClosestResource(Transform buildingBase, ItemData itemdata, Worker worker)
+    public GameObject FindClosestResource(ResourceBuildingBase buildingBase, ItemData itemdata, Worker worker)
     {
         GameObject closestResource = null;
+        float scanRange = buildingBase.GetRange();
         float closestDistance = scanRange;
         Vector3 currentPosition = buildingBase.transform.position;
 

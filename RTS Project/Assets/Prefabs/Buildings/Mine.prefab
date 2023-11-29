@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5247091873377409366}
   - component: {fileID: 4694457708341824937}
   - component: {fileID: -1352996216526569333}
+  - component: {fileID: 8195611119465234610}
   m_Layer: 7
   m_Name: Mine
   m_TagString: Untagged
@@ -66,7 +67,8 @@ MonoBehaviour:
   workers: []
   jobName: Stone Miner
   jobs: 1
-  scanRange: 500
+  scanRange: 50
+  closestResourceCluster: {fileID: 0}
 --- !u!65 &4694457708341824937
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -106,6 +108,22 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
+--- !u!208 &8195611119465234610
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2432438935407483892}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 3.9916456, y: 2.3183055, z: 2.114337}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 0
+  m_Center: {x: 1.72, y: 1.823306, z: -0.01758671}
+  m_TimeToStationary: 0.5
 --- !u!1001 &366478329926876015
 PrefabInstance:
   m_ObjectHideFlags: 0

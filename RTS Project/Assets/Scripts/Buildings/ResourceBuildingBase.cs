@@ -217,4 +217,6 @@ public class ResourceBuildingBase : BuildingBase
 
         base.DestroyBuilding();
     }
+
+    public float GetRange() => scanRange;
 }
