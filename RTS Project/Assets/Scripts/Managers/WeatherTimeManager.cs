@@ -149,6 +149,8 @@ public class WeatherTimeManager : MonoBehaviour
 
     public bool IsDay() => isDay;
 
+
+#if UNITY_EDITOR
     [CustomEditor(typeof(WeatherTimeManager))]
     class WeatherEditor : Editor
     {
@@ -163,4 +165,5 @@ public class WeatherTimeManager : MonoBehaviour
             }
         }
     }
+#endif
 }
