@@ -105,9 +105,10 @@ public class BuildingBase : MonoBehaviour
 
         ChangeObjectMaterial(buildingMaterial);
 
-        buildingAnimationValue = 0f;
+        //while (buildingAnimationValue < buildingMaterial)
+
+        buildingAnimationValue += 0.1f;
         buildingMaterial.SetFloat("Value", buildingAnimationValue);
-        print(buildingMaterial.GetFloat("Value"));
 
         yield return new WaitForSeconds(buildTime);
 
