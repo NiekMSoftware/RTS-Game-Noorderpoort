@@ -289,7 +289,9 @@ public class BuildingManager : MonoBehaviour
         spawnedParticle.Play();
 
         BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pendingObject.transform.position, pendingObject.transform.rotation).GetComponent<BuildingBase>();
-        spawnedBuilding.Init(buildingMaterial, buildParticle);
+        spawnedBuilding.Init(buildingMaterial, buildParticle, 
+            buildings[currentIndex].building, BuildingBase.States.Building);
+
         spawnedBuilding.SetOccupancyType(BuildingBase.OccupancyType.Player);
         StartCoroutine(spawnedBuilding.Build(buildings[currentIndex].buildTime));
 

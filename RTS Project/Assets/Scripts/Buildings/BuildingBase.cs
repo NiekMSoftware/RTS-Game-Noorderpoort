@@ -23,6 +23,8 @@ public class BuildingBase : MonoBehaviour
 
     private GameObject buildingToSpawn;
 
+    private float buildingAnimationValue;
+
     public enum Jobs { Wood, Stone, Metal }
 
     [SerializeField] private OccupancyType occupancyType;
@@ -93,15 +95,20 @@ public class BuildingBase : MonoBehaviour
     {
         buildingMaterial = _material;
         particleObject = _particleObject;
+        this.buildingToSpawn = buildingToSpawn;
+        currentState = state;
     }
 
     public virtual IEnumerator Build(float buildTime)
     {
-        currentState = States.Building;
+        if (currentState == States.Normal) yield return null;
 
-        //SaveObjectMaterials();
-        //ApplyObjectMaterials();
-        //ChangeObjectMaterial(buildingMaterial);
+        ChangeObjectMaterial(buildingMaterial);
+
+        buildingAnimationValue = 0.001f;
+        buildingMaterial.SetFloat("Value", buildingAnimationValue);
+        print(buildingMaterial.GetFloat("Value"));
+
         yield return new WaitForSeconds(buildTime);
 
         currentState = States.Normal;
@@ -109,7 +116,11 @@ public class BuildingBase : MonoBehaviour
         particle.Play();
         yield return new WaitForSeconds(particle.main.duration);
 
+        Instantiate(buildingToSpawn, transform.position, transform.rotation);
+
         yield return null;
+
+        Destroy(gameObject);
     }
 
     public States GetCurrentState() => currentState;
@@ -164,55 +175,6 @@ public class BuildingBase : MonoBehaviour
     {
         uiManager.SetBuildingUI(false, this);
         Destroy(gameObject);
-    }
-
-    private void ApplyObjectMaterials()
-    {
-        if (gameObject.TryGetComponent(out MeshRenderer mr))
-        {
-            if (mr.material)
-            {
-                mr.material = savedMaterials[0];
-            }
-        }
-        else
-        {
-            foreach (var mr2 in gameObject.GetComponentsInChildren<MeshRenderer>())
-            {
-                Material[] materials = mr2.materials;
-
-                for (int i = 0; i < materials.Length; i++)
-                {
-                    materials[i] = savedMaterials[i];
-                }
-
-                mr2.materials = materials;
-            }
-        }
-    }
-
-    private void SaveObjectMaterials()
-    {
-        if (gameObject.TryGetComponent(out MeshRenderer mr))
-        {
-            if (mr.material)
-            {
-                savedMaterials[0] = mr.material;
-            }
-        }
-        else
-        {
-            foreach (var mr2 in gameObject.GetComponentsInChildren<MeshRenderer>())
-            {
-                Material[] materials = mr2.materials;
-
-                for (int i = 0; i < materials.Length; i++)
-                {
-                    //print(materials[i].name + " " + i + mr2.transform.GetSiblingIndex());
-                    savedMaterials.Add(materials[i]);
-                }
-            }
-        }
     }
 
     public Outline GetOutline() => outline;

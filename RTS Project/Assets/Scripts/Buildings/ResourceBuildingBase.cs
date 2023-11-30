@@ -89,9 +89,9 @@ public class ResourceBuildingBase : BuildingBase
         return closestResource;
     }
 
-    public override void Init(Material _material, GameObject _particleObject)
+    public override void Init(Material _material, GameObject _particleObject, GameObject buildingToSpawn, States state)
     {
-        base.Init(_material, _particleObject);
+        base.Init(_material, _particleObject, buildingToSpawn, state);
         SetResourceItemManagerByType(ResourceItemManager.Type.Player);
     }
 
