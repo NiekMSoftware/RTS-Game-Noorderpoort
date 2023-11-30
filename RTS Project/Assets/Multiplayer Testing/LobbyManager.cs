@@ -1,12 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
 
 public class LobbyManager : MonoBehaviour {
 
@@ -410,12 +413,20 @@ public class LobbyManager : MonoBehaviour {
 
 
                 joinedLobby = lobby;
+                GoToGameScene();
             }
             catch (LobbyServiceException e) 
             {
                 Debug.Log(e);
             }
         }
+    }
+
+
+    [ClientRpc]
+    private void GoToGameScene()
+    {
+        SceneManager.LoadScene("RelayTest");
     }
 }
 
