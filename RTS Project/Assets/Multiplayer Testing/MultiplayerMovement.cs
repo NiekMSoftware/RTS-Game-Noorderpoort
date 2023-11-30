@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MultiplayerMovement : NetworkBehaviour
 {
     void Update()
     {
+        if (!IsOwner) return;
         Vector3 moveDir = Vector3.zero;
 
         if (Input.GetKey(KeyCode.W)) moveDir.z = +1f;
