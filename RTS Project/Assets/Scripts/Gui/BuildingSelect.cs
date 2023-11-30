@@ -47,16 +47,16 @@ public class BuildingSelect : MonoBehaviour
         if (!currentBuilding) return;
 
         buildingName.SetText(currentBuilding.buildingName);
-        if (currentBuilding.GetComponent<ResourceBuildingBase>().closestResourceCluster)
-        {
-            resourceManagerStatus.SetText("Resource cluster in range.");
-            resourceManagerStatus.color = Color.white;
-        }
-        else if (currentBuilding.GetComponent<ResourceBuildingBase>().closestResourceCluster == null)
-        {
-            resourceManagerStatus.SetText("No resource cluster in range.");
-            resourceManagerStatus.color = Color.red;
-        }
+        //if (currentBuilding.GetComponent<ResourceBuildingBase>().closestResourceCluster)
+        //{
+        //    resourceManagerStatus.SetText("Resource cluster in range.");
+        //    resourceManagerStatus.color = Color.white;
+        //}
+        //else if (currentBuilding.GetComponent<ResourceBuildingBase>().closestResourceCluster == null)
+        //{
+        //    resourceManagerStatus.SetText("No resource cluster in range.");
+        //    resourceManagerStatus.color = Color.red;
+        //}
 
 
 
