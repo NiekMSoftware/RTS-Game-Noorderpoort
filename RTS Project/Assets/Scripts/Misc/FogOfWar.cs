@@ -23,6 +23,10 @@ public class FogOfWar : MonoBehaviour
 
     private List<bool> visitedVertices;
 
+    [Range(0, 1)]
+    public float Transparency;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -65,13 +69,15 @@ public class FogOfWar : MonoBehaviour
                     {
                         float alpha = MathF.Min(colors[i].a, dist/radiusSqr);
                         colors[i].a = alpha;
+                        visitedVertices[i] = true;
                         FogToDestroy = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
                     }
                     //if vertices are outside of radius then make them half see through. 
                     else if (visitedVertices[i])
                     {
                         // If vertices are outside of the radius, make them half see-through.
-                        colors[i].a = 0.5f;
+                        //colors[i].a = 0.5f;
+                        colors[i].a = Mathf.Lerp(colors[i].a, Transparency, Time.deltaTime);
                     }
                 }
                 UpdateColor();
@@ -93,7 +99,7 @@ public class FogOfWar : MonoBehaviour
 
         for (int i=0; i<colors.Length; i++)
         {
-            colors[i] = Color.black;   
+            colors[i] = Color.black;
         }
         UpdateColor();      
     }
