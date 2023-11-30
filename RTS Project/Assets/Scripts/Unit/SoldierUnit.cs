@@ -25,15 +25,17 @@ public class SoldierUnit : Unit
     public NewSelectionManager selectionManager;
     public float currentBuildingDist;
 
-    protected override void Start()
+    private void Start()
     {
-        base.Start();
+        //base.Start();
 
         selectionManager = FindObjectOfType<NewSelectionManager>();
+        print("selection manager : " + selectionManager);
     }
 
     private void Update()
     {
+        print("choosing building to Attack");
         ChooseBuildingToAttack();
         enemy = selectionManager.GetEnemyToAttack();
         print(enemy);
@@ -52,6 +54,7 @@ public class SoldierUnit : Unit
 
     private void ChooseBuildingToAttack()
     {
+        print("help");
         buildingToAttack = selectionManager.GetBuildingToAttack();
 
         print("found building base1");

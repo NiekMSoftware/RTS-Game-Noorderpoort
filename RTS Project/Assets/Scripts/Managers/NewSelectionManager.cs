@@ -24,7 +24,7 @@ public class NewSelectionManager : MonoBehaviour
 
     private Marker marker;
 
-    private BuildingBase selectedBuilding;
+    [SerializeField] private BuildingBase selectedBuilding;
     private Unit selectedUnit;
 
     private UIManager uiManager;
@@ -107,9 +107,11 @@ public class NewSelectionManager : MonoBehaviour
             if (!hit.transform.TryGetComponent(out BuildingBase building)) return;
 
             selectedBuilding = building;
+            print(building);
 
             if (selectedUnits.Count > 0)
             {
+                print(selectedUnits.Count);
                 foreach (Unit unit in selectedUnits)
                 {
                     switch (unit)
@@ -120,6 +122,7 @@ public class NewSelectionManager : MonoBehaviour
                             {
                                 //Change to buildingbase when soldierunit is changed
                                 buildingToAttack = building;
+                                print(building);
 
                                 soldier.SendUnitToLocation(building.transform.position);
                                 soldier.SetCurrentAction("Attacking " + building.buildingName);
