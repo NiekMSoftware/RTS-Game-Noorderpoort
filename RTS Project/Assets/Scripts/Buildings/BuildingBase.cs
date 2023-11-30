@@ -97,6 +97,7 @@ public class BuildingBase : MonoBehaviour
         particleObject = _particleObject;
         this.buildingToSpawn = buildingToSpawn;
         currentState = state;
+        buildingAnimationValue = -0.004f;
     }
 
     public virtual IEnumerator Build(float buildTime)
@@ -105,12 +106,14 @@ public class BuildingBase : MonoBehaviour
 
         ChangeObjectMaterial(buildingMaterial);
 
-        //while (buildingAnimationValue < buildingMaterial)
+        while (buildingAnimationValue < 0.006f)
+        {
+            buildingAnimationValue += 0.001f;
+            buildingMaterial.SetFloat("Value", buildingAnimationValue);
+            yield return null;
+        }
 
-        buildingAnimationValue += 0.1f;
-        buildingMaterial.SetFloat("Value", buildingAnimationValue);
-
-        yield return new WaitForSeconds(buildTime);
+        //yield return new WaitForSeconds(buildTime);
 
         currentState = States.Normal;
         ParticleSystem particle = Instantiate(particleObject, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
