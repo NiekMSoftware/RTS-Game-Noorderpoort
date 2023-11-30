@@ -66,31 +66,10 @@ public class Barrack : BuildingBase
 
     public void AddUnitToBarrack(Unit AIUnit)
     {
-        //if (AIUnit == null)
-        //{
-        //    List<GameObject> selectedUnit = selectionManager.selectedUnits;
-        //    foreach (var unit in selectedUnit)
-        //    {
-        //        unitAgent = unit.GetComponent<NavMeshAgent>();
-        //        unitAgent.SetDestination(barrackDoor1.transform.position);
-        //    }
-        //}
-        //else
-        //{
-        //    NavMeshAgent unitAgent = AIUnit.GetComponent<NavMeshAgent>();
-        //    Vector3 worldPos = transform.TransformPoint(barrackDoor1.transform.position);
-        //    unitAgent.SetDestination(worldPos);
+        if (AIUnit == null) return;
 
-        //    GameObject gameObject = new();
-
-        //    gameObject.transform.position = worldPos;
-        //}
-
-        if (AIUnit != null)
-        {
-            List<GameObject> selectedUnit = selectionManager.selectedUnits;
-            print($"Added units to {selectedUnit}");
-        }
+        List<GameObject> selectedUnit = selectionManager.selectedUnits;
+        print($"Added {AIUnit} unit to {selectedUnit}");
     }
 
     public Unit GetSpawnedSoldier() => spawnedUnit;
