@@ -21,21 +21,9 @@ public class BuildingBase : MonoBehaviour
 
     private float outlineDefaultSize;
 
+    private GameObject buildingToSpawn;
+
     public enum Jobs { Wood, Stone, Metal }
-
-    private void Awake()
-    {
-        outline = GetComponent<Outline>();
-
-        uiManager = FindObjectOfType<UIManager>();
-
-        outline.enabled = false;
-        outline.OutlineWidth = uiManager.GetOutlineDefaultSize();
-        outlineDefaultSize = outline.OutlineWidth;
-
-        if (buildingName == string.Empty)
-            buildingName = name;
-    }
 
     [SerializeField] private OccupancyType occupancyType;
 
@@ -52,6 +40,8 @@ public class BuildingBase : MonoBehaviour
         Enemy
     }
 
+    #region Occupancy
+
     public void SetOccupancyType(OccupancyType occupancyType)
     {
         this.occupancyType = occupancyType;
@@ -61,6 +51,10 @@ public class BuildingBase : MonoBehaviour
     {
         return occupancyType;
     }
+
+    #endregion
+
+    #region classes
 
     [System.Serializable]
     public class BuildingPoints
@@ -79,7 +73,23 @@ public class BuildingBase : MonoBehaviour
         return recipes;
     }
 
-    public virtual void Init(Material _material, GameObject _particleObject)
+    #endregion
+
+    private void Awake()
+    {
+        outline = GetComponent<Outline>();
+
+        uiManager = FindObjectOfType<UIManager>();
+
+        outline.enabled = false;
+        outline.OutlineWidth = uiManager.GetOutlineDefaultSize();
+        outlineDefaultSize = outline.OutlineWidth;
+
+        if (buildingName == string.Empty)
+            buildingName = name;
+    }
+
+    public virtual void Init(Material _material, GameObject _particleObject, GameObject buildingToSpawn, States state)
     {
         buildingMaterial = _material;
         particleObject = _particleObject;
