@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -988,6 +988,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4827872511044851499, guid: 04da167e17f3d7a4bba0b9dbd8eb0b96,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 448931818
+      objectReference: {fileID: 0}
     - target: {fileID: 7794861187723199530, guid: 04da167e17f3d7a4bba0b9dbd8eb0b96,
         type: 3}
       propertyPath: m_Name
@@ -996,11 +1001,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7794861187723199530, guid: 04da167e17f3d7a4bba0b9dbd8eb0b96,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2118764355}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 04da167e17f3d7a4bba0b9dbd8eb0b96, type: 3}
 --- !u!1001 &347612527
 PrefabInstance:
@@ -2698,12 +2699,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 815057328}
   m_CullTransparentMesh: 1
---- !u!1 &818374248 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7794861187723199530, guid: 04da167e17f3d7a4bba0b9dbd8eb0b96,
-    type: 3}
-  m_PrefabInstance: {fileID: 314971752}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &861579881
 GameObject:
   m_ObjectHideFlags: 0
@@ -6562,26 +6557,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 314971752}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2118764355
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 818374248}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1518683119
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!224 &2146577306 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3649443045141000919, guid: 5d679f2e70bc155488aa3651fc501f5d,
