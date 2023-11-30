@@ -23,7 +23,7 @@ public class BuildingBase : MonoBehaviour
 
     private GameObject buildingToSpawn;
 
-    private Shader buildingShader;
+    private float buildingAnimationValue;
 
     public enum Jobs { Wood, Stone, Metal }
 
@@ -94,7 +94,6 @@ public class BuildingBase : MonoBehaviour
     public virtual void Init(Material _material, GameObject _particleObject, GameObject buildingToSpawn, States state)
     {
         buildingMaterial = _material;
-        buildingShader = buildingMaterial.shader;
         particleObject = _particleObject;
         this.buildingToSpawn = buildingToSpawn;
         currentState = state;
@@ -106,7 +105,10 @@ public class BuildingBase : MonoBehaviour
 
         ChangeObjectMaterial(buildingMaterial);
 
-        //buildingShader
+        Material buildingShader = GetComponent<MeshRenderer>().material;
+
+        buildingAnimationValue++;
+        buildingShader.SetFloat("Value", buildingAnimationValue);
 
         yield return new WaitForSeconds(buildTime);
 
