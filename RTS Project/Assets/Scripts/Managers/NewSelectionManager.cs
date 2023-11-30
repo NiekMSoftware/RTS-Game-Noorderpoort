@@ -176,6 +176,7 @@ public class NewSelectionManager : MonoBehaviour
                 {
                     soldier.enemy = null;
                     enemyToAttack = null;
+                    print("set enemy to null");
                 }
 
                 unit.SendUnitToLocation(hit.point);
@@ -342,6 +343,8 @@ public class NewSelectionManager : MonoBehaviour
     public Unit GetEnemyToAttack() => enemyToAttack;
 
     public List<Unit> GetSelectedUnits() => selectedUnits;
+
+    public Marker GetMarker() => marker;
 
     #endregion
 }
