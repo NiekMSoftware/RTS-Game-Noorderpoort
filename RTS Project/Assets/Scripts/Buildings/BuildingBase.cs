@@ -105,10 +105,8 @@ public class BuildingBase : MonoBehaviour
 
         ChangeObjectMaterial(buildingMaterial);
 
-        Material buildingShader = GetComponent<MeshRenderer>().material;
-
-        buildingAnimationValue++;
-        buildingShader.SetFloat("Value", buildingAnimationValue);
+        buildingAnimationValue = 0.0001f;
+        buildingMaterial.SetFloat("Value", buildingAnimationValue);
 
         yield return new WaitForSeconds(buildTime);
 
