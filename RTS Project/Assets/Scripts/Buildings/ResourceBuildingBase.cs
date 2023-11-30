@@ -196,7 +196,7 @@ public class ResourceBuildingBase : BuildingBase
             }
             else
             {
-                Debug.LogWarning("No resourceManager in range");
+                //Debug.LogWarning("No resourceManager in range");
             }
 
         }

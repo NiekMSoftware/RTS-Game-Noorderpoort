@@ -422,11 +422,9 @@ public class LobbyManager : MonoBehaviour {
         }
     }
 
-    [ClientRpc]
     private void GoToGameScene()
-    {
-        
-        SceneManager.LoadScene("RelayTest");
+    { 
+        SceneManager.LoadScene("MultiplayerWalter");
     }
 }
 
