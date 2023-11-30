@@ -105,7 +105,7 @@ public class BuildingBase : MonoBehaviour
 
         ChangeObjectMaterial(buildingMaterial);
 
-        buildingAnimationValue = 0.001f;
+        buildingAnimationValue = 0f;
         buildingMaterial.SetFloat("Value", buildingAnimationValue);
         print(buildingMaterial.GetFloat("Value"));
 

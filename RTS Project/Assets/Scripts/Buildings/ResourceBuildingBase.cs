@@ -19,6 +19,7 @@ public class ResourceBuildingBase : BuildingBase
 
     private void Start()
     {
+        rangeIndicator.SetActive(false);
         Vector3 scale = new(scanRange, scanRange, 0);
         rangeIndicator.transform.localScale = scale;
     }
