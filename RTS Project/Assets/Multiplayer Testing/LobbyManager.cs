@@ -5,6 +5,7 @@ using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class LobbyManager : MonoBehaviour {
@@ -27,7 +28,7 @@ public class LobbyManager : MonoBehaviour {
     public event EventHandler<LobbyEventArgs> OnJoinedLobbyUpdate;
     public event EventHandler<LobbyEventArgs> OnKickedFromLobby;
     public event EventHandler<LobbyEventArgs> OnLobbyGameModeChanged;
-    public event EventHandler<LobbyEventArgs> onGameStarted;
+    public event EventHandler<LobbyEventArgs> OnGameStarted;
 
     public class LobbyEventArgs : EventArgs {
         public Lobby lobby;
@@ -50,8 +51,6 @@ public class LobbyManager : MonoBehaviour {
         Zombie
     }
 
-
-
     private float heartbeatTimer;
     private float lobbyPollTimer;
     private float refreshLobbyListTimer = 5f;
@@ -59,6 +58,19 @@ public class LobbyManager : MonoBehaviour {
     private string playerName;
 
 
+    //private async void Start()
+    //{
+    //    await UnityServices.InitializeAsync();
+
+
+    //        AuthenticationService.Instance.SignedIn += () =>
+    //        {
+    //            Debug.Log("Signed in " + AuthenticationService.Instance.PlayerId);
+    //        };
+    //        await AuthenticationService.Instance.SignInAnonymouslyAsync();
+
+
+    //}
     private void Awake() {
         Instance = this;
     }
@@ -71,13 +83,14 @@ public class LobbyManager : MonoBehaviour {
 
     public async void Authenticate(string playerName) {
         ////??????????????????????????????????????????????????????
-        await AuthenticationService.Instance.DeleteAccountAsync();
+        //await AuthenticationService.Instance.DeleteAccountAsync();
 
         this.playerName = playerName;
         InitializationOptions initializationOptions = new InitializationOptions();
         initializationOptions.SetProfile(playerName);
 
         await UnityServices.InitializeAsync(initializationOptions);
+
 
         AuthenticationService.Instance.SignedIn += () => {
             // do nothing
@@ -134,8 +147,9 @@ public class LobbyManager : MonoBehaviour {
                     joinedLobby = null;
                 }
 
-                if (joinedLobby.Data[KEY_START_GAME].Value != "0")
-                {   
+                if (joinedLobby.Data["StartGame"].Value != null && joinedLobby.Data["StartGame"].Value != "0")
+                {
+                    Debug.Log(joinedLobby.Data["StartGame"].Value);
                     //start game
                     if (!IsLobbyHost())
                     {
@@ -143,7 +157,8 @@ public class LobbyManager : MonoBehaviour {
                     }
                     joinedLobby = null;
 
-                    onGameStarted?.Invoke(this, EventArgs.Empty);
+                    OnGameStarted?.Invoke(this, new LobbyEventArgs { lobby = joinedLobby });
+
                 }
             }
         }
@@ -203,7 +218,8 @@ public class LobbyManager : MonoBehaviour {
             IsPrivate = isPrivate,
             Data = new Dictionary<string, DataObject> {
                 { KEY_GAME_MODE, new DataObject(DataObject.VisibilityOptions.Public, gameMode.ToString()) },
-                { KEY_START_MODE, new DataObject(DataObject.VisibilityOptions.Member, "0") }
+                { KEY_START_MODE, new DataObject(DataObject.VisibilityOptions.Member, "0") },
+                { KEY_START_GAME, new DataObject(DataObject.VisibilityOptions.Member, "0", DataObject.IndexOptions.S1) }
             }
         };
 
@@ -212,6 +228,8 @@ public class LobbyManager : MonoBehaviour {
         joinedLobby = lobby;
 
         OnJoinedLobby?.Invoke(this, new LobbyEventArgs { lobby = lobby });
+
+        
 
         Debug.Log("Created Lobby " + lobby.Name);
     }
@@ -374,8 +392,8 @@ public class LobbyManager : MonoBehaviour {
     }
     public async void StartGame()
     {
-        //if (isLobbyHost())
-        //{
+        if (IsLobbyHost())
+        {
             try
             {
                 Debug.Log("StartGame");
@@ -397,7 +415,7 @@ public class LobbyManager : MonoBehaviour {
             {
                 Debug.Log(e);
             }
-        //}
+        }
     }
 }
 

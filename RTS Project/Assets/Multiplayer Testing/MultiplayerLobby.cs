@@ -15,6 +15,7 @@ public class MultiplayerLobby : MonoBehaviour
 
     private async void Start()
     {
+        print("123");
         await UnityServices.InitializeAsync();
 
         AuthenticationService.Instance.SignedIn += () =>
