@@ -7,6 +7,7 @@ TagManager:
   - AI
   - Ground
   - EnemyBuilding
+  - Cube
   layers:
   - Default
   - TransparentFX

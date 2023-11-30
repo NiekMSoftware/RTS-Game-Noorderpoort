@@ -6,7 +6,7 @@ public class Spawner : MonoBehaviour
 {
     public GameObject cubePrefab;
     public float spawnInterval = 3f;
-    public int maxCubes = 6; 
+    public int maxCubes = 6;
     private float timer = 0f;
     private int spawnedCubes = 0;
 
