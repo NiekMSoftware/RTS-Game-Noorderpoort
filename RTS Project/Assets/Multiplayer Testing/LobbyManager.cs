@@ -399,6 +399,8 @@ public class LobbyManager : MonoBehaviour {
         {
             try
             {
+                GoToGameScene();
+
                 Debug.Log("StartGame");
 
                 string relayCode = await MultiplayerRelay.Instance.CreateRelay();
@@ -411,9 +413,7 @@ public class LobbyManager : MonoBehaviour {
                     }
                 });
 
-
                 joinedLobby = lobby;
-                GoToGameScene();
             }
             catch (LobbyServiceException e) 
             {
@@ -422,10 +422,10 @@ public class LobbyManager : MonoBehaviour {
         }
     }
 
-
     [ClientRpc]
     private void GoToGameScene()
     {
+        
         SceneManager.LoadScene("RelayTest");
     }
 }
