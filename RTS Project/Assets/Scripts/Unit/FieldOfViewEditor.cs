@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+#if UNITY_EDITOR
+
 [CustomEditor(typeof(FieldOfView))]
 public class FieldOfViewEditor : Editor
 {
@@ -25,3 +27,4 @@ public class FieldOfViewEditor : Editor
         }
     }
 }
+#endif
