@@ -89,8 +89,8 @@ public class BuildingBase : MonoBehaviour
     {
         currentState = States.Building;
 
-        SaveObjectMaterials();
-        ApplyObjectMaterials();
+        //SaveObjectMaterials();
+        //ApplyObjectMaterials();
         //ChangeObjectMaterial(buildingMaterial);
         yield return new WaitForSeconds(buildTime);
 

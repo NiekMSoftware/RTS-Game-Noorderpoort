@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ResourceBuildingBase : BuildingBase
@@ -10,9 +11,8 @@ public class ResourceBuildingBase : BuildingBase
     [SerializeField] private string jobName;
     [SerializeField] private Jobs jobs;
     [SerializeField] private int scanRange = 200;
-
     private ResourceItemManager resourceItemManager;
-
+    public GameObject closestResourceCluster;
     private List<GameObject> resourceAreas = new();
 
     public void SetResourceItemManagerByType(ResourceItemManager.Type type)
@@ -77,6 +77,7 @@ public class ResourceBuildingBase : BuildingBase
         {
             print("No resource in range");
         }
+        closestResourceCluster = closestResource;
         return closestResource;
     }
 
@@ -174,10 +175,18 @@ public class ResourceBuildingBase : BuildingBase
         }
         else if (workers.Count < maxWorkers)
         {
-            worker.InitializeWorker(gameObject, jobs, FindClosestResourceManager(transform, currentStorage[0].data),
+            if (FindClosestResourceManager(transform, currentStorage[0].data) != null)
+            {
+                worker.InitializeWorker(gameObject, jobs, FindClosestResourceManager(transform, currentStorage[0].data),
                 resourceItemManager);
-            workers.Add(worker);
-            return true;
+                workers.Add(worker);
+                return true;
+            }
+            else
+            {
+                Debug.LogWarning("No resourceManager in range");
+            }
+
         }
 
         return false;
@@ -208,4 +217,6 @@ public class ResourceBuildingBase : BuildingBase
 
         base.DestroyBuilding();
     }
+
+    public float GetRange() => scanRange;
 }
