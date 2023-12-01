@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class BuildingManager : NetworkBehaviour
+public class BuildingManager : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Building[] buildings;
@@ -151,7 +151,7 @@ public class BuildingManager : NetworkBehaviour
         {
             if (CheckCanPlace(true))
             {
-                BuildObject();
+                BuildObjectServerRpc();
             }
         }
     }
@@ -275,8 +275,8 @@ public class BuildingManager : NetworkBehaviour
         currentIndex = -1;
         pos = Vector3.zero;
     }
-
-    private void BuildObject()
+    [ServerRpc(RequireOwnership = false)]
+    private void BuildObjectServerRpc()
     {
         foreach (var itemNeeded in buildings[currentIndex].building.GetComponent<BuildingBase>().GetRecipes())
         {
