@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7919055271586890472}
-  - component: {fileID: 3528426091247665186}
   - component: {fileID: 4960871854027342727}
   m_Layer: 0
   m_Name: BuildingManager
@@ -25,34 +24,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5290549236025193350}
-  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3528426091247665186
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5290549236025193350}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4096991829
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!114 &4960871854027342727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildings:
-  - building: {fileID: 2432438935407483892, guid: 0ad3d675a2c86ed4fbb77de3f5c8a204,
+  - building: {fileID: 2432438935407483892, guid: 8140ef950e5920644a01c70b6f40bd1d,
       type: 3}
     yHeight: 0
     multiPlace: 0
@@ -100,7 +79,7 @@ MonoBehaviour:
       m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    buildTime: 3
+    buildTime: 0
     isUnlocked: 1
     buildingsToUnlock: 01000000
   - building: {fileID: 2432438935407483892, guid: 3fe74175db7cfc64e8eb83e219921af4,
@@ -137,8 +116,8 @@ MonoBehaviour:
       m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    buildTime: 3
-    isUnlocked: 0
+    buildTime: 0
+    isUnlocked: 1
     buildingsToUnlock: 02000000
   - building: {fileID: 2432438935407483892, guid: 0cbe5c561572e4f49aeaaabb216c2753,
       type: 3}
@@ -174,88 +153,12 @@ MonoBehaviour:
       m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    buildTime: 3
-    isUnlocked: 0
-    buildingsToUnlock: 03000000
-  - building: {fileID: 5156782261921279343, guid: 726f9dcb6ce19b3499c0e70356579adc,
-      type: 3}
-    yHeight: 0
-    multiPlace: 0
-    buildParticleRandomColor:
-      serializedVersion: 2
-      key0: {r: 0, g: 0, b: 0, a: 0}
-      key1: {r: 0, g: 0, b: 0, a: 0}
-      key2: {r: 0, g: 0, b: 0, a: 0}
-      key3: {r: 0, g: 0, b: 0, a: 0}
-      key4: {r: 0, g: 0, b: 0, a: 0}
-      key5: {r: 0, g: 0, b: 0, a: 0}
-      key6: {r: 0, g: 0, b: 0, a: 0}
-      key7: {r: 0, g: 0, b: 0, a: 0}
-      ctime0: 0
-      ctime1: 65535
-      ctime2: 0
-      ctime3: 0
-      ctime4: 0
-      ctime5: 0
-      ctime6: 0
-      ctime7: 0
-      atime0: 0
-      atime1: 65535
-      atime2: 0
-      atime3: 0
-      atime4: 0
-      atime5: 0
-      atime6: 0
-      atime7: 0
-      m_Mode: 0
-      m_ColorSpace: 0
-      m_NumColorKeys: 2
-      m_NumAlphaKeys: 2
-    buildTime: 3
-    isUnlocked: 0
-    buildingsToUnlock: 04000000
-  - building: {fileID: 3046415911968159675, guid: 1d5730500b3b4cb4d87b7cba178ddb65,
-      type: 3}
-    yHeight: 0
-    multiPlace: 1
-    buildParticleRandomColor:
-      serializedVersion: 2
-      key0: {r: 0, g: 0, b: 0, a: 0}
-      key1: {r: 0, g: 0, b: 0, a: 0}
-      key2: {r: 0, g: 0, b: 0, a: 0}
-      key3: {r: 0, g: 0, b: 0, a: 0}
-      key4: {r: 0, g: 0, b: 0, a: 0}
-      key5: {r: 0, g: 0, b: 0, a: 0}
-      key6: {r: 0, g: 0, b: 0, a: 0}
-      key7: {r: 0, g: 0, b: 0, a: 0}
-      ctime0: 0
-      ctime1: 65535
-      ctime2: 0
-      ctime3: 0
-      ctime4: 0
-      ctime5: 0
-      ctime6: 0
-      ctime7: 0
-      atime0: 0
-      atime1: 65535
-      atime2: 0
-      atime3: 0
-      atime4: 0
-      atime5: 0
-      atime6: 0
-      atime7: 0
-      m_Mode: 0
-      m_ColorSpace: 0
-      m_NumColorKeys: 2
-      m_NumAlphaKeys: 2
-    buildTime: 3
-    isUnlocked: 0
+    buildTime: 0
+    isUnlocked: 1
     buildingsToUnlock: 
   resources: {fileID: 0}
   terrain: {fileID: 0}
   buttons:
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -285,6 +188,6 @@ MonoBehaviour:
   degreesToRotate: 45
   buildErrorFloatUpSpeed: 1
   maxAngle: 125.9
-  maxHeight: 60
+  maxHeight: 50
   minHeight: 10
   pendingObject: {fileID: 0}
