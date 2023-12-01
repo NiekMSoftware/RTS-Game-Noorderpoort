@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -289,6 +290,8 @@ public class BuildingManager : MonoBehaviour
         spawnedParticle.Play();
 
         BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pendingObject.transform.position, pendingObject.transform.rotation).GetComponent<BuildingBase>();
+        spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
+
         spawnedBuilding.Init(buildingMaterial, buildParticle, 
             buildings[currentIndex].building, BuildingBase.States.Building);
 
