@@ -10,6 +10,7 @@ public class BuildingSelect : MonoBehaviour
     [SerializeField] private Button assignWorkersButton;
     [SerializeField] private Button destroyButton;
     [SerializeField] private TMP_Text buildingName;
+    [SerializeField] private TMP_Text resourceManagerStatus;
     [SerializeField] private Slider healthSlider;
     [SerializeField] private TMP_Text healthText;
     [SerializeField] private GameObject workerInfo;
@@ -46,6 +47,18 @@ public class BuildingSelect : MonoBehaviour
         if (!currentBuilding) return;
 
         buildingName.SetText(currentBuilding.buildingName);
+        //if (currentBuilding.GetComponent<ResourceBuildingBase>().closestResourceCluster)
+        //{
+        //    resourceManagerStatus.SetText("Resource cluster in range.");
+        //    resourceManagerStatus.color = Color.white;
+        //}
+        //else if (currentBuilding.GetComponent<ResourceBuildingBase>().closestResourceCluster == null)
+        //{
+        //    resourceManagerStatus.SetText("No resource cluster in range.");
+        //    resourceManagerStatus.color = Color.red;
+        //}
+
+
 
         destroyButton.onClick.RemoveAllListeners();
         destroyButton.onClick.AddListener(currentBuilding.DestroyBuilding);

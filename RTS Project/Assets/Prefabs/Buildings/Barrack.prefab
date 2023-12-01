@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3338330323617080737}
   m_Layer: 7
-  m_Name: Door 2
+  m_Name: Exit
   m_TagString: Untagged
   m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -23,13 +23,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1543227467606998400}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.559, y: -0.28125, z: 0.162}
+  m_LocalPosition: {x: 0.559, y: -0.482, z: 0.412}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7617377509933312893}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5156782261921279343
 GameObject:
@@ -59,6 +59,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5156782261921279343}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 8, y: 8, z: 8}
@@ -67,7 +68,6 @@ Transform:
   - {fileID: 3078622439867273810}
   - {fileID: 3338330323617080737}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1922811086135902095
 MeshFilter:
@@ -163,18 +163,17 @@ MonoBehaviour:
     pointType: 2
     amount: 1
   outline: {fileID: 0}
-  outlineAnimationSpeed: 0.0001
-  outlineAnimationMaxSize: 8
+  buildingName: 
   occupancyType: 0
   unitToSpawn: {fileID: 6687049504355165105, guid: c6b5ed013b2cf2c4689c875d2e2573a8,
     type: 3}
-  spawnPosSoldier: {fileID: 0}
   queue: 0
   maxTimeUntilNext: 5
-  barrackDoor1: {fileID: 4184783236928904395}
-  barrackDoor2: {fileID: 3338330323617080737}
+  rangeOfSpawn: 10
+  entrance: {fileID: 3078622439867273810}
+  exit: {fileID: 3338330323617080737}
+  terrain: {fileID: 0}
   selectionManager: {fileID: 0}
-  unitAgent: {fileID: 0}
 --- !u!114 &6091475512797295991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,9 +202,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3078622439867273810}
   - component: {fileID: 2762624800652576497}
-  - component: {fileID: 4184783236928904395}
   m_Layer: 7
-  m_Name: Door
+  m_Name: Enterance
   m_TagString: Untagged
   m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -218,13 +216,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7988776410278182275}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.53, y: -0.344, z: -0.396}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7617377509933312893}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &2762624800652576497
 BoxCollider:
@@ -247,15 +245,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.04585269, y: 0.345092, z: 0.23823893}
   m_Center: {x: 0.029841617, y: 0.016163744, z: -0.011746138}
---- !u!114 &4184783236928904395
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7988776410278182275}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0c4a5adb282a224e85c5ed48dc0754b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

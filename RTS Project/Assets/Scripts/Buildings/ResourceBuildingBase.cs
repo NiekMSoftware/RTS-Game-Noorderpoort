@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ResourceBuildingBase : BuildingBase
@@ -10,10 +11,18 @@ public class ResourceBuildingBase : BuildingBase
     [SerializeField] private string jobName;
     [SerializeField] private Jobs jobs;
     [SerializeField] private int scanRange = 200;
+    [SerializeField] private GameObject rangeIndicator;
 
     private ResourceItemManager resourceItemManager;
-
+    public GameObject closestResourceCluster;
     private List<GameObject> resourceAreas = new();
+
+    private void Start()
+    {
+        rangeIndicator.SetActive(false);
+        Vector3 scale = new(scanRange, scanRange, 1);
+        rangeIndicator.transform.localScale = scale;
+    }
 
     public void SetResourceItemManagerByType(ResourceItemManager.Type type)
     {
@@ -77,18 +86,21 @@ public class ResourceBuildingBase : BuildingBase
         {
             print("No resource in range");
         }
+        closestResourceCluster = closestResource;
         return closestResource;
     }
 
-    public override void Init(Material _material, GameObject _particleObject)
+    public override void Init(Material _material, GameObject _particleObject, GameObject buildingToSpawn, States state)
     {
-        base.Init(_material, _particleObject);
+        base.Init(_material, _particleObject, buildingToSpawn, state);
         SetResourceItemManagerByType(ResourceItemManager.Type.Player);
     }
 
     public override void SelectBuilding()
     {
         base.SelectBuilding();
+
+        rangeIndicator.SetActive(true);
 
         foreach (var worker in workers)
         {
@@ -99,6 +111,8 @@ public class ResourceBuildingBase : BuildingBase
     public override void DeselectBuilding()
     {
         base.DeselectBuilding();
+
+        rangeIndicator.SetActive(false);
 
         foreach (var worker in workers)
         {
@@ -174,10 +188,18 @@ public class ResourceBuildingBase : BuildingBase
         }
         else if (workers.Count < maxWorkers)
         {
-            worker.InitializeWorker(gameObject, jobs, FindClosestResourceManager(transform, currentStorage[0].data),
+            if (FindClosestResourceManager(transform, currentStorage[0].data) != null)
+            {
+                worker.InitializeWorker(gameObject, jobs, FindClosestResourceManager(transform, currentStorage[0].data),
                 resourceItemManager);
-            workers.Add(worker);
-            return true;
+                workers.Add(worker);
+                return true;
+            }
+            else
+            {
+                Debug.LogWarning("No resourceManager in range");
+            }
+
         }
 
         return false;
@@ -208,4 +230,6 @@ public class ResourceBuildingBase : BuildingBase
 
         base.DestroyBuilding();
     }
+
+    public float GetRange() => scanRange;
 }

@@ -1,52 +1,78 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class SoldierUnit : Unit
 {
     //wat moet er nog gefixt worden?
-    //- selected enemy check maken voor als enemy destroyed wordt.
-    //- building null check
-    //- fix enemy in range attack
-    //- building wordt niet aangeroepen waardoor soldier niet aanvalt.
     //- gebruik Unit.cs zijn health system in plaats van zijn eigen enemyHP;
+    //soldiers vallen elkaar aan.
     public float damageInterval = 2.0f;
     public int damageAmount = 10;
-    public LayerMask Building;
-    public LayerMask Enemy;
-    public List<GameObject> Enemies = new List<GameObject>();
-    public List<BuildingBase> Buildings = new List<BuildingBase>();
+    
     public Unit enemy;
     public GameObject SoldierGameObject;
     public BuildingBase buildingToAttack;
+    
 
     private bool isAttacking = false;
     private float damageTimer = 0.0f;
     public Unit enemyHp;
     public NewSelectionManager selectionManager;
+    public Unit unit;
     public float currentBuildingDist;
 
-    protected override void Start()
+    private void Start()
     {
-        base.Start();
-
+        //base.Start();
+        unit = FindObjectOfType<Unit>();
         selectionManager = FindObjectOfType<NewSelectionManager>();
+        print("selection manager : " + selectionManager);
+        myAgent = GetComponent<NavMeshAgent>();
     }
 
     private void Update()
     {
+        FindClosestEnemy();
+        print("choosing building to Attack");
         ChooseBuildingToAttack();
         enemy = selectionManager.GetEnemyToAttack();
         print(enemy);
         if (enemy == null) return;
         if (enemy == this) return;
+    }
 
-        //DealDamageToEnemiesInRange();
-        if (Vector3.Distance(transform.position, enemy.gameObject.transform.position) < 5)
+    private void FindClosestEnemy()
+    {
+        Unit[] enemies = GameObject.FindObjectsOfType<Unit>();
+        float closestDistance = 5;
+        enemy = null;
+
+        foreach (Unit potentialEnemy in enemies )
         {
-            Debug.Log("Enemy in range");
-            Debug.Log("moving to enemy myself");
-            myAgent.SetDestination(enemy.transform.position);
-            DealDamageToEnemiesInRange();
+            if (potentialEnemy != this)
+            {
+                float distanceToEnemy = Vector3.Distance(transform.position, potentialEnemy.transform.position);
+
+                if (distanceToEnemy < closestDistance)
+                {
+                    if (selectionManager.GetMarker() == true)
+                    {
+                        myAgent.SetDestination(selectionManager.GetMarker().transform.position);
+                        selectionManager.GetMarker();
+                    }
+                    else
+                    {
+                        Debug.Log("Enemy in range");
+                        Debug.Log("moving to enemy myself");
+                        closestDistance = distanceToEnemy;
+                        enemy = potentialEnemy;
+                        print(potentialEnemy);
+                        myAgent.SetDestination(enemy.transform.position);
+                        DealDamageToEnemiesInRange();
+                    }
+                }
+            }
         }
     }
 

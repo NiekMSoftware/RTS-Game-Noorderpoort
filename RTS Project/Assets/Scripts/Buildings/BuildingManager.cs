@@ -79,6 +79,7 @@ public class BuildingManager : MonoBehaviour
 
     void Update()
     {
+        if (currentIndex < 0) return;
         if (!pendingObject) return;
 
         pendingObject.transform.position = pos;
@@ -91,6 +92,34 @@ public class BuildingManager : MonoBehaviour
         else
         {
             ChangeObjectMaterial(pendingObject, correctPlaceMaterial);
+        }
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, groundLayerMask))
+        {
+            pendingObject.SetActive(true);
+            rayHit = true;
+
+            //check raycast for terrain hit normal and check if can place
+
+            Vector3 gridPos = Vector3Int.RoundToInt(hit.point);
+            if (terrain)
+            {
+                gridPos.y = terrain.SampleHeight(gridPos) + (buildings[currentIndex].building.transform.localScale.y / 2);
+            }
+            else
+            {
+                gridPos.y = buildings[currentIndex].building.transform.localScale.y;
+            }
+            pos = gridPos;
+
+            //rotate object towards hit.normal
+        }
+        else
+        {
+            pendingObject.SetActive(false);
+            rayHit = false;
         }
 
         HandleInput();
@@ -259,13 +288,18 @@ public class BuildingManager : MonoBehaviour
         ParticleSystem spawnedParticle = Instantiate(buildParticle, pos, Quaternion.identity).GetComponent<ParticleSystem>();
         spawnedParticle.Play();
 
-        BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pendingObject.transform.position, pendingObject.transform.rotation).GetComponent<BuildingBase>();
-        spawnedBuilding.Init(buildingMaterial, buildParticle);
+        BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pendingObject.transform.position, 
+            pendingObject.transform.rotation).GetComponent<BuildingBase>();
+
+        spawnedBuilding.Init(buildingMaterial, buildParticle, 
+            buildings[currentIndex].building, BuildingBase.States.Building);
+
         spawnedBuilding.SetOccupancyType(BuildingBase.OccupancyType.Player);
         StartCoroutine(spawnedBuilding.Build(buildings[currentIndex].buildTime));
 
         BuildProgress buildProgress = Instantiate(buildProgressPrefab, new Vector3(spawnedBuilding.transform.position.x,
-            spawnedBuilding.transform.position.y + spawnedBuilding.transform.localScale.y + buildProgressHeight, spawnedBuilding.transform.position.z), Quaternion.identity, spawnedBuilding.transform).GetComponent<BuildProgress>();
+            spawnedBuilding.transform.position.y + spawnedBuilding.transform.localScale.y + buildProgressHeight, 
+            spawnedBuilding.transform.position.z), Quaternion.identity, spawnedBuilding.transform).GetComponent<BuildProgress>();
         buildProgress.Init(buildings[currentIndex].buildTime);
 
         for (int i = 0; i < buildings[currentIndex].buildingsToUnlock.Length; i++)
@@ -280,39 +314,6 @@ public class BuildingManager : MonoBehaviour
         if (!buildings[currentIndex].multiPlace)
         {
             ResetObject();
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        if (currentIndex < 0) return;
-
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out hit, 1000, groundLayerMask))
-        {
-            pendingObject.SetActive(true);
-            rayHit = true;
-
-            //check raycast for terrain hit normal and check if can place
-
-            Vector3 gridPos = Vector3Int.RoundToInt(hit.point);
-            if (terrain)
-            {
-                gridPos.y = terrain.SampleHeight(gridPos) + (buildings[currentIndex].building.transform.localScale.y / 2);
-            }
-            else
-            {
-                gridPos.y = buildings[currentIndex].building.transform.localScale.y;
-            }
-            pos = gridPos;
-
-            //rotate object towards hit.normal
-        }
-        else
-        {
-            pendingObject.SetActive(false);
-            rayHit = false;
         }
     }
 
