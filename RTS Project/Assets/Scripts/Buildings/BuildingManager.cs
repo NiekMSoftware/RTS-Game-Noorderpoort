@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class BuildingManager : MonoBehaviour
+public class BuildingManager : NetworkBehaviour
 {
     [Header("References")]
     [SerializeField] private Building[] buildings;
