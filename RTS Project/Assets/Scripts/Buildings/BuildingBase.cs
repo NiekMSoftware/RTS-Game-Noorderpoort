@@ -93,11 +93,16 @@ public class BuildingBase : MonoBehaviour
 
     public virtual void Init(Material _material, GameObject _particleObject, GameObject buildingToSpawn, States state)
     {
-        Material newMaterial = new(_material.shader)
+        if (_material)
         {
-            color = _material.color
-        };
-        buildingMaterial = newMaterial;
+            Material newMaterial = new(_material.shader)
+            {
+                color = _material.color
+            };
+
+            buildingMaterial = newMaterial;
+        }
+
         particleObject = _particleObject;
         this.buildingToSpawn = buildingToSpawn;
         currentState = state;
