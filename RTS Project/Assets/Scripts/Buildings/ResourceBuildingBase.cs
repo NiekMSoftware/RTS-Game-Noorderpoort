@@ -22,6 +22,8 @@ public class ResourceBuildingBase : BuildingBase
         rangeIndicator.SetActive(false);
         Vector3 scale = new(scanRange, scanRange, 1);
         rangeIndicator.transform.localScale = scale;
+
+        FindClosestResourceManager(transform, currentStorage[0].data);
     }
 
     public void SetResourceItemManagerByType(ResourceItemManager.Type type)
@@ -33,15 +35,6 @@ public class ResourceBuildingBase : BuildingBase
                 resourceItemManager = item;
             }
         }
-    }
-
-    public override IEnumerator Build(float buildTime)
-    {
-        StartCoroutine(base.Build(buildTime));
-
-        FindClosestResourceManager(transform, currentStorage[0].data);
-
-        yield return null;
     }
 
     public GameObject FindClosestResourceManager(Transform buildingBase, ItemData itemdata)
@@ -98,6 +91,8 @@ public class ResourceBuildingBase : BuildingBase
 
     public override void SelectBuilding()
     {
+        if (currentState == States.Building) return;
+
         base.SelectBuilding();
 
         rangeIndicator.SetActive(true);
@@ -110,6 +105,8 @@ public class ResourceBuildingBase : BuildingBase
 
     public override void DeselectBuilding()
     {
+        if (currentState == States.Building) return;
+
         base.DeselectBuilding();
 
         rangeIndicator.SetActive(false);

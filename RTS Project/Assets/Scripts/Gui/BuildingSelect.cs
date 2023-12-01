@@ -47,24 +47,23 @@ public class BuildingSelect : MonoBehaviour
         if (!currentBuilding) return;
 
         buildingName.SetText(currentBuilding.buildingName);
-        //if (currentBuilding.GetComponent<ResourceBuildingBase>().closestResourceCluster)
-        //{
-        //    resourceManagerStatus.SetText("Resource cluster in range.");
-        //    resourceManagerStatus.color = Color.white;
-        //}
-        //else if (currentBuilding.GetComponent<ResourceBuildingBase>().closestResourceCluster == null)
-        //{
-        //    resourceManagerStatus.SetText("No resource cluster in range.");
-        //    resourceManagerStatus.color = Color.red;
-        //}
-
-
 
         destroyButton.onClick.RemoveAllListeners();
         destroyButton.onClick.AddListener(currentBuilding.DestroyBuilding);
 
         if (currentBuilding is ResourceBuildingBase resourceBuilding)
         {
+            if (resourceBuilding.closestResourceCluster)
+            {
+                resourceManagerStatus.SetText("Resource cluster in range.");
+                resourceManagerStatus.color = Color.white;
+            }
+            else if (resourceBuilding.closestResourceCluster == null)
+            {
+                resourceManagerStatus.SetText("No resource cluster in range.");
+                resourceManagerStatus.color = Color.red;
+            }
+
             assignWorkersButton.gameObject.SetActive(true);
 
             assignWorkersButton.onClick.RemoveAllListeners();
@@ -92,6 +91,8 @@ public class BuildingSelect : MonoBehaviour
         }
         else
         {
+            resourceManagerStatus.gameObject.SetActive(false);
+
             assignWorkersButton.gameObject.SetActive(false);
 
             workerInfo.SetActive(false);
