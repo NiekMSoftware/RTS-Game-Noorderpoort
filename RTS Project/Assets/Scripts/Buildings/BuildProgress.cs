@@ -21,6 +21,7 @@ public class BuildProgress : MonoBehaviour
     private void Start()
     {
         if (progressImage == null) return;
+
         Sequence tween = DOTween.Sequence();
         tween.Append(progressImage.DOFillAmount(1f, buildTime));
         tween.AppendInterval(2);

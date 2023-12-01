@@ -99,16 +99,16 @@ public class Unit : MonoBehaviour
         {
             name = gameObject.name + " Render Texture"
         };
-        unitCamera.targetTexture = renderTexture;
-        unitCamera.gameObject.SetActive(true);
+        //unitCamera.targetTexture = renderTexture;
+        //unitCamera.gameObject.SetActive(true);
         isSelected = true;
     }
 
     public void Deselect()
     {
-        Destroy(renderTexture);
-        unitCamera.targetTexture = null;
-        unitCamera.gameObject.SetActive(false);
+        //Destroy(renderTexture);
+        //unitCamera.targetTexture = null;
+        //unitCamera.gameObject.SetActive(false);
         isSelected = false;
     }
 

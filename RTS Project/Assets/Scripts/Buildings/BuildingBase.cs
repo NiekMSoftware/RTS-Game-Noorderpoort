@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BuildingBase : MonoBehaviour
 {
     [SerializeField] public float buildingHp = 50f;
-    [SerializeField] private States currentState;
+    [SerializeField] protected States currentState;
     [SerializeField] private Recipe[] recipes;
     [SerializeField] private BuildingPoints points;
     [SerializeField] private Outline outline;
+    [SerializeField] private GameObject model;
 
     public string buildingName;
 
@@ -79,8 +81,6 @@ public class BuildingBase : MonoBehaviour
 
     private void Awake()
     {
-        outline = GetComponent<Outline>();
-
         uiManager = FindObjectOfType<UIManager>();
 
         outline.enabled = false;
@@ -97,6 +97,9 @@ public class BuildingBase : MonoBehaviour
         particleObject = _particleObject;
         this.buildingToSpawn = buildingToSpawn;
         currentState = state;
+
+        if (buildingMaterial)
+            buildingAnimationValue = buildingMaterial.GetFloat("_Min");
     }
 
     public virtual IEnumerator Build(float buildTime)
@@ -105,18 +108,26 @@ public class BuildingBase : MonoBehaviour
 
         ChangeObjectMaterial(buildingMaterial);
 
-        buildingAnimationValue = 0.001f;
-        buildingMaterial.SetFloat("Value", buildingAnimationValue);
-        print(buildingMaterial.GetFloat("Value"));
+        float max = buildingMaterial.GetFloat("_Max");
+        float min = buildingMaterial.GetFloat("_Min");
+        float range = max - min;
+        buildTime *= 250;
+        float speed = range / buildTime;
 
-        yield return new WaitForSeconds(buildTime);
+        while (buildingAnimationValue < max)
+        {
+            buildingAnimationValue += speed;
+            buildingMaterial.SetFloat("_Value", buildingAnimationValue);
+            yield return null;
+        }
 
         currentState = States.Normal;
         ParticleSystem particle = Instantiate(particleObject, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
         particle.Play();
         yield return new WaitForSeconds(particle.main.duration);
 
-        Instantiate(buildingToSpawn, transform.position, transform.rotation);
+        Instantiate(buildingToSpawn, transform.position, transform.rotation).TryGetComponent(out BuildingBase spawnedBuilding);
+        spawnedBuilding.Init(null, null, null, States.Normal);
 
         yield return null;
 
@@ -127,25 +138,25 @@ public class BuildingBase : MonoBehaviour
 
     private void ChangeObjectMaterial(Material material)
     {
-        if (gameObject.TryGetComponent(out MeshRenderer mr))
+        if (model.TryGetComponent(out MeshRenderer mesh))
         {
-            if (mr.material)
+            if (mesh.material)
             {
-                mr.material = material;
+                mesh.material = material;
             }
         }
         else
         {
-            foreach (var mr2 in gameObject.GetComponentsInChildren<MeshRenderer>())
+            foreach (var mr in model.GetComponentsInChildren<MeshRenderer>())
             {
-                Material[] materials = mr2.materials;
+                Material[] materials = mr.materials;
 
                 for (int i = 0; i < materials.Length; i++)
                 {
                     materials[i] = material;
                 }
 
-                mr2.materials = materials;
+                mr.materials = materials;
             }
         }
     }
@@ -160,6 +171,8 @@ public class BuildingBase : MonoBehaviour
 
     public virtual void SelectBuilding()
     {
+        if (currentState == States.Building) return;
+
         uiManager.SetBuildingUI(true, this);
         outline.OutlineWidth = outlineDefaultSize;
         outline.enabled = true;
@@ -167,12 +180,16 @@ public class BuildingBase : MonoBehaviour
 
     public virtual void DeselectBuilding()
     {
+        if (currentState == States.Building) return;
+
         uiManager.SetBuildingUI(false, this);
         outline.enabled = false;
     }
 
     public virtual void DestroyBuilding()
     {
+        if (currentState == States.Building) return;
+
         uiManager.SetBuildingUI(false, this);
         Destroy(gameObject);
     }

@@ -103,15 +103,13 @@ public class NewSelectionManager : MonoBehaviour
     {
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, buildingLayer))
         {
-            print("Selected Building");
             if (!hit.transform.TryGetComponent(out BuildingBase building)) return;
+            if (building.GetCurrentState() == BuildingBase.States.Building) return;
 
             selectedBuilding = building;
-            print(building);
 
             if (selectedUnits.Count > 0)
             {
-                print(selectedUnits.Count);
                 foreach (Unit unit in selectedUnits)
                 {
                     switch (unit)
@@ -122,7 +120,6 @@ public class NewSelectionManager : MonoBehaviour
                             {
                                 //Change to buildingbase when soldierunit is changed
                                 buildingToAttack = building;
-                                print(building);
 
                                 soldier.SendUnitToLocation(building.transform.position);
                                 soldier.SetCurrentAction("Attacking " + building.buildingName);
@@ -142,7 +139,7 @@ public class NewSelectionManager : MonoBehaviour
                                     //Send worker to building
                                     if (workerBuilding.AddWorkerToBuilding(worker))
                                     {
-                                        worker.SetCurrentAction("Goint to work at " + workerBuilding.buildingName);
+                                        worker.SetCurrentAction("Going to work at " + workerBuilding.buildingName);
                                     }
                                     break;
                             }
@@ -176,6 +173,7 @@ public class NewSelectionManager : MonoBehaviour
                 {
                     soldier.enemy = null;
                     enemyToAttack = null;
+                    print("set enemy to null");
                 }
 
                 unit.SendUnitToLocation(hit.point);
@@ -342,6 +340,8 @@ public class NewSelectionManager : MonoBehaviour
     public Unit GetEnemyToAttack() => enemyToAttack;
 
     public List<Unit> GetSelectedUnits() => selectedUnits;
+
+    public Marker GetMarker() => marker;
 
     #endregion
 }

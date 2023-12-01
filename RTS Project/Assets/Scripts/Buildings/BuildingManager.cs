@@ -2,7 +2,6 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -47,9 +46,6 @@ public class BuildingManager : MonoBehaviour
     private Vector3 pos;
     private RaycastHit hit;
     private bool rayHit;
-
-    [SerializeField] private GameObject spawnedObjectPrefab;
-
 
     [System.Serializable]
     class Building
@@ -154,7 +150,7 @@ public class BuildingManager : MonoBehaviour
         {
             if (CheckCanPlace(true))
             {
-                BuildObjectServerRpc();
+                BuildObject();
             }
         }
     }
@@ -279,8 +275,7 @@ public class BuildingManager : MonoBehaviour
         pos = Vector3.zero;
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void BuildObjectServerRpc()
+    private void BuildObject()
     {
         foreach (var itemNeeded in buildings[currentIndex].building.GetComponent<BuildingBase>().GetRecipes())
         {
@@ -293,21 +288,19 @@ public class BuildingManager : MonoBehaviour
         ParticleSystem spawnedParticle = Instantiate(buildParticle, pos, Quaternion.identity).GetComponent<ParticleSystem>();
         spawnedParticle.Play();
 
+        BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pendingObject.transform.position, 
+            pendingObject.transform.rotation).GetComponent<BuildingBase>();
 
-        BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pendingObject.transform.position, pendingObject.transform.rotation).GetComponent<BuildingBase>();
-
-
-        //spawnedBuilding.gameObject.GetComponent<NetworkObject>().Spawn(true);
-
-        spawnedBuilding.Init(buildingMaterial, buildParticle,
+        spawnedBuilding.Init(buildingMaterial, buildParticle, 
             buildings[currentIndex].building, BuildingBase.States.Building);
 
         spawnedBuilding.SetOccupancyType(BuildingBase.OccupancyType.Player);
         StartCoroutine(spawnedBuilding.Build(buildings[currentIndex].buildTime));
 
-        BuildProgress buildProgress = Instantiate(buildProgressPrefab, new Vector3(spawnedBuilding.transform.position.x,
-            spawnedBuilding.transform.position.y + spawnedBuilding.transform.localScale.y + buildProgressHeight, spawnedBuilding.transform.position.z), Quaternion.identity, spawnedBuilding.transform).GetComponent<BuildProgress>();
-        buildProgress.Init(buildings[currentIndex].buildTime);
+        //BuildProgress buildProgress = Instantiate(buildProgressPrefab, new Vector3(spawnedBuilding.transform.position.x,
+        //    spawnedBuilding.transform.position.y + spawnedBuilding.transform.localScale.y + buildProgressHeight, 
+        //    spawnedBuilding.transform.position.z), Quaternion.identity, spawnedBuilding.transform).GetComponent<BuildProgress>();
+        //buildProgress.Init(buildings[currentIndex].buildTime);
 
         for (int i = 0; i < buildings[currentIndex].buildingsToUnlock.Length; i++)
         {
