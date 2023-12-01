@@ -48,6 +48,9 @@ public class BuildingManager : MonoBehaviour
     private RaycastHit hit;
     private bool rayHit;
 
+    [SerializeField] private GameObject spawnedObjectPrefab;
+
+
     [System.Serializable]
     class Building
     {
@@ -290,10 +293,13 @@ public class BuildingManager : MonoBehaviour
         ParticleSystem spawnedParticle = Instantiate(buildParticle, pos, Quaternion.identity).GetComponent<ParticleSystem>();
         spawnedParticle.Play();
 
-        BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pendingObject.transform.position, pendingObject.transform.rotation).GetComponent<BuildingBase>();
-        spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
 
-        spawnedBuilding.Init(buildingMaterial, buildParticle, 
+        BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pendingObject.transform.position, pendingObject.transform.rotation).GetComponent<BuildingBase>();
+
+
+        //spawnedBuilding.gameObject.GetComponent<NetworkObject>().Spawn(true);
+
+        spawnedBuilding.Init(buildingMaterial, buildParticle,
             buildings[currentIndex].building, BuildingBase.States.Building);
 
         spawnedBuilding.SetOccupancyType(BuildingBase.OccupancyType.Player);

@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 4694457708341824937}
   - component: {fileID: 7619373554289024790}
   - component: {fileID: -7530832548365532385}
-  - component: {fileID: 3508457978453874656}
   m_Layer: 7
   m_Name: TestLumber
   m_TagString: Untagged
@@ -130,20 +129,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &3508457978453874656
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2432438935407483892}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c61a80fb728558a45aed689409ca8c20, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  teamId:
-    m_InternalValue: 0
 --- !u!1001 &5251732936460474139
 PrefabInstance:
   m_ObjectHideFlags: 0
