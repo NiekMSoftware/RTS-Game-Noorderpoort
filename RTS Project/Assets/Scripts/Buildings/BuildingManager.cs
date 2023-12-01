@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class BuildingManager : MonoBehaviour
+public class BuildingManager : NetworkBehaviour
 {
     [Header("References")]
     [SerializeField] private Building[] buildings;
@@ -287,6 +287,7 @@ public class BuildingManager : MonoBehaviour
         }
 
         ParticleSystem spawnedParticle = Instantiate(buildParticle, pos, Quaternion.identity).GetComponent<ParticleSystem>();
+        //spawnedParticle.GetComponent<NetworkObject>().Spawn(true);
         spawnedParticle.Play();
 
         BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pendingObject.transform.position, pendingObject.transform.rotation).GetComponent<BuildingBase>();
