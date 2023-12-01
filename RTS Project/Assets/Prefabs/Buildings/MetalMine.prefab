@@ -94,7 +94,6 @@ GameObject:
   - component: {fileID: 3766747821306631617}
   - component: {fileID: 5247091873377409366}
   - component: {fileID: 4694457708341824937}
-  - component: {fileID: -1451564478840672773}
   m_Layer: 7
   m_Name: MetalMine
   m_TagString: Untagged
@@ -141,7 +140,7 @@ MonoBehaviour:
   points:
     pointType: 1
     amount: 1
-  outline: {fileID: -1451564478840672773}
+  outline: {fileID: 935506704979823546}
   model: {fileID: 386958128729160865}
   buildingName: 
   occupancyType: 0
@@ -177,24 +176,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 7.9832907, y: 4.6366115, z: 4.228674}
   m_Center: {x: 1.7602019, y: 1.8233058, z: -0.017586708}
---- !u!114 &-1451564478840672773
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2432438935407483892}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 1
-  outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1001 &693459302669926896
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -281,7 +262,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 568b3f048fee9f545b6b137c2281fc51,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 935506704979823546}
   m_SourcePrefab: {fileID: 100100000, guid: 568b3f048fee9f545b6b137c2281fc51, type: 3}
 --- !u!1 &386958128729160865 stripped
 GameObject:
@@ -289,6 +274,24 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 693459302669926896}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &935506704979823546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 386958128729160865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!4 &1014735925687199259 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 568b3f048fee9f545b6b137c2281fc51,

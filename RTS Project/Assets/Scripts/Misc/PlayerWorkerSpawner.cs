@@ -8,17 +8,27 @@ public class PlayerWorkerSpawner : MonoBehaviour
     [SerializeField] private Vector2 spawnOffset;
     [SerializeField] private Terrain terrain;
 
+    private Worker[] workers;
+
     private void Start()
     {
+        workers = new Worker[amountToSpawn];
+
         for (int i = 0; i < amountToSpawn; i++)
         {
             Vector3 position = transform.position;
             position.x += Random.Range(spawnScale.x, spawnScale.y) + spawnOffset.x;
+            print(spawnScale.x);
+            print(spawnScale.y);
+            print(position.x);
             position.z += Random.Range(spawnScale.x, spawnScale.y) + spawnOffset.y;
             position.y = terrain.SampleHeight(position) + (prefab.transform.lossyScale.y);
-            GameObject spawnedAI = Instantiate(prefab, position, Quaternion.identity);
+            Worker spawnedAI = Instantiate(prefab, position, Quaternion.identity).GetComponent<Worker>();
+            workers[i] = spawnedAI;
         }
     }
+
+    public Worker[] GetWorkers() => workers;
 
     private void OnDrawGizmos()
     {

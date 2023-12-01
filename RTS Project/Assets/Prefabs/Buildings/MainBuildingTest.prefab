@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 645092546158786554}
   - component: {fileID: 7629649435915151637}
+  - component: {fileID: 5935761945686543978}
   m_Layer: 7
   m_Name: MainBuildingTest
   m_TagString: Untagged
@@ -24,6 +25,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5970937043620177259}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 426.86188, y: 6.64633, z: 256.77524}
   m_LocalScale: {x: 7.1347, y: 7.1347, z: 7.1347}
@@ -31,7 +33,6 @@ Transform:
   m_Children:
   - {fileID: 7316941348112279467}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &7629649435915151637
 BoxCollider:
@@ -54,6 +55,23 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.4566565, y: 3.0277228, z: 2.0760422}
   m_Center: {x: 0, y: 0.46866614, z: 0}
+--- !u!114 &5935761945686543978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5970937043620177259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22277830bd7e20f4ebef0006401fdd84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  amountToSpawn: 5
+  prefab: {fileID: 3721838096702204654, guid: 03430657f2f14514ba955174b175ae45, type: 3}
+  spawnScale: {x: 10, y: 10}
+  spawnOffset: {x: -16.65, y: 0}
+  terrain: {fileID: 0}
 --- !u!1001 &7061721313972633664
 PrefabInstance:
   m_ObjectHideFlags: 0

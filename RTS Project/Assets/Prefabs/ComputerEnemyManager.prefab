@@ -107,6 +107,7 @@ MonoBehaviour:
     pointType: 0
     amount: 0
   outline: {fileID: 0}
+  model: {fileID: 0}
   buildingName: 
   occupancyType: 2
 --- !u!1001 &9021258699120182603
@@ -125,17 +126,17 @@ PrefabInstance:
     - target: {fileID: 645092546158786554, guid: 21fd37c60c0dcc04a95d5ccf0b030476,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.556885
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 645092546158786554, guid: 21fd37c60c0dcc04a95d5ccf0b030476,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.0300007
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 645092546158786554, guid: 21fd37c60c0dcc04a95d5ccf0b030476,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.9744263
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 645092546158786554, guid: 21fd37c60c0dcc04a95d5ccf0b030476,
         type: 3}
@@ -171,6 +172,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5935761945686543978, guid: 21fd37c60c0dcc04a95d5ccf0b030476,
+        type: 3}
+      propertyPath: spawnOffset.x
+      value: -19.7
       objectReference: {fileID: 0}
     - target: {fileID: 5970937043620177259, guid: 21fd37c60c0dcc04a95d5ccf0b030476,
         type: 3}

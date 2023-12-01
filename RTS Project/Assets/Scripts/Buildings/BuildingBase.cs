@@ -83,9 +83,12 @@ public class BuildingBase : MonoBehaviour
     {
         uiManager = FindObjectOfType<UIManager>();
 
-        outline.enabled = false;
-        outline.OutlineWidth = uiManager.GetOutlineDefaultSize();
-        outlineDefaultSize = outline.OutlineWidth;
+        if (outline)
+        {
+            outline.enabled = false;
+            outline.OutlineWidth = uiManager.GetOutlineDefaultSize();
+            outlineDefaultSize = outline.OutlineWidth;
+        }
 
         if (buildingName == string.Empty)
             buildingName = name;

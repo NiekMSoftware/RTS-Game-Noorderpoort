@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -25,6 +26,7 @@ public class ComputerEnemy : MonoBehaviour
     [SerializeField] private AIStates state;
     [SerializeField] private int pointsToAddAssignWorker;
     [SerializeField] private bool debugMode;
+    [SerializeField] private PlayerWorkerSpawner workerSpawner;
 
     private List<GameObject> resourceAreas = new();
 
@@ -86,13 +88,7 @@ public class ComputerEnemy : MonoBehaviour
 
     private void Start()
     {
-        for (int i = 0; i < amountOfWorkersAtStart; i++)
-        {
-            Worker worker = Instantiate(workerPrefab, transform.position, Quaternion.identity).GetComponent<Worker>();
-            worker.name += i;
-            workers.Add(worker);
-            availableWorkers.Add(worker);
-        }
+        workers = workerSpawner.GetWorkers().ToList();
     }
 
     private void Update()
