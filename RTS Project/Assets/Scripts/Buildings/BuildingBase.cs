@@ -97,7 +97,7 @@ public class BuildingBase : MonoBehaviour
         particleObject = _particleObject;
         this.buildingToSpawn = buildingToSpawn;
         currentState = state;
-        buildingAnimationValue = -0.004f;
+        buildingAnimationValue = buildingMaterial.GetFloat("_Min");
     }
 
     public virtual IEnumerator Build(float buildTime)
@@ -106,10 +106,16 @@ public class BuildingBase : MonoBehaviour
 
         ChangeObjectMaterial(buildingMaterial);
 
-        while (buildingAnimationValue < 0.006f)
+        float max = buildingMaterial.GetFloat("_Max");
+        float min = buildingMaterial.GetFloat("_Min");
+        float range = max - min;
+        buildTime *= 250;
+        float speed = range / buildTime;
+
+        while (buildingAnimationValue < max)
         {
-            buildingAnimationValue += 0.001f;
-            buildingMaterial.SetFloat("Value", buildingAnimationValue);
+            buildingAnimationValue += speed;
+            buildingMaterial.SetFloat("_Value", buildingAnimationValue);
             yield return null;
         }
 
