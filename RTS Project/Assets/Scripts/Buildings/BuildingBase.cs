@@ -93,7 +93,11 @@ public class BuildingBase : MonoBehaviour
 
     public virtual void Init(Material _material, GameObject _particleObject, GameObject buildingToSpawn, States state)
     {
-        buildingMaterial = _material;
+        Material newMaterial = new(_material.shader)
+        {
+            color = _material.color
+        };
+        buildingMaterial = newMaterial;
         particleObject = _particleObject;
         this.buildingToSpawn = buildingToSpawn;
         currentState = state;
@@ -121,7 +125,6 @@ public class BuildingBase : MonoBehaviour
             yield return null;
         }
 
-        currentState = States.Normal;
         ParticleSystem particle = Instantiate(particleObject, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
         particle.Play();
         yield return new WaitForSeconds(particle.main.duration);
