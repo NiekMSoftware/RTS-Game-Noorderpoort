@@ -23,9 +23,16 @@ public class TestSpawnSync : NetworkBehaviour
         GameObject spawnedObjectTransform = Instantiate(spawnedObjectPrefab);
         spawnedObjectTransform.GetComponent<NetworkObject>().Spawn(true);
         spawnedObjectTransform.GetComponent<Renderer>().material.color = objectColor;
+        SpawnObjectPrintClientRpc(spawnedObjectTransform);
+    }
+
+    [ClientRpc]
+    void SpawnObjectPrintClientRpc(GameObject spawnedObjectTransform)
+    {
         print(spawnedObjectTransform.GetComponent<NetworkObject>().IsOwner);
 
     }
+
 
     // Network variable to synchronize team ID
     public NetworkVariable<int> teamID = new NetworkVariable<int>(1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
