@@ -11,7 +11,7 @@ public class ResourceBuildingBase : BuildingBase
     [SerializeField] private string jobName;
     [SerializeField] private Jobs jobs;
     [SerializeField] private int scanRange = 200;
-    [SerializeField] private GameObject rangeIndicator;
+    //[SerializeField] private GameObject rangeIndicator;
 
     private ResourceItemManager resourceItemManager;
     public GameObject closestResourceCluster;
@@ -19,9 +19,9 @@ public class ResourceBuildingBase : BuildingBase
 
     private void Start()
     {
-        rangeIndicator.SetActive(false);
+        //rangeIndicator.SetActive(false);
         Vector3 scale = new(scanRange, scanRange, 1);
-        rangeIndicator.transform.localScale = scale;
+        //rangeIndicator.transform.localScale = scale;
 
         FindClosestResourceManager(transform, currentStorage[0].data);
     }
@@ -95,7 +95,7 @@ public class ResourceBuildingBase : BuildingBase
 
         base.SelectBuilding();
 
-        rangeIndicator.SetActive(true);
+        //rangeIndicator.SetActive(true);
 
         foreach (var worker in workers)
         {
@@ -109,7 +109,7 @@ public class ResourceBuildingBase : BuildingBase
 
         base.DeselectBuilding();
 
-        rangeIndicator.SetActive(false);
+        //rangeIndicator.SetActive(false);
 
         foreach (var worker in workers)
         {

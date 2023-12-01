@@ -57,6 +57,7 @@ MonoBehaviour:
     pointType: 1
     amount: 1
   outline: {fileID: 7619373554289024790}
+  model: {fileID: 2432438935407483892}
   buildingName: Lumberjack hut
   occupancyType: 0
   maxWorkers: 2
@@ -68,7 +69,6 @@ MonoBehaviour:
   jobName: Lumberjack
   jobs: 0
   scanRange: 2
-  rangeIndicator: {fileID: 0}
   closestResourceCluster: {fileID: 0}
 --- !u!65 &4694457708341824937
 BoxCollider:

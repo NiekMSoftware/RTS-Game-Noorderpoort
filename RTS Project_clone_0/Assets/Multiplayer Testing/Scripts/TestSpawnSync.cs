@@ -22,9 +22,5 @@ public class TestSpawnSync : NetworkBehaviour
         GameObject spawnedObjectTransform = Instantiate(spawnedObjectPrefab);
         spawnedObjectTransform.GetComponent<NetworkObject>().Spawn(true);
         spawnedObjectTransform.GetComponent<Renderer>().material.color = objectColor;
-        print(NetworkObjectId);
-
-        //print(spawnedObjectTransform.GetComponent<NetworkObject>().ChangeOwnership(this.id))
-        print(spawnedObjectTransform.GetComponent<NetworkObject>().NetworkObjectId);
     }
 }

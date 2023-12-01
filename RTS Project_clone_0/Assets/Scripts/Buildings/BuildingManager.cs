@@ -2,11 +2,12 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class BuildingManager : MonoBehaviour
+public class BuildingManager : NetworkBehaviour
 {
     [Header("References")]
     [SerializeField] private Building[] buildings;
@@ -150,7 +151,7 @@ public class BuildingManager : MonoBehaviour
         {
             if (CheckCanPlace(true))
             {
-                BuildObject();
+                BuildObjectServerRpc();
             }
         }
     }
@@ -275,8 +276,10 @@ public class BuildingManager : MonoBehaviour
         pos = Vector3.zero;
     }
 
-    private void BuildObject()
+    [ServerRpc (RequireOwnership = false)]
+    private void BuildObjectServerRpc()
     {
+        currentIndex = 0;
         foreach (var itemNeeded in buildings[currentIndex].building.GetComponent<BuildingBase>().GetRecipes())
         {
             if (itemNeeded.data == resources.GetSlotByItemData(itemNeeded.data).data)
@@ -288,8 +291,9 @@ public class BuildingManager : MonoBehaviour
         ParticleSystem spawnedParticle = Instantiate(buildParticle, pos, Quaternion.identity).GetComponent<ParticleSystem>();
         spawnedParticle.Play();
 
-        BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pendingObject.transform.position, 
-            pendingObject.transform.rotation).GetComponent<BuildingBase>();
+        BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building).GetComponent<BuildingBase>();
+        spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
+
 
         spawnedBuilding.Init(buildingMaterial, buildParticle, 
             buildings[currentIndex].building, BuildingBase.States.Building);
