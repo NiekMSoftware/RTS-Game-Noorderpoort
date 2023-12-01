@@ -4,9 +4,10 @@ using UnityEngine;
 public class TestSpawnSync : NetworkBehaviour
 {
     [SerializeField] private GameObject spawnedObjectPrefab;
+    private GameObject spawnedObjectTransform;
 
 
-    
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.T))
@@ -20,14 +21,14 @@ public class TestSpawnSync : NetworkBehaviour
     {
         Color objectColor = Color.blue;
 
-        GameObject spawnedObjectTransform = Instantiate(spawnedObjectPrefab);
+        spawnedObjectTransform = Instantiate(spawnedObjectPrefab);
         spawnedObjectTransform.GetComponent<NetworkObject>().Spawn(true);
         spawnedObjectTransform.GetComponent<Renderer>().material.color = objectColor;
-        SpawnObjectPrintClientRpc(spawnedObjectTransform);
+        SpawnObjectPrintClientRpc();
     }
 
     [ClientRpc]
-    void SpawnObjectPrintClientRpc(GameObject spawnedObjectTransform)
+    void SpawnObjectPrintClientRpc()
     {
         print(spawnedObjectTransform.GetComponent<NetworkObject>().IsOwner);
 
