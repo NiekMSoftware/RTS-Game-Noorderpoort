@@ -46,8 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58d384ac6455c4e41b0a9b41a2f09939, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  amountOfWorkersAtStart: 5
-  workerPrefab: {fileID: 130443921006063449, guid: ac0e488fa050e814da5daa409f620119,
+  amountOfWorkersAtStart: 10
+  workerPrefab: {fileID: 3721838096702204654, guid: 03430657f2f14514ba955174b175ae45,
     type: 3}
   buildings:
   - building: {fileID: 2432438935407483892, guid: 8140ef950e5920644a01c70b6f40bd1d,
@@ -68,6 +68,12 @@ MonoBehaviour:
     isStarter: 0
     itemData: {fileID: 11400000, guid: 161a6795559e79647b98c0f3e168464e, type: 2}
     hasBeenPlaced: 0
+  - building: {fileID: 5156782261921279343, guid: 726f9dcb6ce19b3499c0e70356579adc,
+      type: 3}
+    buildingType: 2
+    isStarter: 0
+    itemData: {fileID: 0}
+    hasBeenPlaced: 0
   terrain: {fileID: 0}
   occupanyLayer:
     serializedVersion: 2
@@ -79,7 +85,7 @@ MonoBehaviour:
   amountOfSecondsPerChoise: 3
   resourceItemManager: {fileID: 0}
   pointManager: {fileID: 0}
-  minResourcePoints: 5
+  minResourcePoints: 3
   workers: []
   availableWorkers: []
   soldiers: []
@@ -87,6 +93,7 @@ MonoBehaviour:
   state: 0
   pointsToAddAssignWorker: 1
   debugMode: 0
+  workerSpawner: {fileID: 3409755943785433889}
   resourcesToGather: []
 --- !u!114 &-4388863392239712898
 MonoBehaviour:
@@ -193,6 +200,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 21fd37c60c0dcc04a95d5ccf0b030476, type: 3}
+--- !u!114 &3409755943785433889 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5935761945686543978, guid: 21fd37c60c0dcc04a95d5ccf0b030476,
+    type: 3}
+  m_PrefabInstance: {fileID: 9021258699120182603}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22277830bd7e20f4ebef0006401fdd84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &8485387244448641713 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 645092546158786554, guid: 21fd37c60c0dcc04a95d5ccf0b030476,

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class BuildingManager : MonoBehaviour
@@ -12,7 +13,6 @@ public class BuildingManager : MonoBehaviour
     [SerializeField] private Building[] buildings;
     [SerializeField] private ResourceItemManager resources;
     [SerializeField] private Terrain terrain;
-    [SerializeField] private Button[] buttons;
     [SerializeField] private PointManager pointManager;
 
     [Header("Build Progresses")]
@@ -57,6 +57,7 @@ public class BuildingManager : MonoBehaviour
         public float buildTime;
         public bool isUnlocked;
         public int[] buildingsToUnlock;
+        public Button button;
     }
 
     private void Start()
@@ -68,11 +69,15 @@ public class BuildingManager : MonoBehaviour
     {
         for (int i = 0; i < buildings.Length; i++)
         {
-            buttons[i].interactable = false;
+            Button button = buildings[i].button;
+            button.interactable = false;
+            button.onClick.RemoveAllListeners();
+            int index = i;
+            button.onClick.AddListener(() => SelectObject(index));
 
             if (buildings[i].isUnlocked)
             {
-                buttons[i].interactable = true;
+                button.interactable = true;
             }
         }
     }
@@ -297,10 +302,10 @@ public class BuildingManager : MonoBehaviour
         spawnedBuilding.SetOccupancyType(BuildingBase.OccupancyType.Player);
         StartCoroutine(spawnedBuilding.Build(buildings[currentIndex].buildTime));
 
-        //BuildProgress buildProgress = Instantiate(buildProgressPrefab, new Vector3(spawnedBuilding.transform.position.x,
-        //    spawnedBuilding.transform.position.y + spawnedBuilding.transform.localScale.y + buildProgressHeight, 
-        //    spawnedBuilding.transform.position.z), Quaternion.identity, spawnedBuilding.transform).GetComponent<BuildProgress>();
-        //buildProgress.Init(buildings[currentIndex].buildTime);
+        BuildProgress buildProgress = Instantiate(buildProgressPrefab, new Vector3(spawnedBuilding.transform.position.x,
+            spawnedBuilding.transform.position.y + spawnedBuilding.transform.localScale.y + buildProgressHeight,
+            spawnedBuilding.transform.position.z), Quaternion.identity, spawnedBuilding.transform).GetComponent<BuildProgress>();
+        buildProgress.Init(buildings[currentIndex].buildTime);
 
         for (int i = 0; i < buildings[currentIndex].buildingsToUnlock.Length; i++)
         {

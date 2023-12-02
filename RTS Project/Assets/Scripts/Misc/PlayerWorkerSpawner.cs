@@ -10,6 +10,11 @@ public class PlayerWorkerSpawner : MonoBehaviour
 
     private Worker[] workers;
 
+    private void Awake()
+    {
+        terrain = FindObjectOfType<Terrain>();
+    }
+
     private void Start()
     {
         workers = new Worker[amountToSpawn];
@@ -34,7 +39,8 @@ public class PlayerWorkerSpawner : MonoBehaviour
         Vector3 position = transform.position;
         position.x += spawnOffset.x;
         position.z += spawnOffset.y;
-        position.y = terrain.SampleHeight(position);
+        if (terrain)
+            position.y = terrain.SampleHeight(position);
         Gizmos.DrawWireCube(position, scale);
     }
 }
