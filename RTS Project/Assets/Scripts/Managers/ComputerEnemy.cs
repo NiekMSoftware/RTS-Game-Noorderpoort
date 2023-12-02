@@ -89,6 +89,7 @@ public class ComputerEnemy : MonoBehaviour
     private void Start()
     {
         workers = workerSpawner.GetWorkers().ToList();
+        availableWorkers = workers;
     }
 
     private void Update()
@@ -209,7 +210,8 @@ public class ComputerEnemy : MonoBehaviour
                                             if (placedResourceBuilding.GetWorkers().Count <= i)
                                             {
                                                 shouldPlaceNewBuilding = false;
-                                                if (AssignWorker(placedResourceBuilding, GetRandomAvailableWorker()))
+                                                Worker worker = GetRandomAvailableWorker();
+                                                if (AssignWorker(placedResourceBuilding, worker))
                                                 {
                                                     return;
                                                 }
@@ -313,7 +315,7 @@ public class ComputerEnemy : MonoBehaviour
                 {
                     if (building.buildingType == BuildingType.Offensive)
                     {
-                        barrack = building.building.GetComponent<Barrack>();
+                        building.building.TryGetComponent(out barrack);
                         if (!building.hasBeenPlaced)
                         {
                             PlaceNonResourceBuilding(building);
@@ -321,8 +323,12 @@ public class ComputerEnemy : MonoBehaviour
                         else
                         {
                             Worker worker = GetRandomAvailableWorker();
-                            building.building.GetComponent<Barrack>().AddUnitToBarrack(worker);
-                            availableWorkers.Remove(worker);
+
+                            if (worker)
+                            {
+                                barrack.AddUnitToBarrack(worker);
+                                availableWorkers.Remove(worker);
+                            }
                         }
                     }
                 }

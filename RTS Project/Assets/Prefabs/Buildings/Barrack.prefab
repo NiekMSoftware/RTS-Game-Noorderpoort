@@ -163,6 +163,7 @@ MonoBehaviour:
     pointType: 2
     amount: 1
   outline: {fileID: 0}
+  model: {fileID: 0}
   buildingName: 
   occupancyType: 0
   unitToSpawn: {fileID: 6687049504355165105, guid: c6b5ed013b2cf2c4689c875d2e2573a8,
@@ -170,7 +171,7 @@ MonoBehaviour:
   queue: 0
   maxTimeUntilNext: 5
   rangeOfSpawn: 10
-  entrance: {fileID: 3078622439867273810}
+  entrance: {fileID: 9215502002279492395}
   exit: {fileID: 3338330323617080737}
   terrain: {fileID: 0}
   selectionManager: {fileID: 0}
@@ -202,6 +203,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3078622439867273810}
   - component: {fileID: 2762624800652576497}
+  - component: {fileID: 9215502002279492395}
   m_Layer: 7
   m_Name: Enterance
   m_TagString: Untagged
@@ -245,3 +247,15 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.04585269, y: 0.345092, z: 0.23823893}
   m_Center: {x: 0.029841617, y: 0.016163744, z: -0.011746138}
+--- !u!114 &9215502002279492395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7988776410278182275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcc90d19e38b8064f96757dde48c2479, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

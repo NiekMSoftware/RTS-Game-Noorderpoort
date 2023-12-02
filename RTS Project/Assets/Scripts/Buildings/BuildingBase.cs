@@ -79,9 +79,10 @@ public class BuildingBase : MonoBehaviour
 
     #endregion
 
-    private void Awake()
+    protected virtual void Awake()
     {
         uiManager = FindObjectOfType<UIManager>();
+        print("UI manager : " + uiManager + " from " + name);
 
         if (outline)
         {
@@ -189,17 +190,25 @@ public class BuildingBase : MonoBehaviour
     {
         if (currentState == States.Building) return;
 
-        uiManager.SetBuildingUI(true, this);
-        outline.OutlineWidth = outlineDefaultSize;
-        outline.enabled = true;
+        if (uiManager)
+            uiManager.SetBuildingUI(true, this);
+
+        if (outline)
+        {
+            outline.OutlineWidth = outlineDefaultSize;
+            outline.enabled = true;
+        }
     }
 
     public virtual void DeselectBuilding()
     {
         if (currentState == States.Building) return;
 
-        uiManager.SetBuildingUI(false, this);
-        outline.enabled = false;
+        if (uiManager)
+            uiManager.SetBuildingUI(false, this);
+
+        if (outline)
+            outline.enabled = false;
     }
 
     public virtual void DestroyBuilding()
