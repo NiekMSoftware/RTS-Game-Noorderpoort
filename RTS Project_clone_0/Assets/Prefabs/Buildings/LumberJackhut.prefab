@@ -94,7 +94,6 @@ GameObject:
   - component: {fileID: 3766747821306631617}
   - component: {fileID: 5247091873377409366}
   - component: {fileID: 4694457708341824937}
-  - component: {fileID: 7619373554289024790}
   m_Layer: 7
   m_Name: LumberJackhut
   m_TagString: Untagged
@@ -139,7 +138,8 @@ MonoBehaviour:
   points:
     pointType: 1
     amount: 1
-  outline: {fileID: 7619373554289024790}
+  outline: {fileID: 8589388334026806257}
+  model: {fileID: 4909080368746801738}
   buildingName: Lumberjack hut
   occupancyType: 0
   maxWorkers: 2
@@ -150,7 +150,7 @@ MonoBehaviour:
   workers: []
   jobName: Lumberjack
   jobs: 0
-  scanRange: 2
+  scanRange: 50
   rangeIndicator: {fileID: 2087456093501704384}
   closestResourceCluster: {fileID: 0}
 --- !u!65 &4694457708341824937
@@ -174,24 +174,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 7.9832907, y: 4.6366115, z: 4.228674}
   m_Center: {x: 1.7602019, y: 1.8233058, z: -0.017586708}
---- !u!114 &7619373554289024790
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2432438935407483892}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 1
-  outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  outlineWidth: 7.55
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!1001 &5251732936460474139
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -278,8 +260,36 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6e5028dc46907dd4fa7c5586496e9a44,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8589388334026806257}
   m_SourcePrefab: {fileID: 100100000, guid: 6e5028dc46907dd4fa7c5586496e9a44, type: 3}
+--- !u!1 &4909080368746801738 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 6e5028dc46907dd4fa7c5586496e9a44,
+    type: 3}
+  m_PrefabInstance: {fileID: 5251732936460474139}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8589388334026806257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4909080368746801738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!4 &5722771357294358768 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6e5028dc46907dd4fa7c5586496e9a44,

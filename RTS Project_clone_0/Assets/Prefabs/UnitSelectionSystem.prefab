@@ -48,6 +48,7 @@ MonoBehaviour:
   selectionBoxVisual: {fileID: 0}
   markerPrefab: {fileID: 2349340977249974520, guid: e8eb32d6833c2d8449c1cb6a0f1f82ed,
     type: 3}
+  buildingSelectUI: {fileID: 0}
   unitLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -57,3 +58,4 @@ MonoBehaviour:
   buildingLayer:
     serializedVersion: 2
     m_Bits: 128
+  selectedBuilding: {fileID: 0}

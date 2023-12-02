@@ -79,13 +79,17 @@ public class BuildingBase : MonoBehaviour
 
     #endregion
 
-    private void Awake()
+    protected virtual void Awake()
     {
         uiManager = FindObjectOfType<UIManager>();
+        print("UI manager : " + uiManager + " from " + name);
 
-        outline.enabled = false;
-        outline.OutlineWidth = uiManager.GetOutlineDefaultSize();
-        outlineDefaultSize = outline.OutlineWidth;
+        if (outline)
+        {
+            outline.enabled = false;
+            outline.OutlineWidth = uiManager.GetOutlineDefaultSize();
+            outlineDefaultSize = outline.OutlineWidth;
+        }
 
         if (buildingName == string.Empty)
             buildingName = name;
@@ -93,7 +97,16 @@ public class BuildingBase : MonoBehaviour
 
     public virtual void Init(Material _material, GameObject _particleObject, GameObject buildingToSpawn, States state)
     {
-        buildingMaterial = _material;
+        if (_material)
+        {
+            Material newMaterial = new(_material.shader)
+            {
+                color = _material.color
+            };
+
+            buildingMaterial = newMaterial;
+        }
+
         particleObject = _particleObject;
         this.buildingToSpawn = buildingToSpawn;
         currentState = state;
@@ -121,7 +134,6 @@ public class BuildingBase : MonoBehaviour
             yield return null;
         }
 
-        currentState = States.Normal;
         ParticleSystem particle = Instantiate(particleObject, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
         particle.Play();
         yield return new WaitForSeconds(particle.main.duration);
@@ -138,6 +150,8 @@ public class BuildingBase : MonoBehaviour
 
     private void ChangeObjectMaterial(Material material)
     {
+        if (!model) return;
+
         if (model.TryGetComponent(out MeshRenderer mesh))
         {
             if (mesh.material)
@@ -147,16 +161,19 @@ public class BuildingBase : MonoBehaviour
         }
         else
         {
-            foreach (var mr in model.GetComponentsInChildren<MeshRenderer>())
+            foreach (Transform child in model.transform)
             {
-                Material[] materials = mr.materials;
-
-                for (int i = 0; i < materials.Length; i++)
+                if (child.TryGetComponent(out MeshRenderer mesh2))
                 {
-                    materials[i] = material;
-                }
+                    Material[] materials = mesh2.materials;
 
-                mr.materials = materials;
+                    for (int i = 0; i < materials.Length; i++)
+                    {
+                        materials[i] = material;
+                    }
+
+                    mesh2.materials = materials;
+                }
             }
         }
     }
@@ -173,17 +190,25 @@ public class BuildingBase : MonoBehaviour
     {
         if (currentState == States.Building) return;
 
-        uiManager.SetBuildingUI(true, this);
-        outline.OutlineWidth = outlineDefaultSize;
-        outline.enabled = true;
+        if (uiManager)
+            uiManager.SetBuildingUI(true, this);
+
+        if (outline)
+        {
+            outline.OutlineWidth = outlineDefaultSize;
+            outline.enabled = true;
+        }
     }
 
     public virtual void DeselectBuilding()
     {
         if (currentState == States.Building) return;
 
-        uiManager.SetBuildingUI(false, this);
-        outline.enabled = false;
+        if (uiManager)
+            uiManager.SetBuildingUI(false, this);
+
+        if (outline)
+            outline.enabled = false;
     }
 
     public virtual void DestroyBuilding()
