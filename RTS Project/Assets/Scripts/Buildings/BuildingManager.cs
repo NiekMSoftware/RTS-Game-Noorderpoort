@@ -292,8 +292,9 @@ public class BuildingManager : NetworkBehaviour
         spawnedParticle.Play();
 
         BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pendingObject.transform.position,
-                    pendingObject.transform.rotation).GetComponent<BuildingBase>(); spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
+                    pendingObject.transform.rotation).GetComponent<BuildingBase>();
         spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
+
 
 
         spawnedBuilding.Init(buildingMaterial, buildParticle, 
