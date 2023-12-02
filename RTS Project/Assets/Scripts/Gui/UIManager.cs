@@ -32,6 +32,7 @@ public class UIManager : MonoBehaviour
 
         mainCamera = Camera.main;
         selectionManager = FindObjectOfType<NewSelectionManager>();
+        playerResourceItemManager = FindObjectOfType<ResourceItemManager>();
     }
 
     private void Update()

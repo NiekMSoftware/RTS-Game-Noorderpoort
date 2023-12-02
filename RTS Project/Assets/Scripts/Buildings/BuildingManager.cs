@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -72,8 +73,11 @@ public class BuildingManager : NetworkBehaviour
     {
         terrain = FindObjectOfType<Terrain>().GetComponent<Terrain>();
     }
-    private void UpdateButtons()
+
+    [ContextMenu("UpdateButtons")]
+    public void UpdateButtons()
     {
+        print("update");
         for (int i = 0; i < buildings.Length; i++)
         {
             Button button = buildings[i].button;
@@ -91,6 +95,7 @@ public class BuildingManager : NetworkBehaviour
 
     void Update()
     {
+
         if (currentIndex < 0) return;
         if (!pendingObject) return;
 
@@ -158,12 +163,11 @@ public class BuildingManager : NetworkBehaviour
             }
         }
         //place object
-        else if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
-            if (CheckCanPlace(true))
-            {
-                BuildObjectServerRpc(); 
-            }
+
+                BuildObjectServerRpc();
+
         }
     }
 
@@ -298,14 +302,14 @@ public class BuildingManager : NetworkBehaviour
                 resources.GetSlotByItemData(itemNeeded.data).amount -= itemNeeded.amountNeeded;
             }
         }
-        pendingObjectVector3.Value = pendingObject.transform.position;
+        //endingObjectVector3.Value = pendingObject.transform.position;
 
         ParticleSystem spawnedParticle = Instantiate(buildParticle, pos, Quaternion.identity).GetComponent<ParticleSystem>();
         spawnedParticle.Play();
 
         print("Pending object: " + pendingObject);
         print("Building to spawn: " + buildings[currentIndex].building);
-        BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pendingObjectVector3.Value, transform.rotation).GetComponent<BuildingBase>();
+        BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pendingObject.transform.position, transform.rotation).GetComponent<BuildingBase>();
         //BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building).GetComponent<BuildingBase>();
         spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
 
@@ -337,10 +341,9 @@ public class BuildingManager : NetworkBehaviour
         }
     }
 
-    [ServerRpc (RequireOwnership = false)]
-    public void SelectObjectServerRpc(int index)
+    public void SelectObject(int index)
     {
-        print(index);
+        //print(index);
         ResetObject();
         pendingObject = Instantiate(buildings[0].building, pos, transform.rotation);
         

@@ -8,10 +8,10 @@ public class TestSpawnSync : NetworkBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            SpawnObjectServerRpc();
-        }
+        //if (Input.GetKeyDown(KeyCode.T))
+        //{
+        //    SpawnObjectServerRpc();
+        //}
     }
 
     [ServerRpc(RequireOwnership = false)]
