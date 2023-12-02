@@ -24,7 +24,7 @@ public class Barrack : BuildingBase
     [SerializeField] private float rangeOfSpawn = 10f;
 
     [Space]
-    [SerializeField] private Transform entrance;
+    [SerializeField] private BarrackEntrance entrance;
     [SerializeField] private Transform exit;
 
     [Space] 
@@ -34,21 +34,24 @@ public class Barrack : BuildingBase
 
     private Unit spawnedUnit;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         terrain = FindObjectOfType<Terrain>().GetComponent<Terrain>();
     }
 
     private void Start()
     {
+        entrance.Setup(this);
+
         selectionManager = FindObjectOfType<SelectionManager>();
         
         // set both the entrance and exit to the height of the terrain
-        float entranceHeight = terrain.SampleHeight(entrance.position);
+        float entranceHeight = terrain.SampleHeight(entrance.transform.position);
         float exitHeight = terrain.SampleHeight(exit.position);
 
         // set the y-coordinates
-        entrance.position = new Vector3(entrance.position.x, entranceHeight, entrance.position.z);
+        entrance.transform.position = new Vector3(entrance.transform.position.x, entranceHeight, entrance.transform.position.z);
         exit.position = new Vector3(exit.position.x, exitHeight, exit.position.z);
     }
 
@@ -62,7 +65,7 @@ public class Barrack : BuildingBase
 
     public void AddUnitToBarrack(Unit AIUnit)
     {
-        if (AIUnit != null)
+        if (AIUnit == null)
         {
             List<GameObject> selectedUnit = selectionManager.selectedUnits;
             print("Added Unit to list and sending them to the barrack");
@@ -73,12 +76,20 @@ public class Barrack : BuildingBase
                 NavMeshAgent agent = unit.GetComponent<NavMeshAgent>();
                 if (agent != null)
                 {
-                    agent.destination = entrance.position;
+                    agent.destination = entrance.transform.position;
                 }
                 else
                 {
                     Debug.LogError("Failed to gather Agent Component from unit");
                 }
+            }
+        }
+        else
+        {
+            if (AIUnit.TryGetComponent(out NavMeshAgent agent))
+            {
+                print("Entrance position : " + entrance.transform.position);
+                agent.destination = entrance.transform.position;
             }
         }
     }
@@ -89,8 +100,6 @@ public class Barrack : BuildingBase
     {
         // Turn on the queue
         queue += Time.deltaTime;
-
-        print(unitList.Count);
 
         // Check if the list isn't empty, if so break the method
         if (unitList.Count != 0)
@@ -152,15 +161,12 @@ public class Barrack : BuildingBase
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void AIEnteredEntrance(Unit unit)
     {
-        if (other.gameObject.CompareTag("AI"))
-        {
-            // Destroy the unit
-            Destroy(other.gameObject);
+        // Destroy the unit
+        Destroy(unit.gameObject);
 
-            // Add a new item to the list!
-            unitList.Add(unitToSpawn);
-        }
+        // Add a new item to the list!
+        unitList.Add(unitToSpawn);
     }
 }

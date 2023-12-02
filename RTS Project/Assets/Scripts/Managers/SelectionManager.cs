@@ -213,7 +213,7 @@ public class SelectionManager : MonoBehaviour
                         else
                         {
                             print("Assigning Unit to soldier");
-                            selectedBuilding.GetComponent<Barrack>().AddUnitToBarrack(unit.GetComponent<Unit>());
+                            selectedBuilding.GetComponent<Barrack>().AddUnitToBarrack(null);
                         }
                     }
 

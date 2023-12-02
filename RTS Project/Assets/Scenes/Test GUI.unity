@@ -181,7 +181,7 @@ MonoBehaviour:
     m_Bits: 2048
   selectedUnits: []
   markerPrefab: {fileID: 0}
-  boxVisual: {fileID: 0}
+  boxVisual: {fileID: 2103745852}
   selectedEnemy: {fileID: 0}
   buildingToAttack: {fileID: 0}
   buildingPosition: {x: 0, y: 0, z: 0}
@@ -473,7 +473,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1601208693}
     m_Modifications:
     - target: {fileID: 4811899100064674381, guid: 7cc6e56c9125a37418afb53f226405cc,
         type: 3}
@@ -558,12 +558,12 @@ PrefabInstance:
     - target: {fileID: 7070843294513999126, guid: 7cc6e56c9125a37418afb53f226405cc,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -1151.9487
+      value: -2431.9487
       objectReference: {fileID: 0}
     - target: {fileID: 7070843294513999126, guid: 7cc6e56c9125a37418afb53f226405cc,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -435.88635
+      value: -1155.8864
       objectReference: {fileID: 0}
     - target: {fileID: 7070843294513999126, guid: 7cc6e56c9125a37418afb53f226405cc,
         type: 3}
@@ -664,6 +664,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3338330323617080737, guid: 726f9dcb6ce19b3499c0e70356579adc,
     type: 3}
   m_PrefabInstance: {fileID: 6685800541104380544}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &1601208693 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6765246268477586324, guid: 6bb7140ab92b8c9449f606d4fef4abdf,
+    type: 3}
+  m_PrefabInstance: {fileID: 1705733289}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1658610816
 PrefabInstance:
@@ -1283,7 +1289,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 6765246268477586324, guid: 6bb7140ab92b8c9449f606d4fef4abdf,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2103745852}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6bb7140ab92b8c9449f606d4fef4abdf, type: 3}
 --- !u!1 &1763762448
@@ -1590,18 +1600,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3da07764186293c4ebf58944135ae0d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2037588776 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4184783236928904395, guid: 726f9dcb6ce19b3499c0e70356579adc,
-    type: 3}
-  m_PrefabInstance: {fileID: 6685800541104380544}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0c4a5adb282a224e85c5ed48dc0754b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2038580655
 GameObject:
   m_ObjectHideFlags: 0
@@ -1720,6 +1718,12 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!224 &2103745852 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7070843294513999126, guid: 7cc6e56c9125a37418afb53f226405cc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1052630289}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6685800541104380544
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1742,7 +1746,7 @@ PrefabInstance:
         type: 3}
       propertyPath: enterance
       value: 
-      objectReference: {fileID: 2037588776}
+      objectReference: {fileID: 0}
     - target: {fileID: 1860279640408473471, guid: 726f9dcb6ce19b3499c0e70356579adc,
         type: 3}
       propertyPath: unitToSpawn
@@ -1783,6 +1787,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7617377509933312893, guid: 726f9dcb6ce19b3499c0e70356579adc,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7617377509933312893, guid: 726f9dcb6ce19b3499c0e70356579adc,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7617377509933312893, guid: 726f9dcb6ce19b3499c0e70356579adc,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7617377509933312893, guid: 726f9dcb6ce19b3499c0e70356579adc,
         type: 3}
@@ -1865,5 +1884,4 @@ SceneRoots:
   - {fileID: 1763762450}
   - {fileID: 591204819}
   - {fileID: 1705733289}
-  - {fileID: 1052630289}
   - {fileID: 1851730784}

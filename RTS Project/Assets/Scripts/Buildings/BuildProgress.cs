@@ -26,8 +26,14 @@ public class BuildProgress : MonoBehaviour
         tween.Append(progressImage.DOFillAmount(1f, buildTime));
         tween.AppendInterval(2);
         tween.Append(progressImage.DOFade(0f, 1f));
-        tween.OnComplete(() => Destroy(gameObject));
+        tween.OnComplete(() => End(tween));
         tween.Play();
+    }
+
+    private void End(Sequence tween)
+    {
+        tween.Pause();
+        Destroy(gameObject);
     }
 
     private void Update()
