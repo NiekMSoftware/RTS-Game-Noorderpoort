@@ -149,6 +149,8 @@ public class BuildingBase : MonoBehaviour
 
     private void ChangeObjectMaterial(Material material)
     {
+        if (!model) return;
+
         if (model.TryGetComponent(out MeshRenderer mesh))
         {
             if (mesh.material)
@@ -158,16 +160,19 @@ public class BuildingBase : MonoBehaviour
         }
         else
         {
-            foreach (var mr in model.GetComponentsInChildren<MeshRenderer>())
+            foreach (Transform child in model.transform)
             {
-                Material[] materials = mr.materials;
-
-                for (int i = 0; i < materials.Length; i++)
+                if (child.TryGetComponent(out MeshRenderer mesh2))
                 {
-                    materials[i] = material;
-                }
+                    Material[] materials = mesh2.materials;
 
-                mr.materials = materials;
+                    for (int i = 0; i < materials.Length; i++)
+                    {
+                        materials[i] = material;
+                    }
+
+                    mesh2.materials = materials;
+                }
             }
         }
     }

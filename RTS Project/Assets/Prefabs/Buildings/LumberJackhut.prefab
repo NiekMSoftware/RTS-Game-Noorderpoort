@@ -150,7 +150,7 @@ MonoBehaviour:
   workers: []
   jobName: Lumberjack
   jobs: 0
-  scanRange: 2
+  scanRange: 50
   rangeIndicator: {fileID: 2087456093501704384}
   closestResourceCluster: {fileID: 0}
 --- !u!65 &4694457708341824937

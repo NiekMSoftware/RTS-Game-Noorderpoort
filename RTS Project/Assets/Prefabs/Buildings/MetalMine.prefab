@@ -152,7 +152,7 @@ MonoBehaviour:
   workers: []
   jobName: Metal Miner
   jobs: 2
-  scanRange: 500
+  scanRange: 50
   rangeIndicator: {fileID: 1860712545028555381}
   closestResourceCluster: {fileID: 0}
 --- !u!65 &4694457708341824937
