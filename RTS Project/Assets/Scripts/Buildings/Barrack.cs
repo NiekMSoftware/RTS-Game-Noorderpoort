@@ -89,7 +89,7 @@ public class Barrack : BuildingBase
             if (AIUnit.TryGetComponent(out NavMeshAgent agent))
             {
                 print("Entrance position : " + entrance.transform.position);
-                Vector3 globalDestination = transform.TransformPoint(entrance.transform.position);
+                Vector3 globalDestination = transform.TransformPoint(entrance.transform.localPosition);
                 agent.SetDestination(globalDestination);
                 print("AI agent destination : " + agent.destination);
             }
