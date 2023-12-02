@@ -95,7 +95,7 @@ public class BuildingManager : NetworkBehaviour
 
     void Update()
     {
-
+        if (!IsOwner) return;
         if (currentIndex < 0) return;
         if (!pendingObject) return;
 
