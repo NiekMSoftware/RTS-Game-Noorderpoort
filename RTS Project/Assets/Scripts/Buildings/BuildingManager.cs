@@ -120,6 +120,7 @@ public class BuildingManager : MonoBehaviour
             pos = gridPos;
 
             //rotate object towards hit.normal
+            pendingObject.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
         }
         else
         {

@@ -326,7 +326,7 @@ public class ComputerEnemy : MonoBehaviour
 
                             if (worker)
                             {
-                                barrack.AddUnitToBarrack(worker);
+                                barrack.AddUnitToBarrack(worker.gameObject);
                                 availableWorkers.Remove(worker);
                             }
                         }

@@ -63,7 +63,7 @@ public class Barrack : BuildingBase
         }
     }
 
-    public void AddUnitToBarrack(Unit AIUnit)
+    public void AddUnitToBarrack(GameObject AIUnit)
     {
         if (AIUnit == null)
         {
@@ -73,10 +73,10 @@ public class Barrack : BuildingBase
             // Send the selectedUnits to the entrance
             foreach (var unit in selectedUnit)
             {
-                NavMeshAgent agent = unit.GetComponent<NavMeshAgent>();
-                if (agent != null)
+                if (unit.TryGetComponent(out NavMeshAgent agent))
                 {
                     agent.destination = entrance.transform.position;
+                    print("Player agent destination : " + agent.destination);
                 }
                 else
                 {
@@ -89,7 +89,9 @@ public class Barrack : BuildingBase
             if (AIUnit.TryGetComponent(out NavMeshAgent agent))
             {
                 print("Entrance position : " + entrance.transform.position);
-                agent.destination = entrance.transform.position;
+                Vector3 globalDestination = transform.TransformPoint(entrance.transform.position);
+                agent.SetDestination(globalDestination);
+                print("AI agent destination : " + agent.destination);
             }
         }
     }
