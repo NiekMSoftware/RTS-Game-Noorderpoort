@@ -1153,7 +1153,7 @@ PrefabInstance:
     - target: {fileID: 2266570287089781787, guid: 7243e0cae2d6727448fdaf3d2545716f,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5754324476713425757, guid: 7243e0cae2d6727448fdaf3d2545716f,
         type: 3}
@@ -2106,21 +2106,6 @@ PrefabInstance:
       propertyPath: terrain
       value: 
       objectReference: {fileID: 477139716}
-    - target: {fileID: 5935761945686543978, guid: 21fd37c60c0dcc04a95d5ccf0b030476,
-        type: 3}
-      propertyPath: spawnScale.x
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5935761945686543978, guid: 21fd37c60c0dcc04a95d5ccf0b030476,
-        type: 3}
-      propertyPath: spawnScale.y
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5935761945686543978, guid: 21fd37c60c0dcc04a95d5ccf0b030476,
-        type: 3}
-      propertyPath: spawnOffset.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5970937043620177259, guid: 21fd37c60c0dcc04a95d5ccf0b030476,
         type: 3}
       propertyPath: m_Name

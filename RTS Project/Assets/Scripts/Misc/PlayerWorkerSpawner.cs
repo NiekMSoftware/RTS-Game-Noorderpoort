@@ -18,9 +18,6 @@ public class PlayerWorkerSpawner : MonoBehaviour
         {
             Vector3 position = transform.position;
             position.x += Random.Range(spawnScale.x, spawnScale.y) + spawnOffset.x;
-            print(spawnScale.x);
-            print(spawnScale.y);
-            print(position.x);
             position.z += Random.Range(spawnScale.x, spawnScale.y) + spawnOffset.y;
             position.y = terrain.SampleHeight(position) + (prefab.transform.lossyScale.y);
             Worker spawnedAI = Instantiate(prefab, position, Quaternion.identity).GetComponent<Worker>();

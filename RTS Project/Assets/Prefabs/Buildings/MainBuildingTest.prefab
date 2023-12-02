@@ -69,7 +69,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   amountToSpawn: 5
   prefab: {fileID: 3721838096702204654, guid: 03430657f2f14514ba955174b175ae45, type: 3}
-  spawnScale: {x: 10, y: 10}
+  spawnScale: {x: -10, y: 10}
   spawnOffset: {x: -16.65, y: 0}
   terrain: {fileID: 0}
 --- !u!1001 &7061721313972633664
