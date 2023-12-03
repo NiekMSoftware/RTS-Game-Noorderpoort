@@ -22820,7 +22820,7 @@ MonoBehaviour:
   selectionBoxVisual: {fileID: 6996459167918588752}
   markerPrefab: {fileID: 2349340977249974520, guid: e8eb32d6833c2d8449c1cb6a0f1f82ed,
     type: 3}
-  buildingSelectUI: {fileID: 0}
+  buildingSelectUI: {fileID: 5017690096641225425}
   unitLayer:
     serializedVersion: 2
     m_Bits: 64

@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class BuildingBase : MonoBehaviour
+public class BuildingBase : NetworkBehaviour
 {
     [SerializeField] public float buildingHp = 50f;
     [SerializeField] protected States currentState;
@@ -138,7 +139,13 @@ public class BuildingBase : MonoBehaviour
         particle.Play();
         yield return new WaitForSeconds(particle.main.duration);
 
+
+        //GameObject _spawnedBuilding = Instantiate(buildingToSpawn, transform.position, transform.rotation);
+        //_spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
+
         Instantiate(buildingToSpawn, transform.position, transform.rotation).TryGetComponent(out BuildingBase spawnedBuilding);
+        spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
+
         spawnedBuilding.Init(null, null, null, States.Normal);
 
         yield return null;

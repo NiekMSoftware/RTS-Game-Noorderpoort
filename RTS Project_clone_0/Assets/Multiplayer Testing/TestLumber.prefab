@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3766747821306631617}
+  - component: {fileID: -7530832548365532385}
   - component: {fileID: 5247091873377409366}
   - component: {fileID: 4694457708341824937}
   - component: {fileID: 7619373554289024790}
-  - component: {fileID: -7530832548365532385}
   - component: {fileID: 5075777828384363960}
   m_Layer: 7
   m_Name: TestLumber
@@ -37,6 +37,26 @@ Transform:
   - {fileID: 5722771357294358768}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-7530832548365532385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2432438935407483892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 4189978312
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &5247091873377409366
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58,7 +78,7 @@ MonoBehaviour:
     pointType: 1
     amount: 1
   outline: {fileID: 7619373554289024790}
-  model: {fileID: 2432438935407483892}
+  model: {fileID: 4909080368746801738}
   buildingName: Lumberjack hut
   occupancyType: 0
   maxWorkers: 2
@@ -110,26 +130,6 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
---- !u!114 &-7530832548365532385
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2432438935407483892}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4185414468
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!114 &5075777828384363960
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -248,6 +248,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e5028dc46907dd4fa7c5586496e9a44, type: 3}
+--- !u!1 &4909080368746801738 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 6e5028dc46907dd4fa7c5586496e9a44,
+    type: 3}
+  m_PrefabInstance: {fileID: 5251732936460474139}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5722771357294358768 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6e5028dc46907dd4fa7c5586496e9a44,
