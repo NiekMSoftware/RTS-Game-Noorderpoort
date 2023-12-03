@@ -27,6 +27,8 @@ public class CameraMovement : NetworkBehaviour
         base.OnNetworkSpawn();
 
 
+        FindObjectOfType<BuildingManager>().UpdateButtons();
+    
         if (!IsOwner)
         {
             GetComponent<Camera>().enabled = false;

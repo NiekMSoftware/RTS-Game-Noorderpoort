@@ -45,11 +45,12 @@ public class BuildingManager : NetworkBehaviour
 
     public GameObject pendingObject;
     private int currentIndex = -1;
-    private Vector3 pos;
+    //private Vector3 pos;
     private RaycastHit hit;
     private bool rayHit;
 
-    public NetworkVariable<Vector3> pendingObjectVector3 = new NetworkVariable<Vector3>(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<Vector3> pos = new NetworkVariable<Vector3>(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<Quaternion> rot = new NetworkVariable<Quaternion>(Quaternion.identity, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     [System.Serializable]
     class Building
@@ -73,10 +74,20 @@ public class BuildingManager : NetworkBehaviour
     {
         terrain = FindObjectOfType<Terrain>().GetComponent<Terrain>();
     }
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        if (!IsOwner)
+        {
+            GetComponent<BuildingManager>().enabled = false;
+        }
+    }
 
     [ContextMenu("UpdateButtons")]
     public void UpdateButtons()
     {
+        //if (!IsOwner) return;
         print("update");
         for (int i = 0; i < buildings.Length; i++)
         {
@@ -99,7 +110,8 @@ public class BuildingManager : NetworkBehaviour
         if (currentIndex < 0) return;
         if (!pendingObject) return;
 
-        pendingObject.transform.position = pos;
+        pendingObject.transform.position = pos.Value;
+        rot.Value = pendingObject.transform.rotation;
 
         //Change pending object material based on if it can be placed or not
         if (!CheckCanPlace(false))
@@ -129,7 +141,7 @@ public class BuildingManager : NetworkBehaviour
             {
                 gridPos.y = buildings[currentIndex].building.transform.localScale.y;
             }
-            pos = gridPos;
+            pos.Value = gridPos;
 
             //rotate object towards hit.normal
         }
@@ -147,7 +159,7 @@ public class BuildingManager : NetworkBehaviour
         //Destroy and reset pending object
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            ResetObject();
+            ResetObjectServerRpc();
         }
         //Rotate pending object
         else if (Input.GetKeyDown(KeyCode.R))
@@ -156,18 +168,19 @@ public class BuildingManager : NetworkBehaviour
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 pendingObject.transform.Rotate(Vector3.up * -degreesToRotate);
+
             }
             else
             {
                 pendingObject.transform.Rotate(Vector3.up * degreesToRotate);
+
             }
         }
+
         //place object
         if (Input.GetMouseButtonDown(0))
         {
-
-                BuildObjectServerRpc();
-
+            BuildObjectServerRpc();
         }
     }
 
@@ -283,12 +296,13 @@ public class BuildingManager : NetworkBehaviour
         yield return null;
     }
 
-    private void ResetObject()
+    [ServerRpc (RequireOwnership = false)]
+    private void ResetObjectServerRpc()
     {
         Destroy(pendingObject);
         pendingObject = null;
         currentIndex = -1;
-        pos = Vector3.zero;
+        //pos.Value = Vector3.zero;
     }
 
     [ServerRpc (RequireOwnership = false)]
@@ -304,12 +318,12 @@ public class BuildingManager : NetworkBehaviour
         }
         //endingObjectVector3.Value = pendingObject.transform.position;
 
-        ParticleSystem spawnedParticle = Instantiate(buildParticle, pos, Quaternion.identity).GetComponent<ParticleSystem>();
+        ParticleSystem spawnedParticle = Instantiate(buildParticle, pos.Value, Quaternion.identity).GetComponent<ParticleSystem>();
         spawnedParticle.Play();
 
         print("Pending object: " + pendingObject);
         print("Building to spawn: " + buildings[currentIndex].building);
-        BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pendingObject.transform.position, transform.rotation).GetComponent<BuildingBase>();
+        BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pos.Value, rot.Value).GetComponent<BuildingBase>();
         //BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building).GetComponent<BuildingBase>();
         spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
 
@@ -337,15 +351,15 @@ public class BuildingManager : NetworkBehaviour
 
         if (!buildings[currentIndex].multiPlace)
         {
-            ResetObject();
+            ResetObjectServerRpc();
         }
     }
 
     public void SelectObject(int index)
     {
         //print(index);
-        ResetObject();
-        pendingObject = Instantiate(buildings[0].building, pos, transform.rotation);
+        ResetObjectServerRpc();
+        pendingObject = Instantiate(buildings[index].building, pos.Value, transform.rotation);
         
 
         ChangeObjectMaterial(pendingObject, correctPlaceMaterial);
