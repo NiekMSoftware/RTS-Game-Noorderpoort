@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
 public class ResourceBuildingBase : BuildingBase
@@ -83,9 +84,10 @@ public class ResourceBuildingBase : BuildingBase
         return closestResource;
     }
 
-    public override void Init(Material _material, GameObject _particleObject, GameObject buildingToSpawn, States state)
+    [ServerRpc (RequireOwnership = false)]
+    public override void InitServerRpc(States state)
     {
-        base.Init(_material, _particleObject, buildingToSpawn, state);
+        base.InitServerRpc(state);
         SetResourceItemManagerByType(ResourceItemManager.Type.Player);
     }
 

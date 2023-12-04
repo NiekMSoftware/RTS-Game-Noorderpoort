@@ -22,10 +22,10 @@ public class BuildingManager : NetworkBehaviour
     [SerializeField] private float buildProgressHeight;
 
     [Header("Particle")]
-    [SerializeField] private GameObject buildParticle;
+    [SerializeField] public GameObject buildParticle;
 
     [Header("Materials")]
-    [SerializeField] private Material buildingMaterial;
+    [SerializeField] public Material buildingMaterial;
     [SerializeField] private Material correctPlaceMaterial;
     [SerializeField] private Material incorrectPlaceMaterial;
 
@@ -42,6 +42,7 @@ public class BuildingManager : NetworkBehaviour
     [SerializeField] private float maxAngle;
     [SerializeField] private float maxHeight;
     [SerializeField] private float minHeight;
+    BuildingBase bas;
 
     public GameObject pendingObject;
     private int currentIndex = -1;
@@ -182,6 +183,7 @@ public class BuildingManager : NetworkBehaviour
         {
             BuildObjectServerRpc();
         }
+            print(bas);
     }
 
     private bool CheckCanPlace(bool spawnError)
@@ -327,10 +329,9 @@ public class BuildingManager : NetworkBehaviour
         //BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building).GetComponent<BuildingBase>();
         spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
 
+        bas = spawnedBuilding;
 
-
-        spawnedBuilding.Init(buildingMaterial, buildParticle, 
-            buildings[currentIndex].building, BuildingBase.States.Building);
+        spawnedBuilding.InitServerRpc(BuildingBase.States.Building);
 
         spawnedBuilding.SetOccupancyType(BuildingBase.OccupancyType.Player);
         StartCoroutine(spawnedBuilding.Build(buildings[currentIndex].buildTime));

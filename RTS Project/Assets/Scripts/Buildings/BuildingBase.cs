@@ -83,7 +83,7 @@ public class BuildingBase : NetworkBehaviour
     protected virtual void Awake()
     {
         uiManager = FindObjectOfType<UIManager>();
-        print("UI manager : " + uiManager + " from " + name);
+        //print("UI manager : " + uiManager + " from " + name);
 
         if (outline)
         {
@@ -96,19 +96,35 @@ public class BuildingBase : NetworkBehaviour
             buildingName = name;
     }
 
-    public virtual void Init(Material _material, GameObject _particleObject, GameObject buildingToSpawn, States state)
+    [ServerRpc (RequireOwnership = false)]
+    public virtual void InitServerRpc(States state)
     {
-        if (_material)
-        {
-            Material newMaterial = new(_material.shader)
-            {
-                color = _material.color
-            };
+        print("132");
+        GameObject buildingToSpawn = gameObject;
 
-            buildingMaterial = newMaterial;
+        if (state == States.Building)
+        {
+            Material _material = FindAnyObjectByType<BuildingManager>().buildingMaterial;
+            GameObject _particleObject = FindAnyObjectByType<BuildingManager>().buildParticle;
+
+            if (_material)
+            {
+                Material newMaterial = new(_material.shader)
+                {
+                    color = _material.color
+                };
+
+                buildingMaterial = newMaterial;
+            }
+
+            particleObject = _particleObject;
+        }
+        if (state == States.Normal) 
+        {
+            print("1233333");
         }
 
-        particleObject = _particleObject;
+
         this.buildingToSpawn = buildingToSpawn;
         currentState = state;
 
@@ -146,7 +162,7 @@ public class BuildingBase : NetworkBehaviour
         Instantiate(buildingToSpawn, transform.position, transform.rotation).TryGetComponent(out BuildingBase spawnedBuilding);
         spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
 
-        spawnedBuilding.Init(null, null, null, States.Normal);
+        spawnedBuilding.InitServerRpc(States.Normal);
 
         yield return null;
 
