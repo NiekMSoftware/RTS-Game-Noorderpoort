@@ -96,8 +96,8 @@ public class BuildingBase : NetworkBehaviour
             buildingName = name;
     }
 
-    [ServerRpc (RequireOwnership = false)]
-    public virtual void InitServerRpc(States state)
+    [ClientRpc]
+    public virtual void InitClientRpc(States state)
     {
         print("initserverrpc called");
         buildingToSpawn = gameObject;
@@ -120,7 +120,9 @@ public class BuildingBase : NetworkBehaviour
         }
         if (currentState == States.Normal) 
         {
-            //buildingMaterial = null;
+            buildingMaterial = null;    
+            ChangeObjectMaterial(buildingMaterial);
+
             print("state normal");
         }
 
@@ -160,7 +162,7 @@ public class BuildingBase : NetworkBehaviour
         Instantiate(buildingToSpawn, transform.position, transform.rotation).TryGetComponent(out BuildingBase spawnedBuilding);
         spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
 
-        spawnedBuilding.InitServerRpc(States.Normal);
+        spawnedBuilding.InitClientRpc(States.Normal);
 
         yield return null;
 

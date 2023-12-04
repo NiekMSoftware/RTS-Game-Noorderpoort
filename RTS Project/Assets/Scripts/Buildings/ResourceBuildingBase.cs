@@ -84,12 +84,13 @@ public class ResourceBuildingBase : BuildingBase
         return closestResource;
     }
 
-    [ServerRpc (RequireOwnership = false)]
-    public override void InitServerRpc(States state)
+    [ClientRpc]
+    public override void InitClientRpc(States state)
     {
+
         print("zzzzzzzzzzzzzzzzzzz");
 
-        base.InitServerRpc(state);
+        base.InitClientRpc(state);
         SetResourceItemManagerByType(ResourceItemManager.Type.Player);
     }
     public override void OnNetworkSpawn()

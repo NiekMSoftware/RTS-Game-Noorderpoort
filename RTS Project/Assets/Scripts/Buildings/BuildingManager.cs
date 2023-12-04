@@ -328,7 +328,7 @@ public class BuildingManager : NetworkBehaviour
         spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
 
 
-        spawnedBuilding.InitServerRpc(BuildingBase.States.Building);
+        spawnedBuilding.InitClientRpc(BuildingBase.States.Building);
 
         spawnedBuilding.SetOccupancyType(BuildingBase.OccupancyType.Player);
         StartCoroutine(spawnedBuilding.Build(buildings[currentIndex].buildTime));
