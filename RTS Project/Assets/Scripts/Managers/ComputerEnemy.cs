@@ -211,10 +211,8 @@ public class ComputerEnemy : MonoBehaviour
                                             {
                                                 shouldPlaceNewBuilding = false;
                                                 Worker worker = GetRandomAvailableWorker();
-                                                if (AssignWorker(placedResourceBuilding, worker))
-                                                {
-                                                    return;
-                                                }
+
+                                                if (AssignWorker(placedResourceBuilding, worker)) continue;
                                             }
                                             else
                                             {
@@ -326,7 +324,8 @@ public class ComputerEnemy : MonoBehaviour
 
                             if (worker)
                             {
-                                barrack.AddUnitToBarrack(worker.gameObject);
+                                //barrack.AddUnitToBarrack(worker.gameObject);
+                                barrack.AIEnteredEntrance(worker);
                                 availableWorkers.Remove(worker);
                             }
                         }
