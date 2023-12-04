@@ -42,7 +42,6 @@ public class BuildingManager : NetworkBehaviour
     [SerializeField] private float maxAngle;
     [SerializeField] private float maxHeight;
     [SerializeField] private float minHeight;
-    BuildingBase bas;
 
     public GameObject pendingObject;
     private int currentIndex = -1;
@@ -183,7 +182,6 @@ public class BuildingManager : NetworkBehaviour
         {
             BuildObjectServerRpc();
         }
-            print(bas);
     }
 
     private bool CheckCanPlace(bool spawnError)
@@ -329,7 +327,6 @@ public class BuildingManager : NetworkBehaviour
         //BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building).GetComponent<BuildingBase>();
         spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
 
-        bas = spawnedBuilding;
 
         spawnedBuilding.InitServerRpc(BuildingBase.States.Building);
 

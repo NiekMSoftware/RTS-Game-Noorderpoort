@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3766747821306631617}
   - component: {fileID: -7530832548365532385}
-  - component: {fileID: 5247091873377409366}
+  - component: {fileID: 2674665029400845523}
   - component: {fileID: 4694457708341824937}
   - component: {fileID: 7619373554289024790}
   - component: {fileID: 5075777828384363960}
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3522720387
+  GlobalObjectIdHash: 4189978312
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -57,7 +57,7 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &5247091873377409366
+--- !u!114 &2674665029400845523
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -66,7 +66,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2432438935407483892}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e99496344083c5345ad812831fa82be5, type: 3}
+  m_Script: {fileID: 11500000, guid: a4ff7243542b40a498d0642690c8f467, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   buildingHp: 50
@@ -75,8 +75,8 @@ MonoBehaviour:
   - data: {fileID: 11400000, guid: 4178d3d151ebd1a4295d48f9a7f482c9, type: 2}
     amountNeeded: 10
   points:
-    pointType: 1
-    amount: 1
+    pointType: 0
+    amount: 0
   outline: {fileID: 7619373554289024790}
   model: {fileID: 4909080368746801738}
   buildingName: Lumberjack hut

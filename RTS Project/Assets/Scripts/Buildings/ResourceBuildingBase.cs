@@ -87,8 +87,14 @@ public class ResourceBuildingBase : BuildingBase
     [ServerRpc (RequireOwnership = false)]
     public override void InitServerRpc(States state)
     {
+        print("zzzzzzzzzzzzzzzzzzz");
+
         base.InitServerRpc(state);
         SetResourceItemManagerByType(ResourceItemManager.Type.Player);
+    }
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
     }
 
     public override void SelectBuilding()

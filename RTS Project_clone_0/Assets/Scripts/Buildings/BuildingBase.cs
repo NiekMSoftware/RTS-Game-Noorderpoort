@@ -99,34 +99,32 @@ public class BuildingBase : NetworkBehaviour
     [ServerRpc (RequireOwnership = false)]
     public virtual void InitServerRpc(States state)
     {
-        print("132");
-        GameObject buildingToSpawn = gameObject;
+        print("initserverrpc called");
+        buildingToSpawn = gameObject;
+        currentState = state;
 
-        if (state == States.Building)
+        if (currentState == States.Building)
         {
             Material _material = FindAnyObjectByType<BuildingManager>().buildingMaterial;
             GameObject _particleObject = FindAnyObjectByType<BuildingManager>().buildParticle;
 
-            if (_material)
+            Material newMaterial = new(_material.shader)
             {
-                Material newMaterial = new(_material.shader)
-                {
-                    color = _material.color
-                };
+                color = _material.color
+            };
 
-                buildingMaterial = newMaterial;
-            }
+            buildingMaterial = newMaterial;
+            
 
             particleObject = _particleObject;
         }
-        if (state == States.Normal) 
+        if (currentState == States.Normal) 
         {
-            print("1233333");
+            //buildingMaterial = null;
+            print("state normal");
         }
 
 
-        this.buildingToSpawn = buildingToSpawn;
-        currentState = state;
 
         if (buildingMaterial)
             buildingAnimationValue = buildingMaterial.GetFloat("_Min");
