@@ -86,12 +86,15 @@ public class Barrack : BuildingBase
         }
         else
         {
-            if (AIUnit.TryGetComponent(out NavMeshAgent agent))
+            if (AIUnit.TryGetComponent(out Worker worker))
             {
-                print("Entrance position : " + entrance.transform.position);
-                Vector3 globalDestination = transform.TransformPoint(entrance.transform.position);
-                agent.SetDestination(globalDestination);
-                print("AI agent destination : " + agent.destination);
+                if (worker.TryGetComponent(out NavMeshAgent agent))
+                {
+                    print("Entrance position : " + entrance.transform.position);
+                  
+                    agent.SetDestination(entrance.transform.position);
+                    print("AI agent destination : " + agent.destination);
+                }
             }
         }
     }
@@ -129,6 +132,7 @@ public class Barrack : BuildingBase
         {
             // Instantiate the GameObject
             GameObject soldierGO = Instantiate(unitToSpawn, hit.position, Quaternion.identity);
+            soldierGO.GetComponent<Unit>().typeUnit = Unit.TypeUnit.Human;
             
             // Remove unit out of the list
             unitList.RemoveAt(0);

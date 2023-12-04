@@ -15,9 +15,9 @@ public class BarrackEntrance : MonoBehaviour
     {
         if (other.CompareTag("AI"))
         {
-            if (other.TryGetComponent(out Unit unit))
+            if (other.TryGetComponent(out Worker worker))
             {
-                barrack.AIEnteredEntrance(unit);
+                barrack.AIEnteredEntrance(worker);
             }
         }
     }
