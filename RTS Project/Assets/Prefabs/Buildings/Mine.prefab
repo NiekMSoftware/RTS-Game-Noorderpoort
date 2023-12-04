@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 3766747821306631617}
   - component: {fileID: 5247091873377409366}
   - component: {fileID: 4694457708341824937}
-  - component: {fileID: -1352996216526569333}
   - component: {fileID: 8195611119465234610}
   m_Layer: 7
   m_Name: Mine
@@ -57,7 +56,8 @@ MonoBehaviour:
   points:
     pointType: 1
     amount: 1
-  outline: {fileID: 0}
+  outline: {fileID: 6517531950078524962}
+  model: {fileID: 708357929155577406}
   buildingName: 
   occupancyType: 0
   maxWorkers: 2
@@ -92,24 +92,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 7.9832907, y: 4.6366115, z: 4.228674}
   m_Center: {x: 1.7602019, y: 1.8233058, z: -0.017586708}
---- !u!114 &-1352996216526569333
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2432438935407483892}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 1
-  outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
 --- !u!208 &8195611119465234610
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -137,7 +119,6 @@ GameObject:
   - component: {fileID: 3268293320087079597}
   - component: {fileID: 5803803907519126406}
   - component: {fileID: 1901734700283226017}
-  - component: {fileID: 5314702915469722319}
   m_Layer: 9
   m_Name: RangeIndicator
   m_TagString: Untagged
@@ -176,9 +157,9 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6988950198703682724}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_DynamicOccludee: 0
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -210,27 +191,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &5314702915469722319
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6988950198703682724}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1.0000002, z: 6.123235e-17}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &366478329926876015
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -312,7 +272,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 74128624750899340bccd4147b2af257,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6517531950078524962}
   m_SourcePrefab: {fileID: 100100000, guid: 74128624750899340bccd4147b2af257, type: 3}
 --- !u!4 &188948204456647812 stripped
 Transform:
@@ -320,3 +284,27 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 366478329926876015}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &708357929155577406 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 74128624750899340bccd4147b2af257,
+    type: 3}
+  m_PrefabInstance: {fileID: 366478329926876015}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6517531950078524962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708357929155577406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []

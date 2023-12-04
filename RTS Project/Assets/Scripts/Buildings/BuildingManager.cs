@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class BuildingManager : MonoBehaviour
@@ -12,7 +13,6 @@ public class BuildingManager : MonoBehaviour
     [SerializeField] private Building[] buildings;
     [SerializeField] private ResourceItemManager resources;
     [SerializeField] private Terrain terrain;
-    [SerializeField] private Button[] buttons;
     [SerializeField] private PointManager pointManager;
 
     [Header("Build Progresses")]
@@ -57,6 +57,7 @@ public class BuildingManager : MonoBehaviour
         public float buildTime;
         public bool isUnlocked;
         public int[] buildingsToUnlock;
+        public Button button;
     }
 
     private void Start()
@@ -68,11 +69,15 @@ public class BuildingManager : MonoBehaviour
     {
         for (int i = 0; i < buildings.Length; i++)
         {
-            buttons[i].interactable = false;
+            Button button = buildings[i].button;
+            button.interactable = false;
+            button.onClick.RemoveAllListeners();
+            int index = i;
+            button.onClick.AddListener(() => SelectObject(index));
 
             if (buildings[i].isUnlocked)
             {
-                buttons[i].interactable = true;
+                button.interactable = true;
             }
         }
     }
@@ -115,6 +120,7 @@ public class BuildingManager : MonoBehaviour
             pos = gridPos;
 
             //rotate object towards hit.normal
+            pendingObject.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
         }
         else
         {
@@ -288,7 +294,9 @@ public class BuildingManager : MonoBehaviour
         ParticleSystem spawnedParticle = Instantiate(buildParticle, pos, Quaternion.identity).GetComponent<ParticleSystem>();
         spawnedParticle.Play();
 
-        BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pendingObject.transform.position, pendingObject.transform.rotation).GetComponent<BuildingBase>();
+        BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pendingObject.transform.position, 
+            pendingObject.transform.rotation).GetComponent<BuildingBase>();
+
         spawnedBuilding.Init(buildingMaterial, buildParticle, 
             buildings[currentIndex].building, BuildingBase.States.Building);
 
@@ -296,7 +304,8 @@ public class BuildingManager : MonoBehaviour
         StartCoroutine(spawnedBuilding.Build(buildings[currentIndex].buildTime));
 
         BuildProgress buildProgress = Instantiate(buildProgressPrefab, new Vector3(spawnedBuilding.transform.position.x,
-            spawnedBuilding.transform.position.y + spawnedBuilding.transform.localScale.y + buildProgressHeight, spawnedBuilding.transform.position.z), Quaternion.identity, spawnedBuilding.transform).GetComponent<BuildProgress>();
+            spawnedBuilding.transform.position.y + spawnedBuilding.transform.localScale.y + buildProgressHeight,
+            spawnedBuilding.transform.position.z), Quaternion.identity, spawnedBuilding.transform).GetComponent<BuildProgress>();
         buildProgress.Init(buildings[currentIndex].buildTime);
 
         for (int i = 0; i < buildings[currentIndex].buildingsToUnlock.Length; i++)

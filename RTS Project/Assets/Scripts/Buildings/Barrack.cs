@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -5,127 +6,173 @@ using UnityEngine.AI;
 public class Barrack : BuildingBase
 {
     private List<GameObject> unitList = new List<GameObject>(CAPACITY);
+
     public List<GameObject> UnitList
     {
-        get
-        {
-            return unitList;
-        }
-        set
-        {
-            unitList = value;
-        }
+        get { return unitList; }
+        set { unitList = value; }
     }
 
-    [Header("Unit List")]
-    [Tooltip("Change this to the Soldier")]
+    [Header("Unit List")] [Tooltip("Change this to the Soldier")]
     public GameObject unitToSpawn;
+
     private const int CAPACITY = 5;
-    private int currentIndex = 0;
 
-    private bool canSpawn = false;
-    private bool hasSpawned = false;
+    [Header("Barrack Properties")] 
+    [SerializeField] private float queue = 0f; // queue to keep track of
+    [SerializeField] private float maxTimeUntilNext = 5.0f; // max time var, this will also be used on Invoke
+    [SerializeField] private float rangeOfSpawn = 10f;
 
-    [Header("Spawn Pos of Soldier")]
-    [SerializeField] private GameObject spawnPosSoldier;
+    [Space]
+    [SerializeField] private BarrackEntrance entrance;
+    [SerializeField] private Transform exit;
 
-    [Header("Barrack Properties")]
-    [SerializeField] private float queue = 0f;  // queue to keep track of
-    [SerializeField] private float maxTimeUntilNext = 5f;   // max time var, this will also be used on Invoke
+    [Space] 
+    [SerializeField] private Terrain terrain;
 
-    [SerializeField] private Barrack_Door barrackDoor1;
-    [SerializeField] private Transform barrackDoor2;
-
-    [Header("Unit Selection")]
-    public SelectionManager selectionManager;
-    public NavMeshAgent unitAgent;
+    [Header("Unit Selection")] public SelectionManager selectionManager;
 
     private Unit spawnedUnit;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        terrain = FindObjectOfType<Terrain>().GetComponent<Terrain>();
+    }
+
     private void Start()
     {
-        selectionManager = FindObjectOfType<SelectionManager>();
-        // unitAgent = GameObject.FindWithTag("AI").GetComponent<NavMeshAgent>();
+        entrance.Setup(this);
 
-        barrackDoor1.SetBarrack(this);
+        selectionManager = FindObjectOfType<SelectionManager>();
+        
+        // set both the entrance and exit to the height of the terrain
+        float entranceHeight = terrain.SampleHeight(entrance.transform.position);
+        float exitHeight = terrain.SampleHeight(exit.position);
+
+        // set the y-coordinates
+        entrance.transform.position = new Vector3(entrance.transform.position.x, entranceHeight, entrance.transform.position.z);
+        exit.position = new Vector3(exit.position.x, exitHeight, exit.position.z);
     }
 
     private void Update()
     {
-        if (canSpawn)
-        {
-            Counter();
-        }
-
         if (unitList.Count > 0)
         {
-            canSpawn = true;
-            SpawnUnit();
+            StartCoroutine(ProcessSpawning());
         }
     }
 
-    public void AddUnitToBarrack(Unit AIUnit)
+    public void AddUnitToBarrack(GameObject AIUnit)
     {
         if (AIUnit == null)
         {
             List<GameObject> selectedUnit = selectionManager.selectedUnits;
+            print("Added Unit to list and sending them to the barrack");
+
+            // Send the selectedUnits to the entrance
             foreach (var unit in selectedUnit)
             {
-                unitAgent = unit.GetComponent<NavMeshAgent>();
-                unitAgent.SetDestination(barrackDoor1.transform.position);
+                if (unit.TryGetComponent(out NavMeshAgent agent))
+                {
+                    agent.destination = entrance.transform.position;
+                    print("Player agent destination : " + agent.destination);
+                }
+                else
+                {
+                    Debug.LogError("Failed to gather Agent Component from unit");
+                }
             }
         }
         else
         {
-            print("Barrack??? Can i be soldier Pretty please?? PLXPZLPZLPZLPZZPLZPZL");
-            NavMeshAgent unitAgent = AIUnit.GetComponent<NavMeshAgent>();
-            Vector3 worldPos = transform.TransformPoint(barrackDoor1.transform.position);
-            unitAgent.SetDestination(worldPos);
-            print(unitAgent.name);
-            print(worldPos);
-            GameObject gameObject = new();
-            gameObject.name = "Gerard";
-            gameObject.transform.position = worldPos;
+            if (AIUnit.TryGetComponent(out Worker worker))
+            {
+                if (worker.TryGetComponent(out NavMeshAgent agent))
+                {
+                    print("Entrance position : " + entrance.transform.position);
+                  
+                    agent.SetDestination(entrance.transform.position);
+                    print("AI agent destination : " + agent.destination);
+                }
+            }
         }
     }
 
     public Unit GetSpawnedSoldier() => spawnedUnit;
 
-    private void SpawnUnit()
+    private IEnumerator ProcessSpawning()
     {
-        if (queue >= maxTimeUntilNext)
+        // Turn on the queue
+        queue += Time.deltaTime;
+
+        // Check if the list isn't empty, if so break the method
+        if (unitList.Count != 0)
         {
-            if (unitList.Count > 0)
+            // Check if the queue hasn't surpassed the max Time
+            if (queue >= maxTimeUntilNext)
             {
-                if (!hasSpawned) {
-                    //TODO: Assign new gameobject as instantiated
-                    // new gameobject.position = barrackdoor1.position
-                    if (unitList.Count > 0 && unitToSpawn != null && barrackDoor1 != null)
-                    {
-                        print("Spawning Soldier");
-                        spawnedUnit = Instantiate(unitList[0]).GetComponent<Unit>();
-                        
-                        spawnedUnit.transform.position = barrackDoor1.transform.position;
-                        spawnedUnit.transform.localScale = new Vector3(1, 1, 1);
+                // Spawn in Soldier
+                SpawnSoldier();
 
-                        unitList.RemoveAt(0);
-                        hasSpawned = true;
+                // Reset queue
+                queue = 0.0f;
+            }
+        }
+        else
+            yield break;
+    }
 
-                        //TODO: Move the soldier to a random position near the Barrack
-                    }
+    private void SpawnSoldier()
+    {
+        /* DEBUGGING */
+
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(exit.position, out hit, 1.0f, NavMesh.AllAreas))
+        {
+            // Instantiate the GameObject
+            GameObject soldierGO = Instantiate(unitToSpawn, hit.position, Quaternion.identity);
+            soldierGO.GetComponent<Unit>().typeUnit = Unit.TypeUnit.Human;
+            
+            // Remove unit out of the list
+            unitList.RemoveAt(0);
+
+            // Generate a random position near the barrack
+            Vector3 randomPosition = exit.position + new Vector3(Random.Range(-rangeOfSpawn, rangeOfSpawn),
+                                        0 , Random.Range(-rangeOfSpawn, rangeOfSpawn));
+
+            // Find the closest point on the Navmesh to the random pos
+            NavMeshHit randomHit;
+            if (NavMesh.SamplePosition(randomPosition, out randomHit, rangeOfSpawn, NavMesh.AllAreas))
+            {
+                // Set the soldier's destination to the randomPos
+                NavMeshAgent agent = soldierGO.GetComponent<NavMeshAgent>();
+                if (agent != null)
+                {
+                    agent.destination = randomHit.position;
+                }
+                else
+                {
+                    Debug.LogError("Failed to get Agent component from soldier!");
                 }
             }
-
-            // Check if the unitList is empty
-            if (unitList.Count == 0)
+            else
             {
-                // Turn off everything related
-                canSpawn = false;
-                hasSpawned = false;
-                queue = 0;
+                Debug.LogError("Failed to find a pos on the NavMesh near the RandomPos");
             }
+        }
+        else
+        {
+            Debug.LogError("Failed to find a position on the NavMesh close to exit.position.");
         }
     }
 
-    private float Counter() => queue += Time.deltaTime;
+    public void AIEnteredEntrance(Unit unit)
+    {
+        // Destroy the unit
+        Destroy(unit.gameObject);
+
+        // Add a new item to the list!
+        unitList.Add(unitToSpawn);
+    }
 }

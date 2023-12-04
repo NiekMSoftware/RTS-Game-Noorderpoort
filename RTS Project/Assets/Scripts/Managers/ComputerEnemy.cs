@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -25,6 +26,7 @@ public class ComputerEnemy : MonoBehaviour
     [SerializeField] private AIStates state;
     [SerializeField] private int pointsToAddAssignWorker;
     [SerializeField] private bool debugMode;
+    [SerializeField] private PlayerWorkerSpawner workerSpawner;
 
     private List<GameObject> resourceAreas = new();
 
@@ -86,13 +88,8 @@ public class ComputerEnemy : MonoBehaviour
 
     private void Start()
     {
-        for (int i = 0; i < amountOfWorkersAtStart; i++)
-        {
-            Worker worker = Instantiate(workerPrefab, transform.position, Quaternion.identity).GetComponent<Worker>();
-            worker.name += i;
-            workers.Add(worker);
-            availableWorkers.Add(worker);
-        }
+        workers = workerSpawner.GetWorkers().ToList();
+        availableWorkers = workers;
     }
 
     private void Update()
@@ -213,7 +210,8 @@ public class ComputerEnemy : MonoBehaviour
                                             if (placedResourceBuilding.GetWorkers().Count <= i)
                                             {
                                                 shouldPlaceNewBuilding = false;
-                                                if (AssignWorker(placedResourceBuilding, GetRandomAvailableWorker()))
+                                                Worker worker = GetRandomAvailableWorker();
+                                                if (AssignWorker(placedResourceBuilding, worker))
                                                 {
                                                     return;
                                                 }
@@ -317,7 +315,7 @@ public class ComputerEnemy : MonoBehaviour
                 {
                     if (building.buildingType == BuildingType.Offensive)
                     {
-                        barrack = building.building.GetComponent<Barrack>();
+                        building.building.TryGetComponent(out barrack);
                         if (!building.hasBeenPlaced)
                         {
                             PlaceNonResourceBuilding(building);
@@ -325,8 +323,12 @@ public class ComputerEnemy : MonoBehaviour
                         else
                         {
                             Worker worker = GetRandomAvailableWorker();
-                            building.building.GetComponent<Barrack>().AddUnitToBarrack(worker);
-                            availableWorkers.Remove(worker);
+
+                            if (worker)
+                            {
+                                barrack.AddUnitToBarrack(worker.gameObject);
+                                availableWorkers.Remove(worker);
+                            }
                         }
                     }
                 }

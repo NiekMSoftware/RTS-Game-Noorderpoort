@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BuildingBase : MonoBehaviour
 {
     [SerializeField] public float buildingHp = 50f;
-    [SerializeField] private States currentState;
+    [SerializeField] protected States currentState;
     [SerializeField] private Recipe[] recipes;
     [SerializeField] private BuildingPoints points;
     [SerializeField] private Outline outline;
+    [SerializeField] private GameObject model;
 
     public string buildingName;
 
@@ -77,15 +79,17 @@ public class BuildingBase : MonoBehaviour
 
     #endregion
 
-    private void Awake()
+    protected virtual void Awake()
     {
-        outline = GetComponent<Outline>();
-
         uiManager = FindObjectOfType<UIManager>();
+        print("UI manager : " + uiManager + " from " + name);
 
-        outline.enabled = false;
-        outline.OutlineWidth = uiManager.GetOutlineDefaultSize();
-        outlineDefaultSize = outline.OutlineWidth;
+        if (outline)
+        {
+            outline.enabled = false;
+            outline.OutlineWidth = uiManager.GetOutlineDefaultSize();
+            outlineDefaultSize = outline.OutlineWidth;
+        }
 
         if (buildingName == string.Empty)
             buildingName = name;
@@ -93,10 +97,22 @@ public class BuildingBase : MonoBehaviour
 
     public virtual void Init(Material _material, GameObject _particleObject, GameObject buildingToSpawn, States state)
     {
-        buildingMaterial = _material;
+        if (_material)
+        {
+            Material newMaterial = new(_material.shader)
+            {
+                color = _material.color
+            };
+
+            buildingMaterial = newMaterial;
+        }
+
         particleObject = _particleObject;
         this.buildingToSpawn = buildingToSpawn;
         currentState = state;
+
+        if (buildingMaterial)
+            buildingAnimationValue = buildingMaterial.GetFloat("_Min");
     }
 
     public virtual IEnumerator Build(float buildTime)
@@ -105,18 +121,25 @@ public class BuildingBase : MonoBehaviour
 
         ChangeObjectMaterial(buildingMaterial);
 
-        buildingAnimationValue = 0f;
-        buildingMaterial.SetFloat("Value", buildingAnimationValue);
-        print(buildingMaterial.GetFloat("Value"));
+        float max = buildingMaterial.GetFloat("_Max");
+        float min = buildingMaterial.GetFloat("_Min");
+        float range = max - min;
+        buildTime *= 250;
+        float speed = range / buildTime;
 
-        yield return new WaitForSeconds(buildTime);
+        while (buildingAnimationValue < max)
+        {
+            buildingAnimationValue += speed;
+            buildingMaterial.SetFloat("_Value", buildingAnimationValue);
+            yield return null;
+        }
 
-        currentState = States.Normal;
         ParticleSystem particle = Instantiate(particleObject, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
         particle.Play();
         yield return new WaitForSeconds(particle.main.duration);
 
-        Instantiate(buildingToSpawn, transform.position, transform.rotation);
+        Instantiate(buildingToSpawn, transform.position, transform.rotation).TryGetComponent(out BuildingBase spawnedBuilding);
+        spawnedBuilding.Init(null, null, null, States.Normal);
 
         yield return null;
 
@@ -127,25 +150,30 @@ public class BuildingBase : MonoBehaviour
 
     private void ChangeObjectMaterial(Material material)
     {
-        if (gameObject.TryGetComponent(out MeshRenderer mr))
+        if (!model) return;
+
+        if (model.TryGetComponent(out MeshRenderer mesh))
         {
-            if (mr.material)
+            if (mesh.material)
             {
-                mr.material = material;
+                mesh.material = material;
             }
         }
         else
         {
-            foreach (var mr2 in gameObject.GetComponentsInChildren<MeshRenderer>())
+            foreach (Transform child in model.transform)
             {
-                Material[] materials = mr2.materials;
-
-                for (int i = 0; i < materials.Length; i++)
+                if (child.TryGetComponent(out MeshRenderer mesh2))
                 {
-                    materials[i] = material;
-                }
+                    Material[] materials = mesh2.materials;
 
-                mr2.materials = materials;
+                    for (int i = 0; i < materials.Length; i++)
+                    {
+                        materials[i] = material;
+                    }
+
+                    mesh2.materials = materials;
+                }
             }
         }
     }
@@ -160,19 +188,33 @@ public class BuildingBase : MonoBehaviour
 
     public virtual void SelectBuilding()
     {
-        uiManager.SetBuildingUI(true, this);
-        outline.OutlineWidth = outlineDefaultSize;
-        outline.enabled = true;
+        if (currentState == States.Building) return;
+
+        if (uiManager)
+            uiManager.SetBuildingUI(true, this);
+
+        if (outline)
+        {
+            outline.OutlineWidth = outlineDefaultSize;
+            outline.enabled = true;
+        }
     }
 
     public virtual void DeselectBuilding()
     {
-        uiManager.SetBuildingUI(false, this);
-        outline.enabled = false;
+        if (currentState == States.Building) return;
+
+        if (uiManager)
+            uiManager.SetBuildingUI(false, this);
+
+        if (outline)
+            outline.enabled = false;
     }
 
     public virtual void DestroyBuilding()
     {
+        if (currentState == States.Building) return;
+
         uiManager.SetBuildingUI(false, this);
         Destroy(gameObject);
     }
