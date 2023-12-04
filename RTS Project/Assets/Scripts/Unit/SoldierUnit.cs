@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -33,7 +34,7 @@ public class SoldierUnit : Unit
 
     private void Update()
     {
-        FindClosestEnemy();
+        //FindClosestEnemy();
         print("choosing building to Attack");
         ChooseBuildingToAttack();
         enemy = selectionManager.GetEnemyToAttack();
@@ -42,8 +43,50 @@ public class SoldierUnit : Unit
         if (enemy == this) return;
     }
 
-    private void FindClosestEnemy()
+    private void OnTriggerEnter(Collider other)
     {
+        print("Collideded");
+        SetEnemy(other.gameObject);
+
+    }
+
+    private void SetEnemy(GameObject enemyObject)
+    {
+        Unit enemyUnit = enemyObject.GetComponent<Unit>();
+        if(enemyUnit != null)
+        {
+            enemy = enemyUnit;
+        }
+
+        if (selectionManager.GetMarker() == true)
+        {
+            Debug.Log("marker true");
+            myAgent.SetDestination(selectionManager.GetMarker().transform.position);
+            selectionManager.GetMarker();
+        }
+        else
+        {
+            Debug.Log("Enemy in range");
+            Debug.Log("moving to enemy myself");
+            //closestDistance = distanceToEnemy;
+            //enemy = potentialEnemy;
+            //print(potentialEnemy);
+            myAgent.SetDestination(enemy.transform.position);
+            Debug.Log("setting destination");
+            DealDamageToEnemiesInRange();
+            Debug.Log("dealing damage to enemies in range");
+        }
+    }
+        //- trigger op de enemies doen
+        //- ontriggerenter gebruiken
+
+    /*private void FindClosestEnemy()
+    {
+        //gamemanager maken:
+        //- 2 list met alle units per team.
+        //- unit moet zelf doorgeven wanneer hij in de lijst moet.
+        //- uit de lijst de enemies halen en dan hieronder gebruiken.
+
         Unit[] enemies = GameObject.FindObjectsOfType<Unit>();
         float closestDistance = 5;
         enemy = null;
@@ -74,7 +117,7 @@ public class SoldierUnit : Unit
                 }
             }
         }
-    }
+    }*/
 
     private void ChooseBuildingToAttack()
     {
@@ -123,23 +166,30 @@ public class SoldierUnit : Unit
     //damage to enemies
     private void DealDamageToEnemiesInRange()
     {
+        Debug.Log("entering dealingdamagetoenemies");
         enemyHp = enemy.GetComponent<Unit>();
-        if (Vector3.Distance(SoldierGameObject.transform.position, enemy.transform.position) < 1)
+        print(enemyHp);
+        if (enemy != null && Vector3.Distance(SoldierGameObject.transform.position, enemy.transform.position) < 1)
         {
+            print(Vector3.Distance(SoldierGameObject.transform.position, enemy.transform.position));
             Debug.Log("Attacking Enemy");
             damageTimer += Time.deltaTime;
 
             if (damageTimer >= damageInterval)
             {
-                enemyHp.UnitHealth -= damageAmount;
-                print(enemyHp.UnitHealth);
-                damageTimer = 0.0f;
-            }
-            if (enemyHp.UnitHealth <= 0)
-            {
-                Debug.Log("destroying enemy");
-                Destroy(enemy.gameObject);
-                isAttacking = false;
+                enemyHp = enemy.GetComponent<Unit>();
+                if (enemyHp != null)
+                {
+                    enemyHp.UnitHealth -= damageAmount;
+                    print(enemyHp.UnitHealth);
+                    damageTimer = 0.0f;
+                    if (enemyHp.UnitHealth <= 0)
+                    {
+                        Debug.Log("destroying enemy");
+                        Destroy(enemy.gameObject);
+                        isAttacking = false;
+                    }
+                }
             }
             //if (selectionmanager.selectedEnemy == null)
             //{
