@@ -15,7 +15,6 @@ public class BuildingBase : NetworkBehaviour
 
     public string buildingName;
 
-    private List<Material> savedMaterials = new List<Material>();
     private GameObject particleObject;
 
     private Material buildingMaterial;
@@ -106,6 +105,7 @@ public class BuildingBase : NetworkBehaviour
 
         if (currentState == States.Building)
         {
+            StoreRenderersInChildren();
             Material _material = FindAnyObjectByType<BuildingManager>().buildingMaterial;
             GameObject _particleObject = FindAnyObjectByType<BuildingManager>().buildParticle;
 
@@ -120,11 +120,10 @@ public class BuildingBase : NetworkBehaviour
         }
         if (currentState == States.Normal) 
         {
-            print("building material");
+            ApplyMaterialsToStoredRenderers();
             //buildingMaterial = null;    
             //ChangeObjectMaterial(buildingMaterial);
 
-            print("state normal");
         }
 
 
@@ -132,38 +131,43 @@ public class BuildingBase : NetworkBehaviour
         if (buildingMaterial)
             buildingAnimationValue = buildingMaterial.GetFloat("_Min");
     }
-    void StoreMaterialsInChildren()
+    List<Material[]> savedMaterials = new List<Material[]>();
+    List<MeshRenderer> savedRenderers = new List<MeshRenderer>();
+
+    void StoreRenderersInChildren()
     {
         // Iterate through all child objects
-        foreach (Transform child in transform)
+        foreach (Transform child in model.transform)
         {
-            // Get the Renderer component of the child
-            Renderer renderer = child.GetComponent<Renderer>();
+            print("store");
+            // Get the MeshRenderer component of the child
+            MeshRenderer renderer = child.GetComponent<MeshRenderer>();
 
             if (renderer != null)
             {
-                // Get the materials attached to the Renderer
-                Material[] materials = renderer.materials;
+                // Add the MeshRenderer to the list
+                savedRenderers.Add(renderer);
 
-                // Add the materials to the list
-                savedMaterials.AddRange(materials);
+                // Get the shared materials of the MeshRenderer and create a copy
+                Material[] materials = renderer.sharedMaterials;
+                Material[] materialsCopy = new Material[materials.Length];
+                System.Array.Copy(materials, materialsCopy, materials.Length);
+
+                // Add the materials copy to the list
+                savedMaterials.Add(materialsCopy);
             }
         }
     }
 
-    void ApplyMaterialsToChildren()
+    void ApplyMaterialsToStoredRenderers()
     {
-        // Iterate through all child objects
-        foreach (Transform child in transform)
+        // Iterate through all stored MeshRenderers and their corresponding materials
+        for (int i = 0; i < savedRenderers.Count; i++)
         {
-            // Get the Renderer component of the child
-            Renderer renderer = child.GetComponent<Renderer>();
+            print("apply");
 
-            if (renderer != null)
-            {
-                // Apply the stored materials to the child's Renderer
-                renderer.materials = savedMaterials.ToArray();
-            }
+            // Apply the stored materials to the MeshRenderer
+            savedRenderers[i].sharedMaterials = savedMaterials[i];
         }
     }
     public virtual IEnumerator Build(float buildTime)
@@ -189,19 +193,15 @@ public class BuildingBase : NetworkBehaviour
         particle.Play();
         yield return new WaitForSeconds(particle.main.duration);
 
-
-        //GameObject _spawnedBuilding = Instantiate(buildingToSpawn, transform.position, transform.rotation);
-        //_spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
-
-        Instantiate(buildingToSpawn, transform.position, transform.rotation).TryGetComponent(out BuildingBase spawnedBuilding);
-        spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
+        //Instantiate(buildingToSpawn, transform.position, transform.rotation).TryGetComponent(out BuildingBase spawnedBuilding);
+        //spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
 
         print("instantiate");
-        spawnedBuilding.InitClientRpc(States.Normal);
+        InitClientRpc(States.Normal);
 
         yield return null;
 
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 
     public States GetCurrentState() => currentState;

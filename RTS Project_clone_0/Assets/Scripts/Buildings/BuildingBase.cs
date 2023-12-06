@@ -15,7 +15,6 @@ public class BuildingBase : NetworkBehaviour
 
     public string buildingName;
 
-    private List<Material> savedMaterials = new();
     private GameObject particleObject;
 
     private Material buildingMaterial;
@@ -103,8 +102,10 @@ public class BuildingBase : NetworkBehaviour
         buildingToSpawn = gameObject;
         currentState = state;
 
+
         if (currentState == States.Building)
         {
+            StoreRenderersInChildren();
             Material _material = FindAnyObjectByType<BuildingManager>().buildingMaterial;
             GameObject _particleObject = FindAnyObjectByType<BuildingManager>().buildParticle;
 
@@ -114,16 +115,15 @@ public class BuildingBase : NetworkBehaviour
             };
 
             buildingMaterial = newMaterial;
-            
 
             particleObject = _particleObject;
         }
         if (currentState == States.Normal) 
         {
-            buildingMaterial = null;    
-            ChangeObjectMaterial(buildingMaterial);
+            ApplyMaterialsToStoredRenderers();
+            //buildingMaterial = null;    
+            //ChangeObjectMaterial(buildingMaterial);
 
-            print("state normal");
         }
 
 
@@ -131,7 +131,45 @@ public class BuildingBase : NetworkBehaviour
         if (buildingMaterial)
             buildingAnimationValue = buildingMaterial.GetFloat("_Min");
     }
+    List<Material[]> savedMaterials = new List<Material[]>();
+    List<MeshRenderer> savedRenderers = new List<MeshRenderer>();
 
+    void StoreRenderersInChildren()
+    {
+        // Iterate through all child objects
+        foreach (Transform child in model.transform)
+        {
+            print("store");
+            // Get the MeshRenderer component of the child
+            MeshRenderer renderer = child.GetComponent<MeshRenderer>();
+
+            if (renderer != null)
+            {
+                // Add the MeshRenderer to the list
+                savedRenderers.Add(renderer);
+
+                // Get the shared materials of the MeshRenderer and create a copy
+                Material[] materials = renderer.sharedMaterials;
+                Material[] materialsCopy = new Material[materials.Length];
+                System.Array.Copy(materials, materialsCopy, materials.Length);
+
+                // Add the materials copy to the list
+                savedMaterials.Add(materialsCopy);
+            }
+        }
+    }
+
+    void ApplyMaterialsToStoredRenderers()
+    {
+        // Iterate through all stored MeshRenderers and their corresponding materials
+        for (int i = 0; i < savedRenderers.Count; i++)
+        {
+            print("apply");
+
+            // Apply the stored materials to the MeshRenderer
+            savedRenderers[i].sharedMaterials = savedMaterials[i];
+        }
+    }
     public virtual IEnumerator Build(float buildTime)
     {
         if (currentState == States.Normal) yield return null;
@@ -155,18 +193,15 @@ public class BuildingBase : NetworkBehaviour
         particle.Play();
         yield return new WaitForSeconds(particle.main.duration);
 
+        //Instantiate(buildingToSpawn, transform.position, transform.rotation).TryGetComponent(out BuildingBase spawnedBuilding);
+        //spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
 
-        //GameObject _spawnedBuilding = Instantiate(buildingToSpawn, transform.position, transform.rotation);
-        //_spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
-
-        Instantiate(buildingToSpawn, transform.position, transform.rotation).TryGetComponent(out BuildingBase spawnedBuilding);
-        spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
-
-        spawnedBuilding.InitClientRpc(States.Normal);
+        print("instantiate");
+        InitClientRpc(States.Normal);
 
         yield return null;
 
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 
     public States GetCurrentState() => currentState;
