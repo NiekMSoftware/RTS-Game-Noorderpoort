@@ -15,7 +15,7 @@ public class BuildingBase : NetworkBehaviour
 
     public string buildingName;
 
-    private List<Material> savedMaterials = new();
+    private List<Material> savedMaterials = new List<Material>();
     private GameObject particleObject;
 
     private Material buildingMaterial;
@@ -103,6 +103,7 @@ public class BuildingBase : NetworkBehaviour
         buildingToSpawn = gameObject;
         currentState = state;
 
+
         if (currentState == States.Building)
         {
             Material _material = FindAnyObjectByType<BuildingManager>().buildingMaterial;
@@ -114,14 +115,14 @@ public class BuildingBase : NetworkBehaviour
             };
 
             buildingMaterial = newMaterial;
-            
 
             particleObject = _particleObject;
         }
         if (currentState == States.Normal) 
         {
-            buildingMaterial = null;    
-            ChangeObjectMaterial(buildingMaterial);
+            print("building material");
+            //buildingMaterial = null;    
+            //ChangeObjectMaterial(buildingMaterial);
 
             print("state normal");
         }
@@ -131,7 +132,40 @@ public class BuildingBase : NetworkBehaviour
         if (buildingMaterial)
             buildingAnimationValue = buildingMaterial.GetFloat("_Min");
     }
+    void StoreMaterialsInChildren()
+    {
+        // Iterate through all child objects
+        foreach (Transform child in transform)
+        {
+            // Get the Renderer component of the child
+            Renderer renderer = child.GetComponent<Renderer>();
 
+            if (renderer != null)
+            {
+                // Get the materials attached to the Renderer
+                Material[] materials = renderer.materials;
+
+                // Add the materials to the list
+                savedMaterials.AddRange(materials);
+            }
+        }
+    }
+
+    void ApplyMaterialsToChildren()
+    {
+        // Iterate through all child objects
+        foreach (Transform child in transform)
+        {
+            // Get the Renderer component of the child
+            Renderer renderer = child.GetComponent<Renderer>();
+
+            if (renderer != null)
+            {
+                // Apply the stored materials to the child's Renderer
+                renderer.materials = savedMaterials.ToArray();
+            }
+        }
+    }
     public virtual IEnumerator Build(float buildTime)
     {
         if (currentState == States.Normal) yield return null;
@@ -162,6 +196,7 @@ public class BuildingBase : NetworkBehaviour
         Instantiate(buildingToSpawn, transform.position, transform.rotation).TryGetComponent(out BuildingBase spawnedBuilding);
         spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
 
+        print("instantiate");
         spawnedBuilding.InitClientRpc(States.Normal);
 
         yield return null;
