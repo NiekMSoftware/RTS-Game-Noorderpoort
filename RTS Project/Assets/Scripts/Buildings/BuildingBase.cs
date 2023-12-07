@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using UnityEditor.Build.Reporting;
 using UnityEngine;
 
 public class BuildingBase : MonoBehaviour
@@ -31,8 +31,16 @@ public class BuildingBase : MonoBehaviour
 
     [SerializeField] private OccupancyType occupancyType;
 
+    private float minBuildValue;
+    private float maxBuildValue;
+    private float buildSpeed;
+
+    private float particleTimer;
+    private bool spawnedParticle;
+
     public enum States
     {
+        Pending,
         Building,
         Normal
     }
@@ -82,7 +90,6 @@ public class BuildingBase : MonoBehaviour
     protected virtual void Awake()
     {
         uiManager = FindObjectOfType<UIManager>();
-        print("UI manager : " + uiManager + " from " + name);
 
         if (outline)
         {
@@ -95,7 +102,7 @@ public class BuildingBase : MonoBehaviour
             buildingName = name;
     }
 
-    public virtual void Init(Material _material, GameObject _particleObject, GameObject buildingToSpawn, States state)
+    public virtual void Init(Material _material, GameObject _particleObject, GameObject buildingToSpawn, float buildTime, States state)
     {
         if (_material)
         {
@@ -111,39 +118,55 @@ public class BuildingBase : MonoBehaviour
         this.buildingToSpawn = buildingToSpawn;
         currentState = state;
 
-        if (buildingMaterial)
-            buildingAnimationValue = buildingMaterial.GetFloat("_Min");
+        if (currentState == States.Building)
+        {
+            if (buildingMaterial)
+            {
+                buildingAnimationValue = buildingMaterial.GetFloat("_Min");
+
+                maxBuildValue = buildingMaterial.GetFloat("_Max");
+                minBuildValue = buildingMaterial.GetFloat("_Min");
+            }
+
+            float range = maxBuildValue - minBuildValue;
+            buildTime *= 250;
+            buildSpeed = range / buildTime;
+
+            ChangeObjectMaterial(buildingMaterial);
+        }
     }
 
-    public virtual IEnumerator Build(float buildTime)
+    public virtual void Build()
     {
-        if (currentState == States.Normal) yield return null;
+        if (currentState == States.Normal || currentState == States.Pending) return;
 
-        ChangeObjectMaterial(buildingMaterial);
-
-        float max = buildingMaterial.GetFloat("_Max");
-        float min = buildingMaterial.GetFloat("_Min");
-        float range = max - min;
-        buildTime *= 250;
-        float speed = range / buildTime;
-
-        while (buildingAnimationValue < max)
+        if (buildingAnimationValue < maxBuildValue)
         {
-            buildingAnimationValue += speed;
+            buildingAnimationValue += buildSpeed;
             buildingMaterial.SetFloat("_Value", buildingAnimationValue);
-            yield return null;
         }
+        else
+        {
+            if (!spawnedParticle)
+            {
+                ParticleSystem particle = Instantiate(particleObject, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
+                particle.Play();
+                particleTimer = particle.main.duration;
+                spawnedParticle = true;
+            }
+            else
+            {
+                particleTimer -= Time.deltaTime;
 
-        ParticleSystem particle = Instantiate(particleObject, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
-        particle.Play();
-        yield return new WaitForSeconds(particle.main.duration);
+                if (particleTimer < 0)
+                {  
+                    Instantiate(buildingToSpawn, transform.position, transform.rotation).TryGetComponent(out BuildingBase spawnedBuilding);
+                    spawnedBuilding.Init(null, null, null, 0, States.Normal);
 
-        Instantiate(buildingToSpawn, transform.position, transform.rotation).TryGetComponent(out BuildingBase spawnedBuilding);
-        spawnedBuilding.Init(null, null, null, States.Normal);
-
-        yield return null;
-
-        Destroy(gameObject);
+                    Destroy(gameObject);
+                }
+            }
+        }
     }
 
     public States GetCurrentState() => currentState;
@@ -180,10 +203,7 @@ public class BuildingBase : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Delete))
-        {
-            DestroyBuilding();
-        }
+        Build();
     }
 
     public virtual void SelectBuilding()
