@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public class SoldierUnit : Unit
 {
@@ -46,11 +47,32 @@ public class SoldierUnit : Unit
     private void OnTriggerEnter(Collider other)
     {
         print("Collideded");
-        SetEnemy(other.gameObject);
+        //SetEnemy(other.gameObject);
 
+        //als soldier in de radius zit van de enemy
+        //zet pak de gameobject uit de lijst als de enemy
+        //val aan met DealDamageToEnemies()
+        Unit enemyUnit = other.GetComponent<Unit>();
+        myAgent.SetDestination(enemyUnit.transform.position);
+        float DistanceToEnemy = Vector3.Distance(transform.position, enemyUnit.transform.position);
+        print(DistanceToEnemy);
+        if (enemyUnit != null && enemyUnit.typeUnit == TypeUnit.Enemy)
+        {
+            //float distanceToEnemy = Vector3.Distance(transform.position, enemyUnit.transform.position);
+            //print(distanceToEnemy);
+            if (DistanceToEnemy < 1.0f)
+            {
+                Debug.Log("Attacking enemy");
+                DealDamageToEnemiesInRange();
+            }
+        }
     }
 
-    private void SetEnemy(GameObject enemyObject)
+    //maak marker false zodat soldier naar enemy loopt.
+    //zorg ervoor dat de Enemy GameObject gelijk is aan enemy zodat de soldier de enemy aan kan vallen. 
+    //- trigger op de enemies doen
+    //- ontriggerenter gebruiken
+    /*private void SetEnemy(GameObject enemyObject)
     {
         Unit enemyUnit = enemyObject.GetComponent<Unit>();
         if(enemyUnit != null)
@@ -76,9 +98,7 @@ public class SoldierUnit : Unit
             DealDamageToEnemiesInRange();
             Debug.Log("dealing damage to enemies in range");
         }
-    }
-        //- trigger op de enemies doen
-        //- ontriggerenter gebruiken
+    }*/
 
     /*private void FindClosestEnemy()
     {

@@ -64,6 +64,17 @@ public class Unit : MonoBehaviour
         RandomSex();
 
         RandomName();
+
+        //voor UnitManager
+        UnitManager unitManager = FindObjectOfType<UnitManager>();
+        if (unitManager != null)
+        {
+            unitManager.AddUnit(this);
+        }
+        else
+        {
+            Debug.Log("can't add Units to lists");
+        }
     }
 
     private void RandomName()
