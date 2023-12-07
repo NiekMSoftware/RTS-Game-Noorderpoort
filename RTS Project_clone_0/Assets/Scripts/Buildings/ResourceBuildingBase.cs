@@ -85,12 +85,12 @@ public class ResourceBuildingBase : BuildingBase
     }
 
     [ClientRpc]
-    public override void InitClientRpc(States state)
+    public override void InitClientRpc(float buildTime, States state)
     {
 
         print("zzzzzzzzzzzzzzzzzzz");
 
-        base.InitClientRpc(state);
+        base.InitClientRpc(buildTime, state);
         SetResourceItemManagerByType(ResourceItemManager.Type.Player);
     }
     public override void OnNetworkSpawn()

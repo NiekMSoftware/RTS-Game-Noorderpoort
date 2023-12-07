@@ -328,10 +328,10 @@ public class BuildingManager : NetworkBehaviour
         spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
 
 
-        spawnedBuilding.InitClientRpc(BuildingBase.States.Building);
+        spawnedBuilding.InitClientRpc(buildings[currentIndex].buildTime, BuildingBase.States.Building);
 
         spawnedBuilding.SetOccupancyType(BuildingBase.OccupancyType.Player);
-        StartCoroutine(spawnedBuilding.Build(buildings[currentIndex].buildTime));
+        spawnedBuilding.BuildClientRpc();
 
         BuildProgress buildProgress = Instantiate(buildProgressPrefab, new Vector3(spawnedBuilding.transform.position.x,
             spawnedBuilding.transform.position.y + spawnedBuilding.transform.localScale.y + buildProgressHeight,

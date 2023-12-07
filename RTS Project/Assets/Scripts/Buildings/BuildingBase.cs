@@ -31,8 +31,20 @@ public class BuildingBase : NetworkBehaviour
 
     [SerializeField] private OccupancyType occupancyType;
 
+    List<Material[]> savedMaterials = new List<Material[]>();
+    List<MeshRenderer> savedRenderers = new List<MeshRenderer>();
+
+
+    private float minBuildValue;
+    private float maxBuildValue;
+    private float buildSpeed;
+
+    private float particleTimer;
+    private bool spawnedParticle;
+
     public enum States
     {
+        Pending,
         Building,
         Normal
     }
@@ -96,7 +108,7 @@ public class BuildingBase : NetworkBehaviour
     }
 
     [ClientRpc]
-    public virtual void InitClientRpc(States state)
+    public virtual void InitClientRpc(float buildTime, States state)
     {
         print("initserverrpc called");
         buildingToSpawn = gameObject;
@@ -117,6 +129,21 @@ public class BuildingBase : NetworkBehaviour
             buildingMaterial = newMaterial;
 
             particleObject = _particleObject;
+
+            if (buildingMaterial)
+            {
+                buildingAnimationValue = buildingMaterial.GetFloat("_Min");
+
+                maxBuildValue = buildingMaterial.GetFloat("_Max");
+                minBuildValue = buildingMaterial.GetFloat("_Min");
+            }
+
+            float range = maxBuildValue - minBuildValue;
+            buildTime *= 250;
+            buildSpeed = range / buildTime;
+
+            ChangeObjectMaterial(buildingMaterial);
+
         }
         if (currentState == States.Normal) 
         {
@@ -131,8 +158,6 @@ public class BuildingBase : NetworkBehaviour
         if (buildingMaterial)
             buildingAnimationValue = buildingMaterial.GetFloat("_Min");
     }
-    List<Material[]> savedMaterials = new List<Material[]>();
-    List<MeshRenderer> savedRenderers = new List<MeshRenderer>();
 
     void StoreRenderersInChildren()
     {
@@ -170,40 +195,38 @@ public class BuildingBase : NetworkBehaviour
             savedRenderers[i].sharedMaterials = savedMaterials[i];
         }
     }
-    public virtual IEnumerator Build(float buildTime)
+    [ClientRpc]
+    public virtual void BuildClientRpc()
     {
-        if (currentState == States.Normal) yield return null;
+        if (currentState == States.Normal || currentState == States.Pending) return;
 
-        ChangeObjectMaterial(buildingMaterial);
-
-        float max = buildingMaterial.GetFloat("_Max");
-        float min = buildingMaterial.GetFloat("_Min");
-        float range = max - min;
-        buildTime *= 250;
-        float speed = range / buildTime;
-
-        while (buildingAnimationValue < max)
+        if (buildingAnimationValue < maxBuildValue)
         {
-            buildingAnimationValue += speed;
+            buildingAnimationValue += buildSpeed;
             buildingMaterial.SetFloat("_Value", buildingAnimationValue);
-            yield return null;
         }
+        else
+        {
+            if (!spawnedParticle)
+            {
+                ParticleSystem particle = Instantiate(particleObject, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
+                particle.Play();
+                particleTimer = particle.main.duration;
+                spawnedParticle = true;
+            }
+            else
+            {
+                particleTimer -= Time.deltaTime;
 
-        ParticleSystem particle = Instantiate(particleObject, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
-        particle.Play();
-        yield return new WaitForSeconds(particle.main.duration);
+                if (particleTimer < 0)
+                {
+                    InitClientRpc(0, States.Normal);
 
-        //Instantiate(buildingToSpawn, transform.position, transform.rotation).TryGetComponent(out BuildingBase spawnedBuilding);
-        //spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
-
-        print("instantiate");
-        InitClientRpc(States.Normal);
-
-        yield return null;
-
-        //Destroy(gameObject);
+                }
+            }
+        }
     }
-
+    
     public States GetCurrentState() => currentState;
 
     private void ChangeObjectMaterial(Material material)
@@ -242,6 +265,7 @@ public class BuildingBase : NetworkBehaviour
         {
             DestroyBuilding();
         }
+        BuildClientRpc();
     }
 
     public virtual void SelectBuilding()

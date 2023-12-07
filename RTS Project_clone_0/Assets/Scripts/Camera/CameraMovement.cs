@@ -25,18 +25,18 @@ public class CameraMovement : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-
-
-        FindObjectOfType<BuildingManager>().UpdateButtons();
-    
+        print("not multiplayer");
         if (!IsOwner)
         {
+            transform.parent.gameObject.SetActive(false);
             GetComponent<Camera>().enabled = false;
             GetComponent<CameraMovement>().enabled = false;
             GetComponent<AudioListener>().enabled = false;
         }
-    }
+        FindObjectOfType<BuildingManager>().UpdateButtons();
+    
 
+    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
