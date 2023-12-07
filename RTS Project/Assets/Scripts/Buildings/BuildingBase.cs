@@ -270,7 +270,7 @@ public class BuildingBase : NetworkBehaviour
 
     public virtual void SelectBuilding()
     {
-        if (currentState == States.Building) return;
+        if (currentState == States.Building || currentState == States.Pending) return;
 
         if (uiManager)
             uiManager.SetBuildingUI(true, this);
@@ -284,7 +284,7 @@ public class BuildingBase : NetworkBehaviour
 
     public virtual void DeselectBuilding()
     {
-        if (currentState == States.Building) return;
+        if (currentState == States.Building || currentState == States.Pending) return;
 
         if (uiManager)
             uiManager.SetBuildingUI(false, this);
