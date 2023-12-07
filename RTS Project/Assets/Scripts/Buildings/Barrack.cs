@@ -57,8 +57,10 @@ public class Barrack : BuildingBase
 
     private void Update()
     {
+        print("unit list length : " + unitList.Count);
         if (unitList.Count > 0)
         {
+            print("Process spawning 0");
             StartCoroutine(ProcessSpawning());
         }
     }
@@ -106,9 +108,13 @@ public class Barrack : BuildingBase
         // Turn on the queue
         queue += Time.deltaTime;
 
+        print("Process spawning 1");
+
         // Check if the list isn't empty, if so break the method
         if (unitList.Count != 0)
         {
+            print("Process spawning");
+
             // Check if the queue hasn't surpassed the max Time
             if (queue >= maxTimeUntilNext)
             {
@@ -127,13 +133,16 @@ public class Barrack : BuildingBase
     {
         /* DEBUGGING */
 
+        print("Spawn soldier");
+
         NavMeshHit hit;
         if (NavMesh.SamplePosition(exit.position, out hit, 1.0f, NavMesh.AllAreas))
         {
             // Instantiate the GameObject
             GameObject soldierGO = Instantiate(unitToSpawn, hit.position, Quaternion.identity);
             soldierGO.GetComponent<Unit>().typeUnit = Unit.TypeUnit.Human;
-            
+            print("Really spawn soldier");
+
             // Remove unit out of the list
             unitList.RemoveAt(0);
 
@@ -174,5 +183,8 @@ public class Barrack : BuildingBase
 
         // Add a new item to the list!
         unitList.Add(unitToSpawn);
+        print("unit list length! : " + unitList.Count);
+
+        print("ai entered entrance");
     }
 }

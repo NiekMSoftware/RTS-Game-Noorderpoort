@@ -298,10 +298,10 @@ public class BuildingManager : MonoBehaviour
             pendingObject.transform.rotation).GetComponent<BuildingBase>();
 
         spawnedBuilding.Init(buildingMaterial, buildParticle, 
-            buildings[currentIndex].building, BuildingBase.States.Building);
+            buildings[currentIndex].building, buildings[currentIndex].buildTime, BuildingBase.States.Building);
 
         spawnedBuilding.SetOccupancyType(BuildingBase.OccupancyType.Player);
-        StartCoroutine(spawnedBuilding.Build(buildings[currentIndex].buildTime));
+        spawnedBuilding.Build();
 
         BuildProgress buildProgress = Instantiate(buildProgressPrefab, new Vector3(spawnedBuilding.transform.position.x,
             spawnedBuilding.transform.position.y + spawnedBuilding.transform.localScale.y + buildProgressHeight,

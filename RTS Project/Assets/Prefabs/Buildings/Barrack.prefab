@@ -166,7 +166,7 @@ MonoBehaviour:
   model: {fileID: 0}
   buildingName: 
   occupancyType: 0
-  unitToSpawn: {fileID: 6687049504355165105, guid: c6b5ed013b2cf2c4689c875d2e2573a8,
+  unitToSpawn: {fileID: 3721838096702204654, guid: 9510a0a69a1181d4b95bbb04ef05c36c,
     type: 3}
   queue: 0
   maxTimeUntilNext: 5

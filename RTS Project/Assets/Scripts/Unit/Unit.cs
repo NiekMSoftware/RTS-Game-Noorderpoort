@@ -106,20 +106,20 @@ public class Unit : MonoBehaviour
     {
         if (isSelected) return;
 
-        renderTexture = new(cameraResoltion, cameraResoltion, 0)
-        {
-            name = gameObject.name + " Render Texture"
-        };
-        unitCamera.targetTexture = renderTexture;
-        unitCamera.gameObject.SetActive(true);
+        //renderTexture = new(cameraResoltion, cameraResoltion, 0)
+        //{
+        //    name = gameObject.name + " Render Texture"
+        //};
+        //unitCamera.targetTexture = renderTexture;
+        //unitCamera.gameObject.SetActive(true);
         isSelected = true;
     }
 
     public void Deselect()
     {
-        Destroy(renderTexture);
-        unitCamera.targetTexture = null;
-        unitCamera.gameObject.SetActive(false);
+        //Destroy(renderTexture);
+        //unitCamera.targetTexture = null;
+        //unitCamera.gameObject.SetActive(false);
         isSelected = false;
     }
 
