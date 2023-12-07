@@ -198,8 +198,6 @@ public class BuildingBase : NetworkBehaviour
     [ClientRpc]
     public virtual void BuildClientRpc()
     {
-        if (currentState == States.Normal || currentState == States.Pending) return;
-
         if (buildingAnimationValue < maxBuildValue)
         {
             buildingAnimationValue += buildSpeed;
@@ -265,9 +263,11 @@ public class BuildingBase : NetworkBehaviour
         {
             DestroyBuilding();
         }
+        if (currentState == States.Normal || currentState == States.Pending) return;
+
         BuildClientRpc();
     }
-
+    
     public virtual void SelectBuilding()
     {
         if (currentState == States.Building || currentState == States.Pending) return;

@@ -100,7 +100,7 @@ public class ResourceBuildingBase : BuildingBase
 
     public override void SelectBuilding()
     {
-        if (currentState == States.Building) return;
+        if (currentState == States.Building || currentState == States.Pending) return;
 
         base.SelectBuilding();
 
@@ -114,7 +114,7 @@ public class ResourceBuildingBase : BuildingBase
 
     public override void DeselectBuilding()
     {
-        if (currentState == States.Building) return;
+        if (currentState == States.Building || currentState == States.Pending) return;
 
         base.DeselectBuilding();
 
