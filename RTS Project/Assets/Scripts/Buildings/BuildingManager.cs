@@ -51,6 +51,7 @@ public class BuildingManager : NetworkBehaviour
 
     public NetworkVariable<Vector3> pos = new NetworkVariable<Vector3>(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<Quaternion> rot = new NetworkVariable<Quaternion>(Quaternion.identity, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> canPlace = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     [System.Serializable]
     class Building
@@ -70,6 +71,7 @@ public class BuildingManager : NetworkBehaviour
         UpdateButtons();
     }
 
+
     private void Awake()
     {
         terrain = FindObjectOfType<Terrain>().GetComponent<Terrain>();
@@ -82,6 +84,7 @@ public class BuildingManager : NetworkBehaviour
         {
             GetComponent<BuildingManager>().enabled = false;
         }
+        UpdateButtons();
     }
 
     [ContextMenu("UpdateButtons")]
@@ -113,8 +116,9 @@ public class BuildingManager : NetworkBehaviour
         pendingObject.transform.position = pos.Value;
         rot.Value = pendingObject.transform.rotation;
 
+        CheckCanPlace(false);
         //Change pending object material based on if it can be placed or not
-        if (!CheckCanPlace(false))
+        if (!canPlace.Value)
         {
             ChangeObjectMaterial(pendingObject, incorrectPlaceMaterial);
         }
@@ -180,96 +184,116 @@ public class BuildingManager : NetworkBehaviour
         //place object
         if (Input.GetMouseButtonDown(0))
         {
-            BuildObjectServerRpc();
+            CheckCanPlace(true);
+            if (canPlace.Value)
+            {
+                BuildObjectServerRpc();
+            }
         }
     }
-
-    private bool CheckCanPlace(bool spawnError)
+    private void CheckCanPlace(bool spawnError)
     {
-        if (EventSystem.current.IsPointerOverGameObject()) return false;
-
-        if (rayHit)
+        if (EventSystem.current.IsPointerOverGameObject())
         {
-            float rayAngle = Vector3.Angle(pendingObject.transform.forward, hit.normal);
+            canPlace.Value = false;
+            return;
+        }
 
-            if (rayAngle <= maxAngle)
+        if (!rayHit)
+        {
+            canPlace.Value = false;
+            return;
+        }
+        float rayAngle = Vector3.Angle(pendingObject.transform.up, Vector3.up);
+
+        if (rayAngle > maxAngle)
+        {
+            if (spawnError)
             {
-                if (pendingObject.transform.position.y <= maxHeight && pendingObject.transform.position.y >= minHeight)
+                SpawnError("angle too steep");
+            }
+            canPlace.Value = false;
+            return;
+        }
+
+        if (pendingObject.transform.position.y > maxHeight)
+        {
+            if (spawnError)
+            {
+                //TODO: improve error
+                SpawnError("Too high");
+            }
+            canPlace.Value = false;
+            return;
+        }
+
+        if (pendingObject.transform.position.y < minHeight)
+        {
+            if (spawnError)
+            {
+                //TODO: improve error
+                SpawnError("Too low");
+            }
+            canPlace.Value = false;
+            return;
+        }
+
+        pendingObject.SetActive(true);
+        //check collision
+        if (GetOccupany(pendingObject) || !rayHit)
+        {
+            if (spawnError)
+            {
+                SpawnError("Can't place building here");
+            }
+            canPlace.Value = false;
+            return;
+        }
+
+        bool hasEverything = true;
+
+        List<ItemSlot> savedSlots = new();
+
+        //loop through all recipe items and all resources and check if the player has enough resources to build the building
+        foreach (var itemNeeded in buildings[currentIndex].building.GetComponent<BuildingBase>().GetRecipes())
+        {
+            if (itemNeeded.data == resources.GetSlotByItemData(itemNeeded.data).data)
+            {
+                if (resources.GetSlotByItemData(itemNeeded.data).amount >= itemNeeded.amountNeeded)
                 {
-                    pendingObject.SetActive(true);
-                    //check collision
-                    if (!GetOccupany(pendingObject) && rayHit)
-                    {
-                        bool hasEverything = true;
-
-                        List<ItemSlot> savedSlots = new();
-
-                        //loop through all recipe items and all resources and check if the player has enough resources to build the building
-                        foreach (var itemNeeded in buildings[currentIndex].building.GetComponent<BuildingBase>().GetRecipes())
-                        {
-                            if (itemNeeded.data == resources.GetSlotByItemData(itemNeeded.data).data)
-                            {
-                                if (resources.GetSlotByItemData(itemNeeded.data).amount >= itemNeeded.amountNeeded)
-                                {
-                                    savedSlots.Add(resources.GetSlotByItemData(itemNeeded.data));
-                                    hasEverything = true;
-                                }
-                                else
-                                {
-                                    if (spawnError)
-                                    {
-                                        SpawnError($"needs {itemNeeded.amountNeeded - resources.GetSlotByItemData(itemNeeded.data).amount} " +
-                                            $"more : {itemNeeded.data.name}");
-                                    }
-                                    hasEverything = false;
-                                    return false;
-                                }
-                            }
-                        }
-
-                        //remove items only when the player can actually build it
-                        if (hasEverything)
-                        {
-                            savedSlots.Clear();
-
-                            //build object
-                            return true;
-                        }
-                    }
-                    else
-                    {
-                        if (spawnError)
-                        {
-                            SpawnError("Can't place building here");
-                        }
-                        return false;
-                    }
+                    savedSlots.Add(resources.GetSlotByItemData(itemNeeded.data));
+                    hasEverything = true;
                 }
                 else
                 {
                     if (spawnError)
                     {
-                        //TODO: improve error
-                        SpawnError("Too high or too low");
+                        SpawnError($"needs {itemNeeded.amountNeeded - resources.GetSlotByItemData(itemNeeded.data).amount} " +
+                            $"more : {itemNeeded.data.name}");
                     }
-                    return false;
+                    hasEverything = false;
+                    canPlace.Value = false;
+                    return;
                 }
             }
-            else
-            {
-                if (spawnError)
-                {
-                    SpawnError("angle too steep");
-                }
-                return false;
-            }
+        }
+
+        //remove items only when the player can actually build it
+        if (hasEverything)
+        {
+            savedSlots.Clear();
+
+            //build object
+            canPlace.Value = true;
+            return;
         }
 
         if (spawnError)
         {
             SpawnError("Other error");
         }
-        return false;
+        canPlace.Value = false;
+        return;
     }
 
     private void SpawnError(string text)
@@ -296,7 +320,7 @@ public class BuildingManager : NetworkBehaviour
         yield return null;
     }
 
-    [ServerRpc (RequireOwnership = false)]
+    [ServerRpc(RequireOwnership = false)]
     private void ResetObjectServerRpc()
     {
         Destroy(pendingObject);
@@ -305,7 +329,7 @@ public class BuildingManager : NetworkBehaviour
         //pos.Value = Vector3.zero;
     }
 
-    [ServerRpc (RequireOwnership = false)]
+    [ServerRpc(RequireOwnership = false)]
     private void BuildObjectServerRpc()
     {
         currentIndex = 0;
@@ -358,7 +382,7 @@ public class BuildingManager : NetworkBehaviour
         //print(index);
         ResetObjectServerRpc();
         pendingObject = Instantiate(buildings[index].building, pos.Value, transform.rotation);
-        
+
 
         ChangeObjectMaterial(pendingObject, correctPlaceMaterial);
 
