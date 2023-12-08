@@ -50,7 +50,7 @@ MonoBehaviour:
   scale: {x: 1000, y: 1000}
   resourceManagerToSpawn: {fileID: 8125856419683990175, guid: 386352292dc51624ca85fc60fea3b2b9,
     type: 3}
-  checkRadius: 50
+  checkRadius: 10
   spawnableResources:
   - parent: {fileID: 2523807452295206489}
     prefabToSpawn: {fileID: 8952031714232469564, guid: fbf2de6a09128e54e990884604ddc847,

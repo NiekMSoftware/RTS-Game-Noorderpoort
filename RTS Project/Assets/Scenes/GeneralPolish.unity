@@ -615,6 +615,16 @@ PrefabInstance:
       propertyPath: minHeight
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 8174031491341160228, guid: e49dccff1924f6e49be9b73ff22ff905,
+        type: 3}
+      propertyPath: checkRadius
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8174031491341160228, guid: e49dccff1924f6e49be9b73ff22ff905,
+        type: 3}
+      propertyPath: resourceLayer.m_Bits
+      value: 32768
+      objectReference: {fileID: 0}
     - target: {fileID: 9059765624243850627, guid: e49dccff1924f6e49be9b73ff22ff905,
         type: 3}
       propertyPath: m_RootOrder
@@ -1265,7 +1275,7 @@ PrefabInstance:
     - target: {fileID: 2266570287089781787, guid: 7243e0cae2d6727448fdaf3d2545716f,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5754324476713425757, guid: 7243e0cae2d6727448fdaf3d2545716f,
         type: 3}
