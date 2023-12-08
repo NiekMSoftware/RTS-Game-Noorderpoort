@@ -211,6 +211,8 @@ public class BuildingManager : NetworkBehaviour
             if (spawnError)
             {
                 SpawnError("angle too steep");
+                canPlace.Value = false;
+
             }
             canPlace.Value = false;
             return;

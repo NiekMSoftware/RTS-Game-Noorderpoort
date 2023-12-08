@@ -147,6 +147,7 @@ public class BuildingBase : NetworkBehaviour
         }
         if (currentState == States.Normal) 
         {
+            print("ApplyMaterialsToStoredRenderers");
             ApplyMaterialsToStoredRenderers();
             //buildingMaterial = null;    
             //ChangeObjectMaterial(buildingMaterial);
@@ -218,13 +219,18 @@ public class BuildingBase : NetworkBehaviour
 
                 if (particleTimer < 0)
                 {
-                    InitClientRpc(0, States.Normal);
+                    print("callingn sloppy");
+                    InitForServerRpc(0, States.Normal);
 
                 }
             }
         }
     }
-    
+    [ServerRpc]
+    private void InitForServerRpc(float buildTime, States state)
+    {
+        InitClientRpc(0, States.Normal);
+    }
     public States GetCurrentState() => currentState;
 
     private void ChangeObjectMaterial(Material material)
