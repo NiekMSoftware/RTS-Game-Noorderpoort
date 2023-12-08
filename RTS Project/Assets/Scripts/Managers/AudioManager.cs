@@ -1,7 +1,6 @@
 using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
-using static AudioManager;
 
 public class AudioManager : MonoBehaviour
 {
@@ -24,16 +23,24 @@ public class AudioManager : MonoBehaviour
     {
         public AudioGroupNames name;
         public List<AudioSource> audioSources;
+        public List<AudioSource> currentAudioSources;
         public bool isPlaying = false;
     }
 
     private void Awake()
     {
         Instance = this;
+
+        foreach (var audioGroup in audioGroups)
+        {
+            audioGroup.currentAudioSources = new List<AudioSource>(audioGroup.audioSources);
+        }
     }
 
     public void PlaySounds(AudioGroup audioGroup, bool shouldLoop = false, bool randomize = false)
     {
+        print("play sounds");
+
         if (audioGroup.name == AudioGroupNames.None) return;
 
         Sequence audioSequence = DOTween.Sequence();
@@ -41,8 +48,10 @@ public class AudioManager : MonoBehaviour
 
         if (audioGroup.isPlaying)
         {
+            print("audiogroup is playing");
             foreach (var audio in audioGroup.audioSources)
             {
+                print(audio.name);
                 if (audio.isPlaying)
                 {
                     print("something is playing");
@@ -53,44 +62,66 @@ public class AudioManager : MonoBehaviour
         }
 
         audioGroup.isPlaying = true;
-        int randomNum = Random.Range(0, audioGroup.audioSources.Count);
 
+        if (audioGroup.currentAudioSources.Count <= 0)
+        {
+            audioGroup.currentAudioSources = new List<AudioSource>(audioGroup.audioSources);
+
+            for (int i = 0; i < audioGroup.currentAudioSources.Count; i++)
+            {
+                if (audioGroup.currentAudioSources[i] == audioSourceToStop)
+                {
+                    audioGroup.currentAudioSources.Remove(audioSourceToStop);
+                    break;
+                }
+            }
+        }
+
+        int randomNum = Random.Range(0, audioGroup.currentAudioSources.Count);
+        AudioSource audioSource = audioGroup.currentAudioSources[randomNum];
+
+        print("Is the same audio : " + (audioSource == audioSourceToStop));
 
         float randomVolume = 1;
 
         if (randomize)
         {
             randomVolume = Random.Range(volumeRange.x, volumeRange.y);
-            audioGroup.audioSources[randomNum].pitch = Random.Range(pitchRange.x, pitchRange.y);
+            audioSource.pitch = Random.Range(pitchRange.x, pitchRange.y);
         }
 
-        audioGroup.audioSources[randomNum].volume = 0;
+        audioSource.volume = 0;
 
-        audioGroup.audioSources[randomNum].loop = shouldLoop;
-        audioGroup.audioSources[randomNum].Play();
+        audioSource.loop = shouldLoop;
+        audioSource.Play();
         if (audioSourceToStop)
         {
             print("fade out audio");
             audioSequence.Append(audioSourceToStop.DOFade(0, 1));
         }
-        audioSequence.Append(audioGroup.audioSources[randomNum].DOFade(randomVolume, 1).OnComplete(() => StopAudioSource(audioSourceToStop, audioGroup, randomNum)));
+        audioSequence.Append(audioSource.DOFade(randomVolume, 1).OnComplete(() => StopAudioSource(audioSourceToStop, audioGroup, audioSource)));
+        audioGroup.currentAudioSources.Remove(audioSource);
         audioSequence.Play();
     }
 
-    private void StopAudioSource(AudioSource audioSource, AudioGroup audioGroup, int randomNum)
+    private void StopAudioSource(AudioSource previousAudio, AudioGroup audioGroup, AudioSource currentAudio)
     {
-        if (audioSource)
+        if (previousAudio)
         {
             print("stop");
-            audioSource.Stop();
-            audioGroup.audioSources.Remove(audioGroup.audioSources[randomNum]);
-            audioGroup.audioSources.Add(audioSource);
+            previousAudio.Stop();
         }
     }
 
-    public void PlaySound(AudioSource audioSource, bool shouldLoop = false)
+    public void PlaySound(AudioSource audioSource, bool shouldLoop = false, bool randomize = false)
     {
         audioSource.Play();
         audioSource.loop = shouldLoop;
+
+        if (randomize)
+        {
+            audioSource.volume = Random.Range(volumeRange.x, volumeRange.y);
+            audioSource.pitch = Random.Range(pitchRange.x, pitchRange.y);
+        }
     }
 }

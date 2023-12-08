@@ -158,10 +158,10 @@ public class WeatherTimeManager : MonoBehaviour
         {
             DrawDefaultInspector();
 
-            WeatherTimeManager script = (WeatherTimeManager)target;
+            WeatherTimeManager weatherTimeManager = (WeatherTimeManager)target;
             if (GUILayout.Button("Update Weather"))
             {
-                script.UpdateWeather();
+                weatherTimeManager.UpdateWeather();
             }
         }
     }
