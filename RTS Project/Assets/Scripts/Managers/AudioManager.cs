@@ -39,8 +39,6 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySounds(AudioGroup audioGroup, bool shouldLoop = false, bool randomize = false)
     {
-        print("play sounds");
-
         if (audioGroup.name == AudioGroupNames.None) return;
 
         Sequence audioSequence = DOTween.Sequence();
@@ -48,13 +46,10 @@ public class AudioManager : MonoBehaviour
 
         if (audioGroup.isPlaying)
         {
-            print("audiogroup is playing");
             foreach (var audio in audioGroup.audioSources)
             {
-                print(audio.name);
                 if (audio.isPlaying)
                 {
-                    print("something is playing");
                     audioSourceToStop = audio;
                     break;
                 }
@@ -80,8 +75,6 @@ public class AudioManager : MonoBehaviour
         int randomNum = Random.Range(0, audioGroup.currentAudioSources.Count);
         AudioSource audioSource = audioGroup.currentAudioSources[randomNum];
 
-        print("Is the same audio : " + (audioSource == audioSourceToStop));
-
         float randomVolume = 1;
 
         if (randomize)
@@ -96,7 +89,6 @@ public class AudioManager : MonoBehaviour
         audioSource.Play();
         if (audioSourceToStop)
         {
-            print("fade out audio");
             audioSequence.Append(audioSourceToStop.DOFade(0, 1));
         }
         audioSequence.Append(audioSource.DOFade(randomVolume, 1).OnComplete(() => StopAudioSource(audioSourceToStop, audioGroup, audioSource)));
@@ -108,7 +100,6 @@ public class AudioManager : MonoBehaviour
     {
         if (previousAudio)
         {
-            print("stop");
             previousAudio.Stop();
         }
     }

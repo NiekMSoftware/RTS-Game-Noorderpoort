@@ -369,7 +369,7 @@ public class BuildingManager : MonoBehaviour
         building.layer = (int)Mathf.Log(tempBuildingLayerMask.value, 2);
         Transform trans = building.transform;
 
-        Collider[] colliders = Physics.OverlapBox(trans.position, trans.localScale / 2, trans.rotation, buildLayerMask);
+        Collider[] colliders = Physics.OverlapBox(trans.position, trans.localScale, trans.rotation, buildLayerMask);
 
         if (colliders.Length > 0)
         {
