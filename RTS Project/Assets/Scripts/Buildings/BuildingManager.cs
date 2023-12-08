@@ -424,8 +424,9 @@ public class BuildingManager : NetworkBehaviour
         building.layer = (int)Mathf.Log(tempBuildingLayerMask.value, 2);
         Transform trans = building.transform;
 
-        Collider[] colliders = Physics.OverlapBox(trans.position, trans.localScale / 2, trans.rotation, buildLayerMask);
+        Collider collider = building.GetComponent<Collider>();
 
+        Collider[] colliders = Physics.OverlapBox(collider.bounds.center, collider.bounds.extents, trans.rotation, buildLayerMask);
         if (colliders.Length > 0)
         {
             return true;
