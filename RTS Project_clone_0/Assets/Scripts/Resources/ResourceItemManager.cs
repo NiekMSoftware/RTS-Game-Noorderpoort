@@ -1,9 +1,11 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class ResourceItemManager : MonoBehaviour
+public class ResourceItemManager : NetworkBehaviour
 {
     public Type type;
 
+    NetworkVariable<ItemSlot> itemSlotVar =  new NetworkVariable<ItemSlot>(null ,NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public ItemSlot[] itemSlots;
 
     public enum Type
@@ -12,16 +14,17 @@ public class ResourceItemManager : MonoBehaviour
         AI
     }
 
-    public ItemSlot GetSlotByItemData(ItemData data)
+    public void GetSlotByItemData(ItemData data)
     {
         foreach (var item in itemSlots)
         {
             if (item.data == data)
             {
-                return item;
+                itemSlotVar.Value = item;
+                return;
             }
         }
-
-        return null;
+        itemSlotVar.Value = null;
+        return;
     }
 }
