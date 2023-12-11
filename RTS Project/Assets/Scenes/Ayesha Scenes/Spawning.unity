@@ -149,7 +149,7 @@ Transform:
   m_GameObject: {fileID: 133134952}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 7.17, z: 0.89}
+  m_LocalPosition: {x: 0, y: 6.62, z: 0.89}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -167,10 +167,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7684577b0080c9c4383d6b1988be6406, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cubePrefab: {fileID: 5324649439494047616, guid: 9c602ac6483414a4c8e083370de4d41b,
+  cubePrefab: {fileID: 6664230956610545413, guid: fb3a63f14325dec4fa1f27bb6eaac316,
     type: 3}
   spawnInterval: 2
-  maxCubes: 10
+  maxCubes: 6
 --- !u!1 &244658212
 GameObject:
   m_ObjectHideFlags: 0
