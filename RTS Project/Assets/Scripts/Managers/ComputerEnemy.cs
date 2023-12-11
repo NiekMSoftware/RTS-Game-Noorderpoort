@@ -194,10 +194,8 @@ public class ComputerEnemy : MonoBehaviour
                         print("not enough resources");
                     foreach (var placedBuilding in placedBuildings)
                     {
-                        if (placedBuilding is ResourceBuildingBase)
+                        if (placedBuilding is ResourceBuildingBase placedResourceBuilding)
                         {
-                            ResourceBuildingBase placedResourceBuilding = (ResourceBuildingBase)placedBuilding;
-
                             foreach (var resource in resourcesToGather)
                             {
                                 if (resource.item == placedResourceBuilding.GetItemData())

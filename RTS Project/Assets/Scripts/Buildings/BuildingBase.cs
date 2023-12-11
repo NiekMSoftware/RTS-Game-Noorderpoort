@@ -106,6 +106,7 @@ public class BuildingBase : MonoBehaviour
     {
         if (_material)
         {
+            print("apply material: " + name);
             Material newMaterial = new(_material.shader)
             {
                 color = _material.color
@@ -122,17 +123,17 @@ public class BuildingBase : MonoBehaviour
         {
             if (buildingMaterial)
             {
-                buildingAnimationValue = buildingMaterial.GetFloat("_Min");
-
+                print("building material");
                 maxBuildValue = buildingMaterial.GetFloat("_Max");
                 minBuildValue = buildingMaterial.GetFloat("_Min");
+
+                buildingAnimationValue = minBuildValue;
+                ChangeObjectMaterial(buildingMaterial);
             }
 
             float range = maxBuildValue - minBuildValue;
             buildTime *= 250;
             buildSpeed = range / buildTime;
-
-            ChangeObjectMaterial(buildingMaterial);
         }
     }
 
@@ -140,19 +141,24 @@ public class BuildingBase : MonoBehaviour
     {
         if (currentState == States.Normal || currentState == States.Pending) return;
 
+        print("building : " + currentState);
+
         if (buildingAnimationValue < maxBuildValue)
         {
             buildingAnimationValue += buildSpeed;
             buildingMaterial.SetFloat("_Value", buildingAnimationValue);
+            print("building animation : " + buildingAnimationValue);
         }
         else
         {
+            print("else");
             if (!spawnedParticle)
             {
                 ParticleSystem particle = Instantiate(particleObject, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
                 particle.Play();
                 particleTimer = particle.main.duration;
                 spawnedParticle = true;
+                print("spawned particle : " + gameObject.name);
             }
             else
             {
@@ -162,6 +168,7 @@ public class BuildingBase : MonoBehaviour
                 {  
                     Instantiate(buildingToSpawn, transform.position, transform.rotation).TryGetComponent(out BuildingBase spawnedBuilding);
                     spawnedBuilding.Init(null, null, null, 0, States.Normal);
+                    print("Spawned building : " + gameObject.name);
 
                     Destroy(gameObject);
                 }
