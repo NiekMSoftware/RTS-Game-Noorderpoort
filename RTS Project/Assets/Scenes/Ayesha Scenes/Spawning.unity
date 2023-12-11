@@ -170,7 +170,7 @@ MonoBehaviour:
   cubePrefab: {fileID: 5324649439494047616, guid: 9c602ac6483414a4c8e083370de4d41b,
     type: 3}
   spawnInterval: 2
-  maxCubes: 6
+  maxCubes: 10
 --- !u!1 &244658212
 GameObject:
   m_ObjectHideFlags: 0
