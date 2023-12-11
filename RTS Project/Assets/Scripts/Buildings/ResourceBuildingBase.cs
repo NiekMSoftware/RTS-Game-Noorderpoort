@@ -175,6 +175,8 @@ public class ResourceBuildingBase : BuildingBase
 
     public bool AddWorkerToBuilding(Worker worker)
     {
+        if (currentState == States.Building || currentState == States.Pending) return false;
+
         if (workers.Contains(worker))
         {
             return false;

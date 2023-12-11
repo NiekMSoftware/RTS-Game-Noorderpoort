@@ -8,6 +8,8 @@ public class ComputerEnemy : MonoBehaviour
     [SerializeField] private float amountOfWorkersAtStart;
     [SerializeField] private GameObject workerPrefab;
     [SerializeField] private Buildings[] buildings;
+    [SerializeField] private Material buildingMaterial;
+    [SerializeField] private GameObject buildingParticle;
     [SerializeField] private Terrain terrain;
     [SerializeField] private LayerMask occupanyLayer;
     [SerializeField] private LayerMask groundLayer;
@@ -67,6 +69,7 @@ public class ComputerEnemy : MonoBehaviour
         public bool isStarter;
         public ItemData itemData;
         public bool hasBeenPlaced;
+        public float buildTime;
     }
 
     public enum AIStates
@@ -375,6 +378,8 @@ public class ComputerEnemy : MonoBehaviour
             GameObject spawnedBuilding = Instantiate(building.building, position, Quaternion.identity);
 
             BuildingBase spawnedBuildingBase = spawnedBuilding.GetComponent<BuildingBase>();
+            spawnedBuildingBase.Init(buildingMaterial, buildingParticle, spawnedBuilding, building.buildTime, BuildingBase.States.Building);
+
             spawnedBuilding.TryGetComponent(out ResourceBuildingBase resourceBuildingBase);
 
             if (Physics.Raycast(spawnedBuilding.transform.position + new Vector3(0, 1, 0), -Vector3.up, out RaycastHit hit, groundLayer))

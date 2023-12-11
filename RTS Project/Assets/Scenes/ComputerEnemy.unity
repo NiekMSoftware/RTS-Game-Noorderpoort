@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3613,9 +3613,41 @@ PrefabInstance:
       objectReference: {fileID: 1084786153}
     - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
         type: 3}
+      propertyPath: buildingMaterial
+      value: 
+      objectReference: {fileID: -876546973899608171, guid: 5a5fd8be79530d042a5c001468e4bb85,
+        type: 3}
+    - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
+        type: 3}
+      propertyPath: buildingParticle
+      value: 
+      objectReference: {fileID: 3392335869857621335, guid: 7cd638073cc234548803694628a32bcf,
+        type: 3}
+    - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
+        type: 3}
       propertyPath: resourceItemManager
       value: 
       objectReference: {fileID: 5668088712000634338}
+    - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
+        type: 3}
+      propertyPath: buildings.Array.data[0].buildTime
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
+        type: 3}
+      propertyPath: buildings.Array.data[1].buildTime
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
+        type: 3}
+      propertyPath: buildings.Array.data[2].buildTime
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329463492631226084, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
+        type: 3}
+      propertyPath: buildings.Array.data[3].buildTime
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 3409755943785433889, guid: 7fc1ac3fa4b3de94f9ed659a41a30411,
         type: 3}
       propertyPath: terrain
