@@ -257,18 +257,22 @@ public class BuildingManager : NetworkBehaviour
         //loop through all recipe items and all resources and check if the player has enough resources to build the building
         foreach (var itemNeeded in buildings[currentIndex].building.GetComponent<BuildingBase>().GetRecipes())
         {
-            if (itemNeeded.data == resources.GetSlotByItemData(itemNeeded.data).data)
+            resources.data.Value = itemNeeded.data;
+            resources.GetSlotByItemDataServerRpc();
+
+            if (itemNeeded.data == resources.itemSlotVar.Value.data)
             {
-                if (resources.GetSlotByItemData(itemNeeded.data).amount >= itemNeeded.amountNeeded)
+                
+                if (resources.itemSlotVar.Value.amount >= itemNeeded.amountNeeded)
                 {
-                    savedSlots.Add(resources.GetSlotByItemData(itemNeeded.data));
+                    savedSlots.Add(resources.itemSlotVar.Value);
                     hasEverything = true;
                 }
                 else
                 {
                     if (spawnError)
                     {
-                        SpawnError($"needs {itemNeeded.amountNeeded - resources.GetSlotByItemData(itemNeeded.data).amount} " +
+                        SpawnError($"needs {itemNeeded.amountNeeded - resources.itemSlotVar.Value.amount} " +
                             $"more : {itemNeeded.data.name}");
                     }
                     hasEverything = false;
@@ -335,9 +339,12 @@ public class BuildingManager : NetworkBehaviour
         currentIndex = 0;
         foreach (var itemNeeded in buildings[currentIndex].building.GetComponent<BuildingBase>().GetRecipes())
         {
-            if (itemNeeded.data == resources.GetSlotByItemData(itemNeeded.data).data)
+            resources.data.Value = itemNeeded.data;
+            resources.GetSlotByItemDataServerRpc();
+
+            if (itemNeeded.data == resources.itemSlotVar.Value.data)
             {
-                resources.GetSlotByItemData(itemNeeded.data).amount -= itemNeeded.amountNeeded;
+                resources.itemSlotVar.Value.amount -= itemNeeded.amountNeeded;
             }
         }
         //endingObjectVector3.Value = pendingObject.transform.position;

@@ -119,7 +119,11 @@ public class Worker : Unit
             {
                 RemoveItemFromWorkerStorage(resourceItem);
                 buildingBase.AddItemToStorage(resourceItem);
-                resourceItemManager.GetSlotByItemData(resourceItem).amount++;
+
+                resourceItemManager.data.Value = resourceItem;
+                resourceItemManager.GetSlotByItemDataServerRpc();
+
+                resourceItemManager.itemSlotVar.Value.amount++;
             }
             yield return new WaitForSeconds(1f);
         }
