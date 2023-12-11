@@ -87,11 +87,9 @@ public class BuildingManager : NetworkBehaviour
         UpdateButtons();
     }
 
-    [ContextMenu("UpdateButtons")]
     public void UpdateButtons()
     {
         //if (!IsOwner) return;
-        print("update");
         for (int i = 0; i < buildings.Length; i++)
         {
             Button button = buildings[i].button;
@@ -381,7 +379,6 @@ public class BuildingManager : NetworkBehaviour
 
     public void SelectObject(int index)
     {
-        //print(index);
         ResetObjectServerRpc();
         pendingObject = Instantiate(buildings[index].building, pos.Value, transform.rotation);
 

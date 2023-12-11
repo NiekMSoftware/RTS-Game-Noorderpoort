@@ -87,9 +87,6 @@ public class ResourceBuildingBase : BuildingBase
     [ClientRpc]
     public override void InitClientRpc(float buildTime, States state)
     {
-
-        print("zzzzzzzzzzzzzzzzzzz");
-
         base.InitClientRpc(buildTime, state);
         SetResourceItemManagerByType(ResourceItemManager.Type.Player);
     }

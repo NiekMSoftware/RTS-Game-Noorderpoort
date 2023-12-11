@@ -110,7 +110,6 @@ public class BuildingBase : NetworkBehaviour
     [ClientRpc]
     public virtual void InitClientRpc(float buildTime, States state)
     {
-        print("initserverrpc called");
         buildingToSpawn = gameObject;
         currentState = state;
 
@@ -147,7 +146,6 @@ public class BuildingBase : NetworkBehaviour
         }
         if (currentState == States.Normal) 
         {
-            print("ApplyMaterialsToStoredRenderers");
             ApplyMaterialsToStoredRenderers();
             //buildingMaterial = null;    
             //ChangeObjectMaterial(buildingMaterial);
@@ -165,7 +163,6 @@ public class BuildingBase : NetworkBehaviour
         // Iterate through all child objects
         foreach (Transform child in model.transform)
         {
-            print("store");
             // Get the MeshRenderer component of the child
             MeshRenderer renderer = child.GetComponent<MeshRenderer>();
 
@@ -190,8 +187,6 @@ public class BuildingBase : NetworkBehaviour
         // Iterate through all stored MeshRenderers and their corresponding materials
         for (int i = 0; i < savedRenderers.Count; i++)
         {
-            print("apply");
-
             // Apply the stored materials to the MeshRenderer
             savedRenderers[i].sharedMaterials = savedMaterials[i];
         }
@@ -219,14 +214,12 @@ public class BuildingBase : NetworkBehaviour
 
                 if (particleTimer < 0)
                 {
-                    print("callingn sloppy");
                     InitForServerRpc(0, States.Normal);
-
                 }
             }
         }
     }
-    [ServerRpc]
+    [ServerRpc (RequireOwnership = false)]
     private void InitForServerRpc(float buildTime, States state)
     {
         InitClientRpc(0, States.Normal);
