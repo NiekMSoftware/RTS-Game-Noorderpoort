@@ -47,6 +47,8 @@ public class BuildingManager : MonoBehaviour
     private RaycastHit hit;
     private bool rayHit;
 
+    private float currentDegreesRotated;
+
     [System.Serializable]
     class Building
     {
@@ -120,7 +122,10 @@ public class BuildingManager : MonoBehaviour
             pos = gridPos;
 
             //rotate object towards hit.normal
-            pendingObject.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+            Quaternion rotation = Quaternion.FromToRotation(Vector3.up,
+                new Vector3(hit.normal.x, hit.normal.y, hit.normal.z));
+            rotation.y += degreesToRotate;
+            pendingObject.transform.rotation = rotation;
         }
         else
         {
@@ -144,12 +149,18 @@ public class BuildingManager : MonoBehaviour
             //Reverse rotation when holding leftshift
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                pendingObject.transform.Rotate(Vector3.up * -degreesToRotate);
+                currentDegreesRotated -= degreesToRotate;
+                print(" - rotation : " + degreesToRotate);
+                //pendingObject.transform.Rotate(Vector3.up * -degreesToRotate);
             }
             else
             {
-                pendingObject.transform.Rotate(Vector3.up * degreesToRotate);
+                currentDegreesRotated += degreesToRotate;
+                print(" + rotation : " + degreesToRotate);
+                //pendingObject.transform.Rotate(Vector3.up * degreesToRotate);
             }
+
+            print("rotation : " + degreesToRotate);
         }
         //place object
         else if (Input.GetMouseButtonDown(0))
