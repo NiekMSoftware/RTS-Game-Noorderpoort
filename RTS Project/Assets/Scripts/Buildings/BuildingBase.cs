@@ -166,6 +166,7 @@ public class BuildingBase : MonoBehaviour
 
                     Destroy(gameObject);
                     print("done");
+                    return;
                 }
             }
         }

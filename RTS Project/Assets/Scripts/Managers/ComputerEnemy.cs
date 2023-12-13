@@ -132,7 +132,7 @@ public class ComputerEnemy : MonoBehaviour
                 }
 
                 //Check if the AI can continue to the exploring state
-                if (checkStartState())
+                if (CheckStartState())
                 {
                     state = AIStates.Exploring;
                 }
@@ -259,7 +259,7 @@ public class ComputerEnemy : MonoBehaviour
             case AIStates.Check:
                 if (!hasExplored)
                 {
-                    if (checkStartState())
+                    if (CheckStartState())
                     {
                         state = AIStates.Exploring;
                     }
@@ -389,10 +389,13 @@ public class ComputerEnemy : MonoBehaviour
 
                 if (resourceBuildingBase)
                 {
+                    //Set resource type
                     resourceBuildingBase.SetResourceItemManagerByType(ResourceItemManager.Type.AI);
                 }
+                //set occupancy type
                 spawnedBuildingBase.SetOccupancyType(BuildingBase.OccupancyType.Enemy);
 
+                //add points
                 pointManager.AddPoints(spawnedBuildingBase.GetPoints().amount, spawnedBuildingBase.GetPoints().pointType, PointManager.EntityType.AI,
                     pointManager.GetPointsByType(PointManager.EntityType.AI).GetResourcePointByItem(building.itemData));
 
@@ -445,7 +448,7 @@ public class ComputerEnemy : MonoBehaviour
         }
 
         //Get building by resource
-        Buildings building = buildings[GetResourceIndexByItemdata(itemData)];
+        Buildings building = GetResourceBuildingByItemdata(itemData);
 
         PlaceBuilding(originalPos, building);
     }
@@ -454,7 +457,7 @@ public class ComputerEnemy : MonoBehaviour
 
     #region Getters
 
-    private bool checkStartState()
+    private bool CheckStartState()
     {
         bool placedAllStarterBuildings = true;
 
@@ -628,20 +631,17 @@ public class ComputerEnemy : MonoBehaviour
         return closestResource;
     }
 
-    public int GetResourceIndexByItemdata(ItemData itemData)
+    public Buildings GetResourceBuildingByItemdata(ItemData itemData)
     {
-        int index = 0;
-
         foreach (var building in buildings)
         {
             if (building.itemData == itemData)
             {
-                return index;
+                return building;
             }
-            index++;
         }
 
-        return -1;
+        return null;
     }
 
     #endregion
