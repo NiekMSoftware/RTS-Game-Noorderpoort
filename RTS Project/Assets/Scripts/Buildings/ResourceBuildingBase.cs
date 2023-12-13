@@ -198,7 +198,6 @@ public class ResourceBuildingBase : BuildingBase
             {
                 Debug.LogWarning("No resourceManager in range");
             }
-
         }
 
         return false;

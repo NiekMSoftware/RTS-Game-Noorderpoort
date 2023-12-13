@@ -15,7 +15,8 @@ public class BuildingBase : MonoBehaviour
 
     public string buildingName;
 
-    private List<Material> savedMaterials = new();
+    private List<Material[]> savedMaterials = new();
+    private List<MeshRenderer> savedRenderers = new();
     private GameObject particleObject;
 
     private Material buildingMaterial;
@@ -105,6 +106,8 @@ public class BuildingBase : MonoBehaviour
 
     public virtual void Init(Material _material, GameObject _particleObject, GameObject buildingToSpawn, float buildTime, States state)
     {
+        StoreRenderersInChildren();
+
         if (_material)
         {
             Material newMaterial = new(_material.shader)
@@ -131,7 +134,6 @@ public class BuildingBase : MonoBehaviour
             }
 
             float range = maxBuildValue - minBuildValue;
-            buildTime *= 250;
             buildSpeed = range / buildTime;
         }
     }
@@ -142,7 +144,7 @@ public class BuildingBase : MonoBehaviour
 
         if (buildingAnimationValue < maxBuildValue)
         {
-            buildingAnimationValue += buildSpeed;
+            buildingAnimationValue += buildSpeed * Time.deltaTime;
             buildingMaterial.SetFloat("_Value", buildingAnimationValue);
         }
         else
@@ -153,20 +155,15 @@ public class BuildingBase : MonoBehaviour
                 particle.Play();
                 particleTimer = particle.main.duration;
                 spawnedParticle = true;
-                print("Spawned particle");
             }
             else
             {
                 particleTimer -= Time.deltaTime;
 
                 if (particleTimer < 0)
-                {  
-                    Instantiate(buildingToSpawn, transform.position, transform.rotation).TryGetComponent(out BuildingBase spawnedBuilding);
-                    spawnedBuilding.Init(null, null, null, 0, States.Normal);
-
-                    Destroy(gameObject);
-                    print("done");
-                    return;
+                {
+                    ApplyMaterialsToStoredRenderers();
+                    currentState = States.Normal;
                 }
             }
         }
@@ -201,6 +198,52 @@ public class BuildingBase : MonoBehaviour
                     mesh2.materials = materials;
                 }
             }
+        }
+    }
+
+    void StoreRenderersInChildren()
+    {
+        if (model.TryGetComponent(out MeshRenderer meshRenderer))
+        {
+            savedRenderers.Add(meshRenderer);
+            Material[] materials = meshRenderer.sharedMaterials;
+            Material[] materialsCopy = new Material[materials.Length];
+            System.Array.Copy(materials, materialsCopy, materials.Length);
+
+            savedMaterials.Add(materialsCopy);
+        }
+        else
+        {
+            // Iterate through all child objects
+            foreach (Transform child in model.transform)
+            {
+                // Get the MeshRenderer component of the child
+                MeshRenderer renderer = child.GetComponent<MeshRenderer>();
+
+                if (renderer != null)
+                {
+                    // Add the MeshRenderer to the list
+                    savedRenderers.Add(renderer);
+
+                    // Get the shared materials of the MeshRenderer and create a copy
+                    Material[] materials = renderer.sharedMaterials;
+                    Material[] materialsCopy = new Material[materials.Length];
+                    System.Array.Copy(materials, materialsCopy, materials.Length);
+
+                    // Add the materials copy to the list
+                    savedMaterials.Add(materialsCopy);
+                }
+            }
+        }
+    }
+
+    void ApplyMaterialsToStoredRenderers()
+    {
+        // Iterate through all stored MeshRenderers and their corresponding materials
+        for (int i = 0; i < savedRenderers.Count; i++)
+        {
+            // Apply the stored materials to the MeshRenderer
+            savedRenderers[i].sharedMaterials = savedMaterials[i];
         }
     }
 
