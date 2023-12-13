@@ -257,9 +257,7 @@ public class BuildingManager : NetworkBehaviour
         //loop through all recipe items and all resources and check if the player has enough resources to build the building
         foreach (var itemNeeded in buildings[currentIndex].building.GetComponent<BuildingBase>().GetRecipes())
         {
-            resources.data.Value = itemNeeded.data;
-            resources.GetSlotByItemDataServerRpc();
-
+            resources.GetSlotByItemDataServerRpc(itemNeeded.data);
             if (itemNeeded.data == resources.itemSlotVar.Value.data)
             {
                 
@@ -336,24 +334,26 @@ public class BuildingManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void BuildObjectServerRpc()
     {
+        print(resources.itemSlotVar.Value.amount);
         currentIndex = 0;
         foreach (var itemNeeded in buildings[currentIndex].building.GetComponent<BuildingBase>().GetRecipes())
         {
-            resources.data.Value = itemNeeded.data;
-            resources.GetSlotByItemDataServerRpc();
+            resources.GetSlotByItemDataServerRpc(itemNeeded.data);
 
             if (itemNeeded.data == resources.itemSlotVar.Value.data)
             {
                 resources.itemSlotVar.Value.amount -= itemNeeded.amountNeeded;
             }
         }
+        print(resources.itemSlotVar.Value.amount);
+
         //endingObjectVector3.Value = pendingObject.transform.position;
 
         ParticleSystem spawnedParticle = Instantiate(buildParticle, pos.Value, Quaternion.identity).GetComponent<ParticleSystem>();
         spawnedParticle.Play();
 
-        print("Pending object: " + pendingObject);
-        print("Building to spawn: " + buildings[currentIndex].building);
+        //print("Pending object: " + pendingObject);
+        //print("Building to spawn: " + buildings[currentIndex].building);
         BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pos.Value, rot.Value).GetComponent<BuildingBase>();
         //BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building).GetComponent<BuildingBase>();
         spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);

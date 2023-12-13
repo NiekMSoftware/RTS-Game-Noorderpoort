@@ -120,8 +120,7 @@ public class Worker : Unit
                 RemoveItemFromWorkerStorage(resourceItem);
                 buildingBase.AddItemToStorage(resourceItem);
 
-                resourceItemManager.data.Value = resourceItem;
-                resourceItemManager.GetSlotByItemDataServerRpc();
+                resourceItemManager.GetSlotByItemDataServerRpc(resourceItem);
 
                 resourceItemManager.itemSlotVar.Value.amount++;
             }
