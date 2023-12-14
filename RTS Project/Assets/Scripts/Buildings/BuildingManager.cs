@@ -122,12 +122,15 @@ public class BuildingManager : MonoBehaviour
             pos = gridPos;
 
             //rotate object towards hit.normal
-            Quaternion rotation = Quaternion.FromToRotation(Vector3.up,
-                new Vector3(hit.normal.x, hit.normal.y /*+ currentDegreesRotated*/, hit.normal.z));
-            //rotation.y += currentDegreesRotated;
-            //currentDegreesRotated = 0;
-            print("Real rotation " + rotation.y);
-            pendingObject.transform.localRotation = rotation;
+            Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+
+            Vector3 eulerAngles = rotation.eulerAngles;
+
+            eulerAngles.y += currentDegreesRotated;
+
+            rotation.eulerAngles = eulerAngles;
+
+            pendingObject.transform.rotation = rotation;
         }
         else
         {
@@ -152,17 +155,11 @@ public class BuildingManager : MonoBehaviour
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 currentDegreesRotated -= degreesToRotate;
-                print(" - rotation : " + currentDegreesRotated);
-                //pendingObject.transform.Rotate(Vector3.up * -degreesToRotate);
             }
             else
             {
                 currentDegreesRotated += degreesToRotate;
-                print(" + rotation : " + currentDegreesRotated);
-                //pendingObject.transform.Rotate(Vector3.up * degreesToRotate);
             }
-
-            print("rotation : " + currentDegreesRotated);
         }
         //place object
         else if (Input.GetMouseButtonDown(0))
@@ -195,7 +192,6 @@ public class BuildingManager : MonoBehaviour
         {
             if (spawnError)
             {
-                //TODO: improve error
                 SpawnError("Too high");
             }
 
@@ -206,7 +202,6 @@ public class BuildingManager : MonoBehaviour
         {
             if (spawnError)
             {
-                //TODO: improve error
                 SpawnError("Too low");
             }
 
