@@ -1290,6 +1290,8 @@ MonoBehaviour:
     type: 3}
   SoldierToSpawn: {fileID: 3721838096702204654, guid: 9510a0a69a1181d4b95bbb04ef05c36c,
     type: 3}
+  enemySoldierToSpawn: {fileID: 3721838096702204654, guid: e24a08ebbf222704aa32424587ff98f2,
+    type: 3}
   ground:
     serializedVersion: 2
     m_Bits: 8
@@ -2972,7 +2974,7 @@ PrefabInstance:
     - target: {fileID: 130443921006063449, guid: ac0e488fa050e814da5daa409f620119,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 130443921006063449, guid: ac0e488fa050e814da5daa409f620119,
         type: 3}
@@ -2982,17 +2984,17 @@ PrefabInstance:
     - target: {fileID: 5517518678586066986, guid: ac0e488fa050e814da5daa409f620119,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 226.53998
+      value: 261.3
       objectReference: {fileID: 0}
     - target: {fileID: 5517518678586066986, guid: ac0e488fa050e814da5daa409f620119,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 20.24
+      value: 29.3
       objectReference: {fileID: 0}
     - target: {fileID: 5517518678586066986, guid: ac0e488fa050e814da5daa409f620119,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 512.33246
+      value: 533.2
       objectReference: {fileID: 0}
     - target: {fileID: 5517518678586066986, guid: ac0e488fa050e814da5daa409f620119,
         type: 3}
@@ -3028,6 +3030,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7553606291268267862, guid: ac0e488fa050e814da5daa409f620119,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3574,12 +3581,8 @@ MonoBehaviour:
   damageInterval: 2
   damageAmount: 10
   isInRange: 0
-  enemy: {fileID: 0}
   enemyUnit: {fileID: 0}
-  soldier: {fileID: 0}
   soldierUnit: {fileID: 0}
-  soldierGameObject: {fileID: 0}
-  enemyGameObject: {fileID: 0}
   buildingToAttack: {fileID: 0}
   enemyHp: {fileID: 0}
   soldierHp: {fileID: 0}
@@ -4463,6 +4466,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1437358349}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1437358351 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6606951222471610092, guid: ab8c5f369ea4a6b42a3816c54f83c38a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1437358349}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93778e25b22e50c40ba602158998117a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1443863059
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6770,10 +6785,55 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemySoldier
       objectReference: {fileID: 0}
+    - target: {fileID: 3721838096702204654, guid: e24a08ebbf222704aa32424587ff98f2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2,
+        type: 3}
+      propertyPath: job
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2,
+        type: 3}
+      propertyPath: enemy
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2,
+        type: 3}
+      propertyPath: enemyHp
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2,
+        type: 3}
+      propertyPath: soldier
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2,
+        type: 3}
+      propertyPath: enemyUnit
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2,
+        type: 3}
+      propertyPath: soldierHp
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2,
         type: 3}
       propertyPath: unitHealth
       value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2,
+        type: 3}
+      propertyPath: soldierUnit
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2,
         type: 3}
@@ -6788,8 +6848,24 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2,
         type: 3}
+      propertyPath: selectionManager
+      value: 
+      objectReference: {fileID: 1437358351}
+    - target: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2,
+        type: 3}
+      propertyPath: soldierGameObject
+      value: 
+      objectReference: {fileID: 3721838096702204654, guid: 9510a0a69a1181d4b95bbb04ef05c36c,
+        type: 3}
+    - target: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2,
+        type: 3}
       propertyPath: clickableUnit.m_Bits
       value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 8396057595472078219, guid: e24a08ebbf222704aa32424587ff98f2,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9150157795128708509, guid: e24a08ebbf222704aa32424587ff98f2,
         type: 3}
@@ -6799,12 +6875,12 @@ PrefabInstance:
     - target: {fileID: 9150157795128708509, guid: e24a08ebbf222704aa32424587ff98f2,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 20.66
+      value: 22.5
       objectReference: {fileID: 0}
     - target: {fileID: 9150157795128708509, guid: e24a08ebbf222704aa32424587ff98f2,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 516.67
+      value: 528.8
       objectReference: {fileID: 0}
     - target: {fileID: 9150157795128708509, guid: e24a08ebbf222704aa32424587ff98f2,
         type: 3}

@@ -280,12 +280,8 @@ MonoBehaviour:
   damageInterval: 2
   damageAmount: 10
   isInRange: 0
-  enemy: {fileID: 0}
   enemyUnit: {fileID: 0}
-  soldier: {fileID: 0}
   soldierUnit: {fileID: 0}
-  soldierGameObject: {fileID: 3721838096702204654}
-  enemyGameObject: {fileID: 0}
   buildingToAttack: {fileID: 0}
   enemyHp: {fileID: 0}
   soldierHp: {fileID: 0}
@@ -307,7 +303,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3

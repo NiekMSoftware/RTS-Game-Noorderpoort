@@ -9,14 +9,15 @@ public class SoldierUnit : Unit
     public float damageInterval = 2.0f;
     public int damageAmount = 10;
     public bool isInRange = false;
-    public Unit enemy;
+    //public Unit enemy;
     public Unit enemyUnit;
-    public Unit soldier;
+    //public Unit soldier;
     public Unit soldierUnit;
-    public GameObject soldierGameObject;
-    public GameObject enemyGameObject;
+    //public GameObject soldierGameObject;
+    //public GameObject enemyGameObject;
     public BuildingBase buildingToAttack;
-    
+    private GameObject currentTarget;
+
 
     private bool isAttacking = false;
     private float damageTimer = 0.0f;
@@ -25,6 +26,8 @@ public class SoldierUnit : Unit
     public NewSelectionManager selectionManager;
     public Unit unit;
     public float currentBuildingDist;
+    private float distanceToEnemy;
+    private float distanceToSoldier;
 
     private void Start()
     {
@@ -39,23 +42,29 @@ public class SoldierUnit : Unit
     {
         print("choosing building to Attack");
         ChooseBuildingToAttack();
-        enemy = selectionManager.GetEnemyToAttack();
-        soldier = selectionManager.GetEnemyToAttack();
+        if(enemyUnit != null){
+            enemyUnit = selectionManager.GetEnemyToAttack();
+        }
 
-        if (isInRange && enemy != null)
+        if (soldierUnit != null)
+        {
+            soldierUnit = selectionManager.GetEnemyToAttack();
+        }
+
+        if (isInRange && enemyUnit != null)
         {
             if (enemyUnit.typeUnit == TypeUnit.Enemy)
             {
+                print("this comes after unit print");
                 EnemyRange();
             }
 
             if (soldierUnit.typeUnit == TypeUnit.Human)
             {
+                print("this comes after unit print");
                 SoldierRange();
             }
         }
-
-        
 
         //enemy null check
         if (enemyUnit == null)
@@ -68,9 +77,9 @@ public class SoldierUnit : Unit
             EnemyRange();
         }
 
-        if (enemy == null) return;
+        //if (enemy == null) return;
         if (enemyUnit == null) return;
-        if (enemy == this) return;
+        if (enemyUnit == this) return;
 
         //soldier null check
         if (soldierUnit == null)
@@ -83,56 +92,77 @@ public class SoldierUnit : Unit
             SoldierRange();
         }
 
-        if(soldier == null) return;
+        //if (soldier == null) return;
         if (soldierUnit == null) return;
-        if (soldier == this) return;
+        if (soldierUnit == this) return;
     }
 
     //Enemy in range check
     public void EnemyRange()
     {
-        Debug.Log("check distance");
-        float distanceToEnemy = Vector3.Distance(transform.position, enemyUnit.transform.position);
-        if (enemyUnit != null && enemyUnit.typeUnit == TypeUnit.Enemy)
+        Debug.Log("check enemy distance");
+        
+        distanceToEnemy = Vector3.Distance(transform.position, currentTarget.transform.position);
+        if (distanceToEnemy <= 1.5f)
         {
-            if (distanceToEnemy < 1.5f)
-            {
-                Debug.Log("Attacking enemy");
-                DealDamageToEnemiesInRange();
-            }
+            Debug.Log("Attacking enemy");
+            DealDamageToEnemiesInRange();
         }
+        
     }
 
     public void SoldierRange()
     {
-        float distanceToSoldier = Vector3.Distance(enemyUnit.transform.position, soldierUnit.transform.position);
-        if (soldierUnit != null && soldierUnit.typeUnit == TypeUnit.Human)
+        Debug.Log("check soldier distance");
+        distanceToSoldier = Vector3.Distance(transform.position, currentTarget.transform.position);
+        if (distanceToSoldier <= 1.5f)
         {
-            if (distanceToSoldier < 1.5f)
-            {
-                Debug.Log("Attacking soldier");
-                DealDamageToSoldiersInRange();
-            }
+            Debug.Log("Attacking soldier");
+            DealDamageToSoldiersInRange();
         }
+        
     }
 
     private void OnTriggerEnter(Collider other)
     {
         print("Collided");
-        if (typeUnit == TypeUnit.Human)
+        if (typeUnit == TypeUnit.Enemy)
         {
             print(typeUnit);
             enemyUnit = other.GetComponent<Unit>();
             isInRange = true;
-            myAgent.SetDestination(enemyUnit.transform.position);
+            if(other.tag=="AI"){
+                currentTarget = enemyUnit.gameObject;
+            }
+            print(enemyUnit);
         }
 
-        if (typeUnit == TypeUnit.Enemy)
+        if (typeUnit == TypeUnit.Human)
         {
             print(typeUnit);
             soldierUnit = other.GetComponent<Unit>();
             isInRange = true;
-            myAgent.SetDestination(soldierUnit.transform.position);
+            if (other.tag == "AI")
+            {
+                currentTarget = soldierUnit.gameObject;
+            }
+            print(soldierUnit);
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (typeUnit == TypeUnit.Enemy && currentTarget!=null)
+        {
+            myAgent.SetDestination(currentTarget.transform.position);
+            SoldierRange();
+            
+        }
+
+        if (typeUnit == TypeUnit.Human && currentTarget != null)
+        {
+            myAgent.SetDestination(currentTarget.transform.position);
+            EnemyRange();
         }
     }
 
@@ -184,7 +214,8 @@ public class SoldierUnit : Unit
     private void DealDamageToEnemiesInRange()
     {
         Debug.Log("entering dealingdamagetoenemies");
-        enemyHp = enemyUnit.GetComponent<Unit>();
+        //enemyHp = enemyUnit.GetComponent<Unit>();
+        enemyUnit.UnitHealth = 10;
         print(enemyHp);
         if (enemyUnit != null && Vector3.Distance(transform.position, enemyUnit.transform.position) < 1.5f)
         {
@@ -215,9 +246,10 @@ public class SoldierUnit : Unit
 
     private void DealDamageToSoldiersInRange()
     {
-        soldierHp = soldierUnit.GetComponent<Unit>();
+        //soldierHp = soldierUnit.GetComponent<Unit>();
+        soldierHp.UnitHealth = 10;
         print(soldierHp);
-        if (soldierUnit != null && Vector3.Distance(transform.position, soldierUnit.transform.position) < 1.5f)
+        if (Vector3.Distance(transform.position, soldierUnit.transform.position) < 1.5f)
         {
             //print(Vector3.Distance(SoldierGameObject.transform.position, enemyUnit.transform.position));
             Debug.Log("Attacking soldier");
