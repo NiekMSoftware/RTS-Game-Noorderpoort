@@ -6,32 +6,30 @@ using UnityEngine.UIElements;
 
 public class SoldierUnit : Unit
 {
-    public float damageInterval = 2.0f;
     public int damageAmount = 10;
-    public bool isInRange = false;
-    //public Unit enemy;
-    public Unit enemyUnit;
-    //public Unit soldier;
-    public Unit soldierUnit;
-    //public GameObject soldierGameObject;
-    //public GameObject enemyGameObject;
     public BuildingBase buildingToAttack;
     private GameObject currentTarget;
 
+    public bool isInRange;
+    private bool isAttacking;
 
-    private bool isAttacking = false;
-    private float damageTimer = 0.0f;
+    public Unit enemyUnit;
+    public Unit soldierUnit;
     public Unit enemyHp;
     public Unit soldierHp;
-    public NewSelectionManager selectionManager;
     public Unit unit;
+    public Unit target = null;
+
+    public NewSelectionManager selectionManager;
+
+    public float damageInterval = 2.0f;
+    private float damageTimer;
     public float currentBuildingDist;
     private float distanceToEnemy;
     private float distanceToSoldier;
 
     private void Start()
     {
-        //base.Start();
         unit = FindObjectOfType<Unit>();
         selectionManager = FindObjectOfType<NewSelectionManager>();
         print("selection manager : " + selectionManager);
@@ -42,7 +40,9 @@ public class SoldierUnit : Unit
     {
         print("choosing building to Attack");
         ChooseBuildingToAttack();
-        if(enemyUnit != null){
+
+        if(enemyUnit != null)
+        {
             enemyUnit = selectionManager.GetEnemyToAttack();
         }
 
@@ -53,17 +53,19 @@ public class SoldierUnit : Unit
 
         if (isInRange && enemyUnit != null)
         {
-            if (enemyUnit.typeUnit == TypeUnit.Enemy)
+            if (typeUnit != enemyUnit.typeUnit || typeUnit != soldierUnit.typeUnit)
             {
-                print("this comes after unit print");
-                EnemyRange();
+                if (enemyUnit.typeUnit == TypeUnit.Enemy)
+                {
+                    EnemyRange();
+                }
+
+                if (soldierUnit.typeUnit == TypeUnit.Human)
+                {
+                    SoldierRange();
+                }
             }
 
-            if (soldierUnit.typeUnit == TypeUnit.Human)
-            {
-                print("this comes after unit print");
-                SoldierRange();
-            }
         }
 
         //enemy null check
@@ -72,14 +74,10 @@ public class SoldierUnit : Unit
             isInRange = false;
         }
 
-        if (isInRange == true)
+        if (isInRange)
         {
             EnemyRange();
         }
-
-        //if (enemy == null) return;
-        if (enemyUnit == null) return;
-        if (enemyUnit == this) return;
 
         //soldier null check
         if (soldierUnit == null)
@@ -87,14 +85,10 @@ public class SoldierUnit : Unit
             isInRange = false;
         }
 
-        if (isInRange == true)
+        if (isInRange)
         {
             SoldierRange();
         }
-
-        //if (soldier == null) return;
-        if (soldierUnit == null) return;
-        if (soldierUnit == this) return;
     }
 
     //Enemy in range check
@@ -120,33 +114,39 @@ public class SoldierUnit : Unit
             Debug.Log("Attacking soldier");
             DealDamageToSoldiersInRange();
         }
-        
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        print("Collided");
-        if (typeUnit == TypeUnit.Enemy)
+        target = other.GetComponent<Unit>();
+        if (target != null)
         {
-            print(typeUnit);
-            enemyUnit = other.GetComponent<Unit>();
-            isInRange = true;
-            if(other.tag=="AI"){
-                currentTarget = enemyUnit.gameObject;
-            }
-            print(enemyUnit);
-        }
-
-        if (typeUnit == TypeUnit.Human)
-        {
-            print(typeUnit);
-            soldierUnit = other.GetComponent<Unit>();
-            isInRange = true;
-            if (other.tag == "AI")
+            if (target.typeUnit != typeUnit)
             {
-                currentTarget = soldierUnit.gameObject;
+                if (typeUnit == TypeUnit.Enemy)
+                {
+                    print(typeUnit);
+                    soldierUnit = other.GetComponent<Unit>();
+                    isInRange = true;
+                    if (other.tag == "AI")
+                    {
+                        currentTarget = soldierUnit.gameObject;
+                    }
+                    print(soldierUnit);
+                }
+
+                if (typeUnit == TypeUnit.Human)
+                {
+                    print(typeUnit);
+                    enemyUnit = other.GetComponent<Unit>();
+                    isInRange = true;
+                    if (other.tag == "AI")
+                    {
+                        currentTarget = enemyUnit.gameObject;
+                    }
+                    print(enemyUnit);
+                }
             }
-            print(soldierUnit);
         }
     }
 
@@ -156,7 +156,6 @@ public class SoldierUnit : Unit
         {
             myAgent.SetDestination(currentTarget.transform.position);
             SoldierRange();
-            
         }
 
         if (typeUnit == TypeUnit.Human && currentTarget != null)
@@ -186,7 +185,6 @@ public class SoldierUnit : Unit
         }
     }
 
-    //damage to buildings.
     private void DealDamageToBuildings()
     {
         if (isAttacking)
@@ -201,6 +199,7 @@ public class SoldierUnit : Unit
                 print(buildingToAttack.buildingHp);
                 damageTimer = 0.0f;
             }
+
             if (buildingToAttack.buildingHp <= 0)
             {
                 Debug.Log("building Destroyed");
@@ -210,22 +209,17 @@ public class SoldierUnit : Unit
         }
     }
 
-    //damage to enemies
     private void DealDamageToEnemiesInRange()
     {
-        Debug.Log("entering dealingdamagetoenemies");
-        //enemyHp = enemyUnit.GetComponent<Unit>();
-        enemyUnit.UnitHealth = 10;
-        print(enemyHp);
-        if (enemyUnit != null && Vector3.Distance(transform.position, enemyUnit.transform.position) < 1.5f)
+        enemyHp = unit.GetComponent<Unit>();
+        if (distanceToSoldier < 1.5f)
         {
-            //print(Vector3.Distance(SoldierGameObject.transform.position, enemyUnit.transform.position));
             Debug.Log("Attacking Enemy");
             damageTimer += Time.deltaTime;
 
             if (damageTimer >= damageInterval)
             {
-                enemyHp = enemyUnit.GetComponent<Unit>();
+                enemyHp = unit.GetComponent<Unit>();
                 if (enemyHp != null)
                 {
                     enemyHp.UnitHealth -= damageAmount;
@@ -235,9 +229,10 @@ public class SoldierUnit : Unit
                     {
                         isInRange = false;
                         print(isInRange);
-                        Destroy(enemyUnit.gameObject);
+                        Destroy(unit.gameObject);
                         Debug.Log("enemy hp is 0");
-                        enemyUnit = null;
+                        currentTarget = null;
+                        target = null;
                     }
                 }
             }
@@ -246,18 +241,15 @@ public class SoldierUnit : Unit
 
     private void DealDamageToSoldiersInRange()
     {
-        //soldierHp = soldierUnit.GetComponent<Unit>();
-        soldierHp.UnitHealth = 10;
-        print(soldierHp);
-        if (Vector3.Distance(transform.position, soldierUnit.transform.position) < 1.5f)
+        soldierHp = unit.GetComponent<Unit>();
+        if (distanceToEnemy < 1.5f)
         {
-            //print(Vector3.Distance(SoldierGameObject.transform.position, enemyUnit.transform.position));
             Debug.Log("Attacking soldier");
             damageTimer += Time.deltaTime;
 
             if (damageTimer >= damageInterval)
             {
-                soldierHp = soldierUnit.GetComponent<Unit>();
+                soldierHp = unit.GetComponent<Unit>();
                 if (soldierHp != null)
                 {
                     soldierHp.UnitHealth -= damageAmount;
@@ -267,16 +259,17 @@ public class SoldierUnit : Unit
                     {
                         isInRange = false;
                         print(isInRange);
-                        Destroy(soldierUnit.gameObject);
+                        Destroy(unit.gameObject);
                         Debug.Log("soldier hp is 0");
-                        soldierUnit = null;
+                        currentTarget = null;
+                        target = null;
                     }
                 }
             }
         }
     }
 
-    public void TakeDamage(float damage)
+    /*public void TakeDamage(float damage)
     {
         unitHealth -= Mathf.FloorToInt(damage);
         if (unitHealth < 0)
@@ -291,5 +284,5 @@ public class SoldierUnit : Unit
         {
             // Play death animation.
         }
-    }
+    }*/
 }

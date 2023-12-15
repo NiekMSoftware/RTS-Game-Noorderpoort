@@ -276,17 +276,20 @@ MonoBehaviour:
     m_Bits: 0
   selectionColor: {r: 0.023584902, g: 0.42912304, b: 0.8156863, a: 1}
   cameraResoltion: 64
-  cameraFPS: 5
-  damageInterval: 2
-  damageAmount: 10
-  isInRange: 0
-  enemyUnit: {fileID: 0}
-  soldierUnit: {fileID: 0}
+  cameraFPS: 8
+  damageAmount: 8
   buildingToAttack: {fileID: 0}
-  enemyHp: {fileID: 0}
-  soldierHp: {fileID: 0}
-  selectionManager: {fileID: 0}
+  isInRange: 0
+  enemyUnit: {fileID: 3883668397140479732}
+  soldierUnit: {fileID: 3883668397140479732, guid: 9510a0a69a1181d4b95bbb04ef05c36c,
+    type: 3}
+  enemyHp: {fileID: 3883668397140479732}
+  soldierHp: {fileID: 3883668397140479732, guid: 9510a0a69a1181d4b95bbb04ef05c36c,
+    type: 3}
   unit: {fileID: 0}
+  target: {fileID: 3883668397140479732, guid: 9510a0a69a1181d4b95bbb04ef05c36c, type: 3}
+  selectionManager: {fileID: 0}
+  damageInterval: 8
   currentBuildingDist: 0
 --- !u!135 &8396057595472078219
 SphereCollider:
