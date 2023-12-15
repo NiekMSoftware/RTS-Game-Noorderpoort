@@ -8,6 +8,8 @@ public class ComputerEnemy : MonoBehaviour
     [SerializeField] private float amountOfWorkersAtStart;
     [SerializeField] private GameObject workerPrefab;
     [SerializeField] private Buildings[] buildings;
+    [SerializeField] private Material buildingMaterial;
+    [SerializeField] private GameObject buildingParticle;
     [SerializeField] private Terrain terrain;
     [SerializeField] private LayerMask occupanyLayer;
     [SerializeField] private LayerMask groundLayer;
@@ -67,6 +69,7 @@ public class ComputerEnemy : MonoBehaviour
         public bool isStarter;
         public ItemData itemData;
         public bool hasBeenPlaced;
+        public float buildTime;
     }
 
     public enum AIStates
@@ -129,7 +132,7 @@ public class ComputerEnemy : MonoBehaviour
                 }
 
                 //Check if the AI can continue to the exploring state
-                if (checkStartState())
+                if (CheckStartState())
                 {
                     state = AIStates.Exploring;
                 }
@@ -194,10 +197,8 @@ public class ComputerEnemy : MonoBehaviour
                         print("not enough resources");
                     foreach (var placedBuilding in placedBuildings)
                     {
-                        if (placedBuilding is ResourceBuildingBase)
+                        if (placedBuilding is ResourceBuildingBase placedResourceBuilding)
                         {
-                            ResourceBuildingBase placedResourceBuilding = (ResourceBuildingBase)placedBuilding;
-
                             foreach (var resource in resourcesToGather)
                             {
                                 if (resource.item == placedResourceBuilding.GetItemData())
@@ -258,7 +259,7 @@ public class ComputerEnemy : MonoBehaviour
             case AIStates.Check:
                 if (!hasExplored)
                 {
-                    if (checkStartState())
+                    if (CheckStartState())
                     {
                         state = AIStates.Exploring;
                     }
@@ -377,6 +378,8 @@ public class ComputerEnemy : MonoBehaviour
             GameObject spawnedBuilding = Instantiate(building.building, position, Quaternion.identity);
 
             BuildingBase spawnedBuildingBase = spawnedBuilding.GetComponent<BuildingBase>();
+            spawnedBuildingBase.Init(buildingMaterial, buildingParticle, spawnedBuilding, building.buildTime, BuildingBase.States.Building);
+
             spawnedBuilding.TryGetComponent(out ResourceBuildingBase resourceBuildingBase);
 
             if (Physics.Raycast(spawnedBuilding.transform.position + new Vector3(0, 1, 0), -Vector3.up, out RaycastHit hit, groundLayer))
@@ -386,10 +389,13 @@ public class ComputerEnemy : MonoBehaviour
 
                 if (resourceBuildingBase)
                 {
+                    //Set resource type
                     resourceBuildingBase.SetResourceItemManagerByType(ResourceItemManager.Type.AI);
                 }
+                //set occupancy type
                 spawnedBuildingBase.SetOccupancyType(BuildingBase.OccupancyType.Enemy);
 
+                //add points
                 pointManager.AddPoints(spawnedBuildingBase.GetPoints().amount, spawnedBuildingBase.GetPoints().pointType, PointManager.EntityType.AI,
                     pointManager.GetPointsByType(PointManager.EntityType.AI).GetResourcePointByItem(building.itemData));
 
@@ -442,7 +448,7 @@ public class ComputerEnemy : MonoBehaviour
         }
 
         //Get building by resource
-        Buildings building = buildings[GetResourceIndexByItemdata(itemData)];
+        Buildings building = GetResourceBuildingByItemdata(itemData);
 
         PlaceBuilding(originalPos, building);
     }
@@ -451,7 +457,7 @@ public class ComputerEnemy : MonoBehaviour
 
     #region Getters
 
-    private bool checkStartState()
+    private bool CheckStartState()
     {
         bool placedAllStarterBuildings = true;
 
@@ -625,20 +631,17 @@ public class ComputerEnemy : MonoBehaviour
         return closestResource;
     }
 
-    public int GetResourceIndexByItemdata(ItemData itemData)
+    public Buildings GetResourceBuildingByItemdata(ItemData itemData)
     {
-        int index = 0;
-
         foreach (var building in buildings)
         {
             if (building.itemData == itemData)
             {
-                return index;
+                return building;
             }
-            index++;
         }
 
-        return -1;
+        return null;
     }
 
     #endregion

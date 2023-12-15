@@ -47,6 +47,8 @@ public class BuildingManager : MonoBehaviour
     private RaycastHit hit;
     private bool rayHit;
 
+    private float currentDegreesRotated;
+
     [System.Serializable]
     class Building
     {
@@ -120,7 +122,15 @@ public class BuildingManager : MonoBehaviour
             pos = gridPos;
 
             //rotate object towards hit.normal
-            pendingObject.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+            Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+
+            Vector3 eulerAngles = rotation.eulerAngles;
+
+            eulerAngles.y += currentDegreesRotated;
+
+            rotation.eulerAngles = eulerAngles;
+
+            pendingObject.transform.rotation = rotation;
         }
         else
         {
@@ -144,11 +154,11 @@ public class BuildingManager : MonoBehaviour
             //Reverse rotation when holding leftshift
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                pendingObject.transform.Rotate(Vector3.up * -degreesToRotate);
+                currentDegreesRotated -= degreesToRotate;
             }
             else
             {
-                pendingObject.transform.Rotate(Vector3.up * degreesToRotate);
+                currentDegreesRotated += degreesToRotate;
             }
         }
         //place object
@@ -165,81 +175,84 @@ public class BuildingManager : MonoBehaviour
     {
         if (EventSystem.current.IsPointerOverGameObject()) return false;
 
-        if (rayHit)
+        if (!rayHit) return false;
+        float rayAngle = Vector3.Angle(pendingObject.transform.up, Vector3.up);
+
+        if (rayAngle > maxAngle)
         {
-            float rayAngle = Vector3.Angle(pendingObject.transform.forward, hit.normal);
-
-            if (rayAngle <= maxAngle)
+            if (spawnError)
             {
-                if (pendingObject.transform.position.y <= maxHeight && pendingObject.transform.position.y >= minHeight)
+                SpawnError("angle too steep");
+            }
+
+            return false;
+        }
+
+        if (pendingObject.transform.position.y > maxHeight)
+        {
+            if (spawnError)
+            {
+                SpawnError("Too high");
+            }
+
+            return false;
+        }
+
+        if (pendingObject.transform.position.y < minHeight)
+        {
+            if (spawnError)
+            {
+                SpawnError("Too low");
+            }
+
+            return false;
+        }
+
+        pendingObject.SetActive(true);
+        //check collision
+        if (GetOccupany(pendingObject) || !rayHit)
+        {
+            if (spawnError)
+            {
+                SpawnError("Can't place building here");
+            }
+            return false;
+        }
+
+        bool hasEverything = true;
+
+        List<ItemSlot> savedSlots = new();
+
+        //loop through all recipe items and all resources and check if the player has enough resources to build the building
+        foreach (var itemNeeded in buildings[currentIndex].building.GetComponent<BuildingBase>().GetRecipes())
+        {
+            if (itemNeeded.data == resources.GetSlotByItemData(itemNeeded.data).data)
+            {
+                if (resources.GetSlotByItemData(itemNeeded.data).amount >= itemNeeded.amountNeeded)
                 {
-                    pendingObject.SetActive(true);
-                    //check collision
-                    if (!GetOccupany(pendingObject) && rayHit)
-                    {
-                        bool hasEverything = true;
-
-                        List<ItemSlot> savedSlots = new();
-
-                        //loop through all recipe items and all resources and check if the player has enough resources to build the building
-                        foreach (var itemNeeded in buildings[currentIndex].building.GetComponent<BuildingBase>().GetRecipes())
-                        {
-                            if (itemNeeded.data == resources.GetSlotByItemData(itemNeeded.data).data)
-                            {
-                                if (resources.GetSlotByItemData(itemNeeded.data).amount >= itemNeeded.amountNeeded)
-                                {
-                                    savedSlots.Add(resources.GetSlotByItemData(itemNeeded.data));
-                                    hasEverything = true;
-                                }
-                                else
-                                {
-                                    if (spawnError)
-                                    {
-                                        SpawnError($"needs {itemNeeded.amountNeeded - resources.GetSlotByItemData(itemNeeded.data).amount} " +
-                                            $"more : {itemNeeded.data.name}");
-                                    }
-                                    hasEverything = false;
-                                    return false;
-                                }
-                            }
-                        }
-
-                        //remove items only when the player can actually build it
-                        if (hasEverything)
-                        {
-                            savedSlots.Clear();
-
-                            //build object
-                            return true;
-                        }
-                    }
-                    else
-                    {
-                        if (spawnError)
-                        {
-                            SpawnError("Can't place building here");
-                        }
-                        return false;
-                    }
+                    savedSlots.Add(resources.GetSlotByItemData(itemNeeded.data));
+                    hasEverything = true;
                 }
                 else
                 {
                     if (spawnError)
                     {
-                        //TODO: improve error
-                        SpawnError("Too high or too low");
+                        SpawnError($"needs {itemNeeded.amountNeeded - resources.GetSlotByItemData(itemNeeded.data).amount} " +
+                            $"more : {itemNeeded.data.name}");
                     }
+                    hasEverything = false;
                     return false;
                 }
             }
-            else
-            {
-                if (spawnError)
-                {
-                    SpawnError("angle too steep");
-                }
-                return false;
-            }
+        }
+
+        //remove items only when the player can actually build it
+        if (hasEverything)
+        {
+            savedSlots.Clear();
+
+            //build object
+            return true;
         }
 
         if (spawnError)
@@ -364,7 +377,9 @@ public class BuildingManager : MonoBehaviour
         building.layer = (int)Mathf.Log(tempBuildingLayerMask.value, 2);
         Transform trans = building.transform;
 
-        Collider[] colliders = Physics.OverlapBox(trans.position, trans.localScale / 2, trans.rotation, buildLayerMask);
+        Collider collider = building.GetComponent<Collider>();
+
+        Collider[] colliders = Physics.OverlapBox(collider.bounds.center, collider.bounds.extents, trans.rotation, buildLayerMask);
 
         if (colliders.Length > 0)
         {

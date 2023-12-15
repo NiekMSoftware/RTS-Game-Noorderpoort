@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Rendering;
 
 public class Barrack : BuildingBase
 {
@@ -37,7 +38,7 @@ public class Barrack : BuildingBase
     protected override void Awake()
     {
         base.Awake();
-        terrain = FindObjectOfType<Terrain>().GetComponent<Terrain>();
+        terrain = FindObjectOfType<Terrain>();
     }
 
     private void Start()
@@ -55,8 +56,10 @@ public class Barrack : BuildingBase
         exit.position = new Vector3(exit.position.x, exitHeight, exit.position.z);
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+
         print("unit list length : " + unitList.Count);
         if (unitList.Count > 0)
         {

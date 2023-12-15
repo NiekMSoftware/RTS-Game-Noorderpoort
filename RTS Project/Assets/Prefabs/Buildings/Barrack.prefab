@@ -162,8 +162,8 @@ MonoBehaviour:
   points:
     pointType: 2
     amount: 1
-  outline: {fileID: 0}
-  model: {fileID: 0}
+  outline: {fileID: 6091475512797295991}
+  model: {fileID: 5156782261921279343}
   buildingName: 
   occupancyType: 0
   unitToSpawn: {fileID: 3721838096702204654, guid: 9510a0a69a1181d4b95bbb04ef05c36c,

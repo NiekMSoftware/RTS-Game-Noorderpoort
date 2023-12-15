@@ -61,9 +61,9 @@ public class Unit : MonoBehaviour
         unitCamera.gameObject.SetActive(false);
         unitCamera.enabled = false;
 
-        RandomSex();
+        SetRandomSex();
 
-        RandomName();
+        SetRandomName();
 
         //voor UnitManager
         UnitManager unitManager = FindObjectOfType<UnitManager>();
@@ -77,7 +77,7 @@ public class Unit : MonoBehaviour
         }
     }
 
-    private void RandomName()
+    private void SetRandomName()
     {
         TextAsset file = null;
 
@@ -95,7 +95,7 @@ public class Unit : MonoBehaviour
         UnitName = names[randomNum];
     }
 
-    private void RandomSex()
+    private void SetRandomSex()
     {
         var values = System.Enum.GetValues(typeof(Sex));
         int randomNum = Random.Range(0, values.Length);

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.UIElements;
-
 public class FogOfWar : MonoBehaviour
 {
     // als de player al een stuk heeft weggehaald moet je het niet mee tellen.
@@ -16,16 +15,19 @@ public class FogOfWar : MonoBehaviour
     public float radius = 5f;
     public Vector3 FogToDestroy;
     private float radiusSqr { get { return radius * radius; } }
-
     private Mesh mesh;
     private Vector3[] vertices;
     private Color[] colors;
-
     private List<bool> visitedVertices;
-
+    
     [Range(0, 1)]
     public float Transparency;
 
+    private Coroutine rayCastRoutine;
+
+    private Vector3 prevPlayerPos;
+    private float distanceTravelled;
+    private float raycastDistThreshold = 1f;
 
     // Start is called before the first frame update
     void Start()
@@ -34,55 +36,96 @@ public class FogOfWar : MonoBehaviour
         Initialize();
         Profiler.EndSample();
     }
-
     // Update is called once per frame
     void Update()
     {
         Profiler.BeginSample("Player Moving");
-        if(RefPlayerMovement.PlayerMoving)
+        if (RefPlayerMovement.PlayerMoving)
         {
-            DoRaycast();
+            if (rayCastRoutine == null)
+            {
+                rayCastRoutine = StartCoroutine(DoRaycast());
+            }
         }
+        else
+        {
+            // Stop de routine als deze loop
+            if (rayCastRoutine != null)
+            {
+                StopCoroutine(rayCastRoutine);
+                rayCastRoutine = null;
+            }
+
+        }
+
         Profiler.EndSample();
     }
-
-    public void DoRaycast()
+    public IEnumerator DoRaycast()
     {
-        Profiler.BeginSample("Doing RayCast");
+        while (true)
+        {
+            // Bereken de afstand die de speler heeft afgelegd
+            distanceTravelled += Vector3.Distance(Player.position, prevPlayerPos);
+            prevPlayerPos = Player.position;
 
+            // voer de raycasts uit alleen wanneer de speler een bepaald aantal afstand heeft gelegd
+            if (distanceTravelled >= raycastDistThreshold)
+            {
+                PerformRayCast();
+                distanceTravelled = 0f;
+            }
+
+            yield return null;
+        }
+    }
+
+    private void PerformRayCast()
+    {
+        Profiler.BeginSample("Started Performing RayCasts");
         Vector3 cameraPosition = Camera.main.transform.position;
+        Transform fogTransform = FogOfWarPlane.transform;
 
         Ray camR = new Ray(cameraPosition, Player.position - cameraPosition);
         RaycastHit Camhit;
-        
+
+        bool colorsChanged = false;
 
         if (RefPlayerMovement.PlayerMoving)
         {
-            //kijkt wanneer de RayCast met de FogLayer collides.
-            if(Physics.Raycast(camR, out Camhit, 100, FogLayer,QueryTriggerInteraction.Collide))
-            {          
-                for(int i= 0;i<vertices.Length;i++)
-                {             
-                    Vector3 v = FogOfWarPlane.transform.TransformPoint(vertices[i]);
+            if (Physics.Raycast(camR, out Camhit, 100, FogLayer, QueryTriggerInteraction.Collide))
+            {
+                for (int i = 0; i < vertices.Length; i++)
+                {
+                    Vector3 v = fogTransform.TransformPoint(vertices[i]);
                     float dist = Vector3.SqrMagnitude(v - Camhit.point);
-                    if(dist < radiusSqr)
+                    if (dist < radiusSqr)
                     {
-                        float alpha = MathF.Min(colors[i].a, dist/radiusSqr);
-                        colors[i].a = alpha;
+                        float alpha = MathF.Min(colors[i].a, dist / radiusSqr);
+                        if (colors[i].a != alpha)
+                        {
+                            colors[i].a = alpha;
+                            colorsChanged = true;
+                        }
                         visitedVertices[i] = true;
                         FogToDestroy = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
                     }
-                    //if vertices are outside of radius then make them half see through. 
                     else if (visitedVertices[i])
                     {
-                        // If vertices are outside of the radius, make them half see-through.
-                        //colors[i].a = 0.5f;
-                        colors[i].a = Mathf.Lerp(colors[i].a, Transparency, Time.deltaTime);
+                        float newAlpha = Mathf.Lerp(colors[i].a, Transparency, Time.deltaTime);
+                        if (colors[i].a != newAlpha)
+                        {
+                            colors[i].a = newAlpha;
+                            colorsChanged = true;
+                        }
                     }
                 }
-                UpdateColor();
+                if (colorsChanged)
+                {
+                    UpdateColor();
+                }
             }
         }
+
         Profiler.EndSample();
     }
 
@@ -94,14 +137,12 @@ public class FogOfWar : MonoBehaviour
         vertices = mesh.vertices;
         //radiusSqr = radius * radius;
         colors = new Color[vertices.Length];
-
         visitedVertices = new List<bool>(new bool[vertices.Length]);
-
-        for (int i=0; i<colors.Length; i++)
+        for (int i = 0; i < colors.Length; i++)
         {
             colors[i] = Color.black;
         }
-        UpdateColor();      
+        UpdateColor();
     }
 
     void UpdateColor()

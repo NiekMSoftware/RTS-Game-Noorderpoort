@@ -125,10 +125,13 @@ public class WeatherTimeManager : MonoBehaviour
             {
                 GameObject weatherParticle = Instantiate(particle, mainCamera.GetComponent<CameraMovement>().GetParticleSpawnPoint());
                 weatherParticles.Add(particle.GetComponent<ParticleSystem>());
-                ParticleSystem particleSystem = weatherParticle.GetComponent<ParticleSystem>();
-                ParticleSystem.EmissionModule emission = particleSystem.emission;
-                emission.rateOverTimeMultiplier = weather.particlesAmountMultiplier;
-                particleSystem.GetComponent<ParticleSystem>().Play();
+                if (weatherParticle.TryGetComponent(out ParticleSystem particleSystem))
+                {
+                    ParticleSystem.EmissionModule emission = particleSystem.emission;
+                    emission.rateOverTimeMultiplier = weather.particlesAmountMultiplier;
+                    print(emission.rateOverTimeMultiplier);
+                    particleSystem.Play();
+                }
             }
         }
 
