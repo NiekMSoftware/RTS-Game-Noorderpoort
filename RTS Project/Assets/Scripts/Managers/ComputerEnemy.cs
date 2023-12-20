@@ -93,6 +93,12 @@ public class ComputerEnemy : MonoBehaviour
     private void Start()
     {
         workers = workerSpawner.GetWorkers().ToList();
+
+        foreach (var worker in workers)
+        {
+            worker.typeUnit = Unit.TypeUnit.Enemy;
+        }
+
         availableWorkers = workers;
     }
 
@@ -621,7 +627,7 @@ public class ComputerEnemy : MonoBehaviour
                 if (resourceManager.resources[0].GetComponent<ResourceObject>().slot.data == itemdata)
                 {
                     //When the AI did not already place a building here
-                    if (!resourceManager.AIPlacedBuilding)
+                    if (!resourceManager.placedBuilding)
                     {
                         validResourceManagers.Add(resourceManager);
                     }
@@ -643,7 +649,7 @@ public class ComputerEnemy : MonoBehaviour
             }
         }
 
-        closestResource.AIPlacedBuilding = true;
+        closestResource.placedBuilding = true;
         return closestResource;
     }
 
