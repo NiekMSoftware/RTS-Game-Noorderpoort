@@ -171,7 +171,7 @@ public class NewSelectionManager : MonoBehaviour
             {
                 if (unit.TryGetComponent(out SoldierUnit soldier))
                 {
-                    soldier.enemy = null;
+                    soldier.enemyUnit = null;
                     enemyToAttack = null;
                     print("set enemy to null");
                 }

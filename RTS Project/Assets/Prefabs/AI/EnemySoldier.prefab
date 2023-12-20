@@ -98,9 +98,9 @@ GameObject:
   - component: {fileID: 6909574573759632584}
   - component: {fileID: 3631595101206008243}
   - component: {fileID: 3883668397140479732}
-  - component: {fileID: 1485270839212012832}
+  - component: {fileID: 8396057595472078219}
   m_Layer: 6
-  m_Name: SoldierAI
+  m_Name: EnemySoldier
   m_TagString: AI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -150,7 +150,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3de23d60a262bd744bd2de308f25bd33, type: 2}
+  - {fileID: 2100000, guid: 3f0e00e60e252384f9075655d18b7112, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -261,9 +261,9 @@ MonoBehaviour:
   unitHealing: 0
   unitName: 
   unitSpeed: 6
-  unitDamage: 1
+  unitDamage: 5
   job: 0
-  typeUnit: 1
+  typeUnit: 3
   sex: 0
   selectionObject: {fileID: 490151513896331683}
   myAgent: {fileID: 6909574573759632584}
@@ -273,24 +273,25 @@ MonoBehaviour:
   marker: {fileID: 0}
   clickableUnit:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   selectionColor: {r: 0.023584902, g: 0.42912304, b: 0.8156863, a: 1}
   cameraResoltion: 64
-  cameraFPS: 5
-  damageInterval: 5
-  damageAmount: 5
-  isInRange: 0
-  enemyUnit: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2,
-    type: 3}
-  soldierUnit: {fileID: 3883668397140479732}
+  cameraFPS: 8
+  damageAmount: 8
   buildingToAttack: {fileID: 0}
-  enemyHp: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2, type: 3}
-  soldierHp: {fileID: 3883668397140479732}
+  isInRange: 0
+  enemyUnit: {fileID: 3883668397140479732}
+  soldierUnit: {fileID: 3883668397140479732, guid: 9510a0a69a1181d4b95bbb04ef05c36c,
+    type: 3}
+  enemyHp: {fileID: 3883668397140479732}
+  soldierHp: {fileID: 3883668397140479732, guid: 9510a0a69a1181d4b95bbb04ef05c36c,
+    type: 3}
   unit: {fileID: 0}
-  target: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2, type: 3}
+  target: {fileID: 3883668397140479732, guid: 9510a0a69a1181d4b95bbb04ef05c36c, type: 3}
   selectionManager: {fileID: 0}
+  damageInterval: 8
   currentBuildingDist: 0
---- !u!135 &1485270839212012832
+--- !u!135 &8396057595472078219
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
