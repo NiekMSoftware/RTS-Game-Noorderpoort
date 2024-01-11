@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -908,6 +908,56 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 314971752}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &647070791
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 647070793}
+  - component: {fileID: 647070792}
+  m_Layer: 0
+  m_Name: SoldierMove
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &647070792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 647070791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b9ad56f23ff1d242805a0043d97023a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectionManager: {fileID: 1437358351}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  splineContainerPrefab: {fileID: 7648696506688546119, guid: f5b0f44d594327f47b82a10d1677a3d3,
+    type: 3}
+--- !u!4 &647070793
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 647070791}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &698412685 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1707241912732129064, guid: 6bb7140ab92b8c9449f606d4fef4abdf,
@@ -1255,6 +1305,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1437358349}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1437358351 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6606951222471610092, guid: ab8c5f369ea4a6b42a3816c54f83c38a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1437358349}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93778e25b22e50c40ba602158998117a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1443863059
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2318,6 +2380,21 @@ PrefabInstance:
       objectReference: {fileID: 477139716}
     - target: {fileID: 5935761945686543978, guid: 21fd37c60c0dcc04a95d5ccf0b030476,
         type: 3}
+      propertyPath: spawnScale.x
+      value: -100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5935761945686543978, guid: 21fd37c60c0dcc04a95d5ccf0b030476,
+        type: 3}
+      propertyPath: spawnScale.y
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5935761945686543978, guid: 21fd37c60c0dcc04a95d5ccf0b030476,
+        type: 3}
+      propertyPath: amountToSpawn
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5935761945686543978, guid: 21fd37c60c0dcc04a95d5ccf0b030476,
+        type: 3}
       propertyPath: spawnOffset.x
       value: -17.9
       objectReference: {fileID: 0}
@@ -2680,3 +2757,4 @@ SceneRoots:
   - {fileID: 1878215719}
   - {fileID: 263979316}
   - {fileID: 1972701849}
+  - {fileID: 647070793}
