@@ -13,16 +13,21 @@ public class FogOfWar : MonoBehaviour
     public List<SoldierUnit> soldierUnits;
     public Transform Player;
     public LayerMask FogLayer;
-    public float radius = 5f;
+    [Range(5f, 30f)]
+    public float radius;
     public Vector3 FogToDestroy;
+    public LayerMask enemyLayer;
+
     private float radiusSqr { get { return radius * radius; } }
     private Mesh mesh;
     private Vector3[] vertices;
     private Color[] colors;
     private List<bool> visitedVertices;
     
-    [Range(0.5f, 1f)]
+    [Range(0.5f, MAX_TRANSPARANCY)]
     public float Transparency;
+
+    private const float MAX_TRANSPARANCY = 1f;
 
     private Coroutine rayCastRoutine;
 
@@ -101,57 +106,12 @@ public class FogOfWar : MonoBehaviour
         }
     }
 
+
+    // TODO: Refactor the cast performing so it will shoot a ray, then do an overlap sphere on said ground to check the radius
+        // if there are things in that radius show them, else not (this goes for all units).
     private void PerformRayCast()
     {
-        Profiler.BeginSample("Started Performing RayCasts");
-        Vector3 cameraPosition = Camera.main.transform.position;
-        Transform fogTransform = FogOfWarPlane.transform;
-
-        Ray camR = new Ray(cameraPosition, Player.position - cameraPosition);
-        RaycastHit Camhit;
-
-        bool colorsChanged = false;
-
-        Profiler.BeginSample("Player Moving");
-        if (RefPlayerMovement.PlayerMoving)
-        {
-            if (Physics.Raycast(camR, out Camhit, 100, FogLayer, QueryTriggerInteraction.Collide))
-            {
-                Profiler.BeginSample("RayCasting");
-                for (int i = 0; i < vertices.Length; i++)
-                {
-                    Vector3 v = fogTransform.TransformPoint(vertices[i]);
-                    float dist = Vector3.SqrMagnitude(v - Camhit.point);
-                    if (dist < radiusSqr)
-                    {
-                        float alpha = MathF.Min(colors[i].a, dist / radiusSqr);
-                        if (colors[i].a != alpha)
-                        {
-                            colors[i].a = alpha;
-                            colorsChanged = true;
-                        }
-                        visitedVertices[i] = true;
-                        FogToDestroy = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
-                    }
-                    else if (visitedVertices[i]) // return fog to transparency
-                    {
-                        float newAlpha = Mathf.Lerp(colors[i].a, Transparency, (timeUntilDisperse * Time.deltaTime));
-                        if (colors[i].a != newAlpha)
-                        {
-                            colors[i].a = newAlpha;
-                            colorsChanged = true;
-                        }
-                    }
-                }
-                Profiler.EndSample();
-                if (colorsChanged)
-                {
-                    UpdateColor();
-                }
-            }
-        }
-
-        Profiler.EndSample();
+        
     }
 
     void Initialize()
