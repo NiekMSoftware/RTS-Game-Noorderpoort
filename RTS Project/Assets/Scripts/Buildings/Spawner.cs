@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class Spawner : MonoBehaviour
 {
     public GameObject cubePrefab;
-    public float spawnCooldown = 5f;
+    public float spawnCooldown = 0f;
     private float cooldownTimer = 0f;
     public List<GameObject> spawnedCubes = new List<GameObject>();
     public int maxCubes = 0;
@@ -13,10 +13,9 @@ public class Spawner : MonoBehaviour
     {
         cooldownTimer += Time.deltaTime;
         CheckCubes();
-
+        
         if (cooldownTimer >= spawnCooldown && spawnedCubes.Count < maxCubes)
         {
-            
             SpawnCube();
             cooldownTimer = 0f;
         }
@@ -30,6 +29,7 @@ public class Spawner : MonoBehaviour
             spawnedCubes.Add(newCube);
         }
     }
+
     public void CheckCubes()
     {
         for(int i = 0; i< spawnedCubes.Count; i++)
@@ -42,10 +42,11 @@ public class Spawner : MonoBehaviour
             } 
         }
     }
+
     public void OnCubeDeleted(GameObject cubeToDelete)
     {
         print("cube deleted");
-       // DestroyImmediate(cubeToDelete, true);
+       //DestroyImmediate(cubeToDelete, true);
         spawnedCubes.Remove(cubeToDelete);
          
         SpawnCube();
