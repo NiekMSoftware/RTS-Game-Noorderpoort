@@ -4,22 +4,50 @@ using System.Collections.Generic;
 public class Spawner : MonoBehaviour
 {
     public GameObject cubePrefab;
-    public float spawnInterval = 0f;
-    public int maxCubes = 6;
-    private float timer = 0f;
-    private int spawnedCubes = 0;
+    public float spawnCooldown = 5f;
+    private float cooldownTimer = 0f;
+    public List<GameObject> spawnedCubes = new List<GameObject>();
+    public int maxCubes = 0;
 
     void Update()
     {
-        timer += Time.deltaTime;
+        cooldownTimer += Time.deltaTime;
+        CheckCubes();
 
-        if (timer >= spawnInterval && spawnedCubes < maxCubes)
+        if (cooldownTimer >= spawnCooldown && spawnedCubes.Count < maxCubes)
         {
-            Instantiate(cubePrefab, transform.position, Quaternion.identity);
-
-            timer = 0f;
-
-            spawnedCubes++;
+            
+            SpawnCube();
+            cooldownTimer = 0f;
         }
+    }
+
+    void SpawnCube()
+    {
+        if (spawnedCubes.Count < maxCubes)
+        {
+            GameObject newCube = Instantiate(cubePrefab, transform.position, Quaternion.identity);
+            spawnedCubes.Add(newCube);
+        }
+    }
+    public void CheckCubes()
+    {
+        for(int i = 0; i< spawnedCubes.Count; i++)
+        {
+            if (spawnedCubes[i] == null) 
+            {
+                print("er ontbreekt een kubus!");
+                spawnedCubes.RemoveAt(i);
+
+            } 
+        }
+    }
+    public void OnCubeDeleted(GameObject cubeToDelete)
+    {
+        print("cube deleted");
+       // DestroyImmediate(cubeToDelete, true);
+        spawnedCubes.Remove(cubeToDelete);
+         
+        SpawnCube();
     }
 }
