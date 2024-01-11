@@ -10,6 +10,7 @@ public class FogOfWar : MonoBehaviour
     //alles buiten de camera hoeft niet meegetelt te worden tijdens de updates.
     public PlayerTestMovement RefPlayerMovement;
     public GameObject FogOfWarPlane;
+    public List<SoldierUnit> soldierUnits;
     public Transform Player;
     public LayerMask FogLayer;
     public float radius = 5f;
@@ -20,14 +21,18 @@ public class FogOfWar : MonoBehaviour
     private Color[] colors;
     private List<bool> visitedVertices;
     
-    [Range(0, 1)]
+    [Range(0.5f, 1f)]
     public float Transparency;
 
     private Coroutine rayCastRoutine;
 
     private Vector3 prevPlayerPos;
     private float distanceTravelled;
-    private float raycastDistThreshold = 1f;
+    
+    [Space]
+    [Range(0.5f, 1.0f)]
+    public float raycastDistThreshold = 1f;
+    public float timeUntilDisperse;
 
     // Start is called before the first frame update
     void Start()
@@ -36,15 +41,30 @@ public class FogOfWar : MonoBehaviour
         Initialize();
         Profiler.EndSample();
     }
+
     // Update is called once per frame
     void Update()
     {
+        // Add soldier units to list once found
+        //SoldierUnit soldierObject = FindObjectOfType<SoldierUnit>();
+        //if (soldierObject == null)
+        //{
+        //    Debug.LogError("No Soldier Found");
+        //}
+        //else
+        //{
+        //    // Add them to the list
+        //    soldierUnits.Add(soldierObject);
+        //}
+
+        // TODO: Gather each soldier and make them move instead to see the Fog of War changing
+
         Profiler.BeginSample("Player Moving");
         if (RefPlayerMovement.PlayerMoving)
         {
             if (rayCastRoutine == null)
             {
-                rayCastRoutine = StartCoroutine(DoRaycast());
+                rayCastRoutine = StartCoroutine(DoRayCast());
             }
         }
         else
@@ -60,7 +80,9 @@ public class FogOfWar : MonoBehaviour
 
         Profiler.EndSample();
     }
-    public IEnumerator DoRaycast()
+
+    // Enumerator om raycasts te sturen
+    public IEnumerator DoRayCast()
     {
         while (true)
         {
@@ -90,10 +112,12 @@ public class FogOfWar : MonoBehaviour
 
         bool colorsChanged = false;
 
+        Profiler.BeginSample("Player Moving");
         if (RefPlayerMovement.PlayerMoving)
         {
             if (Physics.Raycast(camR, out Camhit, 100, FogLayer, QueryTriggerInteraction.Collide))
             {
+                Profiler.BeginSample("RayCasting");
                 for (int i = 0; i < vertices.Length; i++)
                 {
                     Vector3 v = fogTransform.TransformPoint(vertices[i]);
@@ -109,9 +133,9 @@ public class FogOfWar : MonoBehaviour
                         visitedVertices[i] = true;
                         FogToDestroy = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
                     }
-                    else if (visitedVertices[i])
+                    else if (visitedVertices[i]) // return fog to transparency
                     {
-                        float newAlpha = Mathf.Lerp(colors[i].a, Transparency, Time.deltaTime);
+                        float newAlpha = Mathf.Lerp(colors[i].a, Transparency, (timeUntilDisperse * Time.deltaTime));
                         if (colors[i].a != newAlpha)
                         {
                             colors[i].a = newAlpha;
@@ -119,6 +143,7 @@ public class FogOfWar : MonoBehaviour
                         }
                     }
                 }
+                Profiler.EndSample();
                 if (colorsChanged)
                 {
                     UpdateColor();
