@@ -47,6 +47,8 @@ public class BuildingManager : MonoBehaviour
     private RaycastHit hit;
     private bool rayHit;
 
+    private float currentDegreesRotated;
+
     [System.Serializable]
     class Building
     {
@@ -120,7 +122,15 @@ public class BuildingManager : MonoBehaviour
             pos = gridPos;
 
             //rotate object towards hit.normal
-            pendingObject.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+            Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+
+            Vector3 eulerAngles = rotation.eulerAngles;
+
+            eulerAngles.y += currentDegreesRotated;
+
+            rotation.eulerAngles = eulerAngles;
+
+            pendingObject.transform.rotation = rotation;
         }
         else
         {
@@ -144,11 +154,11 @@ public class BuildingManager : MonoBehaviour
             //Reverse rotation when holding leftshift
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                pendingObject.transform.Rotate(Vector3.up * -degreesToRotate);
+                currentDegreesRotated -= degreesToRotate;
             }
             else
             {
-                pendingObject.transform.Rotate(Vector3.up * degreesToRotate);
+                currentDegreesRotated += degreesToRotate;
             }
         }
         //place object
@@ -182,7 +192,6 @@ public class BuildingManager : MonoBehaviour
         {
             if (spawnError)
             {
-                //TODO: improve error
                 SpawnError("Too high");
             }
 
@@ -193,7 +202,6 @@ public class BuildingManager : MonoBehaviour
         {
             if (spawnError)
             {
-                //TODO: improve error
                 SpawnError("Too low");
             }
 

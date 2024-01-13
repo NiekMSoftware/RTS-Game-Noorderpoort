@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 6909574573759632584}
   - component: {fileID: 3631595101206008243}
   - component: {fileID: 3883668397140479732}
+  - component: {fileID: 1485270839212012832}
   m_Layer: 6
   m_Name: SoldierAI
   m_TagString: AI
@@ -255,13 +256,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba023a08ae0e2514d8d4817a63cbff60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitHealth: 0
-  unitMaxHealth: 0
+  unitHealth: 10
+  unitMaxHealth: 20
   unitHealing: 0
+  unitName: 
   unitSpeed: 6
-  unitDamage: 5
+  unitDamage: 1
   job: 0
   typeUnit: 1
+  sex: 0
   selectionObject: {fileID: 490151513896331683}
   myAgent: {fileID: 6909574573759632584}
   groundLayer:
@@ -272,19 +275,39 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   selectionColor: {r: 0.023584902, g: 0.42912304, b: 0.8156863, a: 1}
-  damageInterval: 2
-  damageAmount: 10
-  Building:
-    serializedVersion: 2
-    m_Bits: 128
-  Enemy:
-    serializedVersion: 2
-    m_Bits: 16384
-  Enemies: []
-  Buildings: []
-  enemy: {fileID: 0}
-  SoldierGameObject: {fileID: 3721838096702204654}
+  cameraResoltion: 64
+  cameraFPS: 5
+  damageAmount: 5
   buildingToAttack: {fileID: 0}
-  enemyHp: {fileID: 0}
+  isInRange: 0
+  enemyUnit: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2,
+    type: 3}
+  soldierUnit: {fileID: 3883668397140479732}
+  enemyHp: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2, type: 3}
+  soldierHp: {fileID: 3883668397140479732}
+  unit: {fileID: 0}
+  target: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2, type: 3}
   selectionManager: {fileID: 0}
+  damageInterval: 5
   currentBuildingDist: 0
+--- !u!135 &1485270839212012832
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3721838096702204654}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 20
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}

@@ -24,6 +24,8 @@ public class ResourceBuildingBase : BuildingBase
         rangeIndicator.transform.localScale = scale;
 
         FindClosestResourceManager(transform, currentStorage[0].data);
+        print(closestResourceCluster.name);
+        closestResourceCluster.gameObject.GetComponent<ResourceObjectManager>().placedBuilding = true;
     }
 
     public void SetResourceItemManagerByType(ResourceItemManager.Type type)
@@ -41,7 +43,7 @@ public class ResourceBuildingBase : BuildingBase
     {
         foreach (Transform resourceType in FindAnyObjectByType<ResourceAreaSpawner>().GetComponentInChildren<Transform>())
         {
-            //wanneer broken probeer dit  foreach (Transform resource in resourceType.GetComponentsInChildren<Transform>())
+            //wanneer broken probeer dit: foreach (Transform resource in resourceType.GetComponentsInChildren<Transform>())
             foreach (Transform resource in resourceType.GetComponentInChildren<Transform>())
             {
                 if (!resourceAreas.Contains(resource.gameObject))
@@ -79,6 +81,7 @@ public class ResourceBuildingBase : BuildingBase
         {
             print("No resource in range");
         }
+
         closestResourceCluster = closestResource;
         return closestResource;
     }

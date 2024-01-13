@@ -28,6 +28,12 @@ public class Unit : MonoBehaviour
     [Header("Enum Data")]
     [SerializeField] protected Jobs job;
     [SerializeField] public TypeUnit typeUnit;
+    public TypeUnit Type
+    {
+        get => typeUnit;
+        set => typeUnit = value;
+    }
+
     [SerializeField] private Sex sex;
 
     [Header("Select Agent Movement")]
@@ -38,7 +44,7 @@ public class Unit : MonoBehaviour
     [SerializeField] GameObject marker;
     [SerializeField] LayerMask clickableUnit;
     [SerializeField] protected Color selectionColor;
-    [SerializeField] private int cameraResoltion = 64;
+    [SerializeField] private int cameraResolution = 64;
     [SerializeField] private float cameraFPS = 5;
 
     private Camera unitCamera;
@@ -47,6 +53,7 @@ public class Unit : MonoBehaviour
     private bool isSelected;
 
     private string currentAction;
+
 
     private void Awake()
     {
@@ -61,9 +68,9 @@ public class Unit : MonoBehaviour
         unitCamera.gameObject.SetActive(false);
         unitCamera.enabled = false;
 
-        RandomSex();
+        SetRandomSex();
 
-        RandomName();
+        SetRandomName();
 
         //voor UnitManager
         UnitManager unitManager = FindObjectOfType<UnitManager>();
@@ -77,7 +84,7 @@ public class Unit : MonoBehaviour
         }
     }
 
-    private void RandomName()
+    private void SetRandomName()
     {
         TextAsset file = null;
 
@@ -95,7 +102,7 @@ public class Unit : MonoBehaviour
         UnitName = names[randomNum];
     }
 
-    private void RandomSex()
+    private void SetRandomSex()
     {
         var values = System.Enum.GetValues(typeof(Sex));
         int randomNum = Random.Range(0, values.Length);

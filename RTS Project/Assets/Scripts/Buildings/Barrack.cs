@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Rendering;
 
 public class Barrack : BuildingBase
 {
@@ -33,7 +32,7 @@ public class Barrack : BuildingBase
 
     [Header("Unit Selection")] public SelectionManager selectionManager;
 
-    private Unit spawnedUnit;
+    private SoldierUnit spawnedUnit;
 
     protected override void Awake()
     {
@@ -60,10 +59,8 @@ public class Barrack : BuildingBase
     {
         base.Update();
 
-        print("unit list length : " + unitList.Count);
         if (unitList.Count > 0)
         {
-            print("Process spawning 0");
             StartCoroutine(ProcessSpawning());
         }
     }
@@ -73,7 +70,6 @@ public class Barrack : BuildingBase
         if (AIUnit == null)
         {
             List<GameObject> selectedUnit = selectionManager.selectedUnits;
-            print("Added Unit to list and sending them to the barrack");
 
             // Send the selectedUnits to the entrance
             foreach (var unit in selectedUnit)
@@ -81,7 +77,6 @@ public class Barrack : BuildingBase
                 if (unit.TryGetComponent(out NavMeshAgent agent))
                 {
                     agent.destination = entrance.transform.position;
-                    print("Player agent destination : " + agent.destination);
                 }
                 else
                 {
@@ -95,29 +90,22 @@ public class Barrack : BuildingBase
             {
                 if (worker.TryGetComponent(out NavMeshAgent agent))
                 {
-                    print("Entrance position : " + entrance.transform.position);
-                  
                     agent.SetDestination(entrance.transform.position);
-                    print("AI agent destination : " + agent.destination);
                 }
             }
         }
     }
 
-    public Unit GetSpawnedSoldier() => spawnedUnit;
+    public SoldierUnit GetSpawnedSoldier() => spawnedUnit;
 
     private IEnumerator ProcessSpawning()
     {
         // Turn on the queue
         queue += Time.deltaTime;
 
-        print("Process spawning 1");
-
         // Check if the list isn't empty, if so break the method
         if (unitList.Count != 0)
         {
-            print("Process spawning");
-
             // Check if the queue hasn't surpassed the max Time
             if (queue >= maxTimeUntilNext)
             {
@@ -136,15 +124,14 @@ public class Barrack : BuildingBase
     {
         /* DEBUGGING */
 
-        print("Spawn soldier");
-
         NavMeshHit hit;
         if (NavMesh.SamplePosition(exit.position, out hit, 1.0f, NavMesh.AllAreas))
         {
             // Instantiate the GameObject
             GameObject soldierGO = Instantiate(unitToSpawn, hit.position, Quaternion.identity);
+
             soldierGO.GetComponent<Unit>().typeUnit = Unit.TypeUnit.Human;
-            print("Really spawn soldier");
+            spawnedUnit = soldierGO.GetComponent<SoldierUnit>();
 
             // Remove unit out of the list
             unitList.RemoveAt(0);
@@ -186,8 +173,5 @@ public class Barrack : BuildingBase
 
         // Add a new item to the list!
         unitList.Add(unitToSpawn);
-        print("unit list length! : " + unitList.Count);
-
-        print("ai entered entrance");
     }
 }

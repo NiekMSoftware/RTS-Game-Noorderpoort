@@ -1,159 +1,104 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Profiling;
-using UnityEngine.UIElements;
+
 public class FogOfWar : MonoBehaviour
 {
-    // als de player al een stuk heeft weggehaald moet je het niet mee tellen.
-    //alles buiten de camera hoeft niet meegetelt te worden tijdens de updates.
-    public PlayerTestMovement RefPlayerMovement;
-    public GameObject FogOfWarPlane;
-    public Transform Player;
-    public LayerMask FogLayer;
-    public float radius = 5f;
-    public Vector3 FogToDestroy;
-    private float radiusSqr { get { return radius * radius; } }
-    private Mesh mesh;
-    private Vector3[] vertices;
-    private Color[] colors;
-    private List<bool> visitedVertices;
+    // TODO: Refactor the cast performing so it will shoot a ray, then do an overlap sphere on said ground to check the radius
+    // if there are things in that radius show them, else not (this goes for all units).
+
+    [Header("Unit Properties")]
+    public List<SoldierUnit> soldiers;
+    public List<Unit> enemyUnits;
+
+    // private int to keep track of the soldiers
+    public int foundSoldiers = 0;
+
+    [Space]
     
-    [Range(0, 1)]
-    public float Transparency;
+    public LayerMask soldierLayer;
 
-    private Coroutine rayCastRoutine;
+    [Header("Fog of War Properties")]
+    [SerializeField] private Transform fogTransform;
 
-    private Vector3 prevPlayerPos;
-    private float distanceTravelled;
-    private float raycastDistThreshold = 1f;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        Profiler.BeginSample("Initializing");
-        Initialize();
-        Profiler.EndSample();
-    }
-    // Update is called once per frame
     void Update()
     {
-        Profiler.BeginSample("Player Moving");
-        if (RefPlayerMovement.PlayerMoving)
-        {
-            if (rayCastRoutine == null)
-            {
-                rayCastRoutine = StartCoroutine(DoRaycast());
-            }
-        }
-        else
-        {
-            // Stop de routine als deze loop
-            if (rayCastRoutine != null)
-            {
-                StopCoroutine(rayCastRoutine);
-                rayCastRoutine = null;
-            }
+        // Gather all local soldiers
+        UpdateSoldierList();
 
-        }
+        // Gather each soldier's pos in the List
+        StartCoroutine(nameof(FindPositions));
 
-        Profiler.EndSample();
+        // If there are soldiers found, send the rays
+        if (foundSoldiers != 0)
+        {
+            StartCoroutine(nameof(SendRays));
+        }
     }
-    public IEnumerator DoRaycast()
-    {
-        while (true)
-        {
-            // Bereken de afstand die de speler heeft afgelegd
-            distanceTravelled += Vector3.Distance(Player.position, prevPlayerPos);
-            prevPlayerPos = Player.position;
 
-            // voer de raycasts uit alleen wanneer de speler een bepaald aantal afstand heeft gelegd
-            if (distanceTravelled >= raycastDistThreshold)
+    IEnumerator SendRays()
+    {
+        Debug.LogWarning("SendRays() is being called, but this statement is empty.");
+        if (foundSoldiers == 0)
+            yield break;
+
+        yield return null;
+    }
+
+    IEnumerator FindPositions()
+    {
+        while (foundSoldiers != soldiers.Count)
+        {
+            // if in general the count is equal to 0, break loop
+            if (soldiers.Count == 0) yield break;
+
+            for (int i = 0; i < soldiers.Count; i++)
             {
-                PerformRayCast();
-                distanceTravelled = 0f;
+                Transform soldierPositions = soldiers[i].transform.GetComponent<Transform>();
+                print($"Soldier(s) {i + 1}: {soldierPositions.position}");
             }
 
+            // return null to avoid freezing
             yield return null;
         }
     }
 
-    private void PerformRayCast()
+    private void UpdateSoldierList()
     {
-        Profiler.BeginSample("Started Performing RayCasts");
-        Vector3 cameraPosition = Camera.main.transform.position;
-        Transform fogTransform = FogOfWarPlane.transform;
+        // Count the number of null items
+        int nullSoldiers = soldiers.RemoveAll(soldier => soldier == null);
+        
+        // Decrease the foundSoldiers
+        foundSoldiers -= nullSoldiers;
 
-        Ray camR = new Ray(cameraPosition, Player.position - cameraPosition);
-        RaycastHit Camhit;
+        // Remove any null items from the soldiers list
+        soldiers.RemoveAll(soldier => soldier == null);
 
-        bool colorsChanged = false;
+        // Remove any null items from the enemies list
+        enemyUnits.RemoveAll(soldier => soldier == null);
 
-        if (RefPlayerMovement.PlayerMoving)
+        // find the game object that the soldiers are
+        SoldierUnit[] soldierObjects = FindObjectsOfType<SoldierUnit>();
+
+        // iterate over each obj
+        foreach (var obj in soldierObjects)
         {
-            if (Physics.Raycast(camR, out Camhit, 100, FogLayer, QueryTriggerInteraction.Collide))
+            SoldierUnit soldier = obj.GetComponent<SoldierUnit>();
+
+            // return if true
+            if (soldier == null)
+                return;
+
+            switch (soldiers.Contains(soldier))
             {
-                for (int i = 0; i < vertices.Length; i++)
-                {
-                    Vector3 v = fogTransform.TransformPoint(vertices[i]);
-                    float dist = Vector3.SqrMagnitude(v - Camhit.point);
-                    if (dist < radiusSqr)
-                    {
-                        float alpha = MathF.Min(colors[i].a, dist / radiusSqr);
-                        if (colors[i].a != alpha)
-                        {
-                            colors[i].a = alpha;
-                            colorsChanged = true;
-                        }
-                        visitedVertices[i] = true;
-                        FogToDestroy = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
-                    }
-                    else if (visitedVertices[i])
-                    {
-                        float newAlpha = Mathf.Lerp(colors[i].a, Transparency, Time.deltaTime);
-                        if (colors[i].a != newAlpha)
-                        {
-                            colors[i].a = newAlpha;
-                            colorsChanged = true;
-                        }
-                    }
-                }
-                if (colorsChanged)
-                {
-                    UpdateColor();
-                }
+                case false when obj.Type == Unit.TypeUnit.Human:
+                    soldiers.Add(soldier);
+                    foundSoldiers++;
+                    break;
+                case false when obj.Type == Unit.TypeUnit.Enemy && !enemyUnits.Contains(soldier):
+                    enemyUnits.Add(soldier);
+                    break;
             }
         }
-
-        Profiler.EndSample();
-    }
-
-    void Initialize()
-    {
-        //maakt mesh aan.
-        mesh = FogOfWarPlane.GetComponent<MeshFilter>().mesh;
-        //kijkt hoeveel vertices er zijn.
-        vertices = mesh.vertices;
-        //radiusSqr = radius * radius;
-        colors = new Color[vertices.Length];
-        visitedVertices = new List<bool>(new bool[vertices.Length]);
-        for (int i = 0; i < colors.Length; i++)
-        {
-            colors[i] = Color.black;
-        }
-        UpdateColor();
-    }
-
-    void UpdateColor()
-    {
-        Profiler.BeginSample("Updating color");
-        mesh.colors = colors;
-        Profiler.EndSample();
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(Player.position, radius);
     }
 }
