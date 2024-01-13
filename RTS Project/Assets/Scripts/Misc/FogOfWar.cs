@@ -28,9 +28,9 @@ public class FogOfWar : MonoBehaviour
     [SerializeField] private Transform fogTransform;
     [SerializeField] private float fogHeight;
     [SerializeField] private Material fogMaterial;
-    
-    [Space]
 
+    [Space] 
+    [SerializeField] private GameObject parentObject;
     [SerializeField] private int resolution = 0;
     [SerializeField] private float resolutionFactor = 0;
     [SerializeField] private int sectionSize = 100;
@@ -62,78 +62,6 @@ public class FogOfWar : MonoBehaviour
                 CreateFogPlane(sectionPos, sectionsSize, resolution);
             }
         }
-    }
-
-    void CreateFogPlane(Vector3 sectionPos, Vector3 sectionSize, int resolution)
-    {
-        // Adjust the section size to overlap with neighboring sections
-        sectionSize += new Vector3(1, 0, 1);
-
-        // Create a new gameobject for the fog plane
-        GameObject fogObject = new GameObject("FogPlane");
-        fogObject.AddComponent<MeshFilter>();
-        fogObject.AddComponent<MeshRenderer>();
-
-        // Create a new mesh for the fog plane
-        Mesh fogMesh = new Mesh();
-
-        // Calculate the resolution based on the size of the section
-        resolution = (int)(sectionSize.x * sectionSize.z * resolutionFactor);
-
-        // Create a grid of vertices
-        Vector3[] vertices = new Vector3[resolution * resolution];
-
-        for (int z = 0; z < resolution; z++)
-        {
-            for (int x = 0; x < resolution; x++)
-            {
-                // Calculate the position of this vertex
-                float xPos = sectionPos.x + (x / (float)resolution) * sectionSize.x;
-                float zPos = sectionPos.z + (z / (float)resolution) * sectionSize.z;
-
-                // Use a raycast to find the height of the terrain at this point
-                RaycastHit hit;
-                if (Physics.Raycast(new Vector3(xPos, sectionPos.y + sectionSize.y, zPos), Vector3.down, out hit))
-                {
-                    // Adjust the height of the vertex to be above the terrain
-                    vertices[z * resolution + x] = hit.point + Vector3.up * fogHeight;
-                }
-            }
-        }
-
-        // Set the vertices of the fog mesh
-        fogMesh.vertices = vertices;
-
-        // Create triangles to connect the vertices
-        int[] triangles = new int[(resolution - 1) * (resolution - 1) * 6];
-        for (int z = 0; z < resolution - 1; z++)
-        {
-            for (int x = 0; x < resolution - 1; x++)
-            {
-                // Calculate the index of this quad
-                int quadIndex = z * (resolution - 1) + x;
-                int triangleIndex = quadIndex * 6;
-
-                // Create two triangles to form a quad
-                triangles[triangleIndex + 0] = z * resolution + x;
-                triangles[triangleIndex + 1] = (z + 1) * resolution + x;
-                triangles[triangleIndex + 2] = z * resolution + x + 1;
-                triangles[triangleIndex + 3] = z * resolution + x + 1;
-                triangles[triangleIndex + 4] = (z + 1) * resolution + x;
-                triangles[triangleIndex + 5] = (z + 1) * resolution + x + 1;
-            }
-        }
-
-        // Set the triangles of the fog mesh
-        fogMesh.triangles = triangles;
-
-        // Assign the fog mesh to a MeshFilter component
-        MeshFilter meshFilter = fogObject.GetComponent<MeshFilter>();
-        meshFilter.mesh = fogMesh;
-
-        // Apply a material to the MeshRenderer
-        MeshRenderer meshRenderer = fogObject.GetComponent<MeshRenderer>();
-        meshRenderer.material = fogMaterial;
     }
 
     void Update()
@@ -285,7 +213,81 @@ public class FogOfWar : MonoBehaviour
         }
         
     }
-        
+
+    void CreateFogPlane(Vector3 sectionPos, Vector3 sectionSize, int resolution)
+    {
+        // Adjust the section size to overlap with neighboring sections
+        sectionSize += new Vector3(1, 0, 1);
+
+        // Create a new gameobject for the fog plane
+        GameObject fogObject = new GameObject("FogPlane");
+
+        fogObject.transform.SetParent(parentObject.transform);
+        fogObject.AddComponent<MeshFilter>();
+        fogObject.AddComponent<MeshRenderer>();
+
+        // Create a new mesh for the fog plane
+        Mesh fogMesh = new Mesh();
+
+        // Calculate the resolution based on the size of the section
+        resolution = (int)(sectionSize.x * sectionSize.z * resolutionFactor);
+
+        // Create a grid of vertices
+        Vector3[] vertices = new Vector3[resolution * resolution];
+
+        for (int z = 0; z < resolution; z++)
+        {
+            for (int x = 0; x < resolution; x++)
+            {
+                // Calculate the position of this vertex
+                float xPos = sectionPos.x + (x / (float)resolution) * sectionSize.x;
+                float zPos = sectionPos.z + (z / (float)resolution) * sectionSize.z;
+
+                // Use a raycast to find the height of the terrain at this point
+                RaycastHit hit;
+                if (Physics.Raycast(new Vector3(xPos, sectionPos.y + sectionSize.y, zPos), Vector3.down, out hit))
+                {
+                    // Adjust the height of the vertex to be above the terrain
+                    vertices[z * resolution + x] = hit.point + Vector3.up * fogHeight;
+                }
+            }
+        }
+
+        // Set the vertices of the fog mesh
+        fogMesh.vertices = vertices;
+
+        // Create triangles to connect the vertices
+        int[] triangles = new int[(resolution - 1) * (resolution - 1) * 6];
+        for (int z = 0; z < resolution - 1; z++)
+        {
+            for (int x = 0; x < resolution - 1; x++)
+            {
+                // Calculate the index of this quad
+                int quadIndex = z * (resolution - 1) + x;
+                int triangleIndex = quadIndex * 6;
+
+                // Create two triangles to form a quad
+                triangles[triangleIndex + 0] = z * resolution + x;
+                triangles[triangleIndex + 1] = (z + 1) * resolution + x;
+                triangles[triangleIndex + 2] = z * resolution + x + 1;
+                triangles[triangleIndex + 3] = z * resolution + x + 1;
+                triangles[triangleIndex + 4] = (z + 1) * resolution + x;
+                triangles[triangleIndex + 5] = (z + 1) * resolution + x + 1;
+            }
+        }
+
+        // Set the triangles of the fog mesh
+        fogMesh.triangles = triangles;
+
+        // Assign the fog mesh to a MeshFilter component
+        MeshFilter meshFilter = fogObject.GetComponent<MeshFilter>();
+        meshFilter.mesh = fogMesh;
+
+        // Apply a material to the MeshRenderer
+        MeshRenderer meshRenderer = fogObject.GetComponent<MeshRenderer>();
+        meshRenderer.material = fogMaterial;
+    }
+
     IEnumerator FindPositions()
     {
         while (foundSoldiers == soldiers.Count)
