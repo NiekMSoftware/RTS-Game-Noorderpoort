@@ -7,7 +7,7 @@ using UnityEditor;
 #if UNITY_EDITOR
 
 [CustomEditor(typeof(FieldOfView))]
-public class FieldOfViewEditor : Editor
+public class DetectEnemiesEditor : Editor
 {
     void OnSceneGUI() {
         FieldOfView fow = (FieldOfView)target;
@@ -22,7 +22,8 @@ public class FieldOfViewEditor : Editor
         Handles.DrawLine(fow.transform.position, fow.transform.position + viewAngleB * fow.viewRadius);
 
         Handles.color = Color.red;
-        foreach (Transform visibleTarget in fow.visibleTargets) {
+        foreach (Transform visibleTarget in fow.visibleTargets) 
+        {
             Handles.DrawLine(fow.transform.position, visibleTarget.position);
         }
     }
