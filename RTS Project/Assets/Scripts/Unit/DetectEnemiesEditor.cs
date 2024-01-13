@@ -6,11 +6,11 @@ using UnityEditor;
 
 #if UNITY_EDITOR
 
-[CustomEditor(typeof(FieldOfView))]
+[CustomEditor(typeof(DetectEnemies))]
 public class FieldOfViewEditor : Editor
 {
     void OnSceneGUI() {
-        FieldOfView fow = (FieldOfView)target;
+        DetectEnemies fow = (DetectEnemies)target;
         Handles.color = Color.white;
         Handles.DrawWireArc(fow.transform.position, Vector3.up,
                         Vector3.forward, 360, fow.viewRadius);
