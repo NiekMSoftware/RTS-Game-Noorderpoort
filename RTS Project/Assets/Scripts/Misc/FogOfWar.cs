@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
 public class FogOfWar : MonoBehaviour
 {
@@ -11,15 +13,21 @@ public class FogOfWar : MonoBehaviour
     public List<SoldierUnit> soldiers;
     public List<Unit> enemyUnits;
 
-    // private int to keep track of the soldiers
-    public int foundSoldiers = 0;
+    // Dictionaries to store values
+    private Dictionary<SoldierUnit, Vector3> previousPositions = new();
+    Dictionary<SoldierUnit, LineRenderer> lineRenderers = new ();
 
-    [Space]
-    
-    public LayerMask soldierLayer;
+    // private int to keep track of the soldiers
+    private int foundSoldiers = 0;
+
+    [Space] 
+    [SerializeField] private float elapsed;
+    [SerializeField] private float maxUntilNext;
 
     [Header("Fog of War Properties")]
     [SerializeField] private Transform fogTransform;
+
+    private Transform soldierPosition;
 
     void Update()
     {
@@ -32,30 +40,117 @@ public class FogOfWar : MonoBehaviour
         // If there are soldiers found, send the rays
         if (foundSoldiers != 0)
         {
-            StartCoroutine(nameof(SendRays));
+            StartCoroutine(SendRays(soldierPosition));
         }
     }
 
-    IEnumerator SendRays()
+    void LateUpdate()
     {
-        Debug.LogWarning("SendRays() is being called, but this statement is empty.");
-        if (foundSoldiers == 0)
-            yield break;
+        // Update the end position of each LineRenderer to the current position of its soldier
+        foreach (var soldier in lineRenderers.Keys)
+        {
+            LineRenderer lineRenderer = lineRenderers[soldier];
+
+            if (lineRenderer != null)
+            {
+                lineRenderers[soldier].SetPosition(1, soldier.transform.position);
+
+            }
+        }
+    }
+
+    IEnumerator SendRays(Transform positions)
+    {
+        // iterate through each item in list, then check if they moved
+        foreach (var soldier in soldiers)
+        {
+            // if the previousPos isn't stored, store it.
+            if (!previousPositions.ContainsKey(soldier))
+            {
+                previousPositions[soldier] = soldier.transform.position;
+
+                // after waiting send out a ray from the camera to the position of the soldier
+                Vector3 direction = soldier.transform.position - Camera.main.transform.position;
+                Ray ray = new Ray(Camera.main.transform.position, direction);
+                RaycastHit hit;
+
+                // check if it his
+                if (Physics.Raycast(ray, out hit))
+                {
+                    Debug.Log("Ray hit object: " + hit.collider.gameObject.name);
+
+                    // Create a new LineRenderer for this hit
+                    GameObject lineRendererObject = new GameObject("LineRenderer");
+                    LineRenderer lineRenderer = lineRendererObject.AddComponent<LineRenderer>();
+
+                    lineRenderer.startWidth = 0.1f;
+                    lineRenderer.endWidth = 0.1f;
+
+                    // Draw a line from the camera to the hit point
+                    lineRenderer.SetPosition(0, Camera.main.transform.position);
+                    lineRenderer.SetPosition(1, hit.point);
+
+                    lineRenderers[soldier] = lineRenderer;
+
+                    Destroy(lineRenderer, 3f);
+                }
+            }
+            else
+            {
+                // If the soldier's position is different from the stored pos, it moved
+                if (soldier.transform.position != previousPositions[soldier])
+                {
+                    Debug.Log($"Soldier: {soldier} has moved!");
+
+                    // Update the position
+                    previousPositions[soldier] = soldier.transform.position;
+
+                    // after waiting send out a ray from the camera to the position of the soldier
+                    Vector3 direction = soldier.transform.position - Camera.main.transform.position;
+                    Ray ray = new Ray(Camera.main.transform.position, direction);
+                    RaycastHit hit;
+
+                    // check if it his
+                    if (Physics.Raycast(ray, out hit))
+                    {
+                        Debug.Log("Ray hit object: " + hit.collider.gameObject.name);
+
+                        // Create a new LineRenderer for this hit
+                        GameObject lineRendererObject = new GameObject("LineRenderer");
+                        LineRenderer lineRenderer = lineRendererObject.AddComponent<LineRenderer>();
+
+                        lineRenderer.startWidth = 0.1f;
+                        lineRenderer.endWidth = 0.1f;
+
+                        // Draw a line from the camera to the hit point
+                        lineRenderer.SetPosition(0, Camera.main.transform.position);
+                        lineRenderer.SetPosition(1, hit.point);
+
+                        lineRenderers[soldier] = lineRenderer;
+
+                        Destroy(lineRenderer, 1f);
+
+                        // check the fog of war pos and remove vertices of it via the ray casts
+                            // these rays will be sent from the position of the soldiers to the y pos of the plane
+                            // once hit the plane, they release a raycast sphere to create holes in the plane
+                    }
+                }
+            }
+        }
 
         yield return null;
     }
-
+        
     IEnumerator FindPositions()
     {
-        while (foundSoldiers != soldiers.Count)
+        while (foundSoldiers == soldiers.Count)
         {
             // if in general the count is equal to 0, break loop
             if (soldiers.Count == 0) yield break;
 
-            for (int i = 0; i < soldiers.Count; i++)
+            foreach (var soldier in soldiers)
             {
-                Transform soldierPositions = soldiers[i].transform.GetComponent<Transform>();
-                print($"Soldier(s) {i + 1}: {soldierPositions.position}");
+                soldierPosition = soldier.transform.GetComponent<Transform>();
             }
 
             // return null to avoid freezing
@@ -89,6 +184,7 @@ public class FogOfWar : MonoBehaviour
             if (soldier == null)
                 return;
 
+            // Add the soldier accordingly
             switch (soldiers.Contains(soldier))
             {
                 case false when obj.Type == Unit.TypeUnit.Human:
