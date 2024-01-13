@@ -1,11 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Experimental.AI;
 using UnityEngine.Splines;
-using UnityEngine.UIElements;
 
 public class SoldierSplineMove : MonoBehaviour
 {
@@ -21,6 +18,8 @@ public class SoldierSplineMove : MonoBehaviour
     private void Awake()
     {
         mainCamera = Camera.main;
+
+        enabled = false;
     }
 
     private void Update()
@@ -35,7 +34,6 @@ public class SoldierSplineMove : MonoBehaviour
                 if (splineContainer)
                 {
                     Destroy(splineContainer.gameObject);
-                    print("hi");
                 }
 
                 splineContainer = Instantiate(splineContainerPrefab).GetComponent<SplineContainer>();
@@ -47,23 +45,20 @@ public class SoldierSplineMove : MonoBehaviour
             {
                 BezierKnot knot = new();
                 knot.Position = hit.point;
-                knot.Rotation = Quaternion.identity;
-                knot.TangentIn = Vector3.forward;
-                knot.TangentOut = Vector3.forward;
                 spline.Add(knot);
+                splineContainer.gameObject.GetComponent<SplineManager>().UpdateLineRenderer(spline);
             }
 
             if (Input.GetMouseButtonUp(0))
             {
-                splineContainer.Spline = spline;
+                selectionManager.SetMayDrawSelectionBox(true);
 
-                //List<float> distanceBetweenPreviousList = new();
-                //List<BezierKnot> knotsToRemove = new();
+                splineContainer.Splines.ToList().Add(spline);
 
                 List<float> distanceBetweenNodesList = new();
                 List<BezierKnot> nodes = new();
 
-                print("Length before : " + spline.Knots.ToList().Count);
+                float knotsLength = spline.Knots.ToList().Count;
 
                 foreach (var knotA in spline.Knots)
                 {
@@ -80,15 +75,17 @@ public class SoldierSplineMove : MonoBehaviour
 
                 for (int i = 0; i < nodes.Count; i++)
                 {
-                    if (distanceBetweenNodesList[i] < 3f)
+                    if (distanceBetweenNodesList[i] < 0.5f)
                     {
                         spline.Remove(nodes[i]);
                     }
                 }
 
-                print("Length after : " + spline.Knots.ToList().Count);
+                splineContainer.gameObject.GetComponent<SplineManager>().UpdateLineRenderer(spline);
 
-                List<Unit> units = FindObjectsOfType<Unit>().ToList();
+                print("knots removed : " + (knotsLength - spline.Knots.ToList().Count));
+
+                List<Unit> units = selectionManager.GetSelectedUnits();
                 List<NavMeshAgent> unitAgents = new();
 
                 foreach (Unit unit in units)
@@ -98,20 +95,22 @@ public class SoldierSplineMove : MonoBehaviour
 
                 float splineLength = spline.GetLength();
                 float distanceBetweenNodes = 3;
-                float jumpAmount = distanceBetweenNodes / splineLength;
                 int amountOfNodes = (int)(splineLength / distanceBetweenNodes);
+                float jumpAmount = amountOfNodes / splineLength;
                 float currentPos = 0;
 
                 for (int i = 0; i < amountOfNodes; i++)
                 {
                     if (unitAgents[i] == null) return;
 
-                    print("hi");
+                    NavMeshPath path = new();
+                    unitAgents[i].CalculatePath(spline.EvaluatePosition(currentPos), path);
                     unitAgents[i].SetDestination(spline.EvaluatePosition(currentPos));
                     currentPos += jumpAmount;
                 }
 
-                print("move soldiers");
+                selectionManager.SetMayDeselect(true);
+                enabled = false;
             }
         }
     }
