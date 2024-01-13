@@ -25,26 +25,30 @@ public class FieldOfView : MonoBehaviour {
     }
 
     void FindVisibleTargets() {
-        this.visibleTargets.Clear();
+        visibleTargets.Clear();
         
         Collider[] targetsInRadius = Physics.OverlapSphere(transform.position, this.viewRadius, this.targetMask);
-        for (int i = 0; i < targetsInRadius.Length; i++) {
+        for (int i = 0; i < targetsInRadius.Length; i++) 
+        {
             Transform target = targetsInRadius[i].transform;
             Vector3 dirToTarget = (target.position - transform.position).normalized;
             
-            if (Vector3.Angle(transform.forward, dirToTarget) < this.viewAngle / 2) {
+            if (Vector3.Angle(transform.forward, dirToTarget) < this.viewAngle / 2)
+            {
                 float distanceToTarget = Vector3.Distance(transform.position, target.position);
 
                 if (!Physics.Raycast(transform.position, dirToTarget, distanceToTarget, this.obstacleMask)) {
                     // See the target
-                    this.visibleTargets.Add(target);
+                    print("Found an enemy");
+                    visibleTargets.Add(target);
                 }
             }
         }
     }
 
     public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal) {
-        if (!angleIsGlobal) {
+        if (!angleIsGlobal) 
+        {
             angleInDegrees += transform.eulerAngles.y;
         }
         return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees 

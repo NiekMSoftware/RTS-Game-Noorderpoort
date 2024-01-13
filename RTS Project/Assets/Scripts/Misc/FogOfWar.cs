@@ -25,7 +25,6 @@ public class FogOfWar : MonoBehaviour
     [SerializeField] private float maxUntilNext;
 
     [Header("Fog of War Properties")]
-    [SerializeField] private Transform fogTransform;
     [SerializeField] private float fogHeight;
     [SerializeField] private Material fogMaterial;
 
@@ -36,6 +35,9 @@ public class FogOfWar : MonoBehaviour
     [SerializeField] private int sectionSize = 100;
 
     private Transform soldierPosition;
+
+    [Header("DEBUG PROPERTIES")] 
+    [SerializeField] private GameObject parentLines;
 
     void Start()
     {
@@ -115,6 +117,10 @@ public class FogOfWar : MonoBehaviour
 
                     // Create a new LineRenderer for this hit
                     GameObject lineRendererObject = new GameObject("LineRenderer");
+
+                    // set parent obj
+                    lineRendererObject.transform.SetParent(parentLines.transform);
+
                     LineRenderer lineRenderer = lineRendererObject.AddComponent<LineRenderer>();
 
                     lineRenderer.startWidth = 0.1f;
@@ -154,6 +160,10 @@ public class FogOfWar : MonoBehaviour
 
                         // Create a new LineRenderer for this hit
                         GameObject lineRendererObject = new GameObject("LineRenderer");
+
+                        // set parent
+                        lineRendererObject.transform.SetParent(parentLines.transform);
+
                         LineRenderer lineRenderer = lineRendererObject.AddComponent<LineRenderer>();
 
                         lineRenderer.startWidth = 0.1f;
@@ -181,7 +191,7 @@ public class FogOfWar : MonoBehaviour
 
     private void DestroyFog()
     {
-        if (fogTransform != null)
+        if (parentObject.transform != null)
         {
             foreach (var soldier in soldiers)
             {
@@ -191,19 +201,32 @@ public class FogOfWar : MonoBehaviour
 
                 // Create a ray from those positions
                 Ray ray = new Ray(origin, direction);
+                RaycastHit hit;
 
-                RaycastHit hit; 
-                if (Physics.Raycast(ray, out hit))
+                int layerMask = (13 << LayerMask.NameToLayer("FogOfWar")) | (6 << LayerMask.NameToLayer("Clickable"));
+
+                // invert the bit corresponding clickable units
+                layerMask = layerMask & ~(6 << LayerMask.NameToLayer("Clickable"));
+
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
                 {
+                    Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green, 100f);
+
                     // check if it hit the fog
-                    if (hit.collider.gameObject == fogTransform.gameObject)
+                    if (hit.collider.transform.IsChildOf(parentObject.transform))
                     {
                         Debug.Log("Ray hit the fog");
                     }
                     else
                     {
-                        Debug.LogError("Ray didn't hit the fog (Oh no...)");
+                        Debug.LogError("Ray didn't hit child");
                     }
+                }
+                else
+                {
+                    Debug.LogError("Ray didn't hit the fog (Oh no...)");
+
+                    Debug.DrawRay(ray.origin, ray.direction * 1000, Color.red, 100f);
                 }
             }
         }
@@ -214,7 +237,7 @@ public class FogOfWar : MonoBehaviour
         
     }
 
-    void CreateFogPlane(Vector3 sectionPos, Vector3 sectionSize, int resolution)
+    private void CreateFogPlane(Vector3 sectionPos, Vector3 sectionSize, int resolution)
     {
         // Adjust the section size to overlap with neighboring sections
         sectionSize += new Vector3(1, 0, 1);
@@ -225,6 +248,8 @@ public class FogOfWar : MonoBehaviour
         fogObject.transform.SetParent(parentObject.transform);
         fogObject.AddComponent<MeshFilter>();
         fogObject.AddComponent<MeshRenderer>();
+        fogObject.AddComponent<MeshCollider>();
+        fogObject.layer = LayerMask.NameToLayer("FogOfWar");
 
         // Create a new mesh for the fog plane
         Mesh fogMesh = new Mesh();
@@ -245,7 +270,8 @@ public class FogOfWar : MonoBehaviour
 
                 // Use a raycast to find the height of the terrain at this point
                 RaycastHit hit;
-                if (Physics.Raycast(new Vector3(xPos, sectionPos.y + sectionSize.y, zPos), Vector3.down, out hit))
+                int layerMask = 1 << LayerMask.NameToLayer("Ground"); // only interact with ground layer
+                if (Physics.Raycast(new Vector3(xPos, sectionPos.y + sectionSize.y, zPos), Vector3.down, out hit, Mathf.Infinity, layerMask))
                 {
                     // Adjust the height of the vertex to be above the terrain
                     vertices[z * resolution + x] = hit.point + Vector3.up * fogHeight;
