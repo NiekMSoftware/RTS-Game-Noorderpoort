@@ -28,6 +28,12 @@ public class Unit : MonoBehaviour
     [Header("Enum Data")]
     [SerializeField] protected Jobs job;
     [SerializeField] public TypeUnit typeUnit;
+    public TypeUnit Type
+    {
+        get => typeUnit;
+        set => typeUnit = value;
+    }
+
     [SerializeField] private Sex sex;
 
     [Header("Select Agent Movement")]
@@ -47,6 +53,7 @@ public class Unit : MonoBehaviour
     private bool isSelected;
 
     private string currentAction;
+
 
     private void Awake()
     {
