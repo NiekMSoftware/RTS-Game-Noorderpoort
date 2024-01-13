@@ -7,7 +7,7 @@ using UnityEditor;
 #if UNITY_EDITOR
 
 [CustomEditor(typeof(FieldOfView))]
-public class DetectEnemiesEditor : Editor
+public class FieldOfViewEditor : Editor
 {
     void OnSceneGUI() {
         FieldOfView fow = (FieldOfView)target;
