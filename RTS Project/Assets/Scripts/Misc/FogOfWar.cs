@@ -20,14 +20,16 @@ public class FogOfWar : MonoBehaviour
     // private int to keep track of the soldiers
     private int foundSoldiers = 0;
 
-    [Space]
-    [SerializeField] private float elapsed;
-    [SerializeField] private float maxUntilNext;
-
     [Header("Fog of War Properties")]
-    [SerializeField] private float fogHeight;
+    [SerializeField] private int fogWidth = 100;
+    [SerializeField] private int fogHeight = 100;
+
+    [Space]
     [SerializeField] private Material fogMaterial;
+
+    [Space]
     [SerializeField] private LayerMask fogLayer;
+    private Texture2D initialFogTexture;
 
     [Space]
     [SerializeField] private GameObject parentObject;
@@ -36,6 +38,9 @@ public class FogOfWar : MonoBehaviour
     [SerializeField] private int sectionSize = 100;
 
     private Transform soldierPosition;
+
+    [Header("Detection")] 
+    [SerializeField] [Range(1, 10)] private int radius = 10;
 
     [Header("DEBUG PROPERTIES")]
     [SerializeField] private GameObject parentLines;
@@ -105,84 +110,19 @@ public class FogOfWar : MonoBehaviour
             if (!previousPositions.ContainsKey(soldier))
             {
                 previousPositions[soldier] = soldier.transform.position;
-
-                // after waiting send out a ray from the camera to the position of the soldier
-                Vector3 direction = soldier.transform.position - Camera.main.transform.position;
-                Ray ray = new Ray(Camera.main.transform.position, direction);
-                RaycastHit hit;
-
-                // check if it his
-                if (Physics.Raycast(ray, out hit))
-                {
-                    Debug.Log("Ray hit object: " + hit.collider.gameObject.name);
-
-                    // Create a new LineRenderer for this hit
-                    GameObject lineRendererObject = new GameObject("LineRenderer");
-
-                    // set parent obj
-                    lineRendererObject.transform.SetParent(parentLines.transform);
-
-                    LineRenderer lineRenderer = lineRendererObject.AddComponent<LineRenderer>();
-
-                    lineRenderer.startWidth = 0.1f;
-                    lineRenderer.endWidth = 0.1f;
-
-                    // Draw a line from the camera to the hit point
-                    lineRenderer.SetPosition(0, Camera.main.transform.position);
-                    lineRenderer.SetPosition(1, hit.point);
-
-                    lineRenderers[soldier] = lineRenderer;
-
-                    Destroy(lineRenderer, 3f);
-
-                    // Destroy fog
-                    DestroyFog();
-                }
             }
             else
             {
                 // If the soldier's position is different from the stored pos, it moved
                 if (soldier.transform.position != previousPositions[soldier])
                 {
-                    Debug.Log($"Soldier: {soldier} has moved!");
-
                     // Update the position
                     previousPositions[soldier] = soldier.transform.position;
 
-                    // after waiting send out a ray from the camera to the position of the soldier
-                    Vector3 direction = soldier.transform.position - Camera.main.transform.position;
-                    Ray ray = new Ray(Camera.main.transform.position, direction);
-                    RaycastHit hit;
-
-                    // check if it his
-                    if (Physics.Raycast(ray, out hit))
-                    {
-                        Debug.Log("Ray hit object: " + hit.collider.gameObject.name);
-
-                        // Create a new LineRenderer for this hit
-                        GameObject lineRendererObject = new GameObject("LineRenderer");
-
-                        // set parent
-                        lineRendererObject.transform.SetParent(parentLines.transform);
-
-                        LineRenderer lineRenderer = lineRendererObject.AddComponent<LineRenderer>();
-
-                        lineRenderer.startWidth = 0.1f;
-                        lineRenderer.endWidth = 0.1f;
-
-                        // Draw a line from the camera to the hit point
-                        lineRenderer.SetPosition(0, Camera.main.transform.position);
-                        lineRenderer.SetPosition(1, hit.point);
-
-                        lineRenderers[soldier] = lineRenderer;
-
-                        Destroy(lineRenderer, 1f);
-
-                        // check the fog of war pos and remove vertices of it via the ray casts
-                        // these rays will be sent from the position of the soldiers to the y pos of the plane
-                        // once hit the plane, they release a raycast sphere to create holes in the plane
-                        DestroyFog();
-                    }
+                    // check the fog of war pos and remove vertices of it via the ray casts
+                    // these rays will be sent from the position of the soldiers to the y pos of the plane
+                    // once hit the plane, they release a raycast sphere to create holes in the plane
+                    DestroyFog(soldier.transform.position);
                 }
             }
         }
@@ -190,33 +130,63 @@ public class FogOfWar : MonoBehaviour
         yield return null;
     }
 
-    private void DestroyFog()
+    private void DestroyFog(Vector3 soldierPosition)
     {
         if (parentObject.transform != null)
         {
-            foreach (var soldier in soldiers)
+            foreach (Transform child in parentObject.transform)
             {
-                // Save the origin and direction
-                Vector3 origin = soldier.transform.position;
-                Vector3 direction = Vector3.up;
+                Renderer render = child.GetComponent<Renderer>();
 
-                // Create a ray from those positions
-                Ray ray = new Ray(origin, direction);
-                RaycastHit hit;
-
-                if (Physics.Raycast(ray, out hit, 10f, fogLayer))
+                if (render != null)
                 {
-                    Debug.Log("RayCast hit: " + hit.collider.gameObject.name);
+                    fogMaterial = render.material;
 
-                    Debug.DrawRay(ray.origin, ray.direction * 3f, Color.green, 5f);
+                    // Get the current fog texture
+                    Texture2D fogTexture = (Texture2D)fogMaterial.mainTexture;
 
-                    Debug.Log("Successfully hit the mesh");
+                    // Create a new texture if necessary
+                    if (fogTexture == null)
+                    {
+                        Debug.Log("Creating a new texture");
+                        fogTexture = new Texture2D(fogWidth, fogHeight);
+                        fogMaterial.mainTexture = fogTexture;
+                    }
+
+                    // Convert the soldier's position to texture coordinates
+                    int xCord = (int)(soldierPosition.x / fogWidth * fogTexture.width);
+                    int yCord = (int)(soldierPosition.z / fogHeight * fogTexture.height);
+
+                    // Draw a transparent circle at the soldier's position
+                    for (int i = -radius; i <= radius; i++)
+                    {
+                        for (int j = -radius; j <= radius; j++)
+                        {
+                            if (i * i + j * j <= radius * radius)
+                            {
+                                fogTexture.SetPixel(xCord + i, yCord + j, new Color(1f, 1f, 1f, 0f));
+                            }
+                        }
+                    }
+
+                    // Blend the texture to the initial state
+                    for (int y = 0; y < fogTexture.height; y++)
+                    {
+                        for (int x = 0; x < fogTexture.width; x++)
+                        {
+                            Color color = fogTexture.GetPixel(x, y);
+                            Color initialColor = initialFogTexture.GetPixel(x, y);
+                            color.a = Mathf.Min(color.a - 0.01f, initialColor.a);
+                            fogTexture.SetPixel(x, y, color);
+                        }
+                    }
+
+                    // Apply the updated texture
+                    fogTexture.Apply();
                 }
                 else
                 {
-                    Debug.LogError("Ray didn't hit the fog (Oh no...)");
-
-                    Debug.DrawRay(ray.origin, ray.direction * 3f, Color.red, 5f);
+                    Debug.LogError("No renderer found on child:");
                 }
             }
         }
@@ -224,7 +194,6 @@ public class FogOfWar : MonoBehaviour
         {
             Debug.LogError("There is no FOG object in this scene...");
         }
-
     }
 
     private void CreateFogPlane(Vector3 sectionPos, Vector3 sectionSize, int resolution)
@@ -239,6 +208,14 @@ public class FogOfWar : MonoBehaviour
 
         // Create a new mesh for the fog plane
         Mesh fogMesh = new Mesh();
+
+        Texture2D fogTexture = new Texture2D(fogWidth, fogHeight, TextureFormat.RGBA32, false);
+        fogMaterial.mainTexture = fogTexture;
+
+        // Create a copy of the fog texture
+        initialFogTexture = new Texture2D(fogTexture.width, fogTexture.height, TextureFormat.RGBA32, false);
+        initialFogTexture.SetPixels(fogTexture.GetPixels());
+        initialFogTexture.Apply();
 
         // setup mesh
         fogObject.transform.SetParent(parentObject.transform);
