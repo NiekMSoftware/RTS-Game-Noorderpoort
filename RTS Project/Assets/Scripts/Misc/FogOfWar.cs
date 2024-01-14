@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 
@@ -16,37 +15,30 @@ public class FogOfWar : MonoBehaviour
 
     // Dictionaries to store values
     private Dictionary<SoldierUnit, Vector3> previousPositions = new();
-    Dictionary<SoldierUnit, LineRenderer> lineRenderers = new ();
-    private Dictionary<int, List<SoldierUnit>> vertexSoldiers = new();
+    Dictionary<SoldierUnit, LineRenderer> lineRenderers = new();
 
     // private int to keep track of the soldiers
     private int foundSoldiers = 0;
 
-    [Space] 
+    [Space]
     [SerializeField] private float elapsed;
     [SerializeField] private float maxUntilNext;
 
     [Header("Fog of War Properties")]
     [SerializeField] private float fogHeight;
     [SerializeField] private Material fogMaterial;
+    [SerializeField] private LayerMask fogLayer;
 
-    [Space] 
+    [Space]
     [SerializeField] private GameObject parentObject;
     [SerializeField] private int resolution = 0;
     [SerializeField] private float resolutionFactor = 0;
     [SerializeField] private int sectionSize = 100;
-    public List<GameObject> fogObjects = new();
 
     private Transform soldierPosition;
 
-    [Header("Fog Detection")] 
-    [SerializeField] 
-    [Range(1f, 20f)] private float radius;
-
-    [Header("DEBUG PROPERTIES")] 
+    [Header("DEBUG PROPERTIES")]
     [SerializeField] private GameObject parentLines;
-    private Vector3 lastHitPoint;
-    private float lastRadius;
 
     void Start()
     {
@@ -73,8 +65,6 @@ public class FogOfWar : MonoBehaviour
                 CreateFogPlane(sectionPos, sectionsSize, resolution);
             }
         }
-
-        StartCoroutine(InitializeFogObjects());
     }
 
     void Update()
@@ -106,60 +96,6 @@ public class FogOfWar : MonoBehaviour
         }
     }
 
-    private void UpdateFog(SoldierUnit soldier, Vector3 oldPos, Vector3 newPos)
-    {
-        foreach (var fogObject in fogObjects)
-        {
-            // Get the fog object's MeshFilter
-            MeshFilter meshFilter = fogObject.GetComponent<MeshFilter>();
-
-            // Get the fog mesh
-            Mesh mesh = meshFilter.mesh;
-
-            // Get the current colors of the fog mesh
-            Color[] colors = mesh.colors;
-
-            // Calculate the maximum distance a vertex can be from the soldier to be affected
-            float maxDistance = radius * radius;
-
-            // Iterate over each vertex
-            for (int i = 0; i < mesh.vertexCount; i++)
-            {
-                Vector3 worldPos = fogObject.transform.TransformPoint(mesh.vertices[i]);
-
-                // Calculate the squared distance from the old and new soldier positions to this vertex
-                float oldDistance = (worldPos - oldPos).sqrMagnitude;
-                float newDistance = (worldPos - newPos).sqrMagnitude;
-
-                // Check if this vertex was or is within the soldier's radius
-                if (oldDistance <= maxDistance || newDistance <= maxDistance)
-                {
-                    // Update the list of soldiers affecting this vertex
-                    if (!vertexSoldiers.ContainsKey(i))
-                    {
-                        vertexSoldiers[i] = new List<SoldierUnit>();
-                    }
-
-                    if (oldDistance <= maxDistance)
-                    {
-                        vertexSoldiers[i].Remove(soldier);
-                    }
-
-                    if (newDistance <= maxDistance)
-                    {
-                        vertexSoldiers[i].Add(soldier);
-                    }
-
-                    // Update the color of this vertex based on whether any soldiers are affecting it
-                    colors[i] = vertexSoldiers[i].Count > 0 ? Color.clear : Color.red;
-                }
-            }
-
-            // Update the colors of the fog mesh
-            mesh.colors = colors;
-        }
-    }
-
     IEnumerator SendRays(Transform positions)
     {
         // iterate through each item in list, then check if they moved
@@ -168,14 +104,7 @@ public class FogOfWar : MonoBehaviour
             // if the previousPos isn't stored, store it.
             if (!previousPositions.ContainsKey(soldier))
             {
-                if (previousPositions.ContainsKey(soldier))
-                {
-                    UpdateFog(soldier, previousPositions[soldier], soldier.transform.position);
-                }
-                else
-                {
-                    previousPositions[soldier] = soldier.transform.position;
-                }
+                previousPositions[soldier] = soldier.transform.position;
 
                 // after waiting send out a ray from the camera to the position of the soldier
                 Vector3 direction = soldier.transform.position - Camera.main.transform.position;
@@ -185,6 +114,8 @@ public class FogOfWar : MonoBehaviour
                 // check if it his
                 if (Physics.Raycast(ray, out hit))
                 {
+                    Debug.Log("Ray hit object: " + hit.collider.gameObject.name);
+
                     // Create a new LineRenderer for this hit
                     GameObject lineRendererObject = new GameObject("LineRenderer");
 
@@ -203,6 +134,9 @@ public class FogOfWar : MonoBehaviour
                     lineRenderers[soldier] = lineRenderer;
 
                     Destroy(lineRenderer, 3f);
+
+                    // Destroy fog
+                    DestroyFog();
                 }
             }
             else
@@ -210,6 +144,8 @@ public class FogOfWar : MonoBehaviour
                 // If the soldier's position is different from the stored pos, it moved
                 if (soldier.transform.position != previousPositions[soldier])
                 {
+                    Debug.Log($"Soldier: {soldier} has moved!");
+
                     // Update the position
                     previousPositions[soldier] = soldier.transform.position;
 
@@ -221,6 +157,8 @@ public class FogOfWar : MonoBehaviour
                     // check if it his
                     if (Physics.Raycast(ray, out hit))
                     {
+                        Debug.Log("Ray hit object: " + hit.collider.gameObject.name);
+
                         // Create a new LineRenderer for this hit
                         GameObject lineRendererObject = new GameObject("LineRenderer");
 
@@ -239,6 +177,11 @@ public class FogOfWar : MonoBehaviour
                         lineRenderers[soldier] = lineRenderer;
 
                         Destroy(lineRenderer, 1f);
+
+                        // check the fog of war pos and remove vertices of it via the ray casts
+                        // these rays will be sent from the position of the soldiers to the y pos of the plane
+                        // once hit the plane, they release a raycast sphere to create holes in the plane
+                        DestroyFog();
                     }
                 }
             }
@@ -247,82 +190,42 @@ public class FogOfWar : MonoBehaviour
         yield return null;
     }
 
-    #region IEnumerators
-
-    IEnumerator FindPositions()
+    private void DestroyFog()
     {
-        while (foundSoldiers == soldiers.Count)
+        if (parentObject.transform != null)
         {
-            // if in general the count is equal to 0, break loop
-            if (soldiers.Count == 0) yield break;
-
             foreach (var soldier in soldiers)
             {
-                soldierPosition = soldier.transform.GetComponent<Transform>();
-            }
+                // Save the origin and direction
+                Vector3 origin = soldier.transform.position;
+                Vector3 direction = Vector3.up;
 
-            // return null to avoid freezing
-            yield return null;
-        }
-    }
+                // Create a ray from those positions
+                Ray ray = new Ray(origin, direction);
+                RaycastHit hit;
 
-<<<<<<< HEAD
-    IEnumerator AddMeshCollider(GameObject fogObject)
-    {
-        // Wait for the next frame
-        yield return null;
-
-        // Now add the MeshCollider
-        MeshCollider fogMeshCollider = fogObject.AddComponent<MeshCollider>();
-        fogMeshCollider.convex = true;
-    }
-
-    IEnumerator InitializeFogObjects()
-    {
-        yield return new WaitForEndOfFrame();
-
-        var allObjects = FindObjectsOfType<GameObject>();
-
-        int fogOfWarLayer = LayerMask.NameToLayer("FogOfWar");
-
-        foreach (var obj in allObjects)
-        {
-            if (obj.layer == fogOfWarLayer)
-            {
-                fogObjects.Add(obj);
-=======
-                int layerMask = (13 << LayerMask.NameToLayer("FogOfWar")) | (6 << LayerMask.NameToLayer("Clickable"));
-
-                // invert the bit corresponding clickable units
-                layerMask = layerMask & ~(6 << LayerMask.NameToLayer("Clickable"));
-
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+                if (Physics.Raycast(ray, out hit, 10f, fogLayer))
                 {
-                    Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green, 100f);
+                    Debug.Log("RayCast hit: " + hit.collider.gameObject.name);
 
-                    // check if it hit the fog
-                    if (hit.collider.transform.IsChildOf(parentObject.transform))
-                    {
-                        Debug.Log("Ray hit the fog");
-                    }
-                    else
-                    {
-                        Debug.LogError("Ray didn't hit child");
-                    }
+                    Debug.DrawRay(ray.origin, ray.direction * 3f, Color.green, 5f);
+
+                    Debug.Log("Successfully hit the mesh");
                 }
                 else
                 {
                     Debug.LogError("Ray didn't hit the fog (Oh no...)");
 
-                    Debug.DrawRay(ray.origin, ray.direction * 1000, Color.red, 100f);
+                    Debug.DrawRay(ray.origin, ray.direction * 3f, Color.red, 5f);
                 }
->>>>>>> parent of a194326 (Ray collision working?! FINALLY)
             }
         }
+        else
+        {
+            Debug.LogError("There is no FOG object in this scene...");
+        }
+
     }
-
-    #endregion
-
 
     private void CreateFogPlane(Vector3 sectionPos, Vector3 sectionSize, int resolution)
     {
@@ -332,14 +235,16 @@ public class FogOfWar : MonoBehaviour
         // Create a new gameobject for the fog plane
         GameObject fogObject = new GameObject("FogPlane");
 
-        fogObject.transform.SetParent(parentObject.transform);
-        fogObject.AddComponent<MeshFilter>();
-        fogObject.AddComponent<MeshRenderer>();
-        fogObject.AddComponent<MeshCollider>();
         fogObject.layer = LayerMask.NameToLayer("FogOfWar");
 
         // Create a new mesh for the fog plane
         Mesh fogMesh = new Mesh();
+
+        // setup mesh
+        fogObject.transform.SetParent(parentObject.transform);
+        fogObject.AddComponent<MeshFilter>();
+        fogObject.AddComponent<MeshRenderer>();
+        StartCoroutine(AddMeshCollider(fogObject));
 
         // Calculate the resolution based on the size of the section
         resolution = (int)(sectionSize.x * sectionSize.z * resolutionFactor);
@@ -401,8 +306,6 @@ public class FogOfWar : MonoBehaviour
         meshRenderer.material = fogMaterial;
     }
 
-<<<<<<< HEAD
-=======
     IEnumerator FindPositions()
     {
         while (foundSoldiers == soldiers.Count)
@@ -420,12 +323,21 @@ public class FogOfWar : MonoBehaviour
         }
     }
 
->>>>>>> parent of a194326 (Ray collision working?! FINALLY)
+    IEnumerator AddMeshCollider(GameObject fogObject)
+    {
+        // Wait for the next frame
+        yield return null;
+
+        // Now add the MeshCollider
+        MeshCollider fogMeshCollider = fogObject.AddComponent<MeshCollider>();
+        fogMeshCollider.convex = true;
+    }
+
     private void UpdateSoldierList()
     {
         // Count the number of null items
         int nullSoldiers = soldiers.RemoveAll(soldier => soldier == null);
-        
+
         // Decrease the foundSoldiers
         foundSoldiers -= nullSoldiers;
 
@@ -459,11 +371,5 @@ public class FogOfWar : MonoBehaviour
                     break;
             }
         }
-    }
-
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(lastHitPoint, radius);
     }
 }
