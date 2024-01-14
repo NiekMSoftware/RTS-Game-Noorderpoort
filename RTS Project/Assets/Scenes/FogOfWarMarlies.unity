@@ -333,7 +333,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 556564693}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: DEBUG
   m_TagString: Untagged
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
@@ -365,7 +365,7 @@ GameObject:
   m_Component:
   - component: {fileID: 613015309}
   - component: {fileID: 613015310}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Fog of War
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -414,6 +414,8 @@ MonoBehaviour:
   resolution: 10
   resolutionFactor: 0.01
   sectionSize: 100
+  fogObjects: []
+  radius: 5
   parentLines: {fileID: 556564692}
 --- !u!850595691 &820401145
 LightingSettings:
@@ -698,7 +700,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1474721380}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: FogPlanes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
