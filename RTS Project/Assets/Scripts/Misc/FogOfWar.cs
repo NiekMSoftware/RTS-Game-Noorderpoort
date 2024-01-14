@@ -29,7 +29,6 @@ public class FogOfWar : MonoBehaviour
     [Header("Fog of War Properties")]
     [SerializeField] private float fogHeight;
     [SerializeField] private Material fogMaterial;
-    [SerializeField] private LayerMask fogLayer;
 
     [Space] 
     [SerializeField] private GameObject parentObject;
@@ -267,6 +266,7 @@ public class FogOfWar : MonoBehaviour
         }
     }
 
+<<<<<<< HEAD
     IEnumerator AddMeshCollider(GameObject fogObject)
     {
         // Wait for the next frame
@@ -290,6 +290,33 @@ public class FogOfWar : MonoBehaviour
             if (obj.layer == fogOfWarLayer)
             {
                 fogObjects.Add(obj);
+=======
+                int layerMask = (13 << LayerMask.NameToLayer("FogOfWar")) | (6 << LayerMask.NameToLayer("Clickable"));
+
+                // invert the bit corresponding clickable units
+                layerMask = layerMask & ~(6 << LayerMask.NameToLayer("Clickable"));
+
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+                {
+                    Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green, 100f);
+
+                    // check if it hit the fog
+                    if (hit.collider.transform.IsChildOf(parentObject.transform))
+                    {
+                        Debug.Log("Ray hit the fog");
+                    }
+                    else
+                    {
+                        Debug.LogError("Ray didn't hit child");
+                    }
+                }
+                else
+                {
+                    Debug.LogError("Ray didn't hit the fog (Oh no...)");
+
+                    Debug.DrawRay(ray.origin, ray.direction * 1000, Color.red, 100f);
+                }
+>>>>>>> parent of a194326 (Ray collision working?! FINALLY)
             }
         }
     }
@@ -305,16 +332,14 @@ public class FogOfWar : MonoBehaviour
         // Create a new gameobject for the fog plane
         GameObject fogObject = new GameObject("FogPlane");
 
+        fogObject.transform.SetParent(parentObject.transform);
+        fogObject.AddComponent<MeshFilter>();
+        fogObject.AddComponent<MeshRenderer>();
+        fogObject.AddComponent<MeshCollider>();
         fogObject.layer = LayerMask.NameToLayer("FogOfWar");
 
         // Create a new mesh for the fog plane
         Mesh fogMesh = new Mesh();
-
-        // setup mesh
-        fogObject.transform.SetParent(parentObject.transform);
-        fogObject.AddComponent<MeshFilter>();
-        fogObject.AddComponent<MeshRenderer>();
-        StartCoroutine(AddMeshCollider(fogObject));
 
         // Calculate the resolution based on the size of the section
         resolution = (int)(sectionSize.x * sectionSize.z * resolutionFactor);
@@ -376,6 +401,26 @@ public class FogOfWar : MonoBehaviour
         meshRenderer.material = fogMaterial;
     }
 
+<<<<<<< HEAD
+=======
+    IEnumerator FindPositions()
+    {
+        while (foundSoldiers == soldiers.Count)
+        {
+            // if in general the count is equal to 0, break loop
+            if (soldiers.Count == 0) yield break;
+
+            foreach (var soldier in soldiers)
+            {
+                soldierPosition = soldier.transform.GetComponent<Transform>();
+            }
+
+            // return null to avoid freezing
+            yield return null;
+        }
+    }
+
+>>>>>>> parent of a194326 (Ray collision working?! FINALLY)
     private void UpdateSoldierList()
     {
         // Count the number of null items

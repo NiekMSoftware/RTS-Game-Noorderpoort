@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DetectEnemies : MonoBehaviour {
+public class FieldOfView : MonoBehaviour {
     [Range(0, 5)] public float viewRadius;
     [Range(0,360)] public float viewAngle;
 
