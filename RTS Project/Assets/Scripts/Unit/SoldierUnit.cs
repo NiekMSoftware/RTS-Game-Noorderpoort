@@ -38,7 +38,8 @@ public class SoldierUnit : Unit
 
     private void Update()
     {
-        print("choosing building to Attack");
+        //print("choosing building to Attack");
+        if (buildingToAttack == null) return;
         ChooseBuildingToAttack();
 
         if(enemyUnit != null)

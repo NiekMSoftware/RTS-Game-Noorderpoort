@@ -22,8 +22,7 @@ public class ComputerEnemy : MonoBehaviour
 
     [SerializeField] private List<Worker> workers;
     [SerializeField] private List<Worker> availableWorkers;
-    //TODO: change this to soldier
-    [SerializeField] private List<Unit> soldiers;
+    [SerializeField] private List<SoldierUnit> soldiers;
     [SerializeField] public List<BuildingBase> placedBuildings;
     [SerializeField] private AIStates state;
     [SerializeField] private int pointsToAddAssignWorker;
@@ -38,6 +37,8 @@ public class ComputerEnemy : MonoBehaviour
     private Points playerPoints;
 
     private bool hasExplored;
+
+    private Vector3 playerMainBuildingPosition;
 
     [SerializeField] private List<MissingResource> resourcesToGather;
 
@@ -92,6 +93,12 @@ public class ComputerEnemy : MonoBehaviour
     private void Start()
     {
         workers = workerSpawner.GetWorkers().ToList();
+
+        foreach (var worker in workers)
+        {
+            worker.typeUnit = Unit.TypeUnit.Enemy;
+        }
+
         availableWorkers = workers;
     }
 
@@ -111,6 +118,8 @@ public class ComputerEnemy : MonoBehaviour
 
     private void MakeChoise()
     {
+        //if (hasTrainedUnit) return;
+
         switch (state)
         {
             case AIStates.Start:
@@ -250,6 +259,8 @@ public class ComputerEnemy : MonoBehaviour
             case AIStates.Exploring:
                 //Add exploring code
 
+                playerMainBuildingPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
+
                 hasExplored = true;
 
                 state = AIStates.Check;
@@ -308,41 +319,41 @@ public class ComputerEnemy : MonoBehaviour
 
             case AIStates.PreparingAttack:
                 //Build barracks and create offensive troops
-                Barrack barrack = null;
-
+                Barrack barrackBuilding = null;
                 foreach (var building in buildings)
                 {
                     if (building.buildingType == BuildingType.Offensive)
                     {
-                        building.building.TryGetComponent(out barrack);
-                        if (!building.hasBeenPlaced)
+                        if (building.building.TryGetComponent(out barrackBuilding))
                         {
-                            PlaceNonResourceBuilding(building);
-                        }
-                        else
-                        {
-                            Worker worker = GetRandomAvailableWorker();
-
-                            if (worker)
+                            if (!building.hasBeenPlaced)
                             {
-                                //barrack.AddUnitToBarrack(worker.gameObject);
-                                barrack.AIEnteredEntrance(worker);
-                                availableWorkers.Remove(worker);
+                                PlaceNonResourceBuilding(building);
                             }
                         }
                     }
                 }
 
-                //Fix bugs
-                if (barrack)
-                {
-                    if (barrack.GetSpawnedSoldier() != null)
-                    {
-                        if (soldiers.Contains(barrack.GetSpawnedSoldier())) return;
+                BuildingBase placedBarrackBuildingBase = GetPlacedBuildingByType(barrackBuilding);
 
-                        if (debugMode)
-                            print("made soldier");
-                        soldiers.Add(barrack.GetSpawnedSoldier());
+                if(placedBarrackBuildingBase.TryGetComponent(out Barrack placedBarrack))
+                {
+                    Worker worker = GetRandomAvailableWorker();
+
+                    if (worker)
+                    {
+                        placedBarrack.AddUnitToBarrack(worker.gameObject);
+                        availableWorkers.Remove(worker);
+                    }
+
+                    if (placedBarrack.GetSpawnedSoldier() != null)
+                    {
+                        SoldierUnit soldierUnit = placedBarrack.GetSpawnedSoldier();
+                        if (soldiers.Contains(soldierUnit)) return;
+
+                        soldierUnit.typeUnit = Unit.TypeUnit.Enemy;
+
+                        soldiers.Add(soldierUnit);
                     }
                 }
 
@@ -351,11 +362,9 @@ public class ComputerEnemy : MonoBehaviour
 
             case AIStates.Attacking:
                 //Select all soldiers and attack player
-                if (debugMode)
-                    print("cum on we have to ATTACK!");
                 foreach (var soldier in soldiers)
                 {
-                    soldier.GetComponent<NavMeshAgent>().SetDestination(Vector3.zero);
+                    soldier.GetComponent<NavMeshAgent>().SetDestination(playerMainBuildingPosition);
                 }
                 break;
         }
@@ -541,6 +550,19 @@ public class ComputerEnemy : MonoBehaviour
         return null;
     }
 
+    private BuildingBase GetPlacedBuildingByType(BuildingBase building)
+    {
+        foreach (var placedBuilding in placedBuildings)
+        {
+            if (placedBuilding.GetType() == building.GetType())
+            {
+                return placedBuilding;
+            }
+        }
+
+        return null;
+    }
+
     private Worker GetRandomAvailableWorker()
     {
         if (availableWorkers.Count <= 0)
@@ -605,7 +627,7 @@ public class ComputerEnemy : MonoBehaviour
                 if (resourceManager.resources[0].GetComponent<ResourceObject>().slot.data == itemdata)
                 {
                     //When the AI did not already place a building here
-                    if (!resourceManager.AIPlacedBuilding)
+                    if (!resourceManager.placedBuilding)
                     {
                         validResourceManagers.Add(resourceManager);
                     }
@@ -627,7 +649,7 @@ public class ComputerEnemy : MonoBehaviour
             }
         }
 
-        closestResource.AIPlacedBuilding = true;
+        closestResource.placedBuilding = true;
         return closestResource;
     }
 
