@@ -28,29 +28,36 @@ public class WeatherTimeManager : MonoBehaviour
     [SerializeField] private WeatherStates currentWeather;
     [SerializeField] private Weather[] weathers;
 
-
     [System.Serializable]
-    public class Weather
+    public struct Weather
     {
-        public GameObject[] weatherParticles;
-        public float particlesAmountMultiplier;
+        public ParticleSettings[] particlesSettings;
         public CloudSettings cloudState;
         public float windSpeed;
         public AudioManager.AudioGroupNames audioToPlay;
     }
 
     [System.Serializable]
-    public class CloudSettings
+    public struct CloudSettings
     {
         public float density;
         public Color color;
+    }
+
+    [System.Serializable]
+    public struct ParticleSettings
+    {
+        public ParticleSystem particleSystem;
+        public float particleAmountMultiplier;
     }
 
     public enum WeatherStates
     {
         None,
         Rain,
-        HeavyRain
+        HeavyRain,
+        Snowing,
+        Storm
     }
 
     private Camera mainCamera;
@@ -119,17 +126,17 @@ public class WeatherTimeManager : MonoBehaviour
             }
         }
 
-        if (weather.weatherParticles.Length > 0)
+        if (weather.particlesSettings.Length > 0)
         {
-            foreach (var particle in weather.weatherParticles)
+            foreach (var particle in weather.particlesSettings)
             {
-                GameObject weatherParticle = Instantiate(particle, mainCamera.GetComponent<CameraMovement>().GetParticleSpawnPoint());
-                weatherParticles.Add(particle.GetComponent<ParticleSystem>());
+                GameObject weatherParticle = Instantiate(particle.particleSystem.gameObject, mainCamera.GetComponent<CameraMovement>().GetParticleSpawnPoint());
+
                 if (weatherParticle.TryGetComponent(out ParticleSystem particleSystem))
                 {
+                    weatherParticles.Add(particleSystem);
                     ParticleSystem.EmissionModule emission = particleSystem.emission;
-                    emission.rateOverTimeMultiplier = weather.particlesAmountMultiplier;
-                    print(emission.rateOverTimeMultiplier);
+                    emission.rateOverTimeMultiplier = particle.particleAmountMultiplier;
                     particleSystem.Play();
                 }
             }

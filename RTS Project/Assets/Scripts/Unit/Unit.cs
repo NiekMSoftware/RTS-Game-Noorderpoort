@@ -44,7 +44,7 @@ public class Unit : MonoBehaviour
     [SerializeField] GameObject marker;
     [SerializeField] LayerMask clickableUnit;
     [SerializeField] protected Color selectionColor;
-    [SerializeField] private int cameraResoltion = 64;
+    [SerializeField] private int cameraResolution = 64;
     [SerializeField] private float cameraFPS = 5;
 
     private Camera unitCamera;
