@@ -36,7 +36,7 @@ public class Spawner : MonoBehaviour
         {
             if (spawnedCubes[i] == null) 
             {
-                print("er ontbreekt een kubus!");
+                //print("er ontbreekt een kubus!");
                 spawnedCubes.RemoveAt(i);
 
             } 
