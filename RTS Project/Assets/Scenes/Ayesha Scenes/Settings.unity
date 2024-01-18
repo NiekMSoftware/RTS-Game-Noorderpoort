@@ -580,11 +580,11 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
-    - m_Text: Option A
+    - m_Text: Low Quality
       m_Image: {fileID: 0}
-    - m_Text: Option B
+    - m_Text: Medium Quality
       m_Image: {fileID: 0}
-    - m_Text: Option C
+    - m_Text: High Quality
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
@@ -685,7 +685,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Option A
+  m_text: Low Quality
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1205,15 +1205,15 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1564297679}
-  - {fileID: 1823983283}
   - {fileID: 1734874895}
-  - {fileID: 1073846051}
-  - {fileID: 1739123852}
-  - {fileID: 1832805563}
   - {fileID: 433788518}
-  - {fileID: 330762160}
+  - {fileID: 1823983283}
+  - {fileID: 1739123852}
   - {fileID: 1173550733}
+  - {fileID: 1832805563}
   - {fileID: 1178545638}
+  - {fileID: 1073846051}
+  - {fileID: 330762160}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
