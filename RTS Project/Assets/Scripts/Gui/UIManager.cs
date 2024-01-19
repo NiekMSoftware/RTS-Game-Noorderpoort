@@ -39,6 +39,8 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
+        return;
+
         for (int i = 0; i < resourceTexts.Length; i++)
         {
             ItemSlot currentItemSlot = playerResourceItemManager.itemSlots[i];

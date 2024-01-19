@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -87,6 +88,7 @@ public class SoldierSplineMove : MonoBehaviour
 
                 List<Unit> units = selectionManager.GetSelectedUnits();
                 List<NavMeshAgent> unitAgents = new();
+                print("Amount of ai: " + units.Count);
 
                 foreach (Unit unit in units)
                 {
@@ -96,6 +98,7 @@ public class SoldierSplineMove : MonoBehaviour
                 float splineLength = spline.GetLength();
                 float distanceBetweenNodes = 3;
                 int amountOfNodes = (int)(splineLength / distanceBetweenNodes);
+                print("Amount of nodes : " + amountOfNodes);
                 float jumpAmount = amountOfNodes / splineLength;
                 float currentPos = 0;
 
