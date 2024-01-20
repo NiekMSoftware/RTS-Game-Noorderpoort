@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -51,13 +52,13 @@ public class NewSelectionManager : MonoBehaviour
         {
             if (mayDeselect)
             {
-                print("aaaa123");
+                print("deselecting");
                 selectedUnit.Deselect();
                 selectedUnit = null;
             }
             else
             {
-                print("aaaaa");
+                print("may deselect : false");
             }
 
             uiManager.SetUnitUI(false, null);
@@ -116,14 +117,6 @@ public class NewSelectionManager : MonoBehaviour
         else if (Input.GetMouseButtonDown(1))//right mouse button
         {
             MoveUnits(ray);
-        }
-    }
-
-    private void UnassignWorkerTest(Ray ray)
-    {
-        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, unitLayer) && hit.collider.GetComponent<Worker>())
-        {
-            hit.collider.gameObject.GetComponent<Worker>().UnAssignWorker();
         }
     }
 

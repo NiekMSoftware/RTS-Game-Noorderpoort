@@ -275,7 +275,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   selectionColor: {r: 0.023584902, g: 0.42912304, b: 0.8156863, a: 1}
-  cameraResoltion: 64
+  cameraResolution: 64
   cameraFPS: 5
   damageAmount: 5
   buildingToAttack: {fileID: 0}
@@ -290,6 +290,7 @@ MonoBehaviour:
   selectionManager: {fileID: 0}
   damageInterval: 5
   currentBuildingDist: 0
+  detectEnemies: {fileID: 0}
 --- !u!135 &1485270839212012832
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -307,7 +308,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Radius: 20
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}

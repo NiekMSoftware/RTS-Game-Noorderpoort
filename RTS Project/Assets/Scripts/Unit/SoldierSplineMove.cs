@@ -20,11 +20,12 @@ public class SoldierSplineMove : MonoBehaviour
     {
         mainCamera = Camera.main;
 
-        enabled = false;
+        gameObject.SetActive(false);
     }
 
     private void Update()
     {
+        print("AAAAAAAAAAAAAAAAA i am alive! What is this feeling?!?! Who am i? Oh yeah nevermind i am : " + this);
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, groundLayer))
@@ -108,10 +109,9 @@ public class SoldierSplineMove : MonoBehaviour
 
                 for (int i = 0; i < amountOfNodes; i++)
                 {
-                    if (i >= unitAgents.Count) return;
-                    if (unitAgents[i] == null) return;
+                    if (i >= unitAgents.Count) continue;
+                    if (unitAgents[i] == null) continue;
 
-                    print(currentPos);
                     NavMeshPath path = new();
                     Vector3 splinePos = spline.EvaluatePosition(currentPos);
                     unitAgents[i].CalculatePath(splinePos, path);
@@ -120,7 +120,7 @@ public class SoldierSplineMove : MonoBehaviour
                 }
 
                 selectionManager.SetMayDeselect(true);
-                enabled = false;
+                gameObject.SetActive(false);
             }
         }
     }

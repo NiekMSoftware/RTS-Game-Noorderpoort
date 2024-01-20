@@ -1924,7 +1924,7 @@ PrefabInstance:
         type: 3}
       propertyPath: soldierSplineMove
       value: 
-      objectReference: {fileID: 647070792}
+      objectReference: {fileID: 647070791}
     - target: {fileID: 1991099906848169630, guid: 6bb7140ab92b8c9449f606d4fef4abdf,
         type: 3}
       propertyPath: m_AnchorMax.y
