@@ -88,7 +88,6 @@ public class SoldierSplineMove : MonoBehaviour
 
                 List<Unit> units = selectionManager.GetSelectedUnits();
                 List<NavMeshAgent> unitAgents = new();
-                print("Amount of ai: " + units.Count);
 
                 foreach (Unit unit in units)
                 {
@@ -98,17 +97,25 @@ public class SoldierSplineMove : MonoBehaviour
                 float splineLength = spline.GetLength();
                 float distanceBetweenNodes = 3;
                 int amountOfNodes = (int)(splineLength / distanceBetweenNodes);
-                print("Amount of nodes : " + amountOfNodes);
-                float jumpAmount = amountOfNodes / splineLength;
+                float jumpAmount = distanceBetweenNodes / splineLength;
                 float currentPos = 0;
+
+                if (amountOfNodes > unitAgents.Count)
+                {
+                    distanceBetweenNodes = splineLength / unitAgents.Count;
+                    jumpAmount = distanceBetweenNodes / splineLength;
+                }
 
                 for (int i = 0; i < amountOfNodes; i++)
                 {
+                    if (i >= unitAgents.Count) return;
                     if (unitAgents[i] == null) return;
 
+                    print(currentPos);
                     NavMeshPath path = new();
-                    unitAgents[i].CalculatePath(spline.EvaluatePosition(currentPos), path);
-                    unitAgents[i].SetDestination(spline.EvaluatePosition(currentPos));
+                    Vector3 splinePos = spline.EvaluatePosition(currentPos);
+                    unitAgents[i].CalculatePath(splinePos, path);
+                    unitAgents[i].SetDestination(splinePos);
                     currentPos += jumpAmount;
                 }
 
