@@ -706,6 +706,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa10eec7814bceb4d8421c71e22f1f0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &528797317 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8197054196703273472, guid: e66dfe5730aecb44d9402b720e3c76bf,
+    type: 3}
+  m_PrefabInstance: {fileID: 684499249}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &533421661
 GameObject:
   m_ObjectHideFlags: 0
@@ -1747,6 +1753,16 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1483393148}
+    - target: {fileID: 1742137279065446063, guid: 6bb7140ab92b8c9449f606d4fef4abdf,
+        type: 3}
+      propertyPath: selectionManager
+      value: 
+      objectReference: {fileID: 1536612487}
+    - target: {fileID: 1742137279065446063, guid: 6bb7140ab92b8c9449f606d4fef4abdf,
+        type: 3}
+      propertyPath: soldierSplineMove
+      value: 
+      objectReference: {fileID: 528797317}
     - target: {fileID: 1991099906848169630, guid: 6bb7140ab92b8c9449f606d4fef4abdf,
         type: 3}
       propertyPath: m_AnchorMax.y
