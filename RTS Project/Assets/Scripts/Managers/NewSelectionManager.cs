@@ -29,6 +29,9 @@ public class NewSelectionManager : MonoBehaviour
 
     private UIManager uiManager;
 
+    private bool mayDrawSelectionBox = true;
+    private bool mayDeselect = true;
+
     private void Awake()
     {
         mainCamera = Camera.main;
@@ -42,10 +45,20 @@ public class NewSelectionManager : MonoBehaviour
 
     public void Update()
     {
+        print(mayDeselect);
+
         if (selectedUnits.Count != 1 && selectedUnit)
         {
-            selectedUnit.Deselect();
-            selectedUnit = null;
+            if (mayDeselect)
+            {
+                print("aaaa123");
+                selectedUnit.Deselect();
+                selectedUnit = null;
+            }
+            else
+            {
+                print("aaaaa");
+            }
 
             uiManager.SetUnitUI(false, null);
         }
@@ -59,6 +72,21 @@ public class NewSelectionManager : MonoBehaviour
             uiManager.SetUnitUI(true, selectedUnits[0]);
             selectedUnit = selectedUnits[0];
             selectedUnit.Select();
+        }
+
+        if (selectedUnits.Count > 1)
+        {
+            bool isSoldier = false;
+
+            foreach (var unit in selectedUnits)
+            {
+                if (unit is SoldierUnit)
+                {
+                    isSoldier = true;
+                }
+            }
+
+            uiManager.SetMultiSoldierUI(isSoldier);
         }
     }
 
@@ -231,6 +259,8 @@ public class NewSelectionManager : MonoBehaviour
 
     public void DeselectAllUnits()
     {
+        if (!mayDeselect) return;
+
         foreach (Unit unit in selectedUnits)
         {
             unit.SetSelectionObject(false);
@@ -251,6 +281,8 @@ public class NewSelectionManager : MonoBehaviour
 
     private void HandleBoxSelect()
     {
+        if (!mayDrawSelectionBox) return;
+
         if (Input.GetMouseButtonDown(0))
         {
             boxStartPosition = Input.mousePosition;
@@ -342,6 +374,10 @@ public class NewSelectionManager : MonoBehaviour
     public List<Unit> GetSelectedUnits() => selectedUnits;
 
     public Marker GetMarker() => marker;
+
+    public void SetMayDrawSelectionBox(bool value) => mayDrawSelectionBox = value;
+
+    public void SetMayDeselect(bool value) => mayDeselect = value;
 
     #endregion
 }
