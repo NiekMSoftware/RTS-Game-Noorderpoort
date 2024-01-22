@@ -25,7 +25,6 @@ public class SoldierSplineMove : MonoBehaviour
 
     private void Update()
     {
-        print("AAAAAAAAAAAAAAAAA i am alive! What is this feeling?!?! Who am i? Oh yeah nevermind i am : " + this);
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, groundLayer))

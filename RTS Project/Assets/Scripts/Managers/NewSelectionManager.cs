@@ -46,19 +46,12 @@ public class NewSelectionManager : MonoBehaviour
 
     public void Update()
     {
-        print(mayDeselect);
-
         if (selectedUnits.Count != 1 && selectedUnit)
         {
             if (mayDeselect)
             {
-                print("deselecting");
                 selectedUnit.Deselect();
                 selectedUnit = null;
-            }
-            else
-            {
-                print("may deselect : false");
             }
 
             uiManager.SetUnitUI(false, null);

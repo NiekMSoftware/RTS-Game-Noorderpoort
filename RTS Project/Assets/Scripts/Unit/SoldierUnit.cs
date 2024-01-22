@@ -31,7 +31,6 @@ public class SoldierUnit : Unit
     {
         unit = FindObjectOfType<Unit>();
         selectionManager = FindObjectOfType<NewSelectionManager>();
-        print("selection manager : " + selectionManager);
         myAgent = GetComponent<NavMeshAgent>();
         detectEnemies = GetComponent<DetectEnemies>();
     }
