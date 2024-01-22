@@ -50,3 +50,4 @@ MonoBehaviour:
     m_Bits: 8
   splineContainerPrefab: {fileID: 7648696506688546119, guid: f5b0f44d594327f47b82a10d1677a3d3,
     type: 3}
+  maxSplineLength: 500

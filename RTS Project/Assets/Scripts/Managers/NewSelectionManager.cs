@@ -359,6 +359,13 @@ public class NewSelectionManager : MonoBehaviour
 
     public List<Unit> GetSelectedUnits() => selectedUnits;
 
+    public List<SoldierUnit> GetSelectedSoldiers()
+    {
+        List<SoldierUnit> soldiers = new();
+        selectedUnits.ForEach(x => { if (x is SoldierUnit soldier) soldiers.Add(soldier); });
+        return soldiers;
+    }
+
     public Marker GetMarker() => marker;
 
     public void SetMayDrawSelectionBox(bool value) => mayDrawSelectionBox = value;
