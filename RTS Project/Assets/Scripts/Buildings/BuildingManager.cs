@@ -72,6 +72,12 @@ public class BuildingManager : MonoBehaviour
         for (int i = 0; i < buildings.Length; i++)
         {
             Button button = buildings[i].button;
+
+            if (button == null)
+            {
+                Debug.LogError("Building button not found");
+                continue;
+            }
             button.interactable = false;
             button.onClick.RemoveAllListeners();
             int index = i;

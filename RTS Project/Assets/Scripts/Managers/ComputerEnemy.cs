@@ -364,8 +364,12 @@ public class ComputerEnemy : MonoBehaviour
                 //Select all soldiers and attack player
                 foreach (var soldier in soldiers)
                 {
+                    NavMeshPath path = new();
+                    soldier.GetComponent<NavMeshAgent>().CalculatePath(playerMainBuildingPosition, path);
                     soldier.GetComponent<NavMeshAgent>().SetDestination(playerMainBuildingPosition);
                 }
+
+                soldiers.Clear();
                 break;
         }
     }
@@ -387,6 +391,7 @@ public class ComputerEnemy : MonoBehaviour
             GameObject spawnedBuilding = Instantiate(building.building, position, Quaternion.identity);
 
             BuildingBase spawnedBuildingBase = spawnedBuilding.GetComponent<BuildingBase>();
+
             spawnedBuildingBase.Init(buildingMaterial, buildingParticle, spawnedBuilding, building.buildTime, BuildingBase.States.Building);
 
             spawnedBuilding.TryGetComponent(out ResourceBuildingBase resourceBuildingBase);
