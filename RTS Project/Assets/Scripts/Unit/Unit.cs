@@ -71,17 +71,6 @@ public class Unit : MonoBehaviour
         SetRandomSex();
 
         SetRandomName();
-
-        //voor UnitManager
-        UnitManager unitManager = FindObjectOfType<UnitManager>();
-        if (unitManager != null)
-        {
-            unitManager.AddUnit(this);
-        }
-        else
-        {
-            Debug.Log("can't add Units to lists");
-        }
     }
 
     private void SetRandomName()

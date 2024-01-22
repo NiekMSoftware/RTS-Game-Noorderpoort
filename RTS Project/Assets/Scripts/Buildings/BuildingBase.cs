@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.IO.LowLevel.Unsafe;
+using Unity.VisualScripting;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 
@@ -151,10 +152,13 @@ public class BuildingBase : MonoBehaviour
         {
             if (!spawnedParticle)
             {
-                ParticleSystem particle = Instantiate(particleObject, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
-                particle.Play();
-                particleTimer = particle.main.duration;
-                spawnedParticle = true;
+                if (particleObject != null)
+                {
+                    ParticleSystem particle = Instantiate(particleObject, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
+                    particle.Play();
+                    particleTimer = particle.main.duration;
+                    spawnedParticle = true;
+                }
             }
             else
             {
