@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine.UI;
 public class MultiSoldierSelect : MonoBehaviour
 {
     [SerializeField] private Button drawFormationButton;
-    [SerializeField] private SoldierSplineMove soldierSplineMove;
+    [SerializeField] private GameObject soldierSplineMove;
     [SerializeField] private NewSelectionManager selectionManager;
 
     private void Start()
@@ -19,6 +20,6 @@ public class MultiSoldierSelect : MonoBehaviour
     {
         selectionManager.SetMayDeselect(false);
         selectionManager.SetMayDrawSelectionBox(false);
-        soldierSplineMove.enabled = true;
+        soldierSplineMove.SetActive(true);
     }
 }

@@ -13,10 +13,7 @@ public class PlayerWorkerSpawner : MonoBehaviour
     private void Awake()
     {
         terrain = FindObjectOfType<Terrain>();
-    }
 
-    private void Start()
-    {
         workers = new Worker[amountToSpawn];
 
         for (int i = 0; i < amountToSpawn; i++)

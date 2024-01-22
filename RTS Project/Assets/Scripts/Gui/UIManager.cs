@@ -35,12 +35,12 @@ public class UIManager : MonoBehaviour
 
         mainCamera = Camera.main;
         selectionManager = FindObjectOfType<NewSelectionManager>();
+
+        Invoke(nameof(UpdateResourceTexts), 1f);
     }
 
-    private void Update()
+    private void UpdateResourceTexts()
     {
-        return;
-
         for (int i = 0; i < resourceTexts.Length; i++)
         {
             ItemSlot currentItemSlot = playerResourceItemManager.itemSlots[i];

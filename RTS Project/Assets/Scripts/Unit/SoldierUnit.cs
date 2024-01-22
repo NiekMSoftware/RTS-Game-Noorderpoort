@@ -31,7 +31,6 @@ public class SoldierUnit : Unit
     {
         unit = FindObjectOfType<Unit>();
         selectionManager = FindObjectOfType<NewSelectionManager>();
-        print("selection manager : " + selectionManager);
         myAgent = GetComponent<NavMeshAgent>();
         detectEnemies = GetComponent<DetectEnemies>();
     }
@@ -53,12 +52,12 @@ public class SoldierUnit : Unit
             {
                 if (enemyUnit.typeUnit == TypeUnit.Enemy)
                 {
-                    EnemyRange();
+                    //EnemyRange();
                 }
 
                 if (soldierUnit.typeUnit == TypeUnit.Human)
                 {
-                    SoldierRange();
+                    //SoldierRange();
                 }
             }
         }
@@ -70,7 +69,7 @@ public class SoldierUnit : Unit
 
         if (isInRange)
         {
-            EnemyRange();
+            //EnemyRange();
         }
 
         if (soldierUnit == null)

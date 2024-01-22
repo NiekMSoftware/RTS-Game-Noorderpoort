@@ -20,7 +20,7 @@ public class SoldierSplineMove : MonoBehaviour
     {
         mainCamera = Camera.main;
 
-        enabled = false;
+        gameObject.SetActive(false);
     }
 
     private void Update()
@@ -108,10 +108,9 @@ public class SoldierSplineMove : MonoBehaviour
 
                 for (int i = 0; i < amountOfNodes; i++)
                 {
-                    if (i >= unitAgents.Count) return;
-                    if (unitAgents[i] == null) return;
+                    if (i >= unitAgents.Count) continue;
+                    if (unitAgents[i] == null) continue;
 
-                    print(currentPos);
                     NavMeshPath path = new();
                     Vector3 splinePos = spline.EvaluatePosition(currentPos);
                     unitAgents[i].CalculatePath(splinePos, path);
@@ -120,7 +119,7 @@ public class SoldierSplineMove : MonoBehaviour
                 }
 
                 selectionManager.SetMayDeselect(true);
-                enabled = false;
+                gameObject.SetActive(false);
             }
         }
     }
