@@ -97,8 +97,8 @@ GameObject:
   - component: {fileID: 2124331050788244938}
   - component: {fileID: 6909574573759632584}
   - component: {fileID: 3631595101206008243}
-  - component: {fileID: 3883668397140479732}
-  - component: {fileID: 1485270839212012832}
+  - component: {fileID: 4171562252069922633}
+  - component: {fileID: 3895033456078313050}
   m_Layer: 6
   m_Name: SoldierAI
   m_TagString: AI
@@ -244,7 +244,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &3883668397140479732
+--- !u!114 &4171562252069922633
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -253,62 +253,56 @@ MonoBehaviour:
   m_GameObject: {fileID: 3721838096702204654}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba023a08ae0e2514d8d4817a63cbff60, type: 3}
+  m_Script: {fileID: 11500000, guid: 20d0b4e5cd8d95c459a805b00fd2ddc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitHealth: 10
-  unitMaxHealth: 20
+  viewRadius: 10
+  viewAngle: 94
+  targetMask:
+    serializedVersion: 2
+    m_Bits: 64
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 9
+  visibleTargets: []
+  foundEnemies: 0
+--- !u!114 &3895033456078313050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3721838096702204654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c043f2e59a7dd64ead5c8841b9f5d9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitHealth: 20
+  unitMaxHealth: 10
   unitHealing: 0
   unitName: 
-  unitSpeed: 6
-  unitDamage: 1
+  unitSpeed: 5
+  unitDamage: 5
   job: 0
-  typeUnit: 1
+  typeUnit: 3
   sex: 0
   selectionObject: {fileID: 490151513896331683}
   myAgent: {fileID: 6909574573759632584}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  marker: {fileID: 0}
+  marker: {fileID: 2349340977249974520, guid: e8eb32d6833c2d8449c1cb6a0f1f82ed, type: 3}
   clickableUnit:
     serializedVersion: 2
-    m_Bits: 64
-  selectionColor: {r: 0.023584902, g: 0.42912304, b: 0.8156863, a: 1}
+    m_Bits: 0
+  selectionColor: {r: 0, g: 0, b: 0, a: 0}
   cameraResolution: 64
   cameraFPS: 5
-  damageAmount: 5
-  buildingToAttack: {fileID: 0}
-  isInRange: 0
-  enemyUnit: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2,
-    type: 3}
-  soldierUnit: {fileID: 3883668397140479732}
-  enemyHp: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2, type: 3}
-  soldierHp: {fileID: 3883668397140479732}
-  unit: {fileID: 0}
-  target: {fileID: 3883668397140479732, guid: e24a08ebbf222704aa32424587ff98f2, type: 3}
-  selectionManager: {fileID: 0}
-  damageInterval: 5
-  currentBuildingDist: 0
-  detectEnemies: {fileID: 0}
---- !u!135 &1485270839212012832
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3721838096702204654}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Radius: 20
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+  autoAttackTargets: 0
+  acceptDistance: 1.5
+  attackSpeed: 1
+  turnInterval: 0
+  turnSpeed: 90
+  currentState: 0
+  target: {fileID: 0}

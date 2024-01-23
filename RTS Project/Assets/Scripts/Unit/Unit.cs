@@ -123,6 +123,12 @@ public class Unit : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (unitHealth <= 0)
+        {
+            Death();
+            return;
+        }
+
         if (isSelected)
         {
             elapsed += Time.deltaTime;
@@ -178,7 +184,8 @@ public class Unit : MonoBehaviour
 
     protected virtual void Death()
     {
-
+        Destroy(gameObject);
+        return;
     }
 
     protected virtual int Heal(int healing)

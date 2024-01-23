@@ -1,8 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 #if UNITY_EDITOR
 
@@ -22,9 +19,11 @@ public class FieldOfViewEditor : Editor
         Handles.DrawLine(fow.transform.position, fow.transform.position + viewAngleB * fow.viewRadius);
 
         Handles.color = Color.red;
-        foreach (Transform visibleTarget in fow.visibleTargets) 
+        foreach (GameObject visibleTarget in fow.visibleTargets)
         {
-            Handles.DrawLine(fow.transform.position, visibleTarget.position);
+            if (visibleTarget == null) continue;
+
+            Handles.DrawLine(fow.transform.position, visibleTarget.transform.position);
         }
     }
 }
