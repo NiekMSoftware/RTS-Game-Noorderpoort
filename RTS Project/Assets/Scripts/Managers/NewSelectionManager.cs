@@ -74,7 +74,7 @@ public class NewSelectionManager : MonoBehaviour
 
             foreach (var unit in selectedUnits)
             {
-                if (unit is SoldierUnit)
+                if (unit is Soldier)
                 {
                     isSoldier = true;
                 }
@@ -359,10 +359,10 @@ public class NewSelectionManager : MonoBehaviour
 
     public List<Unit> GetSelectedUnits() => selectedUnits;
 
-    public List<SoldierUnit> GetSelectedSoldiers()
+    public List<Soldier> GetSelectedSoldiers()
     {
-        List<SoldierUnit> soldiers = new();
-        selectedUnits.ForEach(x => { if (x is SoldierUnit soldier) soldiers.Add(soldier); });
+        List<Soldier> soldiers = new();
+        selectedUnits.ForEach(x => { if (x is Soldier soldier) soldiers.Add(soldier); });
         return soldiers;
     }
 

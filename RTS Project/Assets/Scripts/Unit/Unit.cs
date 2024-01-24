@@ -47,18 +47,12 @@ public class Unit : MonoBehaviour
     [SerializeField] private int cameraResolution = 64;
     [SerializeField] private float cameraFPS = 5;
 
-    private Camera unitCamera;
+    [SerializeField] private Camera unitCamera;
     private RenderTexture renderTexture;
 
     private bool isSelected;
 
     private string currentAction;
-
-
-    private void Awake()
-    {
-        unitCamera = GetComponentInChildren<Camera>();
-    }
 
     protected virtual void Start()
     {

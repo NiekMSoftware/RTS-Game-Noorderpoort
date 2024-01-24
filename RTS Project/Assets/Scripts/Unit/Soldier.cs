@@ -22,7 +22,7 @@ public class Soldier : Unit
     private float attackTimer;
     private float turnTimer;
 
-    private float savedAngle;
+    private float amountTurned;
 
     private enum States
     {
@@ -70,20 +70,19 @@ public class Soldier : Unit
         switch (currentState)
         {
             case States.Idle:
-                //turnTimer -= Time.deltaTime;
+                turnTimer -= Time.deltaTime;
 
-                //if (turnTimer <= 0 )
-                //{
-                //    if (savedAngle == 0)
-                //        savedAngle = transform.rotation.y;
-                //    else if (savedAngle + transform.rotation.y < 1f && transform.rotation.y > 5)
-                //    {
-                //        savedAngle = 0;
-                //        turnTimer = turnInterval;
-                //    }
+                if (turnTimer <= 0)
+                {
+                    if (amountTurned >= 360)
+                    {
+                        amountTurned = 0;
+                        turnTimer = turnInterval;
+                    }
 
-                //    transform.Rotate(Time.deltaTime * turnSpeed * Vector3.up);
-                //}
+                    amountTurned += Time.deltaTime * turnSpeed;
+                    transform.Rotate(Time.deltaTime * turnSpeed * Vector3.up);
+                }
                 break;
 
             case States.Attacking:
