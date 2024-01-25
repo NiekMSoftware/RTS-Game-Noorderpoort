@@ -20,9 +20,6 @@ public class NewSelectionManager : MonoBehaviour
 
     private Camera mainCamera;
 
-    private BuildingBase buildingToAttack;
-    private Unit enemyToAttack;
-
     private Marker marker;
 
     [SerializeField] private BuildingBase selectedBuilding;
@@ -128,15 +125,12 @@ public class NewSelectionManager : MonoBehaviour
                 {
                     switch (unit)
                     {
-                        case Unit soldier when unit is SoldierUnit:
+                        case Soldier soldier when unit is Soldier:
                             //Send soldier to enemy building
+                            
                             if (building.GetOccupancyType() == BuildingBase.OccupancyType.Enemy)
                             {
-                                //Change to buildingbase when soldierunit is changed
-                                buildingToAttack = building;
-
-                                soldier.SendUnitToLocation(building.transform.position);
-                                soldier.SetCurrentAction("Attacking " + building.buildingName);
+                                soldier.SelectedBuilding(building);
                             }
                             break;
 
@@ -183,11 +177,11 @@ public class NewSelectionManager : MonoBehaviour
             marker = Instantiate(markerPrefab, hit.point, Quaternion.identity).GetComponent<Marker>();
             foreach (var unit in selectedUnits)
             {
-                if (unit.TryGetComponent(out SoldierUnit soldier))
+                //Todo: figure this shit out
+                if (unit.TryGetComponent(out Soldier soldier))
                 {
-                    soldier.enemyUnit = null;
-                    enemyToAttack = null;
-                    print("set enemy to null");
+                    print("reset soldier");
+                    soldier.ResetTargets();
                 }
 
                 unit.SendUnitToLocation(hit.point);
@@ -232,8 +226,6 @@ public class NewSelectionManager : MonoBehaviour
 
     private void AttackEnemy(RaycastHit hit, Unit enemy)
     {
-        enemyToAttack = enemy;
-
         foreach (var soldier in selectedUnits)
         {
             if (soldier is SoldierUnit)
@@ -352,10 +344,6 @@ public class NewSelectionManager : MonoBehaviour
     #endregion
 
     #region Public Getters
-
-    public BuildingBase GetBuildingToAttack() => buildingToAttack;
-
-    public Unit GetEnemyToAttack() => enemyToAttack;
 
     public List<Unit> GetSelectedUnits() => selectedUnits;
 
