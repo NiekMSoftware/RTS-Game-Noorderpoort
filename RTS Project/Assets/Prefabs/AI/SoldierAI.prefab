@@ -259,6 +259,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewRadius: 10
   viewAngle: 94
+  senseDistance: 5
   targetMask:
     serializedVersion: 2
     m_Bits: 64
@@ -266,7 +267,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 9
   visibleTargets: []
-  foundEnemies: 0
 --- !u!114 &3895033456078313050
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -301,13 +301,14 @@ MonoBehaviour:
   cameraResolution: 64
   cameraFPS: 5
   unitCamera: {fileID: 2674803573189764175}
-  autoAttackTargets: 0
   acceptDistance: 1.5
   attackSpeed: 1
   turnInterval: 3
   turnSpeed: 90
+  cantDetectTargetsTime: 2
   currentState: 0
   target: {fileID: 0}
+  secTarget: {fileID: 0}
 --- !u!1 &4420035977062785065
 GameObject:
   m_ObjectHideFlags: 0

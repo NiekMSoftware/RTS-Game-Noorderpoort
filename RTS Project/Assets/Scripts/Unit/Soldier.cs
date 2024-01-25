@@ -7,7 +7,8 @@ using UnityEngine.AI;
 [RequireComponent (typeof(NavMeshAgent))]
 public class Soldier : Unit
 {
-    [SerializeField] private float acceptDistance = 3f;
+    [SerializeField] private float unitAcceptDistance = 3f;
+    [SerializeField] private float buildingAcceptDistance = 10f;
     [SerializeField] private float attackSpeed;
     [SerializeField] private float turnInterval;
     [SerializeField] private float turnSpeed;
@@ -27,6 +28,8 @@ public class Soldier : Unit
 
     private bool canDetectTargets = true;
     private float cantDetectTargetsTimer;
+
+    private float currentAcceptDistance = 0f;
 
     private enum States
     {
@@ -52,6 +55,8 @@ public class Soldier : Unit
     {
         base.Update();
 
+        CalculateCurrentAcceptDistance();
+
         UpdateCantDetectTargetsTimer();
 
         HandleStates();
@@ -73,20 +78,30 @@ public class Soldier : Unit
         {
             cantDetectTargetsTimer = cantDetectTargetsTime;
             canDetectTargets = true;
-            print("Can detect enemies again!");
         }
     }
-        
+
+    private void CalculateCurrentAcceptDistance()
+    {
+        if (!target) return;
+
+        float acceptDistance = 0f;
+
+        if (target.TryGetComponent(out BuildingBase _))
+            acceptDistance = buildingAcceptDistance;
+        else if (target.TryGetComponent(out Unit _))
+            acceptDistance = unitAcceptDistance;
+
+        currentAcceptDistance = acceptDistance;
+    }
 
     private void CheckMove()
     {
         if (target == null) return;
         if (myAgent == null) return;
 
-        if (Vector3.Distance(target.transform.position, transform.position) > acceptDistance)
-        {
+        if (Vector3.Distance(target.transform.position, transform.position) > currentAcceptDistance)
             myAgent.SetDestination(target.transform.position);
-        }
         else
             myAgent.SetDestination(transform.position);
     }
@@ -217,7 +232,7 @@ public class Soldier : Unit
                 return;
         }
 
-        if (Vector3.Distance(target.transform.position, transform.position) <= acceptDistance)
+        if (Vector3.Distance(target.transform.position, transform.position) <= currentAcceptDistance)
         {
             currentState = States.Attacking;
         }

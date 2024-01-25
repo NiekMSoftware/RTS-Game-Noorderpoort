@@ -139,7 +139,7 @@ public class NewSelectionManager : MonoBehaviour
                             {
                                 case Barrack barrack when building is Barrack:
                                     //Send worker to barrack
-                                    barrack.AddUnitToBarrack(worker.gameObject);
+                                    barrack.AddUnitToBarrack(worker.gameObject, Unit.TypeUnit.Human);
                                     worker.SetCurrentAction("Going to train at " + barrack.buildingName);
                                     break;
 

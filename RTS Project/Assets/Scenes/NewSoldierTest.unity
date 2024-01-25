@@ -1079,6 +1079,11 @@ PrefabInstance:
       propertyPath: typeUnit
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3895033456078313050, guid: 9510a0a69a1181d4b95bbb04ef05c36c,
+        type: 3}
+      propertyPath: cantDetectTargetsTime
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4171562252069922633, guid: 9510a0a69a1181d4b95bbb04ef05c36c,
         type: 3}
       propertyPath: senseDistance
@@ -2939,16 +2944,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SoldierAI
-      objectReference: {fileID: 0}
-    - target: {fileID: 4171562252069922633, guid: 9510a0a69a1181d4b95bbb04ef05c36c,
-        type: 3}
-      propertyPath: viewRadius
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 4171562252069922633, guid: 9510a0a69a1181d4b95bbb04ef05c36c,
-        type: 3}
-      propertyPath: senseDistance
-      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 9150157795128708509, guid: 9510a0a69a1181d4b95bbb04ef05c36c,
         type: 3}
