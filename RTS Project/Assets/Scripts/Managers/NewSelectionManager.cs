@@ -177,15 +177,13 @@ public class NewSelectionManager : MonoBehaviour
             marker = Instantiate(markerPrefab, hit.point, Quaternion.identity).GetComponent<Marker>();
             foreach (var unit in selectedUnits)
             {
-                //Todo: figure this shit out
                 if (unit.TryGetComponent(out Soldier soldier))
                 {
-                    print("reset soldier");
-                    soldier.ResetTargets();
+                    soldier.MoveUnitToLocation(marker.transform);
                 }
 
                 unit.SendUnitToLocation(hit.point);
-                marker.SetUnit(unit);
+                marker.AddUnit(unit);
             }
         }
     }

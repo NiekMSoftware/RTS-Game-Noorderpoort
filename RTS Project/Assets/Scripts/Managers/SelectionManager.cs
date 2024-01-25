@@ -140,7 +140,7 @@ public class SelectionManager : MonoBehaviour
             {
                 Unit unit = unitObject.GetComponent<Unit>();
                 unit.SendUnitToLocation(hit.point);
-                marker.SetUnit(unit);
+                marker.AddUnit(unit);
             }
         }
     }

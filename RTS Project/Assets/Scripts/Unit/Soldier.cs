@@ -1,3 +1,4 @@
+using Mono.Cecil;
 using Mono.Cecil.Cil;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,7 +20,7 @@ public class Soldier : Unit
     [SerializeField] private States currentState;
 
     [SerializeField] private GameObject target;
-    [SerializeField] private BuildingBase secTarget;
+    [SerializeField] private Transform secTarget;
 
     private float attackTimer;
     private float turnTimer;
@@ -160,6 +161,13 @@ public class Soldier : Unit
         }
     }
 
+    public void MoveUnitToLocation(Transform transform)
+    {
+        ResetTargets();
+
+        target = transform.gameObject;
+    }
+
     public void SelectedBuilding(BuildingBase building)
     {
         if (building.GetOccupancyType() == BuildingBase.OccupancyType.Player && typeUnit == TypeUnit.Human)
@@ -168,14 +176,9 @@ public class Soldier : Unit
         if (building.GetOccupancyType() == BuildingBase.OccupancyType.Enemy && typeUnit == TypeUnit.Enemy)
             return;
 
-        if (target)
-        {
-            secTarget = building;
-        }
-        else
-        {
-            target = building.gameObject;
-        }
+        ResetTargets();
+
+        target = building.gameObject;
     }
 
     public void ResetTargets()
@@ -214,8 +217,10 @@ public class Soldier : Unit
             //make return if possible
             if (target)
             {
-                if (target.TryGetComponent(out BuildingBase building))
-                    secTarget = building;
+                if (!target.TryGetComponent(out Unit _))
+                {
+                    secTarget = target.transform;
+                }
             }
 
             target = finalTarget;
