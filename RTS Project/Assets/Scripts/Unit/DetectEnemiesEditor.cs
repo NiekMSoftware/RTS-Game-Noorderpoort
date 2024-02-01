@@ -10,11 +10,16 @@ public class FieldOfViewEditor : Editor
         DetectEnemies fow = (DetectEnemies)target;
         Handles.color = Color.white;
         Handles.DrawWireArc(fow.transform.position, Vector3.up,
-                        Vector3.forward, 360, fow.viewRadius);
+                        Vector3.forward, 360, fow.viewRadius, 10f);
+
+        Handles.color = Color.blue;
+        Handles.DrawWireArc(fow.transform.position, Vector3.up,
+            Vector3.forward, 360, fow.senseDistance, 10f);
 
         Vector3 viewAngle = fow.DirFromAngle(-fow.viewAngle / 2, false);
         Vector3 viewAngleB = fow.DirFromAngle(fow.viewAngle / 2, false);
         
+        Handles.color = Color.white;
         Handles.DrawLine(fow.transform.position, fow.transform.position + viewAngle * fow.viewRadius);
         Handles.DrawLine(fow.transform.position, fow.transform.position + viewAngleB * fow.viewRadius);
 

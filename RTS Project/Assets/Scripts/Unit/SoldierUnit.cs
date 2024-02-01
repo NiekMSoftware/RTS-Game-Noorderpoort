@@ -144,8 +144,6 @@ public class SoldierUnit : Unit
 
     private void ChooseBuildingToAttack()
     {
-        buildingToAttack = selectionManager.GetBuildingToAttack();
-
         print("found building base1");
 
         if (buildingToAttack != null)

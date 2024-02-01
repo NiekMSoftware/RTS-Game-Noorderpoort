@@ -34,6 +34,8 @@ public class Barrack : BuildingBase
 
     private SoldierUnit spawnedUnit;
 
+    private Unit.TypeUnit typeUnit;
+
     protected override void Awake()
     {
         base.Awake();
@@ -65,7 +67,7 @@ public class Barrack : BuildingBase
         }
     }
 
-    public void AddUnitToBarrack(GameObject AIUnit)
+    public void AddUnitToBarrack(GameObject AIUnit, Unit.TypeUnit typeUnit)
     {
         if (AIUnit == null)
         {
@@ -86,6 +88,8 @@ public class Barrack : BuildingBase
         }
         else
         {
+            this.typeUnit = typeUnit;
+
             if (AIUnit.TryGetComponent(out Worker worker))
             {
                 if (worker.TryGetComponent(out NavMeshAgent agent))
@@ -130,7 +134,7 @@ public class Barrack : BuildingBase
             // Instantiate the GameObject
             GameObject soldierGO = Instantiate(unitToSpawn, hit.position, Quaternion.identity);
 
-            soldierGO.GetComponent<Unit>().typeUnit = Unit.TypeUnit.Human;
+            soldierGO.GetComponent<Unit>().typeUnit = typeUnit;
             spawnedUnit = soldierGO.GetComponent<SoldierUnit>();
 
             // Remove unit out of the list

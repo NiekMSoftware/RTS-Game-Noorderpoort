@@ -1364,6 +1364,11 @@ PrefabInstance:
       objectReference: {fileID: 477139716}
     - target: {fileID: 4960871854027342727, guid: 14d717b6b9bb25049a85cee8480ea724,
         type: 3}
+      propertyPath: maxHeight
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 4960871854027342727, guid: 14d717b6b9bb25049a85cee8480ea724,
+        type: 3}
       propertyPath: resources
       value: 
       objectReference: {fileID: 392051083}

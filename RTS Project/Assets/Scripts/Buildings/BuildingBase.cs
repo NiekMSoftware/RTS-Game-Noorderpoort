@@ -253,6 +253,12 @@ public class BuildingBase : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (buildingHp <= 0)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Build();
     }
 

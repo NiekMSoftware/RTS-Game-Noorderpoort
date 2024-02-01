@@ -342,7 +342,7 @@ public class ComputerEnemy : MonoBehaviour
 
                     if (worker)
                     {
-                        placedBarrack.AddUnitToBarrack(worker.gameObject);
+                        placedBarrack.AddUnitToBarrack(worker.gameObject, Unit.TypeUnit.Enemy);
                         availableWorkers.Remove(worker);
                     }
 
