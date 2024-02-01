@@ -1,36 +1,35 @@
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Marker : MonoBehaviour
 {
-    [SerializeField] private float destroyTime;
     [SerializeField] private MeshRenderer selectionCircle;
     [SerializeField] private Color color;
     [SerializeField] private float acceptDistance;
 
-    private Unit unit;
+    private List<Unit> units = new();
 
-    IEnumerator Start()
+    private void Start()
     {
         selectionCircle.material.color = color;
-
-        yield return new WaitForSeconds(destroyTime);
-
-        Destroy(gameObject);
     }
 
-    public void SetUnit(Unit unit)
+    public void AddUnit(Unit unit)
     {
-        this.unit = unit;
+        units.Add(unit);
     }
 
     private void Update()
     {
-        if (unit != null)
+        if (units.Count > 0)
         {
-            if (Vector3.Distance(unit.transform.position, transform.position) < acceptDistance)
+            foreach (var unit in units.ToList())
             {
-                Destroy(gameObject);
+                if (Vector3.Distance(unit.transform.position, transform.position) < acceptDistance)
+                {
+                    units.Remove(unit);
+                }
             }
         }
         else

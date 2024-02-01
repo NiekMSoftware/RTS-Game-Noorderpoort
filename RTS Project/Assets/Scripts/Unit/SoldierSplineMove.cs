@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,6 +11,7 @@ public class SoldierSplineMove : MonoBehaviour
     [SerializeField] private NewSelectionManager selectionManager;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private GameObject splineContainerPrefab;
+    [SerializeField] private int maxSplineLength;
 
     private SplineContainer splineContainer;
     private Spline spline;
@@ -48,6 +50,8 @@ public class SoldierSplineMove : MonoBehaviour
                 knot.Position = hit.point;
                 spline.Add(knot);
                 splineContainer.gameObject.GetComponent<SplineManager>().UpdateLineRenderer(spline);
+
+                StartCoroutine(nameof(RemoveLastSplineNode));
             }
 
             if (Input.GetMouseButtonUp(0))
@@ -86,7 +90,7 @@ public class SoldierSplineMove : MonoBehaviour
 
                 print("knots removed : " + (knotsLength - spline.Knots.ToList().Count));
 
-                List<Unit> units = selectionManager.GetSelectedUnits();
+                List<Soldier> units = selectionManager.GetSelectedSoldiers();
                 List<NavMeshAgent> unitAgents = new();
 
                 foreach (Unit unit in units)
@@ -122,5 +126,15 @@ public class SoldierSplineMove : MonoBehaviour
                 gameObject.SetActive(false);
             }
         }
+    }
+
+    private IEnumerator RemoveLastSplineNode()
+    {
+        while (spline.GetLength() > maxSplineLength)
+        {
+            spline.RemoveAt(0);
+        }
+
+        yield return null;
     }
 }
