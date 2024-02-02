@@ -45,12 +45,12 @@ public class SoldierUnit : Unit
 
         if (enemyUnit != null)
         {
-            enemyUnit = selectionManager.GetEnemyToAttack();
+            //enemyUnit = selectionManager.GetEnemyToAttack();
         }
 
         if (soldierUnit != null)
         {
-            soldierUnit = selectionManager.GetEnemyToAttack();
+            //soldierUnit = selectionManager.GetEnemyToAttack();
         }
 
         if (isInRange && enemyUnit != null)
