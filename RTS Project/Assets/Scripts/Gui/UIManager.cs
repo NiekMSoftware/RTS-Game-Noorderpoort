@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button unitsWorklessButton;
     [SerializeField] private BuildingSelect buildingSelectMenu;
     [SerializeField] private UnitSelect unitSelectMenu;
+    [SerializeField] private MultiSoldierSelect multiSoldierSelectMenu;
     [SerializeField] private float outlineDefaultSize;
     [SerializeField] private float outlineAnimationSpeed;
     [SerializeField] private float outlineAnimationMaxSize;
@@ -30,11 +31,15 @@ public class UIManager : MonoBehaviour
         unitsWorklessButton.onClick.RemoveAllListeners();
         unitsWorklessButton.onClick.AddListener(FindWorklessWorker);
 
+        multiSoldierSelectMenu.gameObject.SetActive(false);
+
         mainCamera = Camera.main;
         selectionManager = FindObjectOfType<NewSelectionManager>();
+
+        Invoke(nameof(UpdateResourceTexts), 1f);
     }
 
-    private void Update()
+    private void UpdateResourceTexts()
     {
         for (int i = 0; i < resourceTexts.Length; i++)
         {
@@ -101,6 +106,11 @@ public class UIManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void SetMultiSoldierUI(bool value)
+    {
+        multiSoldierSelectMenu.gameObject.SetActive(value);
     }
 
     public void SetBuildingUI(bool value, BuildingBase building)
