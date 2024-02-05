@@ -20,9 +20,6 @@ public class NewSelectionManager : MonoBehaviour
 
     private Camera mainCamera;
 
-    private BuildingBase buildingToAttack;
-    private Unit enemyToAttack;
-
     private Marker marker;
 
     [SerializeField] private BuildingBase selectedBuilding;
@@ -74,7 +71,7 @@ public class NewSelectionManager : MonoBehaviour
 
             foreach (var unit in selectedUnits)
             {
-                if (unit is SoldierUnit)
+                if (unit is Soldier)
                 {
                     isSoldier = true;
                 }
@@ -128,15 +125,12 @@ public class NewSelectionManager : MonoBehaviour
                 {
                     switch (unit)
                     {
-                        case Unit soldier when unit is SoldierUnit:
+                        case Soldier soldier when unit is Soldier:
                             //Send soldier to enemy building
+                            
                             if (building.GetOccupancyType() == BuildingBase.OccupancyType.Enemy)
                             {
-                                //Change to buildingbase when soldierunit is changed
-                                buildingToAttack = building;
-
-                                soldier.SendUnitToLocation(building.transform.position);
-                                soldier.SetCurrentAction("Attacking " + building.buildingName);
+                                soldier.SelectedBuilding(building);
                             }
                             break;
 
@@ -145,7 +139,7 @@ public class NewSelectionManager : MonoBehaviour
                             {
                                 case Barrack barrack when building is Barrack:
                                     //Send worker to barrack
-                                    barrack.AddUnitToBarrack(worker.gameObject);
+                                    barrack.AddUnitToBarrack(worker.gameObject, Unit.TypeUnit.Human);
                                     worker.SetCurrentAction("Going to train at " + barrack.buildingName);
                                     break;
 
@@ -183,15 +177,13 @@ public class NewSelectionManager : MonoBehaviour
             marker = Instantiate(markerPrefab, hit.point, Quaternion.identity).GetComponent<Marker>();
             foreach (var unit in selectedUnits)
             {
-                if (unit.TryGetComponent(out SoldierUnit soldier))
+                if (unit.TryGetComponent(out Soldier soldier))
                 {
-                    soldier.enemyUnit = null;
-                    enemyToAttack = null;
-                    print("set enemy to null");
+                    soldier.MoveUnitToLocation(marker.transform);
                 }
 
                 unit.SendUnitToLocation(hit.point);
-                marker.SetUnit(unit);
+                marker.AddUnit(unit);
             }
         }
     }
@@ -232,8 +224,6 @@ public class NewSelectionManager : MonoBehaviour
 
     private void AttackEnemy(RaycastHit hit, Unit enemy)
     {
-        enemyToAttack = enemy;
-
         foreach (var soldier in selectedUnits)
         {
             if (soldier is SoldierUnit)
@@ -353,16 +343,12 @@ public class NewSelectionManager : MonoBehaviour
 
     #region Public Getters
 
-    public BuildingBase GetBuildingToAttack() => buildingToAttack;
-
-    public Unit GetEnemyToAttack() => enemyToAttack;
-
     public List<Unit> GetSelectedUnits() => selectedUnits;
 
-    public List<SoldierUnit> GetSelectedSoldiers()
+    public List<Soldier> GetSelectedSoldiers()
     {
-        List<SoldierUnit> soldiers = new();
-        selectedUnits.ForEach(x => { if (x is SoldierUnit soldier) soldiers.Add(soldier); });
+        List<Soldier> soldiers = new();
+        selectedUnits.ForEach(x => { if (x is Soldier soldier) soldiers.Add(soldier); });
         return soldiers;
     }
 

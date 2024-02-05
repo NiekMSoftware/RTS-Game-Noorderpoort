@@ -47,18 +47,12 @@ public class Unit : MonoBehaviour
     [SerializeField] private int cameraResolution = 64;
     [SerializeField] private float cameraFPS = 5;
 
-    private Camera unitCamera;
+    [SerializeField] private Camera unitCamera;
     private RenderTexture renderTexture;
 
     private bool isSelected;
 
     private string currentAction;
-
-
-    private void Awake()
-    {
-        unitCamera = GetComponentInChildren<Camera>();
-    }
 
     protected virtual void Start()
     {
@@ -102,20 +96,20 @@ public class Unit : MonoBehaviour
     {
         if (isSelected) return;
 
-        //renderTexture = new(cameraResoltion, cameraResoltion, 0)
-        //{
-        //    name = gameObject.name + " Render Texture"
-        //};
-        //unitCamera.targetTexture = renderTexture;
-        //unitCamera.gameObject.SetActive(true);
+        renderTexture = new(cameraResolution, cameraResolution, 0)
+        {
+            name = gameObject.name + " Render Texture"
+        };
+        unitCamera.targetTexture = renderTexture;
+        unitCamera.gameObject.SetActive(true);
         isSelected = true;
     }
 
     public void Deselect()
     {
-        //Destroy(renderTexture);
-        //unitCamera.targetTexture = null;
-        //unitCamera.gameObject.SetActive(false);
+        Destroy(renderTexture);
+        unitCamera.targetTexture = null;
+        unitCamera.gameObject.SetActive(false);
         isSelected = false;
     }
 
@@ -123,6 +117,12 @@ public class Unit : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (unitHealth <= 0)
+        {
+            Death();
+            return;
+        }
+
         if (isSelected)
         {
             elapsed += Time.deltaTime;
@@ -178,7 +178,8 @@ public class Unit : MonoBehaviour
 
     protected virtual void Death()
     {
-
+        Destroy(gameObject);
+        return;
     }
 
     protected virtual int Heal(int healing)
@@ -190,7 +191,7 @@ public class Unit : MonoBehaviour
 
     #endregion
 
-    #region Unit Location Controller
+     #region Unit Location Controller
 
     public void SetSelectionObject(bool value) => selectionObject.SetActive(value);
 

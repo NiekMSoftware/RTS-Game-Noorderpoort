@@ -149,10 +149,12 @@ MonoBehaviour:
   unitHealth: 18
   unitMaxHealth: 20
   unitHealing: 0
+  unitName: 
   unitSpeed: 10
   unitDamage: 0
   job: 4
   typeUnit: 1
+  sex: 0
   selectionObject: {fileID: 7024833265930589587}
   myAgent: {fileID: 6909574573759632584}
   groundLayer:
@@ -163,8 +165,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   selectionColor: {r: 0.32941175, g: 0.65675884, b: 1, a: 0.78431374}
-  cameraResoltion: 64
+  cameraResolution: 64
   cameraFPS: 15
+  unitCamera: {fileID: 2207551562300224419}
   resourceTarget: {fileID: 0}
   workerHouse: {fileID: 0}
   resourceObjectManager: {fileID: 0}
@@ -342,7 +345,7 @@ GameObject:
   - component: {fileID: 1707644151148643686}
   - component: {fileID: 8065026522787017419}
   m_Layer: 6
-  m_Name: SelectionCirlce
+  m_Name: SelectionCircle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

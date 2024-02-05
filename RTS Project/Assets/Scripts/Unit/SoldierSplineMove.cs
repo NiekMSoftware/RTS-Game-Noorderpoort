@@ -90,7 +90,7 @@ public class SoldierSplineMove : MonoBehaviour
 
                 print("knots removed : " + (knotsLength - spline.Knots.ToList().Count));
 
-                List<SoldierUnit> units = selectionManager.GetSelectedSoldiers();
+                List<Soldier> units = selectionManager.GetSelectedSoldiers();
                 List<NavMeshAgent> unitAgents = new();
 
                 foreach (Unit unit in units)
