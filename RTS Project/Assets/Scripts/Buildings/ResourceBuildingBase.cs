@@ -24,8 +24,14 @@ public class ResourceBuildingBase : BuildingBase
         rangeIndicator.transform.localScale = scale;
 
         FindClosestResourceManager(transform, currentStorage[0].data);
-        print(closestResourceCluster.name);
-        closestResourceCluster.gameObject.GetComponent<ResourceObjectManager>().placedBuilding = true;
+        if (closestResourceCluster != null)
+        {
+            closestResourceCluster.gameObject.GetComponent<ResourceObjectManager>().placedBuilding = true;
+        }
+        else
+        {
+            Debug.LogError("Resource building doesnt have resource cluster");
+        }
     }
 
     public void SetResourceItemManagerByType(ResourceItemManager.Type type)
@@ -180,27 +186,20 @@ public class ResourceBuildingBase : BuildingBase
     {
         if (currentState == States.Building || currentState == States.Pending) return false;
 
-        if (workers.Contains(worker))
+        if (workers.Contains(worker)) return false;
+        if (worker.GetCurrentBuilding() != null) return false;
+        if (workers.Count >= maxWorkers) return false;
+
+        if (FindClosestResourceManager(transform, currentStorage[0].data) != null)
         {
-            return false;
+            worker.InitializeWorker(gameObject, jobs, FindClosestResourceManager(transform, currentStorage[0].data),
+            resourceItemManager);
+            workers.Add(worker);
+            return true;
         }
-        else if (worker.GetCurrentBuilding() != null)
+        else
         {
-            return false;
-        }
-        else if (workers.Count < maxWorkers)
-        {
-            if (FindClosestResourceManager(transform, currentStorage[0].data) != null)
-            {
-                worker.InitializeWorker(gameObject, jobs, FindClosestResourceManager(transform, currentStorage[0].data),
-                resourceItemManager);
-                workers.Add(worker);
-                return true;
-            }
-            else
-            {
-                Debug.LogWarning("No resourceManager in range");
-            }
+            Debug.LogWarning("No resourceManager in range");
         }
 
         return false;

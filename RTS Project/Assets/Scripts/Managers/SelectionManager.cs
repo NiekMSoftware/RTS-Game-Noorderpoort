@@ -140,7 +140,7 @@ public class SelectionManager : MonoBehaviour
             {
                 Unit unit = unitObject.GetComponent<Unit>();
                 unit.SendUnitToLocation(hit.point);
-                marker.SetUnit(unit);
+                marker.AddUnit(unit);
             }
         }
     }
@@ -213,7 +213,7 @@ public class SelectionManager : MonoBehaviour
                         else
                         {
                             print("Assigning Unit to soldier");
-                            selectedBuilding.GetComponent<Barrack>().AddUnitToBarrack(null);
+                            selectedBuilding.GetComponent<Barrack>().AddUnitToBarrack(null, Unit.TypeUnit.Human);
                         }
                     }
 
@@ -257,7 +257,6 @@ public class SelectionManager : MonoBehaviour
         Vector2 boxSize = new(Mathf.Abs(boxStart.x - boxEnd.x), Mathf.Abs(boxStart.y - boxEnd.y));
 
         boxVisual.sizeDelta = boxSize;
-
     }
 
     void CalculateSelection()
