@@ -598,15 +598,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20d0b4e5cd8d95c459a805b00fd2ddc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewRadius: 0
-  viewAngle: 0
-  senseDistance: 0
+  viewRadius: 10
+  viewAngle: 94
+  senseDistance: 5
   targetMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 9
   visibleTargets: []
 --- !u!114 &1894960754755019375
 MonoBehaviour:
