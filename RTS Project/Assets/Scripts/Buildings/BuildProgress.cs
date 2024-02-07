@@ -20,11 +20,24 @@ public class BuildProgress : MonoBehaviour
 
     private void Start()
     {
+        if (progressImage == null) return;
+
         Sequence tween = DOTween.Sequence();
         tween.Append(progressImage.DOFillAmount(1f, buildTime));
         tween.AppendInterval(2);
         tween.Append(progressImage.DOFade(0f, 1f));
-        tween.OnComplete(() => Destroy(gameObject));
+        tween.OnComplete(() => End(tween));
         tween.Play();
+    }
+
+    private void End(Sequence tween)
+    {
+        tween.Pause();
+        Destroy(gameObject);
+    }
+
+    private void Update()
+    {
+        transform.LookAt(Camera.main.transform.position);
     }
 }

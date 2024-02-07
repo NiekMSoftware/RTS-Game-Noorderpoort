@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ResourceBuildingBase : BuildingBase
@@ -10,10 +11,28 @@ public class ResourceBuildingBase : BuildingBase
     [SerializeField] private string jobName;
     [SerializeField] private Jobs jobs;
     [SerializeField] private int scanRange = 200;
+    [SerializeField] private GameObject rangeIndicator;
 
     private ResourceItemManager resourceItemManager;
-
+    public GameObject closestResourceCluster;
     private List<GameObject> resourceAreas = new();
+
+    private void Start()
+    {
+        rangeIndicator.SetActive(false);
+        Vector3 scale = new(scanRange, scanRange, 1);
+        rangeIndicator.transform.localScale = scale;
+
+        FindClosestResourceManager(transform, currentStorage[0].data);
+        if (closestResourceCluster != null)
+        {
+            closestResourceCluster.gameObject.GetComponent<ResourceObjectManager>().placedBuilding = true;
+        }
+        else
+        {
+            Debug.LogError("Resource building doesnt have resource cluster");
+        }
+    }
 
     public void SetResourceItemManagerByType(ResourceItemManager.Type type)
     {
@@ -26,20 +45,11 @@ public class ResourceBuildingBase : BuildingBase
         }
     }
 
-    public override IEnumerator Build(float buildTime)
-    {
-        StartCoroutine(base.Build(buildTime));
-
-        FindClosestResourceManager(transform, currentStorage[0].data);
-
-        yield return null;
-    }
-
     public GameObject FindClosestResourceManager(Transform buildingBase, ItemData itemdata)
     {
         foreach (Transform resourceType in FindAnyObjectByType<ResourceAreaSpawner>().GetComponentInChildren<Transform>())
         {
-            //wanneer broken probeer dit  foreach (Transform resource in resourceType.GetComponentsInChildren<Transform>())
+            //wanneer broken probeer dit: foreach (Transform resource in resourceType.GetComponentsInChildren<Transform>())
             foreach (Transform resource in resourceType.GetComponentInChildren<Transform>())
             {
                 if (!resourceAreas.Contains(resource.gameObject))
@@ -77,13 +87,43 @@ public class ResourceBuildingBase : BuildingBase
         {
             print("No resource in range");
         }
+
+        closestResourceCluster = closestResource;
         return closestResource;
     }
 
-    public override void Init(Material _material, GameObject _particleObject)
+    public override void Init(Material _material, GameObject _particleObject, GameObject buildingToSpawn, float buildTime, States state)
     {
-        base.Init(_material, _particleObject);
+        base.Init(_material, _particleObject, buildingToSpawn, buildTime, state);
         SetResourceItemManagerByType(ResourceItemManager.Type.Player);
+    }
+
+    public override void SelectBuilding()
+    {
+        if (currentState == States.Building) return;
+
+        base.SelectBuilding();
+
+        rangeIndicator.SetActive(true);
+
+        foreach (var worker in workers)
+        {
+            worker.Select();
+        }
+    }
+
+    public override void DeselectBuilding()
+    {
+        if (currentState == States.Building) return;
+
+        base.DeselectBuilding();
+
+        rangeIndicator.SetActive(false);
+
+        foreach (var worker in workers)
+        {
+            worker.Deselect();
+        }
     }
 
     public ItemSlot GetStorage(ItemData itemdata)
@@ -144,21 +184,22 @@ public class ResourceBuildingBase : BuildingBase
 
     public bool AddWorkerToBuilding(Worker worker)
     {
-        print("addworkertobuilding");
-        if (workers.Contains(worker))
-        {
-            return false;
-        }
-        else if (worker.GetCurrentBuilding() != null)
-        {
-            return false;
-        }
-        else if (workers.Count < maxWorkers)
+        if (currentState == States.Building || currentState == States.Pending) return false;
+
+        if (workers.Contains(worker)) return false;
+        if (worker.GetCurrentBuilding() != null) return false;
+        if (workers.Count >= maxWorkers) return false;
+
+        if (FindClosestResourceManager(transform, currentStorage[0].data) != null)
         {
             worker.InitializeWorker(gameObject, jobs, FindClosestResourceManager(transform, currentStorage[0].data),
-                resourceItemManager);
+            resourceItemManager);
             workers.Add(worker);
             return true;
+        }
+        else
+        {
+            Debug.LogWarning("No resourceManager in range");
         }
 
         return false;
@@ -166,6 +207,7 @@ public class ResourceBuildingBase : BuildingBase
 
     public void RemoveWorkerFromBuilding(Worker worker)
     {
+        worker.UnAssignWorker();
         workers.Remove(worker);
     }
 
@@ -188,4 +230,6 @@ public class ResourceBuildingBase : BuildingBase
 
         base.DestroyBuilding();
     }
+
+    public float GetRange() => scanRange;
 }

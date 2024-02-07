@@ -1,13 +1,10 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.ProBuilder.Shapes;
 
 public class CameraManager : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform cameraHolder;
-    [SerializeField] private Transform orientation;
-    [SerializeField] private Transform zoomOrientation;
     [SerializeField] private TMP_Text debugText;
 
     [Header("Movement")]
@@ -23,6 +20,7 @@ public class CameraManager : MonoBehaviour
     [SerializeField] private float zoomSpeed;
     [SerializeField] private float zoomSmoothing;
     [SerializeField] private Vector2 zoomRange;
+    [SerializeField] private float zoomAngle;
 
     private Rigidbody rb;
 
@@ -34,13 +32,28 @@ public class CameraManager : MonoBehaviour
     private float zoomInput;
     private Vector3 cameraDirection => transform.InverseTransformDirection(cameraHolder.forward);
 
+    private Quaternion finalRotation;
+    private bool hasRotated;
+
+    private Transform orientation;
+    private Transform zoomOrientation;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         rb.inertiaTensor = Vector3.one;
+    }
 
+    private void Start()
+    {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        orientation = new GameObject().transform;
+        orientation.name = "Orientation";
+
+        zoomOrientation = new GameObject().transform;
+        zoomOrientation.name = "ZoomOrientation";
     }
 
     private void Update()
@@ -53,24 +66,75 @@ public class CameraManager : MonoBehaviour
 
         Movement();
 
-        Rotation();
-
         Zoom();
+
+        debugText.text = transform.forward.ToString();
+        currentRotation = Vector3.Lerp(currentRotation, rotationInput, Time.deltaTime * rotationSmoothing);
+
+        if (transform.forward.y < rotationRangeY.x)
+        {
+            print("too low");
+            Vector3 newRotation = transform.forward;
+            newRotation.y = rotationRangeY.x + 0.01f;
+            transform.forward = newRotation;
+        }
+        else if (transform.forward.y > rotationRangeY.y)
+        {
+            print("too high");
+            Vector3 newRotation = transform.forward;
+            newRotation.y = rotationRangeY.y - 0.01f;
+            transform.forward = newRotation;
+        }
+
+        Vector3 rotation = new(currentRotation.y, currentRotation.x);
+        finalRotation = Quaternion.Euler(rotation);
+
+        if (hasRotated)
+        {
+            print("reset rotation stuff");
+            //Reset z rotation
+            Vector3 eulerAngles = transform.eulerAngles;
+            transform.eulerAngles = new(eulerAngles.x, eulerAngles.y, 0);
+
+            currentRotation = Vector3.zero;
+            rotationInput = Vector2.zero;
+            hasRotated = false;
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+    }
+
+    private void FixedUpdate()
+    {
+        Rotation();
     }
 
     private void RotateOrientation()
     {
         orientation.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
+        zoomOrientation.rotation = Quaternion.Euler(zoomAngle, transform.eulerAngles.y, 0);
     }
 
     private void Zoom()
     {
         if (transform.position.y > zoomRange.y)
         {
+            rb.velocity = Vector3.zero;
+            Vector3 position = transform.position;
+            position.y = zoomRange.y - 0.1f;
+            transform.position = position;
             zoomInput = Mathf.Clamp(zoomInput, 0, 1);
         }
         else if (transform.position.y < zoomRange.x)
         {
+            rb.velocity = Vector3.zero;
+            Vector3 position = transform.position;
+            position.y = zoomRange.x + 0.1f;
+            transform.position = position;
             zoomInput = Mathf.Clamp(zoomInput, -1, 0);
         }
 
@@ -82,47 +146,21 @@ public class CameraManager : MonoBehaviour
 
     private bool ZoomIsInBounds(Vector3 position)
     {
-        print(position.magnitude);
-        print(position.magnitude > zoomRange.x && position.magnitude < zoomRange.y);
         return position.magnitude > zoomRange.x && position.magnitude < zoomRange.y;
     }
 
     private void Rotation()
     {
-        //print(-transform.right);
-        debugText.SetText(transform.up.ToString());
-
-        if (transform.up.y <= rotationRangeY.x)
-        {
-            print("too high");
-            //rotationInput.y = Mathf.Clamp(rotationInput.y, -1, 0);
-        }
-
-        if (transform.up.y >= rotationRangeY.y)
-        {
-            print("too low");
-            //rotationInput.y = Mathf.Clamp(rotationInput.y, 0, 1);
-        }
-
-        //currentRotation = Vector3.Lerp(currentRotation, rotationInput, Time.deltaTime * rotationSmoothing);
-        currentRotation = rotationInput;
-
-        Vector3 torque = currentRotation.x * rotationSpeed * transform.up;
-        Vector3 globalTorque = transform.TransformDirection(torque);
-        rb.AddTorque(globalTorque, ForceMode.Force);
-        //rb.AddRelativeTorque(currentRotation.y * rotationSpeed * -transform.right, ForceMode.Force);
-
-        //Vector3 eulerAngles = transform.eulerAngles;
-        //transform.eulerAngles = new Vector3(eulerAngles.x, eulerAngles.y, 0);
-
-        currentRotation = Vector3.zero;
-        rotationInput = Vector2.zero;
+        rb.MoveRotation(rb.rotation * finalRotation);
+        //rb.rotation = finalRotation;
+        hasRotated = true;
     }
 
     private void Movement()
     {
         if (input.magnitude >= 0.1f)
         {
+            print("hi");
             rb.AddForce(moveSpeed * Time.deltaTime * input, ForceMode.Force);
         }
     }

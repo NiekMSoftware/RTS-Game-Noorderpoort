@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -8,7 +9,13 @@ public class Unit : MonoBehaviour
     [SerializeField] protected int unitHealth;
     [SerializeField] protected int unitMaxHealth;
     [SerializeField] protected int unitHealing;
+    [SerializeField] protected string unitName;
+    
     public int UnitHealth { get { return unitHealth; } set { unitHealth = value; } }
+
+    public int UnitMaxHealth { get { return unitMaxHealth; } set { UnitMaxHealth = value; } }
+
+    public string UnitName { get { return unitName; } set { unitName = value; } }
 
     [Space]
     [SerializeField] protected int unitSpeed;
@@ -21,6 +28,13 @@ public class Unit : MonoBehaviour
     [Header("Enum Data")]
     [SerializeField] protected Jobs job;
     [SerializeField] public TypeUnit typeUnit;
+    public TypeUnit Type
+    {
+        get => typeUnit;
+        set => typeUnit = value;
+    }
+
+    [SerializeField] private Sex sex;
 
     [Header("Select Agent Movement")]
     [SerializeField] GameObject selectionObject;
@@ -30,13 +44,94 @@ public class Unit : MonoBehaviour
     [SerializeField] GameObject marker;
     [SerializeField] LayerMask clickableUnit;
     [SerializeField] protected Color selectionColor;
+    [SerializeField] private int cameraResolution = 64;
+    [SerializeField] private float cameraFPS = 5;
 
-    Camera myCamera;
+    [SerializeField] private Camera unitCamera;
+    private RenderTexture renderTexture;
+
+    private bool isSelected;
+
+    private string currentAction;
 
     protected virtual void Start()
     {
         selectionObject.SetActive(false);
         selectionObject.GetComponent<MeshRenderer>().material.color = selectionColor;
+
+        unitCamera.gameObject.SetActive(false);
+        unitCamera.enabled = false;
+
+        SetRandomSex();
+
+        SetRandomName();
+    }
+
+    private void SetRandomName()
+    {
+        TextAsset file = null;
+
+        if (sex == Sex.Female)
+        {
+            file = Resources.Load<TextAsset>("FemaleNames");
+        }
+        else if (sex == Sex.Male)
+        {
+            file = Resources.Load<TextAsset>("MaleNames");
+        }
+
+        string[] names = file.text.Split('\n');
+        int randomNum = Random.Range(0, names.Length);
+        UnitName = names[randomNum];
+    }
+
+    private void SetRandomSex()
+    {
+        var values = System.Enum.GetValues(typeof(Sex));
+        int randomNum = Random.Range(0, values.Length);
+        sex = (Sex)values.GetValue(randomNum);
+    }
+
+    public void Select()
+    {
+        if (isSelected) return;
+
+        renderTexture = new(cameraResolution, cameraResolution, 0)
+        {
+            name = gameObject.name + " Render Texture"
+        };
+        unitCamera.targetTexture = renderTexture;
+        unitCamera.gameObject.SetActive(true);
+        isSelected = true;
+    }
+
+    public void Deselect()
+    {
+        Destroy(renderTexture);
+        unitCamera.targetTexture = null;
+        unitCamera.gameObject.SetActive(false);
+        isSelected = false;
+    }
+
+    float elapsed = 0;
+
+    protected virtual void Update()
+    {
+        if (unitHealth <= 0)
+        {
+            Death();
+            return;
+        }
+
+        if (isSelected)
+        {
+            elapsed += Time.deltaTime;
+            if (elapsed > 1 / cameraFPS)
+            {
+                elapsed = 0;
+                unitCamera.Render();
+            }
+        }
     }
 
     #region Enums
@@ -60,6 +155,12 @@ public class Unit : MonoBehaviour
         Special
     }
 
+    protected enum Sex
+    {
+        Female,
+        Male
+    }
+
     #endregion
 
     #region Combat Functions
@@ -77,7 +178,8 @@ public class Unit : MonoBehaviour
 
     protected virtual void Death()
     {
-
+        Destroy(gameObject);
+        return;
     }
 
     protected virtual int Heal(int healing)
@@ -89,7 +191,7 @@ public class Unit : MonoBehaviour
 
     #endregion
 
-    #region Unit Location Controller
+     #region Unit Location Controller
 
     public void SetSelectionObject(bool value) => selectionObject.SetActive(value);
 
@@ -107,4 +209,10 @@ public class Unit : MonoBehaviour
     }
 
     #endregion
+
+    public RenderTexture GetRenderTexture() => renderTexture;
+
+    public string GetCurrentAction() => currentAction;
+
+    public void SetCurrentAction(string currentAction) => this.currentAction = currentAction;
 }

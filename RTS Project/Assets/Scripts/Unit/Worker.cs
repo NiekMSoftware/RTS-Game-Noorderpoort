@@ -15,13 +15,12 @@ public class Worker : Unit
 
     private bool canGather = true;
     private bool canDeposit = true;
-    private float transferRange = 2.5f;
+    private float transferRange = 5f;
     private float gatherTime = 1f;
     public enum State { Moving, Idling, Gathering, Depositing, Assigning }
     public State currentState = State.Assigning;
     private ResourceBuildingBase buildingBase;
     private string jobName;
-
 
     protected override void Start()
     {
@@ -32,6 +31,7 @@ public class Worker : Unit
         currentStorage = itemSlot;
         myAgent = GetComponent<NavMeshAgent>();
     }
+
     public ResourceBuildingBase GetCurrentBuilding()
     {
         if (workerHouse)
@@ -58,17 +58,14 @@ public class Worker : Unit
 
     public void UnAssignWorker()
     {
-        if (workerHouse)
-        {
-            buildingBase.RemoveWorkerFromBuilding(this);
-            workerHouse = null;
-            resourceTarget = null;
-            resourceObjectManager = null;
-            currentStorage.amount = 0;
-            currentState = State.Idling;
-            buildingBase = null;
-            myAgent.ResetPath();
-        }
+        buildingBase.RemoveWorkerFromBuilding(this);
+        workerHouse = null;
+        resourceTarget = null;
+        resourceObjectManager = null;
+        currentStorage.amount = 0;
+        currentState = State.Idling;
+        buildingBase = null;
+        myAgent.ResetPath();
     }
 
     protected void AddItemToWorkerStorage(ItemData itemData)
@@ -131,8 +128,10 @@ public class Worker : Unit
 
         yield return null;
     }
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+
         switch (currentState)
         {
             case State.Assigning:
@@ -140,6 +139,7 @@ public class Worker : Unit
                 {
                     myAgent.isStopped = false;
                     myAgent.SetDestination(workerHouse.transform.position);
+                    SetCurrentAction("Going to " + workerHouse.name);
 
                     if (Vector3.Distance(transform.position, workerHouse.transform.position) <= transferRange)
                     {
@@ -153,16 +153,18 @@ public class Worker : Unit
                 {
                     if (!resourceTarget)
                     {
-                        resourceTarget = resourceObjectManager.FindClosestResource(buildingBase.transform, resourceItem, this);
+                        resourceTarget = resourceObjectManager.FindClosestResource(buildingBase, resourceItem, this);
                     }
                     else
                     {
                         myAgent.SetDestination(resourceTarget.transform.position);
+                        SetCurrentAction("Going to " + resourceTarget.name);
                     }
                 }
                 else if (currentStorage.GetAmount() == maxStorage)
                 {
                     myAgent.SetDestination(workerHouse.transform.position);
+                    SetCurrentAction("Going to " + workerHouse.name);
                 }
 
                 if (resourceTarget)
@@ -198,7 +200,7 @@ public class Worker : Unit
                     if (!resourceTarget && resourceObjectManager.resources.Count > resourceObjectManager.occupiedResources.Count)
                     {
                         currentState = State.Moving;
-                        resourceTarget = resourceObjectManager.FindClosestResource(buildingBase.transform, resourceItem, this);
+                        resourceTarget = resourceObjectManager.FindClosestResource(buildingBase, resourceItem, this);
                     }
 
                     // If inventory isnt full in building and working go to moving
@@ -217,12 +219,15 @@ public class Worker : Unit
                     else
                     {
                         myAgent.SetDestination(workerHouse.transform.position);
+                        SetCurrentAction("Going to " + workerHouse.name);
                     }
                 }
 
                 break;
 
             case State.Gathering:
+                if (resourceTarget)
+                    SetCurrentAction("Gathering " + resourceTarget.name);
                 myAgent.isStopped = true;
                 if (canGather)
                 {
@@ -232,6 +237,8 @@ public class Worker : Unit
                 break;
 
             case State.Depositing:
+                if (workerHouse && resourceItem)
+                    SetCurrentAction($"Depositing {resourceItem.name} to {workerHouse.name}");
                 myAgent.isStopped = true;
                 // kijk uit voor de edge case als een worker vol is en een gebouw vol is
                 if (buildingBase.GetStorage(resourceItem).GetAmount() == buildingBase.GetStorage(resourceItem).GetMaxAmount())
@@ -260,4 +267,6 @@ public class Worker : Unit
                 break;
         }
     }
+
+    public bool GetHasWork() => workerHouse;
 }
