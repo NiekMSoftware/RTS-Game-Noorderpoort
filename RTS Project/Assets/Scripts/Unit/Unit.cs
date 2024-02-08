@@ -28,6 +28,12 @@ public class Unit : MonoBehaviour
     [Header("Enum Data")]
     [SerializeField] protected Jobs job;
     [SerializeField] public TypeUnit typeUnit;
+    public TypeUnit Type
+    {
+        get => typeUnit;
+        set => typeUnit = value;
+    }
+
     [SerializeField] private Sex sex;
 
     [Header("Select Agent Movement")]
@@ -38,20 +44,15 @@ public class Unit : MonoBehaviour
     [SerializeField] GameObject marker;
     [SerializeField] LayerMask clickableUnit;
     [SerializeField] protected Color selectionColor;
-    [SerializeField] private int cameraResoltion = 64;
+    [SerializeField] private int cameraResolution = 64;
     [SerializeField] private float cameraFPS = 5;
 
-    private Camera unitCamera;
+    [SerializeField] private Camera unitCamera;
     private RenderTexture renderTexture;
 
     private bool isSelected;
 
     private string currentAction;
-
-    private void Awake()
-    {
-        unitCamera = GetComponentInChildren<Camera>();
-    }
 
     protected virtual void Start()
     {
@@ -61,12 +62,12 @@ public class Unit : MonoBehaviour
         unitCamera.gameObject.SetActive(false);
         unitCamera.enabled = false;
 
-        RandomSex();
+        SetRandomSex();
 
-        RandomName();
+        SetRandomName();
     }
 
-    private void RandomName()
+    private void SetRandomName()
     {
         TextAsset file = null;
 
@@ -84,7 +85,7 @@ public class Unit : MonoBehaviour
         UnitName = names[randomNum];
     }
 
-    private void RandomSex()
+    private void SetRandomSex()
     {
         var values = System.Enum.GetValues(typeof(Sex));
         int randomNum = Random.Range(0, values.Length);
@@ -95,7 +96,7 @@ public class Unit : MonoBehaviour
     {
         if (isSelected) return;
 
-        renderTexture = new(cameraResoltion, cameraResoltion, 0)
+        renderTexture = new(cameraResolution, cameraResolution, 0)
         {
             name = gameObject.name + " Render Texture"
         };
@@ -116,6 +117,12 @@ public class Unit : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (unitHealth <= 0)
+        {
+            Death();
+            return;
+        }
+
         if (isSelected)
         {
             elapsed += Time.deltaTime;
@@ -171,7 +178,8 @@ public class Unit : MonoBehaviour
 
     protected virtual void Death()
     {
-
+        Destroy(gameObject);
+        return;
     }
 
     protected virtual int Heal(int healing)
@@ -183,7 +191,7 @@ public class Unit : MonoBehaviour
 
     #endregion
 
-    #region Unit Location Controller
+     #region Unit Location Controller
 
     public void SetSelectionObject(bool value) => selectionObject.SetActive(value);
 

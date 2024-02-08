@@ -1,30 +1,36 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public class SoldierUnit : Unit
 {
-    //wat moet er nog gefixt worden?
-    //- gebruik Unit.cs zijn health system in plaats van zijn eigen enemyHP;
-    //soldiers vallen elkaar aan.
-    public float damageInterval = 2.0f;
-    public int damageAmount = 10;
-    
-    public Unit enemy;
-    public GameObject SoldierGameObject;
+    public int damageAmount;
     public BuildingBase buildingToAttack;
-    
+    private GameObject currentTarget;
 
-    private bool isAttacking = false;
-    private float damageTimer = 0.0f;
+    public bool isInRange;
+    private bool isAttacking;
+
+    public Unit enemyUnit;
+    public Unit soldierUnit;
     public Unit enemyHp;
-    public NewSelectionManager selectionManager;
+    public Unit soldierHp;
     public Unit unit;
+    public Unit target = null;
+
+    public NewSelectionManager selectionManager;
+    public Worker worker;
+
+    public float damageInterval = 2.0f;
+    private float damageTimer;
     public float currentBuildingDist;
+    private float distanceToEnemy;
+    private float distanceToSoldier;
 
     private void Start()
     {
-        //base.Start();
         unit = FindObjectOfType<Unit>();
         selectionManager = FindObjectOfType<NewSelectionManager>();
         print("selection manager : " + selectionManager);
@@ -33,53 +39,140 @@ public class SoldierUnit : Unit
 
     private void Update()
     {
-        FindClosestEnemy();
-        print("choosing building to Attack");
+        //print("choosing building to Attack");
+        if (buildingToAttack == null) return;
         ChooseBuildingToAttack();
-        enemy = selectionManager.GetEnemyToAttack();
-        print(enemy);
-        if (enemy == null) return;
-        if (enemy == this) return;
+
+        //if (enemyUnit != null)
+        //{
+        //    enemyUnit = selectionManager.GetEnemyToAttack();
+        //}
+
+        //if (soldierUnit != null)
+        //{
+        //    soldierUnit = selectionManager.GetEnemyToAttack();
+        //}
+
+        if (isInRange && enemyUnit != null)
+        {
+            if (typeUnit != enemyUnit.typeUnit)
+            {
+                if (soldierUnit.typeUnit == TypeUnit.Human)
+                {
+                    SoldierRange();
+                }
+            }
+            if(typeUnit != soldierUnit.typeUnit)
+            {
+                if (enemyUnit.typeUnit == TypeUnit.Enemy)
+                {
+                    EnemyRange();
+                }
+            }
+        }
+
+        //enemy null check
+        if (enemyUnit == null)
+        {
+            isInRange = false;
+        }
+
+        if (isInRange)
+        {
+            EnemyRange();
+        }
+
+        //soldier null check
+        if (soldierUnit == null)
+        {
+            isInRange = false;
+        }
+
+        if (isInRange)
+        {
+            SoldierRange();
+        }
     }
 
-    private void FindClosestEnemy()
+    //Enemy in range check
+    public void EnemyRange()
     {
-        Unit[] enemies = GameObject.FindObjectsOfType<Unit>();
-        float closestDistance = 5;
-        enemy = null;
+        Debug.Log("check enemy distance");
 
-        foreach (Unit potentialEnemy in enemies )
+        distanceToEnemy = Vector3.Distance(transform.position, currentTarget.transform.position);
+        if (distanceToEnemy <= 1.5f)
         {
-            if (potentialEnemy != this)
-            {
-                float distanceToEnemy = Vector3.Distance(transform.position, potentialEnemy.transform.position);
+            Debug.Log("Attacking enemy");
+            DealDamageToSoldiersInRange();
+        }
+    }
 
-                if (distanceToEnemy < closestDistance)
+    public void SoldierRange()
+    {
+        worker = GetComponent<Worker>();
+        if (worker == null)
+        {
+            Debug.Log("check soldier distance");
+            distanceToSoldier = Vector3.Distance(transform.position, currentTarget.transform.position);
+            if (distanceToSoldier <= 1.5f)
+            {
+                Debug.Log("Attacking soldier");
+                DealDamageToEnemiesInRange();
+            }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        target = other.GetComponent<Unit>();
+        if (target != null)
+        {
+            if (target.typeUnit != typeUnit)
+            {
+                if (typeUnit == TypeUnit.Enemy)
                 {
-                    if (selectionManager.GetMarker() == true)
+                    print(typeUnit);
+                    soldierUnit = other.GetComponent<Unit>();
+                    isInRange = true;
+                    if (other.tag == "AI")
                     {
-                        myAgent.SetDestination(selectionManager.GetMarker().transform.position);
-                        selectionManager.GetMarker();
+                        currentTarget = soldierUnit.gameObject;
                     }
-                    else
+                    print(soldierUnit);
+                }
+
+                if (typeUnit == TypeUnit.Human)
+                {
+                    print(typeUnit);
+                    enemyUnit = other.GetComponent<Unit>();
+                    isInRange = true;
+                    if (other.tag == "AI")
                     {
-                        Debug.Log("Enemy in range");
-                        Debug.Log("moving to enemy myself");
-                        closestDistance = distanceToEnemy;
-                        enemy = potentialEnemy;
-                        print(potentialEnemy);
-                        myAgent.SetDestination(enemy.transform.position);
-                        DealDamageToEnemiesInRange();
+                        currentTarget = enemyUnit.gameObject;
                     }
+                    print(enemyUnit);
                 }
             }
         }
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        if (typeUnit == TypeUnit.Enemy && currentTarget != null)
+        {
+            myAgent.SetDestination(currentTarget.transform.position);
+            SoldierRange();
+        }
+
+        if (typeUnit == TypeUnit.Human && currentTarget != null)
+        {
+            myAgent.SetDestination(currentTarget.transform.position);
+            EnemyRange();
+        }
+    }
+
     private void ChooseBuildingToAttack()
     {
-        buildingToAttack = selectionManager.GetBuildingToAttack();
-
         print("found building base1");
 
         if (buildingToAttack != null)
@@ -96,7 +189,6 @@ public class SoldierUnit : Unit
         }
     }
 
-    //damage to buildings.
     private void DealDamageToBuildings()
     {
         if (isAttacking)
@@ -111,6 +203,7 @@ public class SoldierUnit : Unit
                 print(buildingToAttack.buildingHp);
                 damageTimer = 0.0f;
             }
+
             if (buildingToAttack.buildingHp <= 0)
             {
                 Debug.Log("building Destroyed");
@@ -120,65 +213,65 @@ public class SoldierUnit : Unit
         }
     }
 
-    //damage to enemies
     private void DealDamageToEnemiesInRange()
     {
-        enemyHp = enemy.GetComponent<Unit>();
-        if (Vector3.Distance(SoldierGameObject.transform.position, enemy.transform.position) < 1)
+        enemyHp = unit.GetComponent<Unit>();
+        if (distanceToSoldier < 1.5f)
         {
+            print(damageAmount);
             Debug.Log("Attacking Enemy");
             damageTimer += Time.deltaTime;
 
             if (damageTimer >= damageInterval)
             {
-                enemyHp.UnitHealth -= damageAmount;
-                print(enemyHp.UnitHealth);
-                damageTimer = 0.0f;
-            }
-            if (enemyHp.UnitHealth <= 0)
-            {
-                Debug.Log("destroying enemy");
-                Destroy(enemy.gameObject);
-                isAttacking = false;
-            }
-            //if (selectionmanager.selectedEnemy == null)
-            //{
-            //    selectionmanager.selectedEnemy = placeHolder;
-            //}
-        }
-        /*Collider[] colliders = Physics.OverlapBox(
-            transform.position, Vector3.one, Quaternion.identity, Enemy);
-
-        foreach (var collider in colliders)
-        {
-            Debug.Log("Colliding with enemy.");
-            print(collider);
-            if (collider.gameObject != gameObject)
-            {
-                SoldierUnit Enemy = collider.GetComponent<SoldierUnit>();
-                if (Enemy != null)
+                enemyHp = unit.GetComponent<Unit>();
+                if (enemyHp != null)
                 {
-                    print(damageAmount);
-                    Enemy.TakeDamage(damageAmount);
+                    enemyHp.UnitHealth -= damageAmount;
+                    print(enemyHp.UnitHealth);
+                    damageTimer = 0.0f;
+                    if (enemyHp.UnitHealth <= 0)
+                    {
+                        isInRange = false;
+                        print(isInRange);
+                        Destroy(unit.gameObject);
+                        Debug.Log("enemy hp is 0");
+                        currentTarget = null;
+                        target = null;
+                    }
                 }
             }
-        }*/
-    }
-
-    public void TakeDamage(float damage)
-    {
-        unitHealth -= Mathf.FloorToInt(damage);
-        if (unitHealth < 0)
-        {
-            Death();
         }
     }
 
-    protected override void Death()
+    private void DealDamageToSoldiersInRange()
     {
-        if (unitHealth <= 0)
+        soldierHp = unit.GetComponent<Unit>();
+        if (distanceToEnemy < 1.5f)
         {
-            // Play death animation.
+            print(damageAmount);
+            Debug.Log("Attacking soldier");
+            damageTimer += Time.deltaTime;
+
+            if (damageTimer >= damageInterval)
+            {
+                soldierHp = unit.GetComponent<Unit>();
+                if (soldierHp != null)
+                {
+                    soldierHp.UnitHealth -= damageAmount;
+                    print(soldierHp.UnitHealth);
+                    damageTimer = 0.0f;
+                    if (soldierHp.UnitHealth <= 0)
+                    {
+                        isInRange = false;
+                        print(isInRange);
+                        Destroy(unit.gameObject);
+                        Debug.Log("soldier hp is 0");
+                        currentTarget = null;
+                        target = null;
+                    }
+                }
+            }
         }
     }
 }

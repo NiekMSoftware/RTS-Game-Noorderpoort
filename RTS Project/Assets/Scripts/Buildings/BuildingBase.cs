@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
+using Unity.IO.LowLevel.Unsafe;
 using Unity.VisualScripting;
+using UnityEditor.Build.Reporting;
 using UnityEngine;
 
-public class BuildingBase : NetworkBehaviour
+public class BuildingBase : MonoBehaviour
 {
     [SerializeField] public float buildingHp = 50f;
     [SerializeField] protected States currentState;
@@ -15,6 +16,8 @@ public class BuildingBase : NetworkBehaviour
 
     public string buildingName;
 
+    private List<Material[]> savedMaterials = new();
+    private List<MeshRenderer> savedRenderers = new();
     private GameObject particleObject;
 
     private Material buildingMaterial;
@@ -30,10 +33,6 @@ public class BuildingBase : NetworkBehaviour
     public enum Jobs { Wood, Stone, Metal }
 
     [SerializeField] private OccupancyType occupancyType;
-
-    List<Material[]> savedMaterials = new List<Material[]>();
-    List<MeshRenderer> savedRenderers = new List<MeshRenderer>();
-
 
     private float minBuildValue;
     private float maxBuildValue;
@@ -94,7 +93,6 @@ public class BuildingBase : NetworkBehaviour
     protected virtual void Awake()
     {
         uiManager = FindObjectOfType<UIManager>();
-        //print("UI manager : " + uiManager + " from " + name);
 
         if (outline)
         {
@@ -107,106 +105,60 @@ public class BuildingBase : NetworkBehaviour
             buildingName = name;
     }
 
-    [ClientRpc]
-    public virtual void InitClientRpc(float buildTime, States state)
+    public virtual void Init(Material _material, GameObject _particleObject, GameObject buildingToSpawn, float buildTime, States state)
     {
-        buildingToSpawn = gameObject;
-        currentState = state;
+        StoreRenderersInChildren();
 
-
-        if (currentState == States.Building)
+        if (_material)
         {
-            StoreRenderersInChildren();
-            Material _material = FindAnyObjectByType<BuildingManager>().buildingMaterial;
-            GameObject _particleObject = FindAnyObjectByType<BuildingManager>().buildParticle;
-
             Material newMaterial = new(_material.shader)
             {
                 color = _material.color
             };
 
             buildingMaterial = newMaterial;
+        }
 
-            particleObject = _particleObject;
+        particleObject = _particleObject;
+        this.buildingToSpawn = buildingToSpawn;
+        currentState = state;
 
+        if (currentState == States.Building)
+        {
             if (buildingMaterial)
             {
-                buildingAnimationValue = buildingMaterial.GetFloat("_Min");
-
                 maxBuildValue = buildingMaterial.GetFloat("_Max");
                 minBuildValue = buildingMaterial.GetFloat("_Min");
+
+                buildingAnimationValue = minBuildValue;
+                ChangeObjectMaterial(buildingMaterial);
             }
 
             float range = maxBuildValue - minBuildValue;
-            buildTime *= 250;
             buildSpeed = range / buildTime;
-
-            ChangeObjectMaterial(buildingMaterial);
-
-        }
-        if (currentState == States.Normal) 
-        {
-            ApplyMaterialsToStoredRenderers();
-            //buildingMaterial = null;    
-            //ChangeObjectMaterial(buildingMaterial);
-
-        }
-
-
-
-        if (buildingMaterial)
-            buildingAnimationValue = buildingMaterial.GetFloat("_Min");
-    }
-
-    void StoreRenderersInChildren()
-    {
-        // Iterate through all child objects
-        foreach (Transform child in model.transform)
-        {
-            // Get the MeshRenderer component of the child
-            MeshRenderer renderer = child.GetComponent<MeshRenderer>();
-
-            if (renderer != null)
-            {
-                // Add the MeshRenderer to the list
-                savedRenderers.Add(renderer);
-
-                // Get the shared materials of the MeshRenderer and create a copy
-                Material[] materials = renderer.sharedMaterials;
-                Material[] materialsCopy = new Material[materials.Length];
-                System.Array.Copy(materials, materialsCopy, materials.Length);
-
-                // Add the materials copy to the list
-                savedMaterials.Add(materialsCopy);
-            }
         }
     }
 
-    void ApplyMaterialsToStoredRenderers()
+    public virtual void Build()
     {
-        // Iterate through all stored MeshRenderers and their corresponding materials
-        for (int i = 0; i < savedRenderers.Count; i++)
-        {
-            // Apply the stored materials to the MeshRenderer
-            savedRenderers[i].sharedMaterials = savedMaterials[i];
-        }
-    }
-    [ClientRpc]
-    public virtual void BuildClientRpc()
-    {
+        if (currentState == States.Normal || currentState == States.Pending) return;
+
         if (buildingAnimationValue < maxBuildValue)
         {
-            buildingAnimationValue += buildSpeed;
+            buildingAnimationValue += buildSpeed * Time.deltaTime;
             buildingMaterial.SetFloat("_Value", buildingAnimationValue);
         }
         else
         {
             if (!spawnedParticle)
             {
-                ParticleSystem particle = Instantiate(particleObject, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
-                particle.Play();
-                particleTimer = particle.main.duration;
-                spawnedParticle = true;
+                if (particleObject != null)
+                {
+                    ParticleSystem particle = Instantiate(particleObject, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
+                    particle.Play();
+                    particleTimer = particle.main.duration;
+                    spawnedParticle = true;
+                }
             }
             else
             {
@@ -214,16 +166,13 @@ public class BuildingBase : NetworkBehaviour
 
                 if (particleTimer < 0)
                 {
-                    InitForServerRpc(0, States.Normal);
+                    ApplyMaterialsToStoredRenderers();
+                    currentState = States.Normal;
                 }
             }
         }
     }
-    [ServerRpc (RequireOwnership = false)]
-    private void InitForServerRpc(float buildTime, States state)
-    {
-        InitClientRpc(0, States.Normal);
-    }
+
     public States GetCurrentState() => currentState;
 
     private void ChangeObjectMaterial(Material material)
@@ -256,20 +205,66 @@ public class BuildingBase : NetworkBehaviour
         }
     }
 
-    private void Update()
+    void StoreRenderersInChildren()
     {
-        if (Input.GetKeyDown(KeyCode.Delete))
+        if (model.TryGetComponent(out MeshRenderer meshRenderer))
         {
-            DestroyBuilding();
-        }
-        if (currentState == States.Normal || currentState == States.Pending) return;
+            savedRenderers.Add(meshRenderer);
+            Material[] materials = meshRenderer.sharedMaterials;
+            Material[] materialsCopy = new Material[materials.Length];
+            System.Array.Copy(materials, materialsCopy, materials.Length);
 
-        BuildClientRpc();
+            savedMaterials.Add(materialsCopy);
+        }
+        else
+        {
+            // Iterate through all child objects
+            foreach (Transform child in model.transform)
+            {
+                // Get the MeshRenderer component of the child
+                MeshRenderer renderer = child.GetComponent<MeshRenderer>();
+
+                if (renderer != null)
+                {
+                    // Add the MeshRenderer to the list
+                    savedRenderers.Add(renderer);
+
+                    // Get the shared materials of the MeshRenderer and create a copy
+                    Material[] materials = renderer.sharedMaterials;
+                    Material[] materialsCopy = new Material[materials.Length];
+                    System.Array.Copy(materials, materialsCopy, materials.Length);
+
+                    // Add the materials copy to the list
+                    savedMaterials.Add(materialsCopy);
+                }
+            }
+        }
     }
-    
+
+    void ApplyMaterialsToStoredRenderers()
+    {
+        // Iterate through all stored MeshRenderers and their corresponding materials
+        for (int i = 0; i < savedRenderers.Count; i++)
+        {
+            // Apply the stored materials to the MeshRenderer
+            savedRenderers[i].sharedMaterials = savedMaterials[i];
+        }
+    }
+
+    protected virtual void Update()
+    {
+        if (buildingHp <= 0)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Build();
+    }
+
     public virtual void SelectBuilding()
     {
-        if (currentState == States.Building || currentState == States.Pending) return;
+        if (currentState == States.Building) return;
 
         if (uiManager)
             uiManager.SetBuildingUI(true, this);
@@ -283,7 +278,7 @@ public class BuildingBase : NetworkBehaviour
 
     public virtual void DeselectBuilding()
     {
-        if (currentState == States.Building || currentState == States.Pending) return;
+        if (currentState == States.Building) return;
 
         if (uiManager)
             uiManager.SetBuildingUI(false, this);

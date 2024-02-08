@@ -13,11 +13,13 @@ public class BarrackEntrance : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (barrack.GetCurrentState() != BuildingBase.States.Normal) return;
+
         if (other.CompareTag("AI"))
         {
-            if (other.TryGetComponent(out Unit unit))
+            if (other.TryGetComponent(out Worker worker))
             {
-                barrack.AIEnteredEntrance(unit);
+                barrack.AIEnteredEntrance(worker);
             }
         }
     }

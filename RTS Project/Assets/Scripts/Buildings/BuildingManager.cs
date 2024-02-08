@@ -1,15 +1,12 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using TMPro;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
-public class BuildingManager : NetworkBehaviour
+public class BuildingManager : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Building[] buildings;
@@ -22,10 +19,10 @@ public class BuildingManager : NetworkBehaviour
     [SerializeField] private float buildProgressHeight;
 
     [Header("Particle")]
-    [SerializeField] public GameObject buildParticle;
+    [SerializeField] private GameObject buildParticle;
 
     [Header("Materials")]
-    [SerializeField] public Material buildingMaterial;
+    [SerializeField] private Material buildingMaterial;
     [SerializeField] private Material correctPlaceMaterial;
     [SerializeField] private Material incorrectPlaceMaterial;
 
@@ -45,13 +42,11 @@ public class BuildingManager : NetworkBehaviour
 
     public GameObject pendingObject;
     private int currentIndex = -1;
-    //private Vector3 pos;
+    private Vector3 pos;
     private RaycastHit hit;
     private bool rayHit;
 
-    public NetworkVariable<Vector3> pos = new NetworkVariable<Vector3>(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    public NetworkVariable<Quaternion> rot = new NetworkVariable<Quaternion>(Quaternion.identity, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    public NetworkVariable<bool> canPlace = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    private float currentDegreesRotated;
 
     [System.Serializable]
     class Building
@@ -71,28 +66,17 @@ public class BuildingManager : NetworkBehaviour
         UpdateButtons();
     }
 
-
-    private void Awake()
+    private void UpdateButtons()
     {
-        terrain = FindObjectOfType<Terrain>().GetComponent<Terrain>();
-    }
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
-
-        if (!IsOwner)
-        {
-            GetComponent<BuildingManager>().enabled = false;
-        }
-        UpdateButtons();
-    }
-
-    public void UpdateButtons()
-    {
-        //if (!IsOwner) return;
         for (int i = 0; i < buildings.Length; i++)
         {
             Button button = buildings[i].button;
+
+            if (button == null)
+            {
+                Debug.LogError("Building button not found");
+                continue;
+            }
             button.interactable = false;
             button.onClick.RemoveAllListeners();
             int index = i;
@@ -107,16 +91,13 @@ public class BuildingManager : NetworkBehaviour
 
     void Update()
     {
-        if (!IsOwner) return;
         if (currentIndex < 0) return;
         if (!pendingObject) return;
 
-        pendingObject.transform.position = pos.Value;
-        rot.Value = pendingObject.transform.rotation;
+        pendingObject.transform.position = pos;
 
-        CheckCanPlace(false);
         //Change pending object material based on if it can be placed or not
-        if (!canPlace.Value)
+        if (!CheckCanPlace(false))
         {
             ChangeObjectMaterial(pendingObject, incorrectPlaceMaterial);
         }
@@ -143,9 +124,18 @@ public class BuildingManager : NetworkBehaviour
             {
                 gridPos.y = buildings[currentIndex].building.transform.localScale.y;
             }
-            pos.Value = gridPos;
+            pos = gridPos;
 
             //rotate object towards hit.normal
+            Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+
+            Vector3 eulerAngles = rotation.eulerAngles;
+
+            eulerAngles.y += currentDegreesRotated;
+
+            rotation.eulerAngles = eulerAngles;
+
+            pendingObject.transform.rotation = rotation;
         }
         else
         {
@@ -161,7 +151,7 @@ public class BuildingManager : NetworkBehaviour
         //Destroy and reset pending object
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            ResetObjectServerRpc();
+            ResetObject();
         }
         //Rotate pending object
         else if (Input.GetKeyDown(KeyCode.R))
@@ -169,39 +159,28 @@ public class BuildingManager : NetworkBehaviour
             //Reverse rotation when holding leftshift
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                pendingObject.transform.Rotate(Vector3.up * -degreesToRotate);
-
+                currentDegreesRotated -= degreesToRotate;
             }
             else
             {
-                pendingObject.transform.Rotate(Vector3.up * degreesToRotate);
-
+                currentDegreesRotated += degreesToRotate;
             }
         }
-
         //place object
-        if (Input.GetMouseButtonDown(0))
+        else if (Input.GetMouseButtonDown(0))
         {
-            CheckCanPlace(true);
-            if (canPlace.Value)
+            if (CheckCanPlace(true))
             {
-                BuildObjectServerRpc();
+                BuildObject();
             }
         }
     }
-    private void CheckCanPlace(bool spawnError)
-    {
-        if (EventSystem.current.IsPointerOverGameObject())
-        {
-            canPlace.Value = false;
-            return;
-        }
 
-        if (!rayHit)
-        {
-            canPlace.Value = false;
-            return;
-        }
+    private bool CheckCanPlace(bool spawnError)
+    {
+        if (EventSystem.current.IsPointerOverGameObject()) return false;
+
+        if (!rayHit) return false;
         float rayAngle = Vector3.Angle(pendingObject.transform.up, Vector3.up);
 
         if (rayAngle > maxAngle)
@@ -209,33 +188,29 @@ public class BuildingManager : NetworkBehaviour
             if (spawnError)
             {
                 SpawnError("angle too steep");
-                canPlace.Value = false;
-
             }
-            canPlace.Value = false;
-            return;
+
+            return false;
         }
 
         if (pendingObject.transform.position.y > maxHeight)
         {
             if (spawnError)
             {
-                //TODO: improve error
                 SpawnError("Too high");
             }
-            canPlace.Value = false;
-            return;
+
+            return false;
         }
 
         if (pendingObject.transform.position.y < minHeight)
         {
             if (spawnError)
             {
-                //TODO: improve error
                 SpawnError("Too low");
             }
-            canPlace.Value = false;
-            return;
+
+            return false;
         }
 
         pendingObject.SetActive(true);
@@ -246,8 +221,7 @@ public class BuildingManager : NetworkBehaviour
             {
                 SpawnError("Can't place building here");
             }
-            canPlace.Value = false;
-            return;
+            return false;
         }
 
         bool hasEverything = true;
@@ -257,25 +231,22 @@ public class BuildingManager : NetworkBehaviour
         //loop through all recipe items and all resources and check if the player has enough resources to build the building
         foreach (var itemNeeded in buildings[currentIndex].building.GetComponent<BuildingBase>().GetRecipes())
         {
-            resources.GetSlotByItemDataServerRpc(itemNeeded.data);
-            if (itemNeeded.data == resources.itemSlotVar.Value.data)
+            if (itemNeeded.data == resources.GetSlotByItemData(itemNeeded.data).data)
             {
-                
-                if (resources.itemSlotVar.Value.amount >= itemNeeded.amountNeeded)
+                if (resources.GetSlotByItemData(itemNeeded.data).amount >= itemNeeded.amountNeeded)
                 {
-                    savedSlots.Add(resources.itemSlotVar.Value);
+                    savedSlots.Add(resources.GetSlotByItemData(itemNeeded.data));
                     hasEverything = true;
                 }
                 else
                 {
                     if (spawnError)
                     {
-                        SpawnError($"needs {itemNeeded.amountNeeded - resources.itemSlotVar.Value.amount} " +
+                        SpawnError($"needs {itemNeeded.amountNeeded - resources.GetSlotByItemData(itemNeeded.data).amount} " +
                             $"more : {itemNeeded.data.name}");
                     }
                     hasEverything = false;
-                    canPlace.Value = false;
-                    return;
+                    return false;
                 }
             }
         }
@@ -286,16 +257,14 @@ public class BuildingManager : NetworkBehaviour
             savedSlots.Clear();
 
             //build object
-            canPlace.Value = true;
-            return;
+            return true;
         }
 
         if (spawnError)
         {
             SpawnError("Other error");
         }
-        canPlace.Value = false;
-        return;
+        return false;
     }
 
     private void SpawnError(string text)
@@ -322,47 +291,35 @@ public class BuildingManager : NetworkBehaviour
         yield return null;
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void ResetObjectServerRpc()
+    private void ResetObject()
     {
         Destroy(pendingObject);
         pendingObject = null;
         currentIndex = -1;
-        //pos.Value = Vector3.zero;
+        pos = Vector3.zero;
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void BuildObjectServerRpc()
+    private void BuildObject()
     {
-        print(resources.itemSlotVar.Value.amount);
-        currentIndex = 0;
         foreach (var itemNeeded in buildings[currentIndex].building.GetComponent<BuildingBase>().GetRecipes())
         {
-            resources.GetSlotByItemDataServerRpc(itemNeeded.data);
-
-            if (itemNeeded.data == resources.itemSlotVar.Value.data)
+            if (itemNeeded.data == resources.GetSlotByItemData(itemNeeded.data).data)
             {
-                resources.itemSlotVar.Value.amount -= itemNeeded.amountNeeded;
+                resources.GetSlotByItemData(itemNeeded.data).amount -= itemNeeded.amountNeeded;
             }
         }
-        print(resources.itemSlotVar.Value.amount);
 
-        //endingObjectVector3.Value = pendingObject.transform.position;
-
-        ParticleSystem spawnedParticle = Instantiate(buildParticle, pos.Value, Quaternion.identity).GetComponent<ParticleSystem>();
+        ParticleSystem spawnedParticle = Instantiate(buildParticle, pos, Quaternion.identity).GetComponent<ParticleSystem>();
         spawnedParticle.Play();
 
-        //print("Pending object: " + pendingObject);
-        //print("Building to spawn: " + buildings[currentIndex].building);
-        BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pos.Value, rot.Value).GetComponent<BuildingBase>();
-        //BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building).GetComponent<BuildingBase>();
-        spawnedBuilding.GetComponent<NetworkObject>().Spawn(true);
+        BuildingBase spawnedBuilding = Instantiate(buildings[currentIndex].building, pendingObject.transform.position, 
+            pendingObject.transform.rotation).GetComponent<BuildingBase>();
 
-
-        spawnedBuilding.InitClientRpc(buildings[currentIndex].buildTime, BuildingBase.States.Building);
+        spawnedBuilding.Init(buildingMaterial, buildParticle, 
+            buildings[currentIndex].building, buildings[currentIndex].buildTime, BuildingBase.States.Building);
 
         spawnedBuilding.SetOccupancyType(BuildingBase.OccupancyType.Player);
-        spawnedBuilding.BuildClientRpc();
+        spawnedBuilding.Build();
 
         BuildProgress buildProgress = Instantiate(buildProgressPrefab, new Vector3(spawnedBuilding.transform.position.x,
             spawnedBuilding.transform.position.y + spawnedBuilding.transform.localScale.y + buildProgressHeight,
@@ -380,23 +337,20 @@ public class BuildingManager : NetworkBehaviour
 
         if (!buildings[currentIndex].multiPlace)
         {
-            ResetObjectServerRpc();
+            ResetObject();
         }
     }
 
     public void SelectObject(int index)
     {
-        ResetObjectServerRpc();
-        pendingObject = Instantiate(buildings[index].building, pos.Value, transform.rotation);
+        ResetObject();
 
+        pendingObject = Instantiate(buildings[index].building, pos, transform.rotation);
 
         ChangeObjectMaterial(pendingObject, correctPlaceMaterial);
 
         currentIndex = index;
     }
-
-
-
 
     private void ChangeObjectMaterial(GameObject go, Material material)
     {
@@ -431,6 +385,7 @@ public class BuildingManager : NetworkBehaviour
         Collider collider = building.GetComponent<Collider>();
 
         Collider[] colliders = Physics.OverlapBox(collider.bounds.center, collider.bounds.extents, trans.rotation, buildLayerMask);
+
         if (colliders.Length > 0)
         {
             return true;

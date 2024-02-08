@@ -225,6 +225,6 @@ MonoBehaviour:
   degreesToRotate: 45
   buildErrorFloatUpSpeed: 1
   maxAngle: 90
-  maxHeight: 50
+  maxHeight: 80
   minHeight: 10
   pendingObject: {fileID: 0}

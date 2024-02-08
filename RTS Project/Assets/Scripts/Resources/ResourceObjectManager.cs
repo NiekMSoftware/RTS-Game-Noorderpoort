@@ -5,7 +5,7 @@ public class ResourceObjectManager : MonoBehaviour
 {
     public List<GameObject> resources = new List<GameObject>();
     public List<GameObject> occupiedResources = new List<GameObject>();
-    public bool AIPlacedBuilding;
+    public bool placedBuilding;
 
     public void SetResources(GameObject resource)
     {
