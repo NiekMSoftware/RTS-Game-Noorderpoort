@@ -353,7 +353,7 @@ PrefabInstance:
     - target: {fileID: 1752017562558811783, guid: b130bf2bc13949d4895274c1924b4091,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1984943538605192134, guid: b130bf2bc13949d4895274c1924b4091,
         type: 3}
@@ -430,6 +430,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5472408088480968848, guid: b130bf2bc13949d4895274c1924b4091,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5491830387358832717, guid: b130bf2bc13949d4895274c1924b4091,
         type: 3}
       propertyPath: m_IsActive
@@ -438,12 +443,17 @@ PrefabInstance:
     - target: {fileID: 5613031444780853133, guid: b130bf2bc13949d4895274c1924b4091,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5791982311799306254, guid: b130bf2bc13949d4895274c1924b4091,
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5808905363095885442, guid: b130bf2bc13949d4895274c1924b4091,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5909720194241851142, guid: b130bf2bc13949d4895274c1924b4091,
         type: 3}
@@ -604,12 +614,17 @@ PrefabInstance:
     - target: {fileID: 7905685479336320087, guid: b130bf2bc13949d4895274c1924b4091,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8050301583129815306, guid: b130bf2bc13949d4895274c1924b4091,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8143848505035546006, guid: b130bf2bc13949d4895274c1924b4091,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8457878204954021127, guid: b130bf2bc13949d4895274c1924b4091,
         type: 3}
@@ -624,7 +639,12 @@ PrefabInstance:
     - target: {fileID: 8860316658400094131, guid: b130bf2bc13949d4895274c1924b4091,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8963398668298325999, guid: b130bf2bc13949d4895274c1924b4091,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8992990322186592672, guid: b130bf2bc13949d4895274c1924b4091,
         type: 3}
@@ -810,7 +830,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1291421954
 RectTransform:
   m_ObjectHideFlags: 0

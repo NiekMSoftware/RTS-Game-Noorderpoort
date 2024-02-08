@@ -387,6 +387,7 @@ MonoBehaviour:
   changeZombieButton: {fileID: 5722534152830763537}
   leaveLobbyButton: {fileID: 7899190545629320132}
   changeGameModeButton: {fileID: 3167308592541126307}
+  startGameButton: {fileID: 0}
 --- !u!1 &787715725117194888
 GameObject:
   m_ObjectHideFlags: 0
@@ -1181,7 +1182,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4000668498697554542
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3309,7 +3310,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4787600683472296450
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5017,7 +5018,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2457074871563179989
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6997,7 +6998,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2993753892260100135
 RectTransform:
   m_ObjectHideFlags: 0
