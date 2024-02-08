@@ -226,7 +226,7 @@ public class BuildingBase : NetworkBehaviour
             }
         }
     }
-    [ServerRpc]
+    [ServerRpc (RequireOwnership = false)]
     private void InitForServerRpc(float buildTime, States state)
     {
         InitClientRpc(0, States.Normal);
