@@ -4490,7 +4490,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 796417031308444103}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.9999998
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -7479,11 +7479,11 @@ Camera:
   far clip plane: 1000
   field of view: 60.000004
   orthographic: 1
-  orthographic size: 20
+  orthographic size: 30
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 8200
+    m_Bits: 28872
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 1dded74f2cee0284aada07ac2b4daf94, type: 2}
   m_TargetDisplay: 0
