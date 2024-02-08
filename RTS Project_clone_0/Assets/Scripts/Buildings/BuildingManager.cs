@@ -163,7 +163,7 @@ public class BuildingManager : NetworkBehaviour
         //Destroy and reset pending object
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            ResetObjectServerRpc();
+            ResetObjectClientRpc();
         }
         //Rotate pending object
         else if (Input.GetKeyDown(KeyCode.R))
@@ -322,8 +322,8 @@ public class BuildingManager : NetworkBehaviour
         yield return null;
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void ResetObjectServerRpc()
+    [ClientRpc]
+    private void ResetObjectClientRpc()
     {
         Destroy(pendingObject);
         pendingObject = null;
@@ -375,14 +375,15 @@ public class BuildingManager : NetworkBehaviour
 
         if (!buildings[currentIndex].multiPlace)
         {
-            ResetObjectServerRpc();
+            print("restting");
+            ResetObjectClientRpc();
         }
     }
 
     public void SelectObject(int index)
     {
         //print(index);
-        ResetObjectServerRpc();
+        ResetObjectClientRpc();
         pendingObject = Instantiate(buildings[index].building, pos.Value, transform.rotation);
 
 
