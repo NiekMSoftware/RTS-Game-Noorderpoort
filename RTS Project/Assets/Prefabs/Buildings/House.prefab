@@ -12,8 +12,7 @@ GameObject:
   - component: {fileID: 1922811086135902095}
   - component: {fileID: 3650219716435031286}
   - component: {fileID: 6174070010329359275}
-  - component: {fileID: 6091475512797295991}
-  - component: {fileID: 6940111927519266967}
+  - component: {fileID: 7680022675338177304}
   m_Layer: 7
   m_Name: House
   m_TagString: Untagged
@@ -107,7 +106,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6091475512797295991
+--- !u!114 &7680022675338177304
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -116,34 +115,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 5156782261921279343}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Script: {fileID: 11500000, guid: 7684577b0080c9c4383d6b1988be6406, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outlineMode: 1
-  outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  outlineWidth: 2
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
---- !u!114 &6940111927519266967
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5156782261921279343}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e802ab8da0aa1fc43a4678d040b6ca7f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buildingHp: 50
-  currentState: 0
-  recipes: []
-  points:
-    pointType: 0
-    amount: 0
-  outline: {fileID: 6091475512797295991}
-  occupancyType: 0
-  cubePrefab: {fileID: 5324649439494047616, guid: 9c602ac6483414a4c8e083370de4d41b,
+  cubePrefab: {fileID: 3721838096702204654, guid: 03430657f2f14514ba955174b175ae45,
     type: 3}
+  spawnCooldown: 2
+  spawnedCubes: []
+  maxCubes: 20
