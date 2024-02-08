@@ -115,7 +115,10 @@ MonoBehaviour:
   model: {fileID: 9199576686967880013}
   buildingName: Barrack
   occupancyType: 0
-  unitToSpawn: {fileID: 3721838096702204654, guid: 9510a0a69a1181d4b95bbb04ef05c36c,
+  unitCount: 0
+  unitToSpawnEnemy: {fileID: 8961510547792965510, guid: 419a4f7a71f60e547a610b717af05e97,
+    type: 3}
+  unitToSpawnFriendly: {fileID: 1413519704412995869, guid: 9fde13089b1485e43a035bd0ae5c5b63,
     type: 3}
   queue: 0
   maxTimeUntilNext: 5

@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class Barrack : BuildingBase
 {
-    private int unitCount;
+    [SerializeField] private int unitCount;
 
     [Header("Unit List")] [Tooltip("Change this to the Soldier")]
     [SerializeField] private GameObject unitToSpawnEnemy;
@@ -147,6 +147,11 @@ public class Barrack : BuildingBase
 
             // Remove unit out of the list
             unitCount--;
+
+            if (unitCount < 0)
+            {
+                unitCount = 0;
+            }
 
             // Generate a random position near the barrack
             Vector3 randomPosition = exit.position + new Vector3(Random.Range(-rangeOfSpawn, rangeOfSpawn),
