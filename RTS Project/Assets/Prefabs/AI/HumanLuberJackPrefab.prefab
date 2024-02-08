@@ -100,7 +100,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5668210464599520471
 Transform:
   m_ObjectHideFlags: 0
@@ -152,7 +152,7 @@ Camera:
   field of view: 60
   orthographic: 0
   orthographic size: 5
-  m_Depth: 0
+  m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4296
@@ -708,8 +708,7 @@ MonoBehaviour:
   job: 4
   typeUnit: 1
   sex: 0
-  selectionObject: {fileID: 7024833265930589587, guid: 03430657f2f14514ba955174b175ae45,
-    type: 3}
+  selectionObject: {fileID: 7140972190452225418}
   myAgent: {fileID: 228550525945452385}
   groundLayer:
     serializedVersion: 2
@@ -721,8 +720,7 @@ MonoBehaviour:
   selectionColor: {r: 0.32941175, g: 0.65675884, b: 1, a: 0.78431374}
   cameraResolution: 64
   cameraFPS: 15
-  unitCamera: {fileID: 2207551562300224419, guid: 03430657f2f14514ba955174b175ae45,
-    type: 3}
+  unitCamera: {fileID: 7916102912445784597}
   resourceTarget: {fileID: 0}
   workerHouse: {fileID: 0}
   resourceObjectManager: {fileID: 0}

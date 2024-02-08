@@ -7,8 +7,7 @@ TagManager:
   - AI
   - Ground
   - EnemyBuilding
-  - StoneResource
-  - Enemy
+  - Cube
   layers:
   - Default
   - TransparentFX
@@ -19,14 +18,14 @@ TagManager:
   - Clickable
   - Building
   - TempBuilding
-  - RangeIndicator
+  - Grid
   - Obstacle
   - Target
   - Resources
   - FogOfWar
   - Enemy
-  - ResourceSpawner
-  - Grid
+  - 
+  - 
   - 
   - 
   - 
