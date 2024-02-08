@@ -45,9 +45,9 @@ public class LobbyUI : MonoBehaviour {
             LobbyManager.Instance.LeaveLobby();
         });
 
-        changeGameModeButton.onClick.AddListener(() => {
-            LobbyManager.Instance.ChangeGameMode();
-        });
+        //changeGameModeButton.onClick.AddListener(() => {
+        //    LobbyManager.Instance.ChangeGameMode();
+        //});
         startGameButton.onClick.AddListener(() =>
         {
             LobbyManager.Instance.StartGame();
@@ -93,7 +93,7 @@ public class LobbyUI : MonoBehaviour {
             lobbyPlayerSingleUI.UpdatePlayer(player);
         }
 
-        changeGameModeButton.gameObject.SetActive(LobbyManager.Instance.IsLobbyHost());
+        //changeGameModeButton.gameObject.SetActive(LobbyManager.Instance.IsLobbyHost());
         startGameButton.gameObject.SetActive(LobbyManager.Instance.IsLobbyHost());
 
         lobbyNameText.text = lobby.Name;
