@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class BuildingManager : MonoBehaviour
@@ -389,6 +388,7 @@ public class BuildingManager : MonoBehaviour
 
         if (colliders.Length > 0)
         {
+            print("collided with something. Count : " + colliders[0].name);
             return true;
         }
 

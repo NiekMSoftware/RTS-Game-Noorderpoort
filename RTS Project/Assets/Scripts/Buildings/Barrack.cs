@@ -5,16 +5,11 @@ using UnityEngine.AI;
 
 public class Barrack : BuildingBase
 {
-    private List<GameObject> unitList = new List<GameObject>(CAPACITY);
-
-    public List<GameObject> UnitList
-    {
-        get { return unitList; }
-        set { unitList = value; }
-    }
+    private int unitCount;
 
     [Header("Unit List")] [Tooltip("Change this to the Soldier")]
-    public GameObject unitToSpawn;
+    [SerializeField] private GameObject unitToSpawnEnemy;
+    [SerializeField] private GameObject unitToSpawnFriendly;
 
     private const int CAPACITY = 5;
 
@@ -61,7 +56,7 @@ public class Barrack : BuildingBase
     {
         base.Update();
 
-        if (unitList.Count > 0)
+        if (unitCount > 0)
         {
             StartCoroutine(ProcessSpawning());
         }
@@ -108,7 +103,7 @@ public class Barrack : BuildingBase
         queue += Time.deltaTime;
 
         // Check if the list isn't empty, if so break the method
-        if (unitList.Count != 0)
+        if (unitCount != 0)
         {
             // Check if the queue hasn't surpassed the max Time
             if (queue >= maxTimeUntilNext)
@@ -132,13 +127,26 @@ public class Barrack : BuildingBase
         if (NavMesh.SamplePosition(exit.position, out hit, 1.0f, NavMesh.AllAreas))
         {
             // Instantiate the GameObject
+            GameObject unitToSpawn = null;
+
+            switch (typeUnit)
+            {
+                case Unit.TypeUnit.Enemy:
+                    unitToSpawn = unitToSpawnEnemy;
+                    break;
+
+                case Unit.TypeUnit.Human:
+                    unitToSpawn = unitToSpawnFriendly;
+                    break;
+            }
+
             GameObject soldierGO = Instantiate(unitToSpawn, hit.position, Quaternion.identity);
 
             soldierGO.GetComponent<Unit>().typeUnit = typeUnit;
             spawnedUnit = soldierGO.GetComponent<SoldierUnit>();
 
             // Remove unit out of the list
-            unitList.RemoveAt(0);
+            unitCount--;
 
             // Generate a random position near the barrack
             Vector3 randomPosition = exit.position + new Vector3(Random.Range(-rangeOfSpawn, rangeOfSpawn),
@@ -176,6 +184,6 @@ public class Barrack : BuildingBase
         Destroy(unit.gameObject);
 
         // Add a new item to the list!
-        unitList.Add(unitToSpawn);
+        unitCount++;
     }
 }

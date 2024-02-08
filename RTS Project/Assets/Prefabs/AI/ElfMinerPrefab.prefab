@@ -427,7 +427,7 @@ MonoBehaviour:
   selectionColor: {r: 0.32941175, g: 0.65675884, b: 1, a: 0.78431374}
   cameraResolution: 64
   cameraFPS: 15
-  unitCamera: {fileID: 0}
+  unitCamera: {fileID: 4704429007086747021}
   resourceTarget: {fileID: 0}
   workerHouse: {fileID: 0}
   resourceObjectManager: {fileID: 0}
