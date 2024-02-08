@@ -1,14 +1,10 @@
-using Unity.Netcode;
 using UnityEngine;
 
-public class ResourceItemManager : NetworkBehaviour
+public class ResourceItemManager : MonoBehaviour
 {
     public Type type;
 
     public ItemSlot[] itemSlots;
-
-    public NetworkVariable<ItemSlot> itemSlotVar = new NetworkVariable<ItemSlot>(null, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    //public NetworkVariable<ItemData> dataVar = new NetworkVariable<ItemData>(null, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     public enum Type
     {
@@ -16,21 +12,16 @@ public class ResourceItemManager : NetworkBehaviour
         AI
     }
 
-    [ServerRpc (RequireOwnership = false)]
-    public void GetSlotByItemDataServerRpc(ItemData _data)
+    public ItemSlot GetSlotByItemData(ItemData data)
     {
-        print(_data);
-        //itemSlotVar.Value.data = _data;
-        print(itemSlotVar.Value.data);
-        //dataVar.Value = _data;
         foreach (var item in itemSlots)
         {
-            if (item.data == _data)
-            { 
-                itemSlotVar.Value = item;
-                print(itemSlotVar);
-                return;
+            if (item.data == data)
+            {
+                return item;
             }
         }
+
+        return null;
     }
 }

@@ -1,8 +1,7 @@
-using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Rendering;
 
-public class CameraMovement : NetworkBehaviour
+
+public class CameraMovement : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 1f;
     [SerializeField] private float zoomSpeed = 5000f;
@@ -22,17 +21,6 @@ public class CameraMovement : NetworkBehaviour
     float actualZoomHeight = 0f;
     private Vector3 hitPointUp = Vector3.zero;
 
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
-        if (!IsOwner)
-        {
-            transform.parent.gameObject.SetActive(false);
-            GetComponent<Camera>().enabled = false;
-            GetComponent<CameraMovement>().enabled = false;
-            GetComponent<AudioListener>().enabled = false;
-        }
-    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
