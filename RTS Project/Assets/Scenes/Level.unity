@@ -869,6 +869,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 396614313279533967, guid: e66dfe5730aecb44d9402b720e3c76bf,
         type: 3}
+      propertyPath: maxSplineLength
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 396614313279533967, guid: e66dfe5730aecb44d9402b720e3c76bf,
+        type: 3}
       propertyPath: selectionManager
       value: 
       objectReference: {fileID: 1536612487}
