@@ -142,7 +142,7 @@ MonoBehaviour:
     amount: 1
   outline: {fileID: 935506704979823546}
   model: {fileID: 386958128729160865}
-  buildingName: 
+  buildingName: Metal Mine
   occupancyType: 0
   maxWorkers: 2
   currentStorage:

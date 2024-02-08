@@ -17,7 +17,7 @@ public class Soldier : Unit
 
     private DetectEnemies detectEnemies;
 
-    [SerializeField] private States currentState;
+    [SerializeField] public States currentState;
 
     [SerializeField] private GameObject target;
     [SerializeField] private Transform secTarget;
@@ -32,7 +32,7 @@ public class Soldier : Unit
 
     private float currentAcceptDistance = 0f;
 
-    private enum States
+    public enum States
     {
         Idle,
         Patrolling,

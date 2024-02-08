@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Multiplayer Testing/LobbyTest.unity
-    guid: 08fbbadf7e29ab74cb3cbd2e3a88870e
+    path: Assets/Scenes/Ayesha Scenes/MainMenu.unity
+    guid: 444a43e9ea289cf4e9c53db985b5d0de
   - enabled: 1
-    path: Assets/Multiplayer Testing/RelayTest.unity
-    guid: 2aaa7147104374a4cb80f88c8f8b8417
+    path: Assets/Scenes/Ayesha Scenes/PauseMenu.unity
+    guid: 5d1979578b6742947bc33ec18d2d550c
   m_configObjects: {}

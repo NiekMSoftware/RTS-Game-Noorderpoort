@@ -128,5 +128,5 @@ MonoBehaviour:
     amount: 1
   outline: {fileID: 0}
   model: {fileID: 0}
-  buildingName: 
+  buildingName: Wall
   occupancyType: 0

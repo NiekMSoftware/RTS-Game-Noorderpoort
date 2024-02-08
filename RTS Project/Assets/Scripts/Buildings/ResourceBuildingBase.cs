@@ -186,6 +186,7 @@ public class ResourceBuildingBase : BuildingBase
     {
         if (currentState == States.Building || currentState == States.Pending) return false;
 
+
         if (workers.Contains(worker)) return false;
         if (worker.GetCurrentBuilding() != null) return false;
         if (workers.Count >= maxWorkers) return false;

@@ -140,7 +140,7 @@ MonoBehaviour:
     amount: 1
   outline: {fileID: 8589388334026806257}
   model: {fileID: 4909080368746801738}
-  buildingName: Lumberjack hut
+  buildingName: Lumberjack Hut
   occupancyType: 0
   maxWorkers: 2
   currentStorage:

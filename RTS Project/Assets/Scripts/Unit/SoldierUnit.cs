@@ -43,15 +43,15 @@ public class SoldierUnit : Unit
         if (buildingToAttack == null) return;
         ChooseBuildingToAttack();
 
-        if (enemyUnit != null)
-        {
-            enemyUnit = selectionManager.GetEnemyToAttack();
-        }
+        //if (enemyUnit != null)
+        //{
+        //    enemyUnit = selectionManager.GetEnemyToAttack();
+        //}
 
-        if (soldierUnit != null)
-        {
-            soldierUnit = selectionManager.GetEnemyToAttack();
-        }
+        //if (soldierUnit != null)
+        //{
+        //    soldierUnit = selectionManager.GetEnemyToAttack();
+        //}
 
         if (isInRange && enemyUnit != null)
         {
