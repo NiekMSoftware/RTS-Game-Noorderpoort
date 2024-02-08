@@ -1,12 +1,29 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
-[Serializable]
-public class ItemSlot
+
+[System.Serializable]
+[GenerateSerializationForType(typeof(ItemSlot))]
+public class ItemSlot : INetworkSerializable
 {
+    // INetworkSerializable
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref amount);
+        serializer.SerializeValue(ref maxAmount);
+        if (data != null)
+        {
+            serializer.SerializeValue(ref data);
+        }
+        else
+        {
+            // Handle the case when data is null (possibly set default values)
+        }
+    }
     public ItemData data;
     public int amount;
     public int maxAmount;
-
+    
     public int GetAmount() => amount;
     public int GetMaxAmount() => maxAmount;
 

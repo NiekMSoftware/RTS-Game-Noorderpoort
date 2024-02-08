@@ -1,12 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
 
 public class LobbyManager : MonoBehaviour {
 
@@ -90,7 +93,15 @@ public class LobbyManager : MonoBehaviour {
         initializationOptions.SetProfile(playerName);
 
         await UnityServices.InitializeAsync(initializationOptions);
-
+#if UNITY_EDITOR
+        if (ParrelSync.ClonesManager.IsClone())
+        {
+            // When using a ParrelSync clone, switch to a different authentication profile to force the clone
+            // to sign in as a different anonymous user account.
+            string customArgument = ParrelSync.ClonesManager.GetArgument();
+            AuthenticationService.Instance.SwitchProfile($"Clone_{customArgument}_Profile");
+        }
+#endif
 
         AuthenticationService.Instance.SignedIn += () => {
             // do nothing
@@ -396,6 +407,8 @@ public class LobbyManager : MonoBehaviour {
         {
             try
             {
+                GoToGameScene();
+
                 Debug.Log("StartGame");
 
                 string relayCode = await MultiplayerRelay.Instance.CreateRelay();
@@ -408,7 +421,6 @@ public class LobbyManager : MonoBehaviour {
                     }
                 });
 
-
                 joinedLobby = lobby;
             }
             catch (LobbyServiceException e) 
@@ -416,6 +428,11 @@ public class LobbyManager : MonoBehaviour {
                 Debug.Log(e);
             }
         }
+    }
+
+    private void GoToGameScene()
+    { 
+        SceneManager.LoadScene("MultiplayerWalter");
     }
 }
 

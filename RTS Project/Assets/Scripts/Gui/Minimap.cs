@@ -11,6 +11,7 @@ public class Minimap : MonoBehaviour
     {
         cam = GetComponent<Camera>();
         cam.enabled = false;
+
     }
 
     private void LateUpdate()
